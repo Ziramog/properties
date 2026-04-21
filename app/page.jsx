@@ -79,8 +79,8 @@ async function geocodeCity(city) {
         return coords;
       }
     }
-  } catch {
-    // silently fail — map will just skip this property
+  } catch (e) {
+    console.error(`Geocode error for ${city}:`, e.message);
   }
 
   geoCache[key] = null;
