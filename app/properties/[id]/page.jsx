@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import PropertyHeaderImage from '@/components/PropertyHeaderImage';
 import PropertyDetails from '@/components/PropertyDetails';
 import connectDB from '@/config/database';

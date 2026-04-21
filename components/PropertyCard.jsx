@@ -4,19 +4,12 @@ import { FaBed, FaBath, FaRulerCombined } from 'react-icons/fa';
 
 const PropertyCard = ({ property, isSelected = false, onMouseEnter, onMouseLeave }) => {
   const getRateDisplay = () => {
-    if (property.rates?.sale) {
-      return 'En Venta';
-    }
-    if (property.price) {
-      return property.price;
-    }
-    if (property.rates?.monthly) {
-      return `$${property.rates.monthly.toLocaleString()}/mes`;
-    } else if (property.rates?.weekly) {
-      return `$${property.rates.weekly.toLocaleString()}/sem`;
-    } else if (property.rates?.nightly) {
-      return `$${property.rates.nightly.toLocaleString()}/noche`;
-    }
+    // price is a String field with values like "USD 200.000" or "$8.000.000/mes"
+    if (property.price) return property.price;
+    // rates.monthly is the numeric fallback
+    if (property.rates?.monthly) return `$${property.rates.monthly.toLocaleString()}/mes`;
+    if (property.rates?.weekly) return `$${property.rates.weekly.toLocaleString()}/sem`;
+    if (property.rates?.nightly) return `$${property.rates.nightly.toLocaleString()}/noche`;
     return 'Consultar';
   };
 

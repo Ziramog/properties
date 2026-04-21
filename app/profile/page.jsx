@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import Image from 'next/image';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
