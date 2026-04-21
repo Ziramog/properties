@@ -37,14 +37,14 @@ const MessagePage = async () => {
   });
 
   return (
-    <section className='bg-blue-50'>
+    <section className='bg-[#f5f0e8]'>
       <div className='container m-auto py-24 max-w-6xl'>
         <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0'>
-          <h1 className='text-3xl font-bold mb-4'>Your Messages</h1>
+          <h1 className='text-3xl font-bold mb-4 text-[#1a3c34]'>Tus Mensajes</h1>
 
           <div className='space-y-4'>
             {messages.length === 0 ? (
-              <p>You have no messages</p>
+              <p>No tienes mensajes</p>
             ) : (
               messages.map((message) => (
                 <MessageCard key={message._id} message={message} />

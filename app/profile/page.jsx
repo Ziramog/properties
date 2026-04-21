@@ -21,10 +21,10 @@ const ProfilePage = async () => {
   const properties = propertiesDocs.map(convertToSerializeableObject);
 
   return (
-    <section className='bg-blue-50'>
+    <section className='bg-[#f5f0e8]'>
       <div className='container m-auto py-24'>
         <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0'>
-          <h1 className='text-3xl font-bold mb-4'>Your Profile</h1>
+          <h1 className='text-3xl font-bold mb-4 text-[#1a3c34]'>Tu Perfil</h1>
           <div className='flex flex-col md:flex-row'>
             <div className='md:w-1/4 mx-20 mt-10'>
               <div className='mb-4'>
@@ -33,24 +33,24 @@ const ProfilePage = async () => {
                   src={sessionUser.user.image || profileDefault}
                   width={200}
                   height={200}
-                  alt='User'
+                  alt='Usuario'
                 />
               </div>
 
               <h2 className='text-2xl mb-4'>
-                <span className='font-bold block'>Name: </span>{' '}
+                <span className='font-bold block'>Nombre: </span>{' '}
                 {sessionUser.user.name}
               </h2>
               <h2 className='text-2xl'>
-                <span className='font-bold block'>Email: </span>{' '}
+                <span className='font-bold block'>Correo: </span>{' '}
                 {sessionUser.user.email}
               </h2>
             </div>
 
             <div className='md:w-3/4 md:pl-4'>
-              <h2 className='text-xl font-semibold mb-4'>Your Listings</h2>
+              <h2 className='text-xl font-semibold mb-4'>Tus Propiedades</h2>
               {properties.length === 0 ? (
-                <p>You have no property listings</p>
+                <p>No tienes propiedades publicadas</p>
               ) : (
                 <ProfileProperties properties={properties} />
               )}

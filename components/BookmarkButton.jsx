@@ -28,32 +28,32 @@ const BookmarkButton = ({ property }) => {
 
   const handleClick = async () => {
     if (!userId) {
-      toast.error('You need to sign in to bookmark a property');
+      toast.error('Debes iniciar sesión para guardar una propiedad');
       return;
     }
 
     bookmarkProperty(property._id).then((res) => {
       if (res.error) return toast.error(res.error);
       setIsBookmarked(res.isBookmarked);
-      toast.success(res.message);
+      toast.success('Propiedad guardada');
     });
   };
 
-  if (loading) return <p className='text-center'>Loading...</p>;
+  if (loading) return <p className='text-center'>Cargando...</p>;
 
   return isBookmarked ? (
     <button
       onClick={handleClick}
       className='bg-red-500 hover:bg-red-600 text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center'
     >
-      <FaBookmark className='mr-2' /> Remove Bookmark
+      <FaBookmark className='mr-2' /> Quitar de Favoritos
     </button>
   ) : (
     <button
       onClick={handleClick}
-      className='bg-blue-500 hover:bg-blue-600 text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center'
+      className='bg-[#d4a574] hover:bg-[#c49664] text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center'
     >
-      <FaBookmark className='mr-2' /> Bookmark Property
+      <FaBookmark className='mr-2' /> Guardar Propiedad
     </button>
   );
 };

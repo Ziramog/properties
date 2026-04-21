@@ -1,89 +1,90 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  FaBed,
-  FaBath,
-  FaRulerCombined,
-  FaMoneyBill,
-  FaMapMarker,
-} from 'react-icons/fa';
+import { FaBed, FaBath, FaRulerCombined } from 'react-icons/fa';
 
-const PropertyCard = ({ property }) => {
+const PropertyCard = ({ property, isSelected = false, onMouseEnter, onMouseLeave }) => {
   const getRateDisplay = () => {
-    const { rates } = property;
-    if (rates.monthly) {
-      return `$${rates.monthly.toLocaleString()}/mo`;
-    } else if (rates.weekly) {
-      return `$${rates.weekly.toLocaleString()}/wk`;
-    } else if (rates.nightly) {
-      return `$${rates.nightly.toLocaleString()}/night`;
+    if (property.rates?.sale) {
+      return 'En Venta';
     }
+    if (property.price) {
+      return property.price;
+    }
+    if (property.rates?.monthly) {
+      return `$${property.rates.monthly.toLocaleString()}/mes`;
+    } else if (property.rates?.weekly) {
+      return `$${property.rates.weekly.toLocaleString()}/sem`;
+    } else if (property.rates?.nightly) {
+      return `$${property.rates.nightly.toLocaleString()}/noche`;
+    }
+    return 'Consultar';
   };
 
   return (
-    <div className='rounded-xl shadow-md relative'>
-      <Image
-        src={property.images[0]}
-        alt=''
-        height={0}
-        width={0}
-        sizes='100vw'
-        className='w-full h-auto rounded-t-xl'
-        priority={true}
-      />
-      <div className='p-4'>
-        <div className='text-left md:text-center lg:text-left mb-6'>
-          <div className='text-gray-600'>{property.type}</div>
-          <h3 className='text-xl font-bold'>{property.name}</h3>
-        </div>
-        <h3 className='absolute top-[10px] right-[10px] bg-white px-4 py-2 rounded-lg text-blue-500 font-bold text-right md:text-center lg:text-right'>
-          {getRateDisplay()}
-        </h3>
-
-        <div className='flex justify-center gap-4 text-gray-500 mb-4'>
-          <p>
-            <FaBed className='md:hidden lg:inline mr-2' /> {property.beds}
-            <span className='md:hidden lg:inline'> Beds</span>
-          </p>
-          <p>
-            <FaBath className='md:hidden lg:inline mr-2' /> {property.baths}
-            <span className='md:hidden lg:inline'> Baths</span>
-          </p>
-          <p>
-            <FaRulerCombined className='md:hidden lg:inline  mr-2' />{' '}
-            {property.square_feet}
-            <span className='md:hidden lg:inline'> sqft</span>
-          </p>
-        </div>
-
-        <div className='flex justify-center gap-4 text-green-900 text-sm mb-4'>
-          <p>
-            <FaMoneyBill className='md:hidden lg:inline mr-2' /> Weekly
-          </p>
-          <p>
-            <FaMoneyBill className='md:hidden lg:inline mr-2' /> Monthly
-          </p>
-        </div>
-
-        <div className='border border-gray-100 mb-5'></div>
-
-        <div className='flex flex-col lg:flex-row justify-between mb-4'>
-          <div className='flex align-middle gap-2 mb-4 lg:mb-0'>
-            <FaMapMarker className='text-orange-700 mt-1' />
-            <span className='text-orange-700'>
-              {' '}
-              {property.location.city}, {property.location.state}
-            </span>
-          </div>
-          <Link
-            href={`/properties/${property._id}`}
-            className='h-[36px] bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-center text-sm'
-          >
-            Details
-          </Link>
+    <Link
+      href={`/properties/${property._id}`}
+      className={`
+        block bg-white rounded-xl overflow-hidden shadow-md transition-all duration-200
+        hover:shadow-xl hover:scale-[1.02]
+        ${isSelected ? 'ring-2 ring-[#E94560]' : ''}
+      `}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      <div className="relative aspect-[4/3] overflow-hidden">
+        <Image
+          src={property.images?.[0] || 'https://via.placeholder.com/400x300'}
+          alt={property.name}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+        <div className="absolute top-3 left-3">
+          <span className="bg-[#E94560] text-white text-xs font-semibold px-3 py-1 rounded-full">
+            {property.type}
+          </span>
         </div>
       </div>
-    </div>
+
+      <div className="p-4">
+        <p className="text-2xl font-bold text-[#1A1A2E] mb-1">
+          {getRateDisplay()}
+        </p>
+
+        <h3 className="text-sm font-medium text-gray-700 line-clamp-1 mb-2">
+          {property.name}
+        </h3>
+
+        <p className="text-xs text-gray-500 mb-3 flex items-center gap-1">
+          <span>{property.location?.city}</span>
+          {property.location?.state && (
+            <>, <span>{property.location.state}</span></>
+          )}
+        </p>
+
+        <div className="flex items-center gap-4 text-sm text-gray-600 border-t pt-3">
+          {property.beds != null && (
+            <span className="flex items-center gap-1">
+              <FaBed className="text-[#E94560]" />
+              {property.beds}
+            </span>
+          )}
+          {property.baths != null && (
+            <span className="flex items-center gap-1">
+              <FaBath className="text-[#E94560]" />
+              {property.baths}
+            </span>
+          )}
+          {property.square_feet != null && (
+            <span className="flex items-center gap-1">
+              <FaRulerCombined className="text-[#E94560]" />
+              {property.square_feet} m²
+            </span>
+          )}
+        </div>
+      </div>
+    </Link>
   );
 };
+
 export default PropertyCard;

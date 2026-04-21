@@ -8,9 +8,9 @@ import '@/assets/styles/globals.css';
 import 'photoswipe/dist/photoswipe.css';
 
 export const metadata = {
-  title: 'PropertyPulse',
-  description: 'Find The Perfect Rental Property',
-  keywords: 'rental, property, real estate',
+  title: 'Roggero & Roma | Negocios Inmobiliarios',
+  description: 'Agencia inmobiliaria en Alta Gracia, Córdoba. Más de 10 años de experiencia en compra, venta y alquiler de propiedades.',
+  keywords: 'inmobiliaria, propiedades, casas, departamentos, campos, Alta Gracia, Córdoba, Argentina',
 };
 
 const MainLayout = ({ children }) => {

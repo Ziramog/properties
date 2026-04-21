@@ -1,20 +1,34 @@
-import PropertySearchForm from './PropertySearchForm';
+import PropertyFilters from './PropertyFilters';
 
 const Hero = () => {
   return (
-    <section className='bg-blue-700 py-20 mb-4'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center'>
-        <div className='text-center'>
-          <h1 className='text-4xl font-extrabold text-white sm:text-5xl md:text-6xl'>
-            Find The Perfect Rental
+    <section className="relative bg-[#1A1A2E] py-16 md:py-24">
+      {/* Background image with overlay */}
+      <div
+        className="absolute inset-0 z-0 opacity-20"
+        style={{
+          backgroundImage: 'url(https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+            Encontrá tu próxima propiedad
           </h1>
-          <p className='my-4 text-xl text-white'>
-            Discover the perfect property that suits your needs.
+          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
+            Más de 10 años guiando decisiones inmobiliarias en Córdoba
           </p>
         </div>
-        <PropertySearchForm />
+
+        <div className="max-w-4xl mx-auto">
+          <PropertyFilters variant="full" />
+        </div>
       </div>
     </section>
   );
 };
+
 export default Hero;

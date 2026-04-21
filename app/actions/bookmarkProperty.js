@@ -20,7 +20,9 @@ async function bookmarkProperty(propertyId) {
   const user = await User.findById(userId);
 
   // Check if property is bookmarked
-  let isBookmarked = user.bookmarks.includes(propertyId);
+  let isBookmarked = user.bookmarks.some(
+    (bookmark) => bookmark.toString() === propertyId
+  );
   console.log(isBookmarked);
 
   let message;

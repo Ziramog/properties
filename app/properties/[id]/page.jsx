@@ -13,15 +13,16 @@ import { FaArrowLeft } from 'react-icons/fa';
 const PropertyPage = async ({ params }) => {
   await connectDB();
   const propertyDoc = await Property.findById(params.id).lean();
-  const property = convertToSerializeableObject(propertyDoc);
 
-  if (!property) {
+  if (!propertyDoc) {
     return (
       <h1 className='text-center text-2xl font-bold mt-10'>
-        Property Not Found
+        Propiedad No Encontrada
       </h1>
     );
   }
+
+  const property = convertToSerializeableObject(propertyDoc);
 
   return (
     <>
@@ -32,7 +33,7 @@ const PropertyPage = async ({ params }) => {
             href='/properties'
             className='text-blue-500 hover:text-blue-600 flex items-center'
           >
-            <FaArrowLeft className='mr-2' /> Back to Properties
+            <FaArrowLeft className='mr-2' /> Volver a Propiedades
           </Link>
         </div>
       </section>

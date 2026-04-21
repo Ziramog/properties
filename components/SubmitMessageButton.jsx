@@ -5,12 +5,12 @@ const SubmitMessageButton = () => {
   const { pending } = useFormStatus();
   return (
     <button
-      className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline flex items-center justify-center'
+      className='bg-[#d4a574] hover:bg-[#c49664] text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline flex items-center justify-center'
       type='submit'
       disabled={pending}
     >
       <FaPaperPlane className='mr-2' />{' '}
-      {pending ? 'Sending...' : 'Send Message'}
+      {pending ? 'Enviando...' : 'Enviar Mensaje'}
     </button>
   );
 };

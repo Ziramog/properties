@@ -80,6 +80,31 @@ const PropertySchema = new Schema(
       type: Boolean,
       default: false,
     },
+    covered_area: {
+      type: Number,
+    },
+    garage: {
+      type: Number,
+    },
+    services: [
+      {
+        type: String,
+      },
+    ],
+    titles_status: {
+      type: String,
+    },
+    interior: {
+      aberturas: String,
+      pisos: String,
+      calefaccion: String,
+    },
+    exterior: {
+      techos: String,
+    },
+    price: {
+      type: String,
+    },
   },
   {
     timestamps: true,

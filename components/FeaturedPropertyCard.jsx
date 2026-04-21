@@ -1,97 +1,85 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import {
-  FaBed,
-  FaBath,
-  FaRulerCombined,
-  FaMoneyBill,
-  FaMapMarker,
-} from 'react-icons/fa';
+import { FaBed, FaBath, FaRulerCombined } from 'react-icons/fa';
 
 const FeaturedPropertyCard = ({ property }) => {
   const getRateDisplay = () => {
-    const { rates } = property;
-
-    if (rates.monthly) {
-      return `${rates.monthly.toLocaleString()}/mo`;
-    } else if (rates.weekly) {
-      return `${rates.weekly.toLocaleString()}/wk`;
-    } else if (rates.nightly) {
-      return `${rates.nightly.toLocaleString()}/night`;
+    if (property.rates?.sale) {
+      return 'En Venta';
     }
+    if (property.price) {
+      return property.price;
+    }
+    if (property.rates?.monthly) {
+      return `$${property.rates.monthly.toLocaleString()}/mes`;
+    } else if (property.rates?.weekly) {
+      return `$${property.rates.weekly.toLocaleString()}/sem`;
+    } else if (property.rates?.nightly) {
+      return `$${property.rates.nightly.toLocaleString()}/noche`;
+    }
+    return 'Consultar';
   };
 
   return (
-    <div className='bg-white rounded-xl shadow-md relative flex flex-col md:flex-row'>
-      <Image
-        src={property.images[0]}
-        alt=''
-        width={0}
-        height={0}
-        sizes='100vw'
-        className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl w-full md:w-2/5'
-      />
-      <div className='p-6'>
-        <h3 className='text-xl font-bold'>{property.name}</h3>
-        <div className='text-gray-600 mb-4'>{property.type}</div>
-        <h3 className='absolute top-[10px] left-[10px] bg-white px-4 py-2 rounded-lg text-blue-500 font-bold text-right md:text-center lg:text-right'>
-          ${getRateDisplay()}
-        </h3>
-        <div className='flex justify-center gap-4 text-gray-500 mb-4'>
-          <p>
-            <FaBed className='inline-block mr-2' /> {property.beds}{' '}
-            <span className='md:hidden lg:inline'>Beds</span>
-          </p>
-          <p>
-            <FaBath className='inline-block mr-2' /> {property.baths}{' '}
-            <span className='md:hidden lg:inline'>Baths</span>
-          </p>
-          <p>
-            <FaRulerCombined className='inline-block mr-2' />
-            {property.square_feet}{' '}
-            <span className='md:hidden lg:inline'>sqft</span>
-          </p>
+    <Link
+      href={`/properties/${property._id}`}
+      className="block bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-200 hover:scale-[1.02]"
+    >
+      <div className="relative aspect-[16/9] overflow-hidden">
+        <Image
+          src={property.images?.[0] || 'https://via.placeholder.com/600x400'}
+          alt={property.name}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+        <div className="absolute top-3 left-3">
+          <span className="bg-[#E94560] text-white text-xs font-semibold px-3 py-1 rounded-full">
+            Destacada
+          </span>
         </div>
-
-        <div className='flex justify-center gap-4 text-green-900 text-sm mb-4'>
-          {property.rates.nightly && (
-            <p>
-              <FaMoneyBill className='inline mr-2' /> Nightly
-            </p>
-          )}
-
-          {property.rates.weekly && (
-            <p>
-              <FaMoneyBill className='inline mr-2' /> Weekly
-            </p>
-          )}
-
-          {property.rates.monthly && (
-            <p>
-              <FaMoneyBill className='inline mr-2' /> Monthly
-            </p>
-          )}
-        </div>
-
-        <div className='border border-gray-200 mb-5'></div>
-
-        <div className='flex flex-col lg:flex-row justify-between'>
-          <div className='flex align-middle gap-2 mb-4 lg:mb-0'>
-            <FaMapMarker className='text-lg text-orange-700' />
-            <span className='text-orange-700'>
-              {' '}
-              {property.location.city} {property.location.state}
-            </span>
-          </div>
-          <Link
-            href={`/properties/${property._id}`}
-            className='h-[36px] bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-center text-sm'
-          >
-            Details
-          </Link>
+        <div className="absolute bottom-3 left-3 bg-[#1A1A2E] text-white px-3 py-1 rounded-lg">
+          <span className="font-semibold">{getRateDisplay()}</span>
         </div>
       </div>
-    </div>
+
+      <div className="p-5">
+        <div className="flex items-center gap-2 text-[#E94560] text-sm font-medium mb-1">
+          <span>{property.type}</span>
+        </div>
+
+        <h3 className="text-lg font-semibold text-[#1A1A2E] line-clamp-1 mb-2">
+          {property.name}
+        </h3>
+
+        <p className="text-sm text-gray-500 mb-4 flex items-center gap-1">
+          <span>{property.location?.city}</span>
+          {property.location?.state && <span>, {property.location.state}</span>}
+        </p>
+
+        <div className="flex items-center gap-4 text-sm text-gray-600 pt-3 border-t">
+          {property.beds != null && (
+            <span className="flex items-center gap-1">
+              <FaBed className="text-[#E94560]" />
+              {property.beds} <span className="hidden sm:inline">Dorm.</span>
+            </span>
+          )}
+          {property.baths != null && (
+            <span className="flex items-center gap-1">
+              <FaBath className="text-[#E94560]" />
+              {property.baths} <span className="hidden sm:inline">Baños</span>
+            </span>
+          )}
+          {property.square_feet != null && (
+            <span className="flex items-center gap-1">
+              <FaRulerCombined className="text-[#E94560]" />
+              {property.square_feet} <span className="hidden sm:inline">m²</span>
+            </span>
+          )}
+        </div>
+      </div>
+    </Link>
   );
 };
+
 export default FeaturedPropertyCard;

@@ -19,7 +19,7 @@ const PropertyContactForm = ({ property }) => {
   if (state.submitted) {
     return (
       <p className='text-green-500 mb-4'>
-        Your message has been sent successfully
+        Tu mensaje ha sido enviado exitosamente
       </p>
     );
   }
@@ -27,7 +27,7 @@ const PropertyContactForm = ({ property }) => {
   return (
     session && (
       <div className='bg-white p-6 rounded-lg shadow-md'>
-        <h3 className='text-xl font-bold mb-6'>Contact Property Manager</h3>
+        <h3 className='text-xl font-bold mb-6 text-[#1a3c34]'>Contactar al Vendedor</h3>
         <form action={formAction}>
           <input
             type='hidden'
@@ -46,14 +46,14 @@ const PropertyContactForm = ({ property }) => {
               className='block text-gray-700 text-sm font-bold mb-2'
               htmlFor='name'
             >
-              Name:
+              Nombre:
             </label>
             <input
               className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               id='name'
               name='name'
               type='text'
-              placeholder='Enter your name'
+              placeholder='Tu nombre'
               required
             />
           </div>
@@ -62,14 +62,14 @@ const PropertyContactForm = ({ property }) => {
               className='block text-gray-700 text-sm font-bold mb-2'
               htmlFor='email'
             >
-              Email:
+              Correo electrónico:
             </label>
             <input
               className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               id='email'
               name='email'
               type='email'
-              placeholder='Enter your email'
+              placeholder='Tu correo electrónico'
               required
             />
           </div>
@@ -78,14 +78,14 @@ const PropertyContactForm = ({ property }) => {
               className='block text-gray-700 text-sm font-bold mb-2'
               htmlFor='phone'
             >
-              Phone:
+              Teléfono:
             </label>
             <input
               className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               id='phone'
               name='phone'
               type='text'
-              placeholder='Enter your phone number'
+              placeholder='Tu número de teléfono'
             />
           </div>
           <div className='mb-4'>
@@ -93,13 +93,13 @@ const PropertyContactForm = ({ property }) => {
               className='block text-gray-700 text-sm font-bold mb-2'
               htmlFor='message'
             >
-              Message:
+              Mensaje:
             </label>
             <textarea
               className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 h-44 focus:outline-none focus:shadow-outline'
               id='message'
               name='message'
-              placeholder='Enter your message'
+              placeholder='Tu mensaje'
             ></textarea>
           </div>
           <div>
