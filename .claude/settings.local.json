@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(curl -s http://localhost:3007)",
+      "Bash(npm list *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(ghapi repos/Ziramog/properties/deployments)",
+      "Bash(vercel logs *)",
+      "Bash(vercel env *)"
+    ]
+  }
+}
