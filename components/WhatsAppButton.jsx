@@ -3,7 +3,7 @@
 import WhatsAppIcon from './icons/WhatsAppIcon'
 
 // Franco's WhatsApp Business number (replace with actual number)
-const WHATSAPP_NUMBER = '+5493571646525'
+const WHATSAPP_NUMBER = '+5493547563911'
 
 const WhatsAppButton = ({ property }) => {
   // Build pre-filled message
