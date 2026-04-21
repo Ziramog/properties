@@ -1,12 +1,20 @@
-import {
-  FaBed,
-  FaBath,
-  FaRulerCombined,
-  FaTimes,
-  FaCheck,
-  FaMapMarker,
-} from 'react-icons/fa';
+import BedIcon from './icons/BedIcon';
+import BathtubIcon from './icons/BathtubIcon';
+import AreaIcon from './icons/AreaIcon';
+import MapIcon from './icons/MapIcon';
 import PropertyMap from '@/components/PropertyMap';
+
+const CheckIcon = () => (
+  <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 16 16'>
+    <path stroke='#22c55e' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='m2.5 8 3.5 3.5 7.5-8' />
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 16 16'>
+    <path stroke='#E94560' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='m3 3 10 10M13 3 3 13' />
+  </svg>
+);
 
 const PropertyDetails = ({ property }) => {
   return (
@@ -15,7 +23,7 @@ const PropertyDetails = ({ property }) => {
         <div className='text-[#E94560] mb-4 font-medium'>{property.type}</div>
         <h1 className='text-3xl font-bold mb-4 text-[#1A1A2E]'>{property.name}</h1>
         <div className='text-gray-500 mb-4 flex align-middle justify-center md:justify-start'>
-          <FaMapMarker className='text-[#E94560] mt-1 mr-1' />
+          <MapIcon className="text-[#E94560] mt-1 mr-1 w-4 h-4" />
           <p className='text-[#E94560]'>
             {property.location.street}, {property.location.city}{' '}
             {property.location.state}
@@ -34,21 +42,21 @@ const PropertyDetails = ({ property }) => {
         <h3 className='text-lg font-bold mb-6 text-[#1A1A2E]'>Descripción y Detalles</h3>
         <div className='flex justify-center gap-4 text-[#E94560] mb-4 text-xl space-x-9'>
           <p>
-            <FaBed className='inline-block mr-2' /> {property.beds}{' '}
+            <BedIcon className='inline-block mr-2 w-5 h-5' /> {property.beds}{' '}
             <span className='hidden sm:inline'>Dorm.</span>
           </p>
           <p>
-            <FaBath className='inline-block mr-2' /> {property.baths}{' '}
-            <span className='hidden sm:inline'>Baños</span>
+            <BathtubIcon className='inline-block mr-2 w-5 h-5' /> {property.baths}{' '}
+            <span className='hidden sm:inline'>Ba&ntilde;os</span>
           </p>
           <p>
-            <FaRulerCombined className='inline-block mr-2' />
+            <AreaIcon className='inline-block mr-2 w-5 h-5' />
             {property.square_feet}{' '}
-            <span className='hidden sm:inline'>m²</span>
+            <span className='hidden sm:inline'>m&sup2;</span>
           </p>
           {property.garage && (
             <p>
-              <FaCheck className='inline-block mr-2' /> {property.garage}{' '}
+              <CheckIcon /> {property.garage}{' '}
               <span className='hidden sm:inline'>Garage</span>
             </p>
           )}
@@ -95,7 +103,7 @@ const PropertyDetails = ({ property }) => {
           <ul className='grid grid-cols-2 md:grid-cols-3 list-none space-y-2'>
             {property.services.map((service, index) => (
               <li key={index}>
-                <FaCheck className='inline-block text-green-600 mr-2' /> {service}
+                <CheckIcon /> {service}
               </li>
             ))}
           </ul>
@@ -115,7 +123,7 @@ const PropertyDetails = ({ property }) => {
         <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 list-none space-y-2'>
           {property.amenities.map((amenity, index) => (
             <li key={index}>
-              <FaCheck className='inline-block text-green-600 mr-2' /> {amenity}
+              <CheckIcon /> {amenity}
             </li>
           ))}
         </ul>
