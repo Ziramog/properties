@@ -1,8 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import BedIcon from './icons/BedIcon';
-import BathtubIcon from './icons/BathtubIcon';
-import AreaIcon from './icons/AreaIcon';
+import { FaBed, FaBath, FaRulerCombined } from 'react-icons/fa';
 
 const PropertyCard = ({ property, isSelected = false, onMouseEnter, onMouseLeave }) => {
   const getRateDisplay = () => {
