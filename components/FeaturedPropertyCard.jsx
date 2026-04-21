@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaBed, FaBath, FaRulerCombined } from 'react-icons/fa';
+import BedIcon from './icons/BedIcon';
+import BathtubIcon from './icons/BathtubIcon';
+import AreaIcon from './icons/AreaIcon';
 
 const FeaturedPropertyCard = ({ property }) => {
   const getRateDisplay = () => {
@@ -59,21 +61,21 @@ const FeaturedPropertyCard = ({ property }) => {
 
         <div className="flex items-center gap-4 text-sm text-gray-600 pt-3 border-t">
           {property.beds != null && (
-            <span className="flex items-center gap-1">
-              <FaBed className="text-[#E94560]" />
-              {property.beds} <span className="hidden sm:inline">Dorm.</span>
+            <span className='flex items-center gap-1.5'>
+              <BedIcon className='w-4 h-4' />
+              {property.beds} <span className='hidden sm:inline'>Dorm.</span>
             </span>
           )}
           {property.baths != null && (
-            <span className="flex items-center gap-1">
-              <FaBath className="text-[#E94560]" />
-              {property.baths} <span className="hidden sm:inline">Baños</span>
+            <span className='flex items-center gap-1.5'>
+              <BathtubIcon className='w-4 h-4' />
+              {property.baths} <span className='hidden sm:inline'>Ba&ntilde;os</span>
             </span>
           )}
           {property.square_feet != null && (
-            <span className="flex items-center gap-1">
-              <FaRulerCombined className="text-[#E94560]" />
-              {property.square_feet} <span className="hidden sm:inline">m²</span>
+            <span className='flex items-center gap-1.5'>
+              <AreaIcon className='w-4 h-4' />
+              {property.square_feet} <span className='hidden sm:inline'>m&sup2;</span>
             </span>
           )}
         </div>

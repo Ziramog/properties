@@ -1,6 +1,8 @@
 import Hero from '@/components/Hero';
 import FeaturedProperties from '@/components/FeaturedProperties';
 import MapProperties from '@/components/MapProperties';
+import Testimonials from '@/components/Testimonials';
+import Clients from '@/components/Clients';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 
@@ -115,6 +117,8 @@ const HomePage = async () => {
       <Hero />
       <MapProperties initialProperties={serializedProperties} />
       <FeaturedProperties />
+      <Testimonials />
+      <Clients />
     </>
   );
 };
