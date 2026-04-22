@@ -3,38 +3,31 @@
 import { useState } from 'react'
 import Image from 'next/image'
 
-// TODO: Replace with real testimonials from Franco
 const TESTIMONIALS = [
   {
     id: 1,
-    name: 'María González',
-    role: 'Compradora — Casa en Jesús María',
-    quote: 'Franco me acompañó en todo el proceso de compra. La atención fue impecable y encontré mi hogar ideal en tiempo récord.',
-    avatar: null,
+    name: 'Maxi Ciappini',
+    role: 'Grido',
+    quote: 'Excelente atención y servicios muy profesional la mejor inmobiliaria...',
+    avatar: '/images/testimonials/Maxi-Ciappini-20180725_190637.jpg',
   },
   {
     id: 2,
-    name: 'Roberto Fernández',
-    role: 'Vendedor — Departamento en Villa General Belgrano',
-    quote: 'Profesionalismo total. Vendieron mi propiedad en menos de 60 días y el proceso fue透明 y sin sorpresas.',
-    avatar: null,
+    name: 'Laura Malpeli de Jordaan',
+    role: 'Styletto',
+    quote: 'Excelente atención, sumamente recomendable.',
+    avatar: '/images/testimonials/Laura-Malpeli-20180725_190653.jpg',
   },
   {
     id: 3,
-    name: 'Laura Mazzoni',
-    role: 'Inversora — 3 departamentos en Córdoba Capital',
-    quote: 'Confío en Roggero & Roma para todas mis operaciones inmobiliarias. El conocimiento del mercado local es incomparable.',
-    avatar: null,
+    name: 'Mario Larizzate',
+    role: 'Farmacia Sierras',
+    quote: 'Excelencia en inmobiliaria. Los recomiendo.',
+    avatar: '/images/testimonials/Mario-Larizzate-20180725_190720.jpg',
   },
 ]
 
 const TestimonialCard = ({ testimonial, isActive }) => {
-  const initials = testimonial.name
-    .split(' ')
-    .map(n => n[0])
-    .join('')
-    .slice(0, 2)
-
   return (
     <div
       className={`
@@ -55,9 +48,19 @@ const TestimonialCard = ({ testimonial, isActive }) => {
 
       {/* Author */}
       <div className='flex items-center gap-3'>
-        <div className='w-10 h-10 rounded-full bg-[#E94560] flex items-center justify-center text-white font-bold text-sm'>
-          {initials}
-        </div>
+        {testimonial.avatar ? (
+          <Image
+            src={testimonial.avatar}
+            alt={testimonial.name}
+            width={40}
+            height={40}
+            className='w-10 h-10 rounded-full object-cover'
+          />
+        ) : (
+          <div className='w-10 h-10 rounded-full bg-[#E94560] flex items-center justify-center text-white font-bold text-sm'>
+            {testimonial.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+          </div>
+        )}
         <div className='text-left'>
           <p className='font-semibold text-[#1A1A2E] text-sm'>{testimonial.name}</p>
           <p className='text-xs text-gray-500'>{testimonial.role}</p>
