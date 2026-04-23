@@ -28,7 +28,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto flex items-center justify-between px-3 md:px-12 py-5 md:py-6">
         {/* Logo */}
         <Link className="flex flex-shrink-0 items-center" href="/">
-          <Image className="h-12 md:h-14 w-auto brightness-0 invert" src={logo} alt="Roggero & Roma" />
+          <Image className="h-[72px] md:h-[84px] w-auto brightness-0 invert" src={logo} alt="Roggero & Roma" />
         </Link>
 
         {/* Desktop Nav */}
