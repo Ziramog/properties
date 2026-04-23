@@ -1,6 +1,5 @@
 'use client';
-
-import Image from 'next/image';
+import ScrollReveal from '@/components/shared/ScrollReveal';
 
 const CLIENTS = [
   { id: 1, name: 'DINO', logo: '/images/clients/DINO-GRIS-169x169.png' },
@@ -11,35 +10,32 @@ const CLIENTS = [
 ];
 
 const ClientMarquee = () => {
-  // Double the items for seamless loop
   const items = [...CLIENTS, ...CLIENTS];
 
   return (
-    <section className="bg-white py-10 border-t border-gray-100 overflow-hidden">
-      <div className="max-w-5xl mx-auto px-4 mb-6">
-        <p className="text-center text-sm font-medium text-gray-400 uppercase tracking-widest">
+    <section className="bg-white py-14 border-t border-[var(--color-border)] overflow-hidden">
+      <ScrollReveal>
+        <p className="text-center text-[13px] font-medium text-[var(--color-ink-tertiary)] uppercase tracking-widest mb-10">
           Empresas que confían en nosotros
         </p>
-      </div>
+      </ScrollReveal>
 
       <div className="relative">
         {/* Fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10" />
-        <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10" />
+        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white to-transparent z-10" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10" />
 
         {/* Scrolling track */}
-        <div className="flex animate-marquee items-center gap-16 w-max">
+        <div className="flex animate-marquee items-center gap-20 w-max">
           {items.map((client, i) => (
             <div
               key={`${client.id}-${i}`}
-              className="flex-shrink-0 w-28 h-16 relative grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+              className="flex-shrink-0 w-32 h-24 relative grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
             >
-              <Image
+              <img
                 src={client.logo}
                 alt={client.name}
-                fill
-                className="object-contain"
-                sizes="112px"
+                className="w-full h-full object-contain"
               />
             </div>
           ))}

@@ -1,175 +1,273 @@
 'use client';
 import { useState, useRef, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import PropertyCard from './PropertyCard';
-import FilterBar from './search/FilterBar';
 import ScrollReveal from './shared/ScrollReveal';
 import { filterProperties } from '@/utils/filterProperties';
 import { useFilters } from '@/hooks/useFilters';
+import { generateWhatsAppLink } from '@/utils/whatsapp';
+import { getPriceDisplay } from '@/utils/propertyDisplay';
+import { FaBed, FaBath, FaWhatsapp, FaExpand } from 'react-icons/fa';
 
 const MapView = dynamic(() => import('./MapView'), {
   ssr: false,
   loading: () => (
-    <div className="h-full w-full flex items-center justify-center bg-gray-100 rounded-xl">
-      <div className="flex flex-col items-center gap-2 text-gray-400">
-        <div className="w-10 h-10 border-2 border-gray-300 border-t-primary rounded-full animate-spin" />
-        <span className="text-sm">Cargando mapa...</span>
+    <div className="h-full w-full flex items-center justify-center bg-[#E8E6E0]">
+      <div className="flex flex-col items-center gap-3 text-[var(--color-ink-tertiary)]">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-12 h-12 opacity-50">
+          <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+          <line x1="8" y1="2" x2="8" y2="18"/>
+          <line x1="16" y1="6" x2="16" y2="22"/>
+        </svg>
+        <span className="text-sm font-medium uppercase tracking-widest">Cargando mapa...</span>
       </div>
     </div>
   ),
 });
 
-const MapProperties = ({ initialProperties = [] }) => {
-  const [selectedPropertyId, setSelectedPropertyId] = useState(null);
-  const [showMap, setShowMap] = useState(false);
-  const { filters, updateFilter, resetFilters, activeCount, hasActiveFilters } = useFilters();
-  const mapRef = useRef(null);
-  const cardRefs = useRef({});
+const PROPERTY_TYPES = ['Casa', 'Departamento', 'Terreno', 'Campo', 'Local'];
+const PRICE_PRESETS = [
+  { label: 'Todos los precios', min: '', max: '' },
+  { label: 'Hasta U$S 150k', min: '', max: '150000' },
+  { label: 'U$S 150k–300k', min: '150000', max: '300000' },
+  { label: '+ U$S 300k', min: '300000', max: '' },
+];
 
-  // Filter properties client-side
-  const filteredProperties = useMemo(
-    () => filterProperties(initialProperties, filters),
-    [initialProperties, filters]
-  );
+const EmptyState = () => (
+  <div className="flex flex-col items-center justify-center h-full text-center px-8">
+    <div className="w-16 h-16 rounded-full bg-[var(--color-surface-soft)] flex items-center justify-center mb-4">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 text-[var(--color-ink-tertiary)]">
+        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+        <line x1="8" y1="2" x2="8" y2="18"/>
+        <line x1="16" y1="6" x2="16" y2="22"/>
+      </svg>
+    </div>
+    <p className="text-[15px] font-semibold text-[var(--color-ink)] mb-2">Seleccioná una propiedad</p>
+    <p className="text-[13px] text-[var(--color-ink-tertiary)] leading-relaxed">
+      Hacé click en un pin del mapa para ver todos los detalles de la propiedad
+    </p>
+  </div>
+);
 
-  // Pin click → scroll to card
-  const handleMarkerClick = useCallback((propertyId) => {
-    setSelectedPropertyId(propertyId);
-    const el = cardRefs.current[propertyId];
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }, []);
+const PropertyDetail = ({ property }) => {
+  if (!property) return <EmptyState />;
 
-  // Card hover → highlight pin
-  const handleCardHover = useCallback((propertyId) => {
-    setSelectedPropertyId(propertyId);
-  }, []);
-
-  // Card click → fly map to property
-  const handleCardClick = useCallback(
-    (propertyId) => {
-      const prop = initialProperties.find((p) => p._id === propertyId);
-      if (prop && mapRef.current) {
-        const lat = prop.location?.lat;
-        const lng = prop.location?.lng;
-        if (lat && lng) {
-          mapRef.current.flyTo([lat, lng], 15);
-        }
-      }
-    },
-    [initialProperties]
-  );
+  const price = getPriceDisplay(property);
+  const image = property.images?.[0] || '/images/property-placeholder.jpg';
 
   return (
-    <section className="bg-surface py-12 md:py-20">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        <ScrollReveal>
-          <div className="mb-8">
-            <p className="text-primary font-bold text-sm uppercase tracking-widest mb-3">Mapa interactivo</p>
-            <h2 className="font-heading text-3xl md:text-4xl font-extrabold text-heading mb-4 tracking-tight">
+    <div className="flex flex-col h-full overflow-y-auto scrollbar-hide">
+      {/* Full-width image */}
+      <div className="relative h-[280px] bg-[var(--color-surface-soft)] flex-shrink-0 overflow-hidden">
+        <img
+          src={image}
+          alt={property.name}
+          className="w-full h-full object-cover"
+        />
+        {/* Status badge */}
+        {property.status && (
+          <div className="absolute top-3 left-3">
+            <span className={`text-[11px] font-bold px-[10px] py-1 rounded-[6px] uppercase tracking-wider ${
+              property.status === 'available' ? 'bg-[var(--color-success-bg)] text-[var(--color-success)]' :
+              property.status === 'rented' ? 'bg-[var(--color-warn-bg)] text-[var(--color-warn)]' :
+              'bg-white text-[var(--color-brand)] border border-[var(--color-brand)]'
+            }`}>
+              {property.status === 'available' ? 'Disponible' : property.status === 'rented' ? 'Arrendado' : 'A consultar'}
+            </span>
+          </div>
+        )}
+        {/* Expand icon */}
+        <div className="absolute top-3 right-3 w-8 h-8 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center">
+          <FaExpand className="w-4 h-4 text-white" />
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 px-6 py-5 flex flex-col gap-4">
+        {/* Price */}
+        <div>
+          <p className="text-[28px] font-bold text-[var(--color-ink)] leading-tight">
+            {price}
+          </p>
+          <p className="text-[15px] text-[var(--color-ink-secondary)] mt-1">
+            {property.name}
+          </p>
+        </div>
+
+        {/* Location */}
+        <div className="flex items-center gap-2 text-[13px] text-[var(--color-ink-tertiary)]">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 flex-shrink-0">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          {property.location?.city}
+        </div>
+
+        {/* Specs row */}
+        <div className="flex items-center gap-5 text-[13px] font-medium text-[var(--color-ink-secondary)] border-t border-b border-[var(--color-border)] py-3">
+          {property.beds != null && (
+            <span className="flex items-center gap-1.5">
+              <FaBed className="w-4 h-4 text-[var(--color-ink-tertiary)]" />
+              {property.beds} Dorm.
+            </span>
+          )}
+          {property.baths != null && (
+            <span className="flex items-center gap-1.5">
+              <FaBath className="w-4 h-4 text-[var(--color-ink-tertiary)]" />
+              {property.baths} Baños
+            </span>
+          )}
+          {property.area && (
+            <span className="flex items-center gap-1.5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-[var(--color-ink-tertiary)]">
+                <polyline points="15 3 21 3 21 9"/>
+                <polyline points="9 21 3 21 3 15"/>
+                <line x1="21" y1="3" x2="14" y2="10"/>
+                <line x1="3" y1="21" x2="10" y2="14"/>
+              </svg>
+              {property.area} m²
+            </span>
+          )}
+          {property.totalArea && (
+            <span className="flex items-center gap-1.5 text-[var(--color-ink-tertiary)]">
+              {property.totalArea} m² total
+            </span>
+          )}
+        </div>
+
+        {/* Description */}
+        {property.description && (
+          <p className="text-[13px] text-[var(--color-ink-secondary)] leading-relaxed line-clamp-4 flex-shrink-0">
+            {property.description}
+          </p>
+        )}
+
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* CTA Buttons */}
+        <div className="flex flex-col gap-2 pt-2 border-t border-[var(--color-border)]">
+          <a
+            href={generateWhatsAppLink({ property })}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full h-[48px] bg-whatsapp hover:bg-whatsapp-hover text-white rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200 shadow-md"
+          >
+            <FaWhatsapp className="w-5 h-5" />
+            Consultar por WhatsApp
+          </a>
+          <a
+            href={`/properties/${property._id}`}
+            className="flex items-center justify-center gap-2 w-full h-[48px] bg-[var(--color-ink)] hover:bg-[var(--color-ink-secondary)] text-white rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200"
+          >
+            Ver propiedad completa
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const MapProperties = ({ initialProperties = [] }) => {
+  const [selectedPropertyId, setSelectedPropertyId] = useState(null);
+  const [activeType, setActiveType] = useState('Casa');
+  const [activePrice, setActivePrice] = useState('Todos los precios');
+  const { filters } = useFilters();
+  const mapRef = useRef(null);
+
+  const filteredProperties = useMemo(
+    () => filterProperties(initialProperties, { ...filters, type: activeType }),
+    [initialProperties, filters, activeType]
+  );
+
+  const selectedProperty = useMemo(
+    () => initialProperties.find((p) => p._id === selectedPropertyId) || null,
+    [initialProperties, selectedPropertyId]
+  );
+
+  const handleMarkerClick = useCallback((propertyId) => {
+    setSelectedPropertyId(propertyId);
+    const prop = initialProperties.find((p) => p._id === propertyId);
+    if (prop && mapRef.current) {
+      const lat = prop.location?.lat;
+      const lng = prop.location?.lng;
+      if (lat && lng) mapRef.current.flyTo([lat, lng], 15);
+    }
+  }, [initialProperties]);
+
+  return (
+    <section className="bg-[var(--color-surface-soft)] py-20 px-6" id="mapa">
+      <div className="max-w-7xl mx-auto">
+        {/* Section Header */}
+        <div className="mb-6">
+          <ScrollReveal>
+            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] block mb-3">
+              MAPA INTERACTIVO
+            </span>
+          </ScrollReveal>
+          <ScrollReveal delay={50}>
+            <h2 className="text-[52px] font-bold text-[var(--color-ink)] leading-[1.1] tracking-[-0.01em] mb-6">
               Explorá en el mapa
             </h2>
+          </ScrollReveal>
 
-            {/* SaaS-style filter bar */}
-            <FilterBar
-              properties={initialProperties}
-              filters={filters}
-              updateFilter={updateFilter}
-              resetFilters={resetFilters}
-              activeCount={activeCount}
-              hasActiveFilters={hasActiveFilters}
-              filteredCount={filteredProperties.length}
-            />
+          {/* Filter pills */}
+          <ScrollReveal delay={100}>
+            <div className="flex flex-wrap items-center gap-2.5 mb-3">
+              {PROPERTY_TYPES.map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setActiveType(type)}
+                  className={`h-9 px-5 bg-white border text-[13px] font-medium rounded-full transition-all duration-150 ${
+                    activeType === type
+                      ? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white'
+                      : 'border-[var(--color-border)] text-[var(--color-ink-secondary)] hover:border-[var(--color-border-strong)]'
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+
+              <div className="w-px h-5 bg-[var(--color-border)] flex-shrink-0 mx-1" />
+
+              {/* Price group */}
+              <div className="flex items-center bg-black/[0.04] rounded-full px-1.5 py-1 gap-1">
+                {PRICE_PRESETS.map((preset) => (
+                  <button
+                    key={preset.label}
+                    onClick={() => setActivePrice(preset.label)}
+                    className={`h-[30px] px-3 text-[13px] font-medium rounded-full transition-all duration-150 ${
+                      activePrice === preset.label
+                        ? 'bg-[var(--color-brand)] text-white'
+                        : 'text-[var(--color-ink-secondary)] hover:bg-black/[0.06]'
+                    }`}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+
+        {/* Map + Sidebar Layout */}
+        <ScrollReveal delay={150}>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] h-[560px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)]">
+            {/* Map */}
+            <div className="relative bg-[#E8E6E0] overflow-hidden">
+              <MapView
+                ref={mapRef}
+                properties={filteredProperties}
+                onMarkerClick={handleMarkerClick}
+                selectedId={selectedPropertyId}
+              />
+            </div>
+
+            {/* Sidebar — detail view */}
+            <div className="bg-white border-l border-[var(--color-border)] flex flex-col overflow-hidden">
+              <PropertyDetail property={selectedProperty} />
+            </div>
           </div>
         </ScrollReveal>
-
-        {/* Mobile map toggle */}
-        <div className="lg:hidden mb-4">
-          <button
-            onClick={() => setShowMap(!showMap)}
-            className="w-full py-3.5 bg-heading text-white rounded-xl font-bold flex items-center justify-center gap-2.5 hover:bg-heading/90 transition-all duration-200 shadow-md"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-            </svg>
-            {showMap ? 'Ocultar Mapa' : 'Ver Mapa'}
-          </button>
-        </div>
-
-        {/* Split view: Map + Cards */}
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Map */}
-          <div
-            className={`${
-              showMap ? 'block' : 'hidden'
-            } lg:block lg:w-[55%] h-[500px] lg:h-[700px] bg-gray-100 rounded-2xl overflow-hidden sticky top-24 shadow-card border border-gray-200/50`}
-          >
-            <MapView
-              ref={mapRef}
-              properties={filteredProperties}
-              onMarkerClick={handleMarkerClick}
-              selectedId={selectedPropertyId}
-            />
-          </div>
-
-          {/* Property cards */}
-          <div className="lg:w-[45%]">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm text-gray-500">
-                <span className="font-semibold text-navy">{filteredProperties.length}</span>{' '}
-                propiedades
-              </p>
-              <select
-                value={filters.sort || 'newest'}
-                onChange={(e) => updateFilter('sort', e.target.value)}
-                className="text-xs border border-gray-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-              >
-                <option value="newest">Más recientes</option>
-                <option value="price_asc">Menor precio</option>
-                <option value="price_desc">Mayor precio</option>
-              </select>
-            </div>
-
-            <div className="space-y-5 max-h-[700px] overflow-y-auto pr-1 scrollbar-hide">
-              {filteredProperties.length === 0 ? (
-                <div className="text-center py-16">
-                  <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                  <h3 className="text-lg font-semibold text-navy mb-2">
-                    No encontramos propiedades
-                  </h3>
-                  <p className="text-sm text-gray-500 mb-4">
-                    Probá ampliando tus filtros o buscando en otra zona
-                  </p>
-                  <button
-                    onClick={resetFilters}
-                    className="btn-primary text-sm"
-                  >
-                    Limpiar filtros
-                  </button>
-                </div>
-              ) : (
-                filteredProperties.map((property) => (
-                  <div
-                    key={property._id}
-                    ref={(el) => {
-                      cardRefs.current[property._id] = el;
-                    }}
-                  >
-                    <PropertyCard
-                      property={property}
-                      isSelected={selectedPropertyId === property._id}
-                      onMouseEnter={() => handleCardHover(property._id)}
-                      onMouseLeave={() => setSelectedPropertyId(null)}
-                    />
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

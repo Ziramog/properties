@@ -6,10 +6,10 @@ const SellerCTA = () => {
   return (
     <section className="bg-white py-20 px-6">
       <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
           {/* Sell CTA — Primary */}
           <ScrollReveal delay={100}>
-            <div className="bg-[var(--color-surface-dark)] rounded-3xl p-10 md:p-12 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_60px_rgba(0,0,0,0.28)]">
+            <div className="bg-[var(--color-surface-dark)] rounded-3xl p-10 md:p-12 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_60px_rgba(0,0,0,0.28)] h-full">
               {/* Icon */}
               <div className="w-14 h-14 bg-[rgba(242,107,46,0.15)] rounded-xl flex items-center justify-center mb-6">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7 text-[var(--color-brand)]">
@@ -30,7 +30,7 @@ const SellerCTA = () => {
               </h3>
 
               {/* Body */}
-              <p className="text-[15px] font-normal text-white/65 leading-[1.6] mb-8">
+              <p className="text-[15px] font-normal text-white/65 leading-[1.6] mb-8 flex-1">
                 Te ayudamos a valuar tu propiedad con el mercado actual y te acompañamos en cada paso del proceso de venta.
               </p>
 
@@ -48,7 +48,7 @@ const SellerCTA = () => {
 
           {/* Invest CTA — Secondary */}
           <ScrollReveal delay={200}>
-            <div className="bg-[var(--color-surface-dark)] border border-[rgba(255,255,255,0.08)] rounded-3xl p-10 md:p-12 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_60px_rgba(0,0,0,0.28)]">
+            <div className="bg-[var(--color-surface-dark)] border border-[rgba(255,255,255,0.08)] rounded-3xl p-10 md:p-12 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_60px_rgba(0,0,0,0.28)] h-full">
               {/* Icon */}
               <div className="w-14 h-14 bg-[rgba(242,107,46,0.10)] rounded-xl flex items-center justify-center mb-6">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7 text-[var(--color-brand)]">
@@ -64,13 +64,13 @@ const SellerCTA = () => {
               </p>
 
               {/* Heading */}
-              <h3 className="text-[26px] font-bold text-white leading-tight mb-3"
+              <h3 className="text-[30px] font-bold text-white leading-tight mb-3"
                 style={{ fontFamily: 'var(--font-display)' }}>
                 ¿Buscás invertir?
               </h3>
 
               {/* Body */}
-              <p className="text-[15px] font-normal text-white/65 leading-[1.6] mb-8">
+              <p className="text-[15px] font-normal text-white/65 leading-[1.6] mb-8 flex-1">
                 Encontrá las mejores oportunidades de inversión en propiedades seleccionadas por nuestro equipo de análisis de mercado.
               </p>
 

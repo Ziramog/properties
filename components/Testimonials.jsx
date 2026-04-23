@@ -1,29 +1,33 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 
 const TESTIMONIALS = [
   {
     id: 1,
-    name: 'Carolina Martínez',
-    role: 'Compradora, Alta Gracia',
-    quote: 'Encontramos la casa perfecta en Alta Gracia después de meses de búsqueda infructuosa con otras inmobiliarias. El equipo de Roggero & Roma nos acompañó en cada paso del proceso.',
+    name: 'Maxi Ciappini',
+    role: 'Grido',
+    quote: 'Excelente atención y servicios. Muy profesional, la mejor inmobiliaria de la zona. Nos acompañaron en todo el proceso de compra.',
     rating: 5,
+    avatar: '/images/testimonials/Maxi-Ciappini-20180725_190637.jpg',
   },
   {
     id: 2,
-    name: 'Roberto García López',
-    role: 'Vendedor, Córdoba Capital',
-    quote: 'Vender mi propiedad fue mucho más fácil de lo que esperaba. Me mantuvieron informado en todo momento y cerraron la operación en tiempo récord. Totalmente recomendados.',
+    name: 'Laura Malpeli de Jordaan',
+    role: 'Styletto',
+    quote: 'Excelente atención, sumamente recomendable. Encontramos exactamente lo que buscábamos gracias a su asesoramiento personalizado.',
     rating: 5,
     featured: true,
+    avatar: '/images/testimonials/Laura-Malpeli-20180725_190653.jpg',
   },
   {
     id: 3,
-    name: 'Ana Pérez',
-    role: 'Inversora, Buenos Aires',
-    quote: 'Como inversora, necesitaba alguien que conociera el mercado local. Franco y su equipo identificaron oportunidades que otras inmobiliarias ni siquiera mencionaron.',
+    name: 'Mario Larizzate',
+    role: 'Farmacia Sierras',
+    quote: 'Excelencia en inmobiliaria. Los recomiendo sin dudar. Un equipo que realmente entiende las necesidades de cada cliente.',
     rating: 5,
+    avatar: '/images/testimonials/Mario-Larizzate-20180725_190720.jpg',
   },
 ];
 
@@ -100,8 +104,14 @@ const Testimonials = () => {
 
                 {/* Author */}
                 <div className="flex items-center gap-3 pt-5 border-t border-[var(--color-border)] relative z-10">
-                  <div className="w-11 h-11 rounded-full bg-[var(--color-brand-light)] border-2 border-[var(--color-brand-light)] flex items-center justify-center text-[var(--color-brand)] font-bold text-sm flex-shrink-0">
-                    {t.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                  <div className="w-11 h-11 rounded-full overflow-hidden bg-[var(--color-brand-light)] flex items-center justify-center text-[var(--color-brand)] font-bold text-sm flex-shrink-0 border-2 border-[var(--color-brand-light)]">
+                    <Image
+                      src={t.avatar}
+                      alt={t.name}
+                      width={44}
+                      height={44}
+                      className="object-cover w-full h-full"
+                    />
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-[var(--color-ink)]">{t.name}</p>
@@ -139,8 +149,14 @@ const Testimonials = () => {
                     &ldquo;{t.quote}&rdquo;
                   </p>
                   <div className="flex items-center gap-3 pt-5 border-t border-[var(--color-border)] relative z-10">
-                    <div className="w-11 h-11 rounded-full bg-[var(--color-brand-light)] border-2 border-[var(--color-brand-light)] flex items-center justify-center text-[var(--color-brand)] font-bold text-sm flex-shrink-0">
-                      {t.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                    <div className="w-11 h-11 rounded-full overflow-hidden bg-[var(--color-brand-light)] border-2 border-[var(--color-brand-light)] flex items-center justify-center text-[var(--color-brand)] font-bold text-sm flex-shrink-0">
+                      <Image
+                        src={t.avatar}
+                        alt={t.name}
+                        width={44}
+                        height={44}
+                        className="object-cover w-full h-full"
+                      />
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-[var(--color-ink)]">{t.name}</p>
