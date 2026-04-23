@@ -114,7 +114,7 @@ const Hero = () => {
       {/* Search Bar */}
       <div className='absolute bottom-8 w-full z-20 px-6'>
         <div
-          className='mx-auto max-w-[880px] bg-black/20 backdrop-blur-xl border border-white/10 px-2 py-2 flex items-center gap-2'
+          className='mx-auto max-w-[880px] bg-black/20 backdrop-blur-xl border border-white/10 px-4 py-3 flex flex-col sm:flex-row items-center gap-3'
           style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
         >
           <form onSubmit={handleSubmit} className='flex items-center w-full gap-2'>
@@ -123,27 +123,27 @@ const Hero = () => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder='Explorá propiedades en Córdoba'
-              className='flex-1 bg-black/20 border border-white/10 text-white text-sm font-medium py-4 px-5 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary/30 transition-all outline-none placeholder:text-white/40'
+              className='flex-1 bg-black/20 border border-white/10 text-white text-sm font-medium py-3.5 px-5 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary/30 transition-all outline-none placeholder:text-white/40'
             />
+            {/* Desktop buscar — inline in bar */}
             <button
               type='submit'
-              className='hidden sm:flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-bold text-sm uppercase tracking-wider rounded-xl shrink-0 h-[52px] px-8 transition-all shadow-lg shadow-primary/30'
+              className='hidden sm:flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-bold text-sm uppercase tracking-wider rounded-xl shrink-0 h-[44px] px-6 transition-all shadow-lg shadow-primary/30'
             >
               <FaSearch className='w-4 h-4' />
               Buscar
             </button>
           </form>
+          {/* Mobile buscar pill — inside the bar */}
+          <button
+            type='button'
+            onClick={() => router.push('/properties')}
+            className='sm:hidden flex items-center justify-center gap-2 w-full bg-primary hover:bg-primary-hover text-white font-bold text-sm uppercase tracking-wider rounded-full py-3.5 px-8 transition-all shadow-lg shadow-primary/30'
+          >
+            <FaSearch className='w-4 h-4' />
+            Buscar ahora
+          </button>
         </div>
-
-        {/* Mobile floating buscar button */}
-        <button
-          type='button'
-          onClick={() => router.push('/properties')}
-          className='sm:hidden flex items-center justify-center gap-2 mx-auto mt-3 bg-black/20 backdrop-blur-xl border border-white/10 text-white font-bold text-sm uppercase tracking-wider rounded-full px-10 py-3.5 transition-all shadow-xl'
-        >
-          <FaSearch className='w-4 h-4' />
-          Buscar ahora
-        </button>
       </div>
 
       <style jsx>{`
