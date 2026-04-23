@@ -66,7 +66,7 @@ const Hero = () => {
       </div>
 
       {/* Content Block — upper 1/3 on mobile */}
-      <div className='absolute inset-0 flex flex-col items-center sm:items-center w-full text-center px-6 z-10 pt-24 pb-40 sm:pt-0 sm:pb-0'>
+      <div className='absolute inset-0 flex flex-col items-center sm:items-center w-full text-center px-6 z-10 pt-[88px] pb-40 sm:pt-0 sm:pb-0'>
 
         {/* Eyebrow */}
         <motion.div
