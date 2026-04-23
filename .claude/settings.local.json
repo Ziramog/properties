@@ -10,7 +10,16 @@
       "Bash(git push *)",
       "Bash(ghapi repos/Ziramog/properties/deployments)",
       "Bash(vercel logs *)",
-      "Bash(vercel env *)"
+      "Bash(vercel env *)",
+      "Bash(gh run *)",
+      "mcp__claude_ai_Figma__get_design_context",
+      "WebFetch(domain:roggeroyroma.com.ar)",
+      "WebFetch(domain:stitch.withgoogle.com)",
+      "WebSearch",
+      "Skill(update-config)",
+      "Bash(npx minimax-mcp-js *)",
+      "Bash(npm install *)",
+      "WebFetch(domain:d6iwsnilyxh2.space.minimax.io)"
     ]
   }
 }

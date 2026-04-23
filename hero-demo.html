@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hero Demo — Stage 4</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="navbar.css" />
+  <link rel="stylesheet" href="hero.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-ui); }
+
+    /* Tall spacer for scroll testing */
+    .scroll-spacer {
+      height: 200vh;
+      background: var(--color-surface-soft);
+    }
+
+    .scroll-spacer-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 80px 48px;
+      text-align: center;
+    }
+
+    .scroll-spacer-content h2 {
+      font-size: var(--t-h2-size);
+      font-weight: var(--t-h2-weight);
+      color: var(--color-ink);
+      margin-bottom: 16px;
+    }
+
+    .scroll-spacer-content p {
+      font-size: var(--t-body-size);
+      color: var(--color-ink-secondary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================
+       NAVBAR (from Stage 3)
+       ============================================ -->
+  <nav class="navbar navbar-transparent" id="navbar">
+    <div class="navbar-inner">
+      <a href="/">
+        <img
+          src="https://placehold.co/160x40/ffffff/1A1A18?text=Roggero+%26+Roma"
+          alt="Roggero & Roma"
+          class="navbar-logo"
+        />
+      </a>
+      <div class="nav-links">
+        <a href="/" class="nav-link">Inicio</a>
+        <a href="/properties" class="nav-link">Propiedades</a>
+        <a href="/contact" class="nav-link">Contacto</a>
+        <button class="btn-primary navbar-cta">Ingresar</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Overlay Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="/" class="mobile-nav-link">Inicio</a>
+    <a href="/properties" class="mobile-nav-link">Propiedades</a>
+    <a href="/contact" class="mobile-nav-link">Contacto</a>
+    <div class="mobile-menu-cta">
+      <button class="btn-primary" style="width: 100%;">Ingresar</button>
+    </div>
+  </div>
+
+  <!-- ============================================
+       HERO SECTION
+       ============================================ -->
+  <section class="hero">
+
+    <!-- Background Photo -->
+    <img
+      class="hero-bg"
+      src="https://placehold.co/1920x1080/1C1C1A/1C1C1A"
+      alt="Córdoba landscape"
+    />
+
+    <!-- Gradient Overlay -->
+    <div class="hero-overlay"></div>
+
+    <!-- Content Block -->
+    <div class="hero-content">
+      <!-- Eyebrow -->
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-line"></span>
+        <span>CÓRDOBA, ARGENTINA</span>
+        <span class="hero-eyebrow-line"></span>
+      </div>
+
+      <!-- Headline Line 1 -->
+      <h1 class="hero-headline">Tu próximo hogar</h1>
+
+      <!-- Headline Line 2 -->
+      <h2 class="hero-headline-2">te está esperando</h2>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="hero-search">
+      <div class="hero-search-bar">
+        <div class="hero-filters">
+          <!-- Filter 1: Operación -->
+          <div class="hero-filter">
+            <span class="hero-filter-label">Operación</span>
+            <span class="hero-filter-value">
+              Venta
+              <svg class="hero-filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </span>
+          </div>
+          <!-- Filter 2: Tipo -->
+          <div class="hero-filter">
+            <span class="hero-filter-label">Tipo</span>
+            <span class="hero-filter-value">
+              Todos
+              <svg class="hero-filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </span>
+          </div>
+          <!-- Filter 3: Zona -->
+          <div class="hero-filter">
+            <span class="hero-filter-label">Zona</span>
+            <span class="hero-filter-value">
+              Córdoba
+              <svg class="hero-filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </span>
+          </div>
+          <!-- Filter 4: Precio -->
+          <div class="hero-filter">
+            <span class="hero-filter-label">Precio</span>
+            <span class="hero-filter-value">
+              Cualquiera
+              <svg class="hero-filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+        <!-- CTA Button -->
+        <button class="btn-primary hero-search-cta">BUSCAR</button>
+      </div>
+    </div>
+
+    <!-- Trust Strip -->
+    <div class="hero-trust">
+      <div class="hero-trust-item">
+        <span class="hero-trust-number">500+</span>
+        <span class="hero-trust-label">Propiedades</span>
+      </div>
+      <div class="hero-trust-sep"></div>
+      <div class="hero-trust-item">
+        <span class="hero-trust-number">10+</span>
+        <span class="hero-trust-label">Años de experiencia</span>
+      </div>
+      <div class="hero-trust-sep"></div>
+      <div class="hero-trust-item">
+        <span class="hero-trust-number">4.8</span>
+        <span class="hero-trust-label">Calificación</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============================================
+       TALL SPACER (scroll testing)
+       ============================================ -->
+  <div class="scroll-spacer">
+    <div class="scroll-spacer-content">
+      <h2>Sección de prueba — scroll para ver el navbar cambiar</h2>
+      <p>Después de 80px de scroll: fondo blanco con blur, logo normal, links en gris oscuro.</p>
+    </div>
+  </div>
+
+  <!-- ============================================
+       STAGE 4 JavaScript — Navbar Scroll + Hamburger
+       ============================================ -->
+  <script>
+    /* Navbar scroll listener */
+    const navbar = document.getElementById('navbar');
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    function handleScroll() {
+      if (window.scrollY > 80) {
+        navbar.classList.remove('navbar-transparent');
+        navbar.classList.add('navbar-scrolled');
+      } else {
+        navbar.classList.remove('navbar-scrolled');
+        navbar.classList.add('navbar-transparent');
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    /* Hamburger toggle */
+    hamburger.addEventListener('click', () => {
+      const isOpen = navbar.classList.contains('navbar-menu-open');
+      if (isOpen) {
+        navbar.classList.remove('navbar-menu-open');
+        mobileMenu.style.opacity = '0';
+        mobileMenu.style.pointerEvents = 'none';
+      } else {
+        navbar.classList.add('navbar-menu-open');
+        mobileMenu.style.opacity = '1';
+        mobileMenu.style.pointerEvents = 'all';
+      }
+    });
+
+    /* Close mobile menu on link click */
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navbar.classList.remove('navbar-menu-open');
+        mobileMenu.style.opacity = '0';
+        mobileMenu.style.pointerEvents = 'none';
+      });
+    });
+  </script>
+
+</body>
+</html>

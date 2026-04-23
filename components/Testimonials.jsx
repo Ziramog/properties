@@ -1,136 +1,170 @@
-'use client'
-
-import { useState } from 'react'
-import Image from 'next/image'
+'use client';
+import { useState, useEffect } from 'react';
+import ScrollReveal from '@/components/shared/ScrollReveal';
 
 const TESTIMONIALS = [
   {
     id: 1,
-    name: 'Maxi Ciappini',
-    role: 'Grido',
-    quote: 'Excelente atención y servicios muy profesional la mejor inmobiliaria...',
-    avatar: '/images/testimonials/Maxi-Ciappini-20180725_190637.jpg',
+    name: 'Carolina Martínez',
+    role: 'Compradora, Alta Gracia',
+    quote: 'Encontramos la casa perfecta en Alta Gracia después de meses de búsqueda infructuosa con otras inmobiliarias. El equipo de Roggero & Roma nos acompañó en cada paso del proceso.',
+    rating: 5,
   },
   {
     id: 2,
-    name: 'Laura Malpeli de Jordaan',
-    role: 'Styletto',
-    quote: 'Excelente atención, sumamente recomendable.',
-    avatar: '/images/testimonials/Laura-Malpeli-20180725_190653.jpg',
+    name: 'Roberto García López',
+    role: 'Vendedor, Córdoba Capital',
+    quote: 'Vender mi propiedad fue mucho más fácil de lo que esperaba. Me mantuvieron informado en todo momento y cerraron la operación en tiempo récord. Totalmente recomendados.',
+    rating: 5,
+    featured: true,
   },
   {
     id: 3,
-    name: 'Mario Larizzate',
-    role: 'Farmacia Sierras',
-    quote: 'Excelencia en inmobiliaria. Los recomiendo.',
-    avatar: '/images/testimonials/Mario-Larizzate-20180725_190720.jpg',
+    name: 'Ana Pérez',
+    role: 'Inversora, Buenos Aires',
+    quote: 'Como inversora, necesitaba alguien que conociera el mercado local. Franco y su equipo identificaron oportunidades que otras inmobiliarias ni siquiera mencionaron.',
+    rating: 5,
   },
-]
+];
 
-const TestimonialCard = ({ testimonial, isActive }) => {
-  return (
-    <div
-      className={`
-        absolute inset-0 flex flex-col items-center justify-center text-center
-        transition-all duration-500
-        ${isActive ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'}
-      `}
-    >
-      {/* Quote mark */}
-      <div className='text-6xl text-[#E94560] font-serif leading-none mb-4'>"</div>
+const StarIcon = () => (
+  <svg viewBox="0 0 24 24" className="w-4 h-4 text-[var(--color-brand)] fill-[var(--color-brand)]">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+  </svg>
+);
 
-      {/* Quote */}
-      <blockquote className='max-w-2xl'>
-        <p className='text-lg md:text-xl text-[#1A1A2E] leading-relaxed mb-6'>
-          {testimonial.quote}
-        </p>
-      </blockquote>
-
-      {/* Author */}
-      <div className='flex items-center gap-3'>
-        {testimonial.avatar ? (
-          <Image
-            src={testimonial.avatar}
-            alt={testimonial.name}
-            width={40}
-            height={40}
-            className='w-10 h-10 rounded-full object-cover'
-          />
-        ) : (
-          <div className='w-10 h-10 rounded-full bg-[#E94560] flex items-center justify-center text-white font-bold text-sm'>
-            {testimonial.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
-          </div>
-        )}
-        <div className='text-left'>
-          <p className='font-semibold text-[#1A1A2E] text-sm'>{testimonial.name}</p>
-          <p className='text-xs text-gray-500'>{testimonial.role}</p>
-        </div>
-      </div>
-    </div>
-  )
-}
+const QuoteMark = () => (
+  <svg viewBox="0 0 24 24" className="w-7 h-7 text-[var(--color-brand-light)] fill-current">
+    <path d="M10 0H0v10C0 15.522 4.478 20 10 20v-6C6.866 14 6 11.522 6 10V0zm10 0H20v10c0 5.522-4.478 10-10 10v-6c3.134 0 6-2.522 6-10V0z"/>
+  </svg>
+);
 
 const Testimonials = () => {
-  const [active, setActive] = useState(0)
+  const [active, setActive] = useState(0);
 
-  const prev = () => setActive(a => (a - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)
-  const next = () => setActive(a => (a + 1) % TESTIMONIALS.length)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((a) => (a + 1) % TESTIMONIALS.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <section className='bg-[#1A1A2E] py-16 px-4'>
-      <div className='max-w-4xl mx-auto'>
-        <div className='text-center mb-10'>
-          <h2 className='text-3xl md:text-4xl font-bold text-white mb-3'>
-            Lo que dicen nuestros clientes
-          </h2>
-          <p className='text-gray-400'>
-           Experiencias reales de personas que confiaron en nosotros
-          </p>
+    <section className="bg-white py-20 px-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Section Header */}
+        <div className="text-center mb-12">
+          <ScrollReveal>
+            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] block mb-3">
+              LO QUE DICEN NUESTROS CLIENTES
+            </span>
+          </ScrollReveal>
+          <ScrollReveal delay={50}>
+            <h2 className="text-[32px] font-semibold text-[var(--color-ink)] leading-tight tracking-[-0.01em] mb-3">
+              Experiencias reales
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <p className="text-[17px] font-normal text-[var(--color-ink-secondary)] leading-[1.7]">
+              Personas que encontraron su hogar con nosotros
+            </p>
+          </ScrollReveal>
         </div>
 
-        {/* Card */}
-        <div className='relative bg-white rounded-2xl p-8 md:p-12 min-h-[280px] overflow-hidden shadow-xl'>
+        {/* Desktop — 3 columns */}
+        <div className="hidden md:grid md:grid-cols-3 gap-6">
           {TESTIMONIALS.map((t, i) => (
-            <TestimonialCard key={t.id} testimonial={t} isActive={i === active} />
-          ))}
+            <ScrollReveal key={t.id} delay={i * 80}>
+              <div className={`
+                relative bg-white border rounded-2xl p-8 pb-10
+                ${t.featured
+                  ? 'bg-[var(--color-brand-muted)] border-[var(--color-brand)] -translate-y-2 shadow-[var(--shadow-card-hover)]'
+                  : 'border-[var(--color-border)] shadow-[var(--shadow-card)]'}
+              `}>
+                {/* Quote mark */}
+                <div className="absolute top-6 left-6">
+                  <QuoteMark />
+                </div>
 
-          {/* Navigation arrows */}
-          <button
-            onClick={prev}
-            className='absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-gray-100 hover:bg-[#E94560] hover:text-white transition-colors flex items-center justify-center text-[#1A1A2E]'
-            aria-label='Testimonio anterior'
-          >
-            <svg width='16' height='16' fill='none' stroke='currentColor' viewBox='0 0 16 16'>
-              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M10 3 6 8l4 5' />
-            </svg>
-          </button>
-          <button
-            onClick={next}
-            className='absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-gray-100 hover:bg-[#E94560] hover:text-white transition-colors flex items-center justify-center text-[#1A1A2E]'
-            aria-label='Siguiente testimonio'
-          >
-            <svg width='16' height='16' fill='none' stroke='currentColor' viewBox='0 0 16 16'>
-              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M6 3l4 5-4 5' />
-            </svg>
-          </button>
+                {/* Stars */}
+                <div className="flex gap-0.5 mb-4 relative z-10">
+                  {[...Array(t.rating)].map((_, s) => (
+                    <StarIcon key={s} />
+                  ))}
+                </div>
+
+                {/* Quote text */}
+                <p className="text-[15px] font-normal text-[var(--color-ink-secondary)] leading-[1.7] mb-6 relative z-10">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+
+                {/* Author */}
+                <div className="flex items-center gap-3 pt-5 border-t border-[var(--color-border)] relative z-10">
+                  <div className="w-11 h-11 rounded-full bg-[var(--color-brand-light)] border-2 border-[var(--color-brand-light)] flex items-center justify-center text-[var(--color-brand)] font-bold text-sm flex-shrink-0">
+                    {t.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-[var(--color-ink)]">{t.name}</p>
+                    <p className="text-xs text-[var(--color-ink-tertiary)]">{t.role}</p>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+          ))}
         </div>
 
-        {/* Dots */}
-        <div className='flex justify-center gap-2 mt-6'>
-          {TESTIMONIALS.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActive(i)}
-              className={`w-2.5 h-2.5 rounded-full transition-all ${
-                i === active ? 'bg-[#E94560] w-6' : 'bg-gray-600 hover:bg-gray-400'
-              }`}
-              aria-label={`Ir al testimonio ${i + 1}`}
-            />
-          ))}
+        {/* Mobile carousel */}
+        <div className="md:hidden">
+          <div className="relative min-h-[300px]">
+            {TESTIMONIALS.map((t, i) => (
+              <div key={t.id}
+                className={`absolute inset-0 flex flex-col transition-all duration-500 ${
+                  i === active ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'
+                }`}>
+                <div className={`
+                  relative bg-white border rounded-2xl p-7
+                  ${t.featured
+                    ? 'bg-[var(--color-brand-muted)] border-[var(--color-brand)]'
+                    : 'border-[var(--color-border)]'}
+                `}>
+                  <div className="absolute top-5 left-5">
+                    <QuoteMark />
+                  </div>
+                  <div className="flex gap-0.5 mb-4 relative z-10">
+                    {[...Array(t.rating)].map((_, s) => (
+                      <StarIcon key={s} />
+                    ))}
+                  </div>
+                  <p className="text-[15px] font-normal text-[var(--color-ink-secondary)] leading-[1.7] mb-6 relative z-10">
+                    &ldquo;{t.quote}&rdquo;
+                  </p>
+                  <div className="flex items-center gap-3 pt-5 border-t border-[var(--color-border)] relative z-10">
+                    <div className="w-11 h-11 rounded-full bg-[var(--color-brand-light)] border-2 border-[var(--color-brand-light)] flex items-center justify-center text-[var(--color-brand)] font-bold text-sm flex-shrink-0">
+                      {t.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-[var(--color-ink)]">{t.name}</p>
+                      <p className="text-xs text-[var(--color-ink-tertiary)]">{t.role}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-center gap-2 mt-6">
+            {TESTIMONIALS.map((_, i) => (
+              <button key={i} onClick={() => setActive(i)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === active ? 'bg-[var(--color-brand)] w-7' : 'bg-[var(--color-border)] w-2'
+                }`}
+                aria-label={`Ir al testimonio ${i + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Testimonials
+export default Testimonials;

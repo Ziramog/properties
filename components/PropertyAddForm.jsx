@@ -395,7 +395,7 @@ const PropertyAddForm = () => {
 
       <div>
         <button
-          className='bg-[#1a3c34] hover:bg-[#2d5a4a] text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline'
+          className='bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary/50'
           type='submit'
         >
           Agregar Propiedad

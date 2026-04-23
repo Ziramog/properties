@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Navbar Demo — Stage 3</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="navbar.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-ui); }
+
+    /* Hero placeholder — tall dark photo-like section */
+    .hero-placeholder {
+      height: 100vh;
+      background: linear-gradient(135deg, #1C1C1A 0%, #2D2D2A 50%, #1A1A18 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+      padding: 0 24px;
+    }
+
+    .hero-placeholder h1 {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.1;
+    }
+
+    .hero-placeholder p {
+      font-size: var(--t-body-size);
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scroll-hint span {
+      font-size: var(--t-small-size);
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .scroll-arrow {
+      width: 20px;
+      height: 20px;
+      border-right: 2px solid rgba(255,255,255,0.4);
+      border-bottom: 2px solid rgba(255,255,255,0.4);
+      transform: rotate(45deg);
+      animation: bounce 1.5s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: rotate(45deg) translateY(0); }
+      50% { transform: rotate(45deg) translateY(6px); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================
+       NAVBAR
+       ============================================ -->
+  <nav class="navbar navbar-transparent" id="navbar">
+
+    <div class="navbar-inner">
+
+      <!-- Logo -->
+      <a href="/">
+        <img
+          src="https://placehold.co/160x40/ffffff/1A1A18?text=Roggero+%26+Roma"
+          alt="Roggero & Roma"
+          class="navbar-logo"
+        />
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <div class="nav-links">
+        <a href="/" class="nav-link">Inicio</a>
+        <a href="/properties" class="nav-link">Propiedades</a>
+        <a href="/contact" class="nav-link">Contacto</a>
+        <button class="btn-primary navbar-cta">Ingresar</button>
+      </div>
+
+      <!-- Mobile Hamburger -->
+      <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+
+    </div>
+
+  </nav>
+
+  <!-- Mobile Overlay Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="/" class="mobile-nav-link">Inicio</a>
+    <a href="/properties" class="mobile-nav-link">Propiedades</a>
+    <a href="/contact" class="mobile-nav-link">Contacto</a>
+    <div class="mobile-menu-cta">
+      <button class="btn-primary" style="width: 100%;">Ingresar</button>
+    </div>
+  </div>
+
+  <!-- ============================================
+       HERO PLACEHOLDER (for scroll testing)
+       ============================================ -->
+  <section class="hero-placeholder">
+    <h1>Tu próximo hogar te está esperando</h1>
+    <p>Desplazate hacia abajo para activar el estado scrolled del navbar</p>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- Tall spacer to enable scrolling -->
+  <div style="height: 200vh; background: var(--color-surface-soft);">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 80px 48px; text-align: center;">
+      <p style="font-size: var(--t-h2-size); font-weight: 600; color: var(--color-ink); margin-bottom: 16px;">
+        Sección de prueba — scroll para ver el navbar cambiar
+      </p>
+      <p style="font-size: var(--t-body-size); color: var(--color-ink-secondary);">
+        Después de 80px de scroll: fondo blanco con blur, logo normal, links en gris oscuro.
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================
+       STAGE 3 JavaScript — Scroll & Hamburger
+       ============================================ -->
+  <script>
+    const navbar = document.getElementById('navbar');
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    /* Scroll listener — transparent / scrolled toggle */
+    function handleScroll() {
+      if (window.scrollY > 80) {
+        navbar.classList.remove('navbar-transparent');
+        navbar.classList.add('navbar-scrolled');
+      } else {
+        navbar.classList.remove('navbar-scrolled');
+        navbar.classList.add('navbar-transparent');
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); /* run once on load */
+
+    /* Hamburger — menu open/close */
+    hamburger.addEventListener('click', () => {
+      const isOpen = navbar.classList.contains('navbar-menu-open');
+      if (isOpen) {
+        navbar.classList.remove('navbar-menu-open');
+        mobileMenu.style.opacity = '0';
+        mobileMenu.style.pointerEvents = 'none';
+      } else {
+        navbar.classList.add('navbar-menu-open');
+        mobileMenu.style.opacity = '1';
+        mobileMenu.style.pointerEvents = 'all';
+      }
+    });
+
+    /* Close mobile menu on link click */
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navbar.classList.remove('navbar-menu-open');
+        mobileMenu.style.opacity = '0';
+        mobileMenu.style.pointerEvents = 'none';
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="RR Real Estate — Encontrá tu próximo hogar en Córdoba, Argentina. Propiedades en venta y alquiler. Casas, departamentos, terrenos y campos." />
+  <title>RR Real Estate — Córdoba, Argentina</title>
+
+  <!-- Fonts first -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400;1,600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- CSS cascade -->
+  <link rel="stylesheet" href="design-system.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="navbar.css" />
+  <link rel="stylesheet" href="hero.css" />
+  <link rel="stylesheet" href="category-cards.css" />
+  <link rel="stylesheet" href="property-card.css" />
+  <link rel="stylesheet" href="stats-bar.css" />
+  <link rel="stylesheet" href="dual-cta.css" />
+  <link rel="stylesheet" href="map-section.css" />
+  <link rel="stylesheet" href="testimonials.css" />
+  <link rel="stylesheet" href="agents.css" />
+  <link rel="stylesheet" href="footer.css" />
+  <link rel="stylesheet" href="floating.css" />
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-ui); }
+
+    /* Scroll-reveal base state */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+    [data-reveal].visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Card stagger via --i */
+    [data-reveal][style*="--i"] {
+      transition-delay: calc(var(--i, 0) * 80ms);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       1. NAVBAR
+       ============================================================ -->
+  <nav class="navbar navbar-transparent" id="navbar">
+    <div class="navbar-inner">
+      <a href="/">
+        <img
+          src="https://placehold.co/160x40/ffffff/1A1A18?text=Roggero+%26+Roma"
+          alt="Roggero & Roma"
+          class="navbar-logo"
+        />
+      </a>
+      <div class="nav-links">
+        <a href="#propiedades" class="nav-link">Propiedades</a>
+        <a href="#mapa" class="nav-link">Mapa</a>
+        <a href="#equipo" class="nav-link">Equipo</a>
+        <a href="#contacto" class="nav-link">Contacto</a>
+        <button class="btn-primary navbar-cta">Ingresar</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Overlay Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#propiedades" class="mobile-nav-link">Propiedades</a>
+    <a href="#mapa" class="mobile-nav-link">Mapa</a>
+    <a href="#equipo" class="mobile-nav-link">Equipo</a>
+    <a href="#contacto" class="mobile-nav-link">Contacto</a>
+    <div class="mobile-menu-cta">
+      <button class="btn-primary" style="width: 100%;">Ingresar</button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       2. HERO
+       ============================================================ -->
+  <section class="hero">
+    <img
+      class="hero-bg"
+      src="https://placehold.co/1920x1080/1C1C1A/2D2D2A?text=."
+      alt="Córdoba landscape"
+    />
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-line"></span>
+        <span>CÓRDOBA, ARGENTINA</span>
+        <span class="hero-eyebrow-line"></span>
+      </div>
+      <h1 class="hero-headline">Tu próximo hogar</h1>
+      <h2 class="hero-headline-2">te está esperando</h2>
+    </div>
+
+    <div class="hero-search">
+      <div class="hero-search-bar">
+        <div class="hero-filters">
+          <div class="hero-filter">
+            <span class="hero-filter-label">Operación</span>
+            <span class="hero-filter-value">
+              Venta
+              <svg class="hero-filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
+          </div>
+          <div class="hero-filter">
+            <span class="hero-filter-label">Tipo</span>
+            <span class="hero-filter-value">
+              Todos
+              <svg class="hero-filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
+          </div>
+          <div class="hero-filter">
+            <span class="hero-filter-label">Zona</span>
+            <span class="hero-filter-value">
+              Córdoba
+              <svg class="hero-filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
+          </div>
+          <div class="hero-filter">
+            <span class="hero-filter-label">Precio</span>
+            <span class="hero-filter-value">
+              Cualquiera
+              <svg class="hero-filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
+          </div>
+        </div>
+        <button class="btn-primary hero-search-cta">BUSCAR</button>
+      </div>
+    </div>
+
+    <div class="hero-trust">
+      <div class="hero-trust-item">
+        <span class="hero-trust-number">500+</span>
+        <span class="hero-trust-label">Propiedades</span>
+      </div>
+      <div class="hero-trust-sep"></div>
+      <div class="hero-trust-item">
+        <span class="hero-trust-number">10+</span>
+        <span class="hero-trust-label">Años de experiencia</span>
+      </div>
+      <div class="hero-trust-sep"></div>
+      <div class="hero-trust-item">
+        <span class="hero-trust-number">⭐ 4.8</span>
+        <span class="hero-trust-label">Calificación</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3. CATEGORY CARDS
+       ============================================================ -->
+  <section class="categories-section">
+    <div class="categories-header" data-reveal>
+      <p class="categories-eyebrow">CATEGORÍAS</p>
+      <h2 class="categories-title">Explorá por categoría</h2>
+      <p class="categories-subtitle">Encontrá el tipo de propiedad que mejor se adapta a vos</p>
+    </div>
+    <div class="categories-grid">
+      <article class="category-card" data-reveal style="--i: 0">
+        <div class="category-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <span class="category-label">Casas</span>
+      </article>
+      <article class="category-card" data-reveal style="--i: 1">
+        <div class="category-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
+            <path d="M9 22v-4h6v4"/>
+            <path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"/>
+          </svg>
+        </div>
+        <span class="category-label">Departamentos</span>
+      </article>
+      <article class="category-card" data-reveal style="--i: 2">
+        <div class="category-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+            <line x1="8" y1="2" x2="8" y2="18"/>
+            <line x1="16" y1="6" x2="16" y2="22"/>
+          </svg>
+        </div>
+        <span class="category-label">Terrenos</span>
+      </article>
+      <article class="category-card" data-reveal style="--i: 3">
+        <div class="category-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <span class="category-label">Campos</span>
+      </article>
+      <article class="category-card" data-reveal style="--i: 4">
+        <div class="category-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+            <line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+        </div>
+        <span class="category-label">Locales</span>
+      </article>
+      <article class="category-card" data-reveal style="--i: 5">
+        <div class="category-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+            <polyline points="17 6 23 6 23 12"/>
+          </svg>
+        </div>
+        <span class="category-label">Inversión</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4. PROPERTY GRID
+       ============================================================ -->
+  <section class="property-section" id="propiedades">
+    <div class="property-section-inner">
+      <div class="property-header" data-reveal>
+        <div class="property-header-left">
+          <span class="property-header-eyebrow">PROPIEDADES DESTACADAS</span>
+          <h2 class="property-header-title">Seleccionadas para vos</h2>
+        </div>
+        <a href="#" class="property-header-link">Ver todas →</a>
+      </div>
+
+      <div class="property-grid">
+
+        <!-- Card 1 — Price + Available -->
+        <article class="property-card" data-reveal style="--i: 0">
+          <div class="property-card-image">
+            <img src="https://placehold.co/600x400/8B7355/FFFFFF?text=Casa+Alta+Gracia" alt="Casa en Alta Gracia" />
+            <span class="property-card-price">U$S 250.000</span>
+            <span class="property-card-status property-card-status--available">Disponible</span>
+            <button class="property-card-favorite" aria-label="Guardar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+            <img class="property-card-agent" src="https://placehold.co/28x28/E8D5C4/8B6F4E?text=RR" alt="Agente" />
+          </div>
+          <div class="property-card-body">
+            <h3 class="property-card-title">Casa moderna en barrio privado con vista a las sierras</h3>
+            <p class="property-card-location">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Alta Gracia, Córdoba
+            </p>
+            <div class="property-card-divider"></div>
+            <div class="property-card-meta">
+              <span class="property-card-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                3 Dorm.
+              </span>
+              <span class="property-card-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><line x1="10" x2="8" y1="5" y2="7"/><line x1="2" x2="22" y1="12" y2="12"/><line x1="7" x2="7" y1="19" y2="21"/><line x1="17" x2="17" y1="19" y2="21"/></svg>
+                2 Baños
+              </span>
+              <span class="property-card-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
+                180 m²
+              </span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2 — Price + Available -->
+        <article class="property-card" data-reveal style="--i: 1">
+          <div class="property-card-image">
+            <img src="https://placehold.co/600x400/5C6B4E/FFFFFF?text=Departamento+Centro" alt="Departamento Centro" />
+            <span class="property-card-price">U$S 185.000</span>
+            <span class="property-card-status property-card-status--available">Disponible</span>
+            <button class="property-card-favorite property-card-favorite--active" aria-label="Guardar">
+              <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+            <img class="property-card-agent" src="https://placehold.co/28x28/E8D5C4/8B6F4E?text=RR" alt="Agente" />
+          </div>
+          <div class="property-card-body">
+            <h3 class="property-card-title">Departamento de lujo en el centro con balcón terrace</h3>
+            <p class="property-card-location">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Centro, Córdoba Capital
+            </p>
+            <div class="property-card-divider"></div>
+            <div class="property-card-meta">
+              <span class="property-card-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                2 Dorm.
+              </span>
+              <span class="property-card-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><line x1="10" x2="8" y1="5" y2="7"/><line x1="2" x2="22" y1="12" y2="12"/><line x1="7" x2="7" y1="19" y2="21"/><line x1="17" x2="17" y1="19" y2="21"/></svg>
+                1 Baño
+              </span>
+              <span class="property-card-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
+                85 m²
+              </span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 — Consult -->
+        <article class="property-card" data-reveal style="--i: 2">
+          <div class="property-card-image">
+            <img src="https://placehold.co/600x400/4A6741/FFFFFF?text=Terreno+Country" alt="Terreno Country" />
+            <span class="property-card-status property-card-status--consult">A consultar</span>
+            <button class="property-card-favorite" aria-label="Guardar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+            <img class="property-card-agent" src="https://placehold.co/28x28/E8D5C4/8B6F4E?text=RR" alt="Agente" />
+          </div>
+          <div class="property-card-body">
+            <h3 class="property-card-title">Terreno premium en barrio privado con acceso al lago</h3>
+            <p class="property-card-location">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Villa Allende, Córdoba
+            </p>
+            <div class="property-card-divider"></div>
+            <div class="property-card-meta">
+              <span class="property-card-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
+                1.200 m²
+              </span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 4 — Price + Rented -->
+        <article class="property-card" data-reveal style="--i: 3">
+          <div class="property-card-image">
+            <img src="https://placehold.co/600x400/8B6F4E/FFFFFF?text=Casa+Villa+Allende" alt="Casa Villa Allende" />
+            <span class="property-card-price">U$S 320.000</span>
+            <span class="property-card-status property-card-status--rented">Arrendado</span>
+            <button class="property-card-favorite" aria-label="Guardar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+            <img class="property-card-agent" src="https://placehold.co/28x28/E8D5C4/8B6F4E?text=RR" alt="Agente" />
+          </div>
+          <div class="property-card-body">
+            <h3 class="property-card-title">Casa con pileta y jardín en country exclusivo de Villa Allende</h3>
+            <p class="property-card-location">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Villa Allende, Córdoba
+            </p>
+            <div class="property-card-divider"></div>
+            <div class="property-card-meta">
+              <span class="property-card-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                4 Dorm.
+              </span>
+              <span class="property-card-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><line x1="10" x2="8" y1="5" y2="7"/><line x1="2" x2="22" y1="12" y2="12"/><line x1="7" x2="7" y1="19" y2="21"/><line x1="17" x2="17" y1="19" y2="21"/></svg>
+                3 Baños
+              </span>
+              <span class="property-card-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
+                280 m²
+              </span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 5 — Consult -->
+        <article class="property-card" data-reveal style="--i: 4">
+          <div class="property-card-image">
+            <img src="https://placehold.co/600x400/6B7A52/FFFFFF?text=Campo+Traslasierra" alt="Campo Traslasierra" />
+            <span class="property-card-status property-card-status--consult">A consultar</span>
+            <button class="property-card-favorite" aria-label="Guardar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+            <img class="property-card-agent" src="https://placehold.co/28x28/E8D5C4/8B6F4E?text=RR" alt="Agente" />
+          </div>
+          <div class="property-card-body">
+            <h3 class="property-card-title">Campo productivo en Traslasierra con vivienda y galpón</h3>
+            <p class="property-card-location">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Mina Clavero, Córdoba
+            </p>
+            <div class="property-card-divider"></div>
+            <div class="property-card-meta">
+              <span class="property-card-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
+                25 has.
+              </span>
+              <span class="property-card-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                3 Dorm.
+              </span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 6 — Price + Rented -->
+        <article class="property-card" data-reveal style="--i: 5">
+          <div class="property-card-image">
+            <img src="https://placehold.co/600x400/9B8B7A/FFFFFF?text=Local+Centro" alt="Local comercial" />
+            <span class="property-card-price">U$S 95.000</span>
+            <span class="property-card-status property-card-status--rented">Arrendado</span>
+            <button class="property-card-favorite" aria-label="Guardar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+            <img class="property-card-agent" src="https://placehold.co/28x28/E8D5C4/8B6F4E?text=RR" alt="Agente" />
+          </div>
+          <div class="property-card-body">
+            <h3 class="property-card-title">Local comercial en pleno centro con alto tráfico peatonal</h3>
+            <p class="property-card-location">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Centro, Córdoba Capital
+            </p>
+            <div class="property-card-divider"></div>
+            <div class="property-card-meta">
+              <span class="property-card-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
+                65 m²
+              </span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="property-section-cta" data-reveal>
+        <button class="btn-primary">
+          Explorar todas las propiedades
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. STATS BAR
+       ============================================================ -->
+  <section class="stats-section" data-reveal>
+    <div class="stats-grid">
+      <div class="stats-item">
+        <span class="stats-number">500+</span>
+        <span class="stats-label">Propiedades</span>
+      </div>
+      <div class="stats-item">
+        <span class="stats-number">10+</span>
+        <span class="stats-label">Años de experiencia</span>
+      </div>
+      <div class="stats-item">
+        <span class="stats-number">4.8</span>
+        <span class="stats-label">Calificación</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       6. DUAL CTA
+       ============================================================ -->
+  <section class="dual-cta-section">
+    <div class="dual-cta-grid">
+      <div class="dual-cta-card dual-cta-card--primary" data-reveal style="--i: 0">
+        <div class="dual-cta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <p class="dual-cta-eyebrow">PROPIETARIOS</p>
+        <h2 class="dual-cta-heading">¿Querés vender tu propiedad?</h2>
+        <p class="dual-cta-body">Te ayudamos a valuar tu propiedad con el mercado actual y te acompañamos en cada paso del proceso de venta.</p>
+        <button class="btn-primary">Solicitar tasación gratuita</button>
+      </div>
+      <div class="dual-cta-card dual-cta-card--secondary" data-reveal style="--i: 1">
+        <div class="dual-cta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <p class="dual-cta-eyebrow">INVERSORES</p>
+        <h2 class="dual-cta-heading">¿Buscás invertir?</h2>
+        <p class="dual-cta-body">Encontrá las mejores oportunidades de inversión en propiedades seleccionadas por nuestro equipo de análisis de mercado.</p>
+        <button class="btn-ghost">Buscar inversión</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       7. MAP SECTION
+       ============================================================ -->
+  <section class="map-section" id="mapa">
+    <div class="map-header" data-reveal>
+      <p class="map-eyebrow">MAPA INTERACTIVO</p>
+      <h2 class="map-title">Explorá en el mapa</h2>
+    </div>
+
+    <div class="map-filters">
+      <button class="map-filter-pill map-filter-pill--active">Casa</button>
+      <button class="map-filter-pill">Departamento</button>
+      <button class="map-filter-pill">Terreno</button>
+      <button class="map-filter-pill">Campo</button>
+      <button class="map-filter-pill">Local</button>
+      <div class="map-filter-divider"></div>
+      <div class="map-price-group">
+        <button class="map-filter-pill map-filter-pill--active">Todos los precios</button>
+        <button class="map-filter-pill">Hasta U$S 150k</button>
+        <button class="map-filter-pill">U$S 150k–300k</button>
+        <button class="map-filter-pill">+ U$S 300k</button>
+      </div>
+    </div>
+
+    <div class="map-layout">
+      <div class="map-container">
+        <div class="map-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+          <span>Mapa interactivo</span>
+        </div>
+        <div class="map-pin" style="top: 35%; left: 45%;">U$S 250.000</div>
+        <div class="map-pin" style="top: 50%; left: 55%;">U$S 185.000</div>
+        <div class="map-pin" style="top: 28%; left: 60%;">U$S 320.000</div>
+      </div>
+
+      <div class="map-sidebar">
+        <div class="map-sidebar-header">
+          <span class="map-sidebar-count">37 propiedades</span>
+          <div class="map-sidebar-sort">
+            Más recientes
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="map-sidebar-list">
+          <div class="map-sidebar-card">
+            <img class="map-sidebar-thumb" src="https://placehold.co/120x80/8B7355/FFFFFF?text=Casa" alt="" />
+            <div class="map-sidebar-info">
+              <span class="map-sidebar-price">U$S 250.000</span>
+              <span class="map-sidebar-title">Casa moderna en barrio privado con vista a las sierras</span>
+              <span class="map-sidebar-location">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Alta Gracia
+              </span>
+              <span class="map-sidebar-meta">3 dorm. · 180 m²</span>
+            </div>
+          </div>
+          <div class="map-sidebar-card">
+            <img class="map-sidebar-thumb" src="https://placehold.co/120x80/5C6B4E/FFFFFF?text=Depto" alt="" />
+            <div class="map-sidebar-info">
+              <span class="map-sidebar-price">U$S 185.000</span>
+              <span class="map-sidebar-title">Departamento de lujo en el centro con balcón</span>
+              <span class="map-sidebar-location">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Centro, Córdoba
+              </span>
+              <span class="map-sidebar-meta">2 dorm. · 85 m²</span>
+            </div>
+          </div>
+          <div class="map-sidebar-card">
+            <img class="map-sidebar-thumb" src="https://placehold.co/120x80/4A6741/FFFFFF?text=Terreno" alt="" />
+            <div class="map-sidebar-info">
+              <span class="map-sidebar-price">A consultar</span>
+              <span class="map-sidebar-title">Terreno premium en barrio privado con acceso al lago</span>
+              <span class="map-sidebar-location">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Villa Allende
+              </span>
+              <span class="map-sidebar-meta">1.200 m²</span>
+            </div>
+          </div>
+          <div class="map-sidebar-card">
+            <img class="map-sidebar-thumb" src="https://placehold.co/120x80/8B6F4E/FFFFFF?text=Campo" alt="" />
+            <div class="map-sidebar-info">
+              <span class="map-sidebar-price">U$S 450.000</span>
+              <span class="map-sidebar-title">Campo productivo en Traslasierra con vivienda</span>
+              <span class="map-sidebar-location">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Mina Clavero
+              </span>
+              <span class="map-sidebar-meta">25 has. · 3 dorm.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       8. TESTIMONIALS
+       ============================================================ -->
+  <section class="testimonials-section">
+    <div class="testimonials-header" data-reveal>
+      <p class="testimonials-eyebrow">LO QUE DICEN NUESTROS CLIENTES</p>
+      <h2 class="testimonials-title">Experiencias reales</h2>
+      <p class="testimonials-subtitle">Personas que encontraron su hogar con nosotros</p>
+    </div>
+    <div class="testimonials-grid">
+      <article class="testimonial-card" data-reveal style="--i: 0">
+        <span class="testimonial-quote-mark">"</span>
+        <div class="testimonial-stars">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="testimonial-text">Encontramos la casa perfecta en Alta Gracia después de meses de búsqueda infructuosa con otras inmobiliarias. El equipo de Roggero & Roma nos acompañó en cada paso del proceso.</p>
+        <div class="testimonial-author">
+          <img class="testimonial-avatar" src="https://placehold.co/44x44/D4A882/4A3728?text=CM" alt="Carolina Martínez" />
+          <div>
+            <p class="testimonial-name">Carolina Martínez</p>
+            <p class="testimonial-role">Compradora, Alta Gracia</p>
+          </div>
+        </div>
+      </article>
+      <article class="testimonial-card testimonial-card--featured" data-reveal style="--i: 1">
+        <span class="testimonial-quote-mark">"</span>
+        <div class="testimonial-stars">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="testimonial-text">Vender mi propiedad fue mucho más fácil de lo que esperaba. Me mantuvieron informado en todo momento y cerraron la operación en tiempo récord. Totalmente recomendados.</p>
+        <div class="testimonial-author">
+          <img class="testimonial-avatar" src="https://placehold.co/44x44/C4A882/4A3728?text=RGL" alt="Roberto García López" />
+          <div>
+            <p class="testimonial-name">Roberto García López</p>
+            <p class="testimonial-role">Vendedor, Córdoba Capital</p>
+          </div>
+        </div>
+      </article>
+      <article class="testimonial-card" data-reveal style="--i: 2">
+        <span class="testimonial-quote-mark">"</span>
+        <div class="testimonial-stars">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="testimonial-text">Como inversora, necesitaba alguien que conociera el mercado local. Franco y su equipo identificaron oportunidades que otras inmobiliarias ni siquiera mencionaron.</p>
+        <div class="testimonial-author">
+          <img class="testimonial-avatar" src="https://placehold.co/44x44/B49872/4A3728?text=AP" alt="Ana Pérez" />
+          <div>
+            <p class="testimonial-name">Ana Pérez</p>
+            <p class="testimonial-role">Inversora, Buenos Aires</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       9. AGENTS
+       ============================================================ -->
+  <section class="agents-section" id="equipo">
+    <div class="agents-header" data-reveal>
+      <p class="agents-eyebrow">EL EQUIPO</p>
+      <h2 class="agents-title">Nuestros asesores</h2>
+      <p class="agents-subtitle">Profesionales con conocimiento profundo del mercado cordobés</p>
+    </div>
+    <div class="agents-grid">
+      <article class="agent-card" data-reveal style="--i: 0">
+        <img class="agent-photo" src="https://placehold.co/80x80/D4A882/4A3728?text=FR" alt="Franco Roma" />
+        <h3 class="agent-name">Franco Roma</h3>
+        <p class="agent-specialty">Director Comercial</p>
+        <div class="agent-stats">
+          <span>45 propiedades</span>
+          <span>·</span>
+          <span>8 años</span>
+        </div>
+        <button class="agent-contact">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Contactar
+        </button>
+      </article>
+      <article class="agent-card" data-reveal style="--i: 1">
+        <img class="agent-photo" src="https://placehold.co/80x80/C4A882/4A3728?text=MGR" alt="Martín González" />
+        <h3 class="agent-name">Martín González</h3>
+        <p class="agent-specialty">Especialista en Ventas</p>
+        <div class="agent-stats">
+          <span>38 propiedades</span>
+          <span>·</span>
+          <span>6 años</span>
+        </div>
+        <button class="agent-contact">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Contactar
+        </button>
+      </article>
+      <article class="agent-card" data-reveal style="--i: 2">
+        <img class="agent-photo" src="https://placehold.co/80x80/B49872/4A3728?text=LR" alt="Laura Rodríguez" />
+        <h3 class="agent-name">Laura Rodríguez</h3>
+        <p class="agent-specialty">Asesora Legal</p>
+        <div class="agent-stats">
+          <span>22 propiedades</span>
+          <span>·</span>
+          <span>5 años</span>
+        </div>
+        <button class="agent-contact">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Contactar
+        </button>
+      </article>
+      <article class="agent-card" data-reveal style="--i: 3">
+        <img class="agent-photo" src="https://placehold.co/80x80/A48862/4A3728?text=PS" alt="Pedro Sánchez" />
+        <h3 class="agent-name">Pedro Sánchez</h3>
+        <p class="agent-specialty">Gestión de Propiedades</p>
+        <div class="agent-stats">
+          <span>55 propiedades</span>
+          <span>·</span>
+          <span>10 años</span>
+        </div>
+        <button class="agent-contact">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Contactar
+        </button>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       10. FOOTER
+       ============================================================ -->
+  <footer class="footer" id="contacto">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img class="footer-logo" src="https://placehold.co/160x40/ffffff/1A1A18?text=Roggero+%26+Roma" alt="Roggero & Roma" />
+        <p class="footer-tagline">Tu socio de confianza en el mercado inmobiliario de Córdoba, Argentina.</p>
+        <div class="footer-social">
+          <a href="#" class="footer-social-btn" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" class="footer-social-btn" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" class="footer-social-btn" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-col-heading">PROPIEDADES</h4>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Ver todas</a>
+          <a href="#" class="footer-link">Casas</a>
+          <a href="#" class="footer-link">Departamentos</a>
+          <a href="#" class="footer-link">Terrenos</a>
+          <a href="#" class="footer-link">Campos</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-col-heading">EMPRESA</h4>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Sobre nosotros</a>
+          <a href="#equipo" class="footer-link">Nuestro equipo</a>
+          <a href="#" class="footer-link">Testimonios</a>
+          <a href="#" class="footer-link">Blog</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-col-heading">CONTACTO</h4>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Alta Gracia, Córdoba</a>
+          <a href="tel:+5493547591234" class="footer-link">+54 9 3547 591234</a>
+          <a href="mailto:info@roggeroroma.com" class="footer-link">info@roggeroroma.com</a>
+          <a href="#" class="footer-link">WhatsApp</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <span class="footer-copyright-left">© 2025 Roggero & Roma. Todos los derechos reservados.</span>
+      <span class="footer-copyright-right">Córdoba, Argentina</span>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       FLOATING ELEMENTS
+       ============================================================ -->
+
+  <!-- WhatsApp Button -->
+  <a href="https://wa.me/5493547591234" class="whatsapp-btn" aria-label="Hablar con un asesor" target="_blank" rel="noopener">
+    <span class="whatsapp-tooltip">Hablar con un asesor</span>
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+      <path d="M12 0C5.373 0 0 5.373 0 12c0 2.094.541 4.062 1.484 5.775L0 24l6.395-1.467A11.952 11.952 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.661-.516-5.179-1.413l-.371-.22-3.795.871.939-3.68-.241-.389A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+    </svg>
+  </a>
+
+  <!-- Sticky Mobile CTA Bar -->
+  <div class="mobile-cta-bar">
+    <button class="btn-primary">Ver propiedades</button>
+    <button class="btn-secondary">Consultar</button>
+  </div>
+
+  <!-- ============================================================
+       CONSOLIDATED JAVASCRIPT
+       ============================================================ -->
+  <script>
+    /* ----------------------------------------
+       Navbar — scroll state
+       ---------------------------------------- */
+    const navbar = document.getElementById('navbar');
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    function handleScroll() {
+      if (window.scrollY > 80) {
+        navbar.classList.remove('navbar-transparent');
+        navbar.classList.add('navbar-scrolled');
+      } else {
+        navbar.classList.remove('navbar-scrolled');
+        navbar.classList.add('navbar-transparent');
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    /* ----------------------------------------
+       Navbar — hamburger toggle
+       ---------------------------------------- */
+    hamburger.addEventListener('click', () => {
+      const isOpen = navbar.classList.contains('navbar-menu-open');
+      if (isOpen) {
+        navbar.classList.remove('navbar-menu-open');
+        mobileMenu.style.opacity = '0';
+        mobileMenu.style.pointerEvents = 'none';
+      } else {
+        navbar.classList.add('navbar-menu-open');
+        mobileMenu.style.opacity = '1';
+        mobileMenu.style.pointerEvents = 'all';
+      }
+    });
+
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navbar.classList.remove('navbar-menu-open');
+        mobileMenu.style.opacity = '0';
+        mobileMenu.style.pointerEvents = 'none';
+      });
+    });
+
+    /* ----------------------------------------
+       Scroll reveal — IntersectionObserver
+       ---------------------------------------- */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('[data-reveal]').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    /* ----------------------------------------
+       Map filter pills — active toggle
+       ---------------------------------------- */
+    document.querySelectorAll('.map-filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const group = pill.closest('.map-price-group') || pill.parentElement;
+        group.querySelectorAll('.map-filter-pill').forEach(p => p.classList.remove('map-filter-pill--active'));
+        pill.classList.add('map-filter-pill--active');
+      });
+    });
+
+    /* ----------------------------------------
+       Category cards — active toggle
+       ---------------------------------------- */
+    document.querySelectorAll('.category-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.category-card').forEach(c => c.classList.remove('category-card--active'));
+        card.classList.add('category-card--active');
+      });
+    });
+
+    /* ----------------------------------------
+       WhatsApp tooltip — hover
+       ---------------------------------------- */
+    const whatsappBtn = document.querySelector('.whatsapp-btn');
+    const tooltip = whatsappBtn?.querySelector('.whatsapp-tooltip');
+    if (whatsappBtn && tooltip) {
+      whatsappBtn.addEventListener('mouseenter', () => {
+        setTimeout(() => { tooltip.style.opacity = '1'; tooltip.style.pointerEvents = 'auto'; }, 150);
+      });
+      whatsappBtn.addEventListener('mouseleave', () => {
+        tooltip.style.opacity = '0';
+        tooltip.style.pointerEvents = 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>
