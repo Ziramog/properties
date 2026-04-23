@@ -6,8 +6,8 @@ import { useEffect, useState, useRef, forwardRef, useImperativeHandle, useCallba
 import { getPropertyImage } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
 
-// ── Custom price marker icon — all orange to match Stitch ──
-function createPriceIcon(property, isSelected = false) {
+// ── Custom price marker icon — orange tag with arrow ──
+function createPriceIcon(property, isSelected = false, isVisited = false) {
   const priceStr = property.price;
   let label = '?';
 
@@ -21,25 +21,24 @@ function createPriceIcon(property, isSelected = false) {
     }
   }
 
-  const scale = isSelected ? 'transform:scale(1.25);z-index:1000;' : '';
-  const ring = isSelected
-    ? 'box-shadow:0 0 0 3px #fff,0 0 0 5px #D84315,0 4px 12px rgba(0,0,0,0.3);'
-    : 'box-shadow:0 2px 8px rgba(0,0,0,0.2);';
+  const bg = isVisited ? '#94a3b8' : isSelected ? '#E94560' : '#D84315';
+  const shadow = isSelected
+    ? 'box-shadow:0 0 0 3px #fff,0 0 0 5px #E94560,0 6px 20px rgba(0,0,0,0.35);'
+    : isVisited
+    ? 'box-shadow:0 2px 6px rgba(0,0,0,0.15);'
+    : 'box-shadow:0 4px 12px rgba(0,0,0,0.25);';
+  const scale = isSelected ? 'transform:scale(1.2);' : '';
+  const z = isSelected ? 'z-index:1000;' : '';
 
-  const html = `<div style="
-    background:#D84315;color:#fff;padding:4px 10px;border-radius:6px;
-    font-size:11px;font-weight:700;font-family:Inter,system-ui,sans-serif;
-    white-space:nowrap;border:2px solid #fff;
-    cursor:pointer;
-    transition:transform 0.2s,box-shadow 0.2s;
-    ${scale}${ring}
+  const html = `<div class="price-tag" style="
+    background:${bg};${shadow}${scale}${z}
   ">${label}</div>`;
 
   return L.divIcon({
     html,
     className: 'price-marker',
     iconSize: null,
-    iconAnchor: [40, 15],
+    iconAnchor: [40, 38],
   });
 }
 
@@ -107,6 +106,7 @@ function MapController({ flyToCoords, flyToZoom }) {
 const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref) => {
   const [geocodedProps, setGeocodedProps] = useState([]);
   const [flyTarget, setFlyTarget] = useState(null);
+  const [visitedIds, setVisitedIds] = useState(new Set());
   const mapRef = useRef(null);
 
   useImperativeHandle(ref, () => ({
@@ -119,6 +119,11 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
       .filter((p) => p.coords != null);
     setGeocodedProps(geo);
   }, [properties]);
+
+  const handleMarkerClick = useCallback((propertyId) => {
+    onMarkerClick?.(propertyId);
+    setVisitedIds((prev) => new Set([...prev, propertyId]));
+  }, [onMarkerClick]);
 
   const defaultCenter = [-31.65, -64.43];
 
@@ -155,9 +160,9 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
         <Marker
           key={property._id}
           position={property.coords}
-          icon={createPriceIcon(property, selectedId === property._id)}
+          icon={createPriceIcon(property, selectedId === property._id, visitedIds.has(property._id))}
           eventHandlers={{
-            click: () => onMarkerClick?.(property._id),
+            click: () => handleMarkerClick(property._id),
           }}
         >
           <Popup>
