@@ -25,7 +25,7 @@ const Navbar = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 p-4">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-8 md:px-12 py-5 md:py-6 bg-black/10 backdrop-blur-xl border border-white/10 rounded-full shadow-2xl">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-12 py-5 md:py-6 bg-black/10 backdrop-blur-xl border border-white/10 md:rounded-full shadow-2xl">
         {/* Logo */}
         <Link className="flex flex-shrink-0 items-center" href="/">
           <Image className="h-12 md:h-14 w-auto brightness-0 invert" src={logo} alt="Roggero & Roma" />

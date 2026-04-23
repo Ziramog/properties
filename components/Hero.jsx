@@ -105,7 +105,7 @@ const Hero = () => {
             <HeadlineChar text={HERO_LINE2} className='block' />
           </h2>
         </div>
-        <div className='md:hidden pt-[88px]'>
+        <div className='md:hidden pt-[50px]'>
           {/* Mobile: upper 1/3 */}
           <motion.div
             className='flex items-center justify-center gap-3 mb-4'
@@ -127,7 +127,7 @@ const Hero = () => {
       </div>
 
       {/* Search Bar */}
-      <div className='absolute bottom-8 w-full z-20 px-6'>
+      <div className='absolute bottom-[50px] w-full z-20 px-4'>
         <div
           className='mx-auto max-w-[880px] bg-black/20 backdrop-blur-xl border border-white/10 px-2 py-2 flex items-center'
           style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
