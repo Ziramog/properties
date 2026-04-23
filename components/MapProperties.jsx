@@ -267,8 +267,8 @@ const MapProperties = ({ initialProperties = [] }) => {
         {/* Desktop: Map + Sidebar | Mobile: Full-screen Map + Bottom Sheet */}
         <ScrollReveal delay={150}>
           <div className="hidden lg:block">
-            <div className="grid grid-cols-[1fr_420px] h-[560px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)]">
-              <div className="relative bg-[#E8E6E0] overflow-hidden">
+            <div className="grid grid-cols-12 gap-6 h-[560px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)]">
+              <div className="col-span-8 relative bg-[#E8E6E0] overflow-hidden">
                 <MapView
                   ref={mapRef}
                   properties={filteredProperties}
@@ -276,7 +276,7 @@ const MapProperties = ({ initialProperties = [] }) => {
                   selectedId={selectedPropertyId}
                 />
               </div>
-              <div className="bg-white border-l border-[var(--color-border)] flex flex-col overflow-hidden">
+              <div className="col-span-4 bg-white border-l border-[var(--color-border)] flex flex-col overflow-hidden">
                 <PropertyDetail property={selectedProperty} />
               </div>
             </div>
