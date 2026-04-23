@@ -30,8 +30,9 @@ function createPriceIcon(property, isSelected = false) {
     background:#D84315;color:#fff;padding:4px 10px;border-radius:6px;
     font-size:11px;font-weight:700;font-family:Inter,system-ui,sans-serif;
     white-space:nowrap;border:2px solid #fff;
+    cursor:pointer;
     transition:transform 0.2s,box-shadow 0.2s;
-    ${scale}${ring}cursor:pointer;
+    ${scale}${ring}
   ">${label}</div>`;
 
   return L.divIcon({

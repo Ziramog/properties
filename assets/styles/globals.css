@@ -154,4 +154,13 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* Price marker hover — CartoDB style */
+  .price-marker > div:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3) !important;
+  }
+  .price-marker > div {
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
 }
