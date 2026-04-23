@@ -143,13 +143,6 @@ const FeaturedProperties = ({ properties = [] }) => {
           </div>
         </div>
 
-        {/* Mobile "Ver todas" link */}
-        <ScrollReveal className='sm:hidden mt-6 text-center'>
-          <a href='/properties' className='text-primary text-sm font-medium hover:underline'>
-            Ver todas →
-          </a>
-        </ScrollReveal>
-
         {/* Bottom CTA */}
         <ScrollReveal delay={200}>
           <div className='text-center mt-12'>
