@@ -65,8 +65,8 @@ const Hero = () => {
         />
       </div>
 
-      {/* Content Block */}
-      <div className='absolute inset-0 flex flex-col items-center justify-center w-full text-center px-6 z-10'>
+      {/* Content Block — upper 1/3 on mobile */}
+      <div className='absolute inset-0 flex flex-col items-center justify-center w-full text-center px-6 z-10 pt-24 pb-40'>
 
         {/* Eyebrow */}
         <motion.div
@@ -117,7 +117,8 @@ const Hero = () => {
           className='mx-auto max-w-[880px] bg-black/20 backdrop-blur-xl border border-white/10 px-4 py-3 flex flex-col sm:flex-row items-center gap-3'
           style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
         >
-          <form onSubmit={handleSubmit} className='flex items-center w-full gap-2'>
+          {/* Desktop only — form + inline button */}
+          <form onSubmit={handleSubmit} className='hidden sm:flex items-center w-full gap-2'>
             <input
               type='text'
               value={query}
@@ -125,16 +126,15 @@ const Hero = () => {
               placeholder='Explorá propiedades en Córdoba'
               className='flex-1 bg-black/20 border border-white/10 text-white text-sm font-medium py-3.5 px-5 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary/30 transition-all outline-none placeholder:text-white/40'
             />
-            {/* Desktop buscar — inline in bar */}
             <button
               type='submit'
-              className='hidden sm:flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-bold text-sm uppercase tracking-wider rounded-xl shrink-0 h-[44px] px-6 transition-all shadow-lg shadow-primary/30'
+              className='flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-bold text-sm uppercase tracking-wider rounded-xl shrink-0 h-[44px] px-6 transition-all shadow-lg shadow-primary/30'
             >
               <FaSearch className='w-4 h-4' />
               Buscar
             </button>
           </form>
-          {/* Mobile buscar pill — inside the bar */}
+          {/* Mobile only — glass pillar button */}
           <button
             type='button'
             onClick={() => router.push('/properties')}
