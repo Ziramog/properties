@@ -85,28 +85,29 @@ const Hero = () => {
       </div>
 
       {/* Content Block — desktop centered, mobile upper 1/3 */}
-      <div className='absolute inset-0 flex flex-col items-center justify-center w-full text-center px-6 z-10'>
-        <div className='hidden md:block'>
-          {/* Desktop: centered */}
-          <motion.div
-            className='flex items-center justify-center gap-3 mb-4'
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          >
-            <span className='w-7 h-px bg-white/40 flex-shrink-0' />
-            <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Córdoba, Argentina</span>
-            <span className='w-7 h-px bg-white/40 flex-shrink-0' />
-          </motion.div>
-          <h1 className='font-display italic font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
-            <HeadlineChar text={HERO_LINE1} className='block' />
-          </h1>
-          <h2 className='font-display font-bold text-white leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
-            <HeadlineChar text={HERO_LINE2} className='block' />
-          </h2>
-        </div>
-        <div className='md:hidden pt-[50px]'>
-          {/* Mobile: upper 1/3 */}
+      {/* Desktop: centered vertically and horizontally */}
+      <div className='hidden md:flex absolute inset-0 flex-col items-center justify-center w-full text-center px-6 z-10'>
+        <motion.div
+          className='flex items-center justify-center gap-3 mb-4'
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+        >
+          <span className='w-7 h-px bg-white/40 flex-shrink-0' />
+          <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Córdoba, Argentina</span>
+          <span className='w-7 h-px bg-white/40 flex-shrink-0' />
+        </motion.div>
+        <h1 className='font-display italic font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
+          <HeadlineChar text={HERO_LINE1} className='block' />
+        </h1>
+        <h2 className='font-display font-bold text-white leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
+          <HeadlineChar text={HERO_LINE2} className='block' />
+        </h2>
+      </div>
+
+      {/* Mobile: aligned to top, pushed down by pt */}
+      <div className='md:hidden absolute inset-0 flex flex-col items-center justify-start w-full text-center px-6 z-10'>
+        <div className='pt-[50px]'>
           <motion.div
             className='flex items-center justify-center gap-3 mb-4'
             initial={{ opacity: 0, y: 16 }}
