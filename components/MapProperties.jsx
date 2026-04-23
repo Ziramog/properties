@@ -6,8 +6,8 @@ import { filterProperties, isGranInversion } from '@/utils/filterProperties';
 import { useFilters } from '@/hooks/useFilters';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
 import { getPriceDisplay } from '@/utils/propertyDisplay';
-import { FaBed, FaBath, FaWhatsapp, FaExpand } from 'react-icons/fa';
-import { TrendingUp } from 'lucide-react';
+import { FaBed, FaBath, FaWhatsapp, FaExpand, FaTimes } from 'react-icons/fa';
+import { TrendingUp, MapPin } from 'lucide-react';
 
 const MapView = dynamic(() => import('./MapView'), {
   ssr: false,
@@ -27,13 +27,13 @@ const MapView = dynamic(() => import('./MapView'), {
 
 const PROPERTY_TYPES = ['Casa', 'Departamento', 'Terreno', 'Campo', 'Inmueble Comercial'];
 const PRICE_PRESETS = [
-  { label: 'Todos los precios', min: '', max: '' },
-  { label: 'Hasta U$S 150k', min: '', max: '150000' },
-  { label: 'U$S 150k–300k', min: '150000', max: '300000' },
-  { label: '+ U$S 300k', min: '300000', max: '' },
+  { label: 'Todos', min: '', max: '' },
+  { label: 'Hasta 150k', min: '', max: '150000' },
+  { label: '150k-300k', min: '150000', max: '300000' },
+  { label: '+300k', min: '300000', max: '' },
 ];
 
-const EmptyState = () => (
+const EmptyState = ({ onClose }) => (
   <div className="flex flex-col items-center justify-center h-full text-center px-8">
     <div className="w-16 h-16 rounded-full bg-[var(--color-surface-soft)] flex items-center justify-center mb-4">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 text-[var(--color-ink-tertiary)]">
@@ -44,13 +44,13 @@ const EmptyState = () => (
     </div>
     <p className="text-[15px] font-semibold text-[var(--color-ink)] mb-2">Seleccioná una propiedad</p>
     <p className="text-[13px] text-[var(--color-ink-tertiary)] leading-relaxed">
-      Hacé click en un pin del mapa para ver todos los detalles de la propiedad
+      Hacé click en un pin del mapa para ver todos los detalles
     </p>
   </div>
 );
 
-const PropertyDetail = ({ property }) => {
-  if (!property) return <EmptyState />;
+const PropertyDetail = ({ property, onClose }) => {
+  if (!property) return <EmptyState onClose={onClose} />;
 
   const price = getPriceDisplay(property);
   const image = property.images?.[0] || '/images/property-placeholder.jpg';
@@ -58,13 +58,12 @@ const PropertyDetail = ({ property }) => {
   return (
     <div className="flex flex-col h-full overflow-y-auto scrollbar-hide">
       {/* Full-width image */}
-      <div className="relative h-[280px] bg-[var(--color-surface-soft)] flex-shrink-0 overflow-hidden">
+      <div className="relative h-[220px] bg-[var(--color-surface-soft)] flex-shrink-0 overflow-hidden">
         <img
           src={image}
           alt={property.name}
           className="w-full h-full object-cover"
         />
-        {/* Status badge */}
         {property.status && (
           <div className="absolute top-3 left-3">
             <span className={`text-[11px] font-bold px-[10px] py-1 rounded-[6px] uppercase tracking-wider ${
@@ -76,35 +75,31 @@ const PropertyDetail = ({ property }) => {
             </span>
           </div>
         )}
-        {/* Expand icon */}
-        <div className="absolute top-3 right-3 w-8 h-8 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center">
+        <a
+          href={`/properties/${property._id}`}
+          className="absolute top-3 right-3 w-8 h-8 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center"
+        >
           <FaExpand className="w-4 h-4 text-white" />
-        </div>
+        </a>
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-6 py-5 flex flex-col gap-4">
-        {/* Price */}
+      <div className="flex-1 px-5 py-4 flex flex-col gap-3">
         <div>
-          <p className="text-[28px] font-bold text-[var(--color-ink)] leading-tight">
+          <p className="text-[24px] font-bold text-[var(--color-ink)] leading-tight">
             {price}
           </p>
-          <p className="text-[15px] text-[var(--color-ink-secondary)] mt-1">
+          <p className="text-[14px] text-[var(--color-ink-secondary)] mt-0.5">
             {property.name}
           </p>
         </div>
 
-        {/* Location */}
         <div className="flex items-center gap-2 text-[13px] text-[var(--color-ink-tertiary)]">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 flex-shrink-0">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
-            <circle cx="12" cy="10" r="3"/>
-          </svg>
+          <MapPin className="w-4 h-4 flex-shrink-0" />
           {property.location?.city}
         </div>
 
-        {/* Specs row */}
-        <div className="flex items-center gap-5 text-[13px] font-medium text-[var(--color-ink-secondary)] border-t border-b border-[var(--color-border)] py-3">
+        <div className="flex items-center gap-4 text-[13px] font-medium text-[var(--color-ink-secondary)] border-t border-b border-[var(--color-border)] py-2.5">
           {property.beds != null && (
             <span className="flex items-center gap-1.5">
               <FaBed className="w-4 h-4 text-[var(--color-ink-tertiary)]" />
@@ -128,39 +123,31 @@ const PropertyDetail = ({ property }) => {
               {property.area} m²
             </span>
           )}
-          {property.totalArea && (
-            <span className="flex items-center gap-1.5 text-[var(--color-ink-tertiary)]">
-              {property.totalArea} m² total
-            </span>
-          )}
         </div>
 
-        {/* Description */}
         {property.description && (
-          <p className="text-[13px] text-[var(--color-ink-secondary)] leading-relaxed line-clamp-4 flex-shrink-0">
+          <p className="text-[13px] text-[var(--color-ink-secondary)] leading-relaxed line-clamp-3">
             {property.description}
           </p>
         )}
 
-        {/* Spacer */}
         <div className="flex-1" />
 
-        {/* CTA Buttons */}
         <div className="flex flex-col gap-2 pt-2 border-t border-[var(--color-border)]">
           <a
             href={generateWhatsAppLink({ property })}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full h-[48px] bg-whatsapp hover:bg-whatsapp-hover text-white rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200 shadow-md"
+            className="flex items-center justify-center gap-2 w-full h-[44px] bg-whatsapp hover:bg-whatsapp-hover text-white rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200 shadow-md"
           >
             <FaWhatsapp className="w-5 h-5" />
-            Consultar por WhatsApp
+            WhatsApp
           </a>
           <a
             href={`/properties/${property._id}`}
-            className="flex items-center justify-center gap-2 w-full h-[48px] bg-[var(--color-ink)] hover:bg-[var(--color-ink-secondary)] text-white rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200"
+            className="flex items-center justify-center gap-2 w-full h-[44px] bg-[var(--color-ink)] hover:bg-[var(--color-ink-secondary)] text-white rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200"
           >
-            Ver propiedad completa
+            Ver propiedad
           </a>
         </div>
       </div>
@@ -171,8 +158,9 @@ const PropertyDetail = ({ property }) => {
 const MapProperties = ({ initialProperties = [] }) => {
   const [selectedPropertyId, setSelectedPropertyId] = useState(null);
   const [activeType, setActiveType] = useState('Casa');
-  const [activePrice, setActivePrice] = useState('Todos los precios');
+  const [activePrice, setActivePrice] = useState('Todos');
   const [showGranInversion, setShowGranInversion] = useState(false);
+  const [showMobileDetail, setShowMobileDetail] = useState(false);
   const { filters } = useFilters();
   const mapRef = useRef(null);
 
@@ -191,6 +179,7 @@ const MapProperties = ({ initialProperties = [] }) => {
 
   const handleMarkerClick = useCallback((propertyId) => {
     setSelectedPropertyId(propertyId);
+    setShowMobileDetail(true);
     const prop = initialProperties.find((p) => p._id === propertyId);
     if (prop && mapRef.current) {
       const lat = prop.location?.lat;
@@ -198,6 +187,11 @@ const MapProperties = ({ initialProperties = [] }) => {
       if (lat && lng) mapRef.current.flyTo([lat, lng], 15);
     }
   }, [initialProperties]);
+
+  const handleCloseMobileDetail = () => {
+    setShowMobileDetail(false);
+    setSelectedPropertyId(null);
+  };
 
   return (
     <section className="bg-[var(--color-surface-soft)] py-20 px-6" id="mapa">
@@ -234,7 +228,6 @@ const MapProperties = ({ initialProperties = [] }) => {
 
               <div className="w-px h-5 bg-[var(--color-border)] flex-shrink-0 mx-1" />
 
-              {/* Gran Inversión — special high-value filter */}
               <button
                 onClick={() => {
                   setShowGranInversion((prev) => !prev);
@@ -252,7 +245,6 @@ const MapProperties = ({ initialProperties = [] }) => {
 
               <div className="w-px h-5 bg-[var(--color-border)] flex-shrink-0 mx-1" />
 
-              {/* Price group */}
               <div className="flex items-center bg-black/[0.04] rounded-full px-1.5 py-1 gap-1">
                 {PRICE_PRESETS.map((preset) => (
                   <button
@@ -272,11 +264,27 @@ const MapProperties = ({ initialProperties = [] }) => {
           </ScrollReveal>
         </div>
 
-        {/* Map + Sidebar Layout */}
+        {/* Desktop: Map + Sidebar | Mobile: Full-screen Map + Bottom Sheet */}
         <ScrollReveal delay={150}>
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] h-[560px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)]">
-            {/* Map */}
-            <div className="relative bg-[#E8E6E0] overflow-hidden">
+          <div className="hidden lg:block">
+            <div className="grid grid-cols-[1fr_420px] h-[560px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)]">
+              <div className="relative bg-[#E8E6E0] overflow-hidden">
+                <MapView
+                  ref={mapRef}
+                  properties={filteredProperties}
+                  onMarkerClick={handleMarkerClick}
+                  selectedId={selectedPropertyId}
+                />
+              </div>
+              <div className="bg-white border-l border-[var(--color-border)] flex flex-col overflow-hidden">
+                <PropertyDetail property={selectedProperty} />
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile: full-screen map + bottom sheet */}
+          <div className="lg:hidden relative">
+            <div className="h-[70vh] rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)] overflow-hidden">
               <MapView
                 ref={mapRef}
                 properties={filteredProperties}
@@ -285,10 +293,34 @@ const MapProperties = ({ initialProperties = [] }) => {
               />
             </div>
 
-            {/* Sidebar — detail view */}
-            <div className="bg-white border-l border-[var(--color-border)] flex flex-col overflow-hidden">
+            {/* Bottom sheet */}
+            <div
+              className={`fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-3xl shadow-2xl transition-transform duration-300 ${
+                showMobileDetail && selectedProperty ? 'translate-y-0' : 'translate-y-full'
+              }`}
+              style={{ height: '60vh', maxHeight: '70vh' }}
+            >
+              {/* Handle */}
+              <div className="flex justify-center pt-3 pb-2">
+                <div className="w-10 h-1 bg-gray-300 rounded-full" />
+              </div>
+              {/* Close button */}
+              <button
+                onClick={handleCloseMobileDetail}
+                className="absolute top-4 right-4 w-8 h-8 bg-black/10 backdrop-blur-sm rounded-full flex items-center justify-center"
+              >
+                <FaTimes className="w-4 h-4 text-[var(--color-ink)]" />
+              </button>
               <PropertyDetail property={selectedProperty} />
             </div>
+
+            {/* Backdrop */}
+            {showMobileDetail && (
+              <div
+                className="fixed inset-0 bg-black/30 z-40 lg:hidden"
+                onClick={handleCloseMobileDetail}
+              />
+            )}
           </div>
         </ScrollReveal>
       </div>

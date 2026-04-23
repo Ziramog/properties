@@ -1,30 +1,63 @@
+'use client';
+import { useState, useEffect, useCallback } from 'react';
 import FeaturedPropertyCard from '@/components/FeaturedPropertyCard';
 import ScrollReveal from '@/components/shared/ScrollReveal';
-import connectDB from '@/config/database';
-import Property from '@/models/Property';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const FeaturedProperties = async () => {
-  await connectDB();
+const CARD_WIDTH = 380;
+const CARD_GAP = 24;
+const PEEK = 60;
 
-  const properties = await Property.find({
-    is_featured: true,
-  }).limit(6).lean();
+const FeaturedProperties = ({ properties = [] }) => {
+  const [current, setCurrent] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  const total = properties.length;
+
+  const next = useCallback(() => {
+    setCurrent((prev) => (prev + 1) % total);
+  }, [total]);
+
+  const prev = () => {
+    setCurrent((prev) => (prev - 1 + total) % total);
+  };
+
+  const goTo = (index) => {
+    setCurrent(index);
+    setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 5000);
+  };
+
+  useEffect(() => {
+    if (!isAutoPlayable || total <= 1) return;
+    const interval = setInterval(next, 2000);
+    return () => clearInterval(interval);
+  }, [next, isAutoPlaying, total]);
+
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const isAutoPlayable = !isMobile;
+
+  const getTransform = (index) => {
+    const diff = (index - current + total) % total;
+    if (diff === 0) return 'translateX(0) scale(1)';
+    if (diff === 1) return `translateX(${CARD_WIDTH + CARD_GAP}px) scale(0.92)`;
+    if (diff === total - 1) return `translateX(-${CARD_WIDTH + CARD_GAP}px) scale(0.92)`;
+    return 'translateX(100vw)';
+  };
 
   if (properties.length === 0) {
     return null;
   }
 
   return (
-    <section className='bg-white py-20 px-6'>
+    <section className='bg-white py-20 px-6 overflow-hidden'>
       <div className='max-w-7xl mx-auto'>
 
-        {/* Section Header — left-aligned per demo */}
+        {/* Section Header */}
         <div className='flex justify-between items-end mb-10'>
           <div className='flex flex-col gap-2.5'>
             <ScrollReveal>
-              <span
-                className='text-[11px] font-bold uppercase tracking-[0.1em] text-primary'
-              >
+              <span className='text-[11px] font-bold uppercase tracking-[0.1em] text-primary'>
                 PROPIEDADES DESTACADAS
               </span>
             </ScrollReveal>
@@ -44,18 +77,70 @@ const FeaturedProperties = async () => {
           </ScrollReveal>
         </div>
 
-        {/* Cards Grid */}
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {properties.map((property, i) => (
-            <ScrollReveal key={property._id.toString()} delay={i * 80}>
-              <FeaturedPropertyCard
-                property={{
-                  ...property,
-                  _id: property._id.toString(),
-                }}
+        {/* Carousel */}
+        <div className='relative'>
+          {/* Cards container */}
+          <div className='relative overflow-hidden' style={{ height: '460px' }}>
+            <div className='absolute inset-0 flex items-center justify-center'>
+              {properties.map((property, i) => {
+                const diff = (i - current + total) % total;
+                const isCenter = diff === 0;
+                const isAdjacent = diff === 1 || diff === total - 1;
+
+                return (
+                  <div
+                    key={property._id?.toString() || i}
+                    className='absolute transition-all duration-500 ease-out'
+                    style={{
+                      width: `${CARD_WIDTH}px`,
+                      transform: getTransform(i),
+                      zIndex: isCenter ? 10 : 1,
+                      opacity: isCenter || isAdjacent ? 1 : 0,
+                    }}
+                  >
+                    <FeaturedPropertyCard
+                      property={{
+                        ...property,
+                        _id: property._id?.toString(),
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Navigation arrows */}
+          <button
+            onClick={prev}
+            className='absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center text-heading hover:bg-white hover:scale-105 transition-all'
+            aria-label='Anterior'
+          >
+            <ChevronLeft className='w-6 h-6' />
+          </button>
+          <button
+            onClick={next}
+            className='absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center text-heading hover:bg-white hover:scale-105 transition-all'
+            aria-label='Siguiente'
+          >
+            <ChevronRight className='w-6 h-6' />
+          </button>
+
+          {/* Dot indicators */}
+          <div className='flex justify-center gap-2 mt-8'>
+            {properties.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className={`rounded-full transition-all ${
+                  i === current
+                    ? 'w-6 h-2 bg-primary'
+                    : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
+                }`}
+                aria-label={`Ir a propiedad ${i + 1}`}
               />
-            </ScrollReveal>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Mobile "Ver todas" link */}

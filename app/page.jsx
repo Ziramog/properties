@@ -1,6 +1,6 @@
 import Hero from '@/components/Hero';
 import CategoryCards from '@/components/sections/CategoryCards';
-import FeaturedProperties from '@/components/FeaturedProperties';
+import FeaturedPropertiesCarousel from '@/components/FeaturedPropertiesCarousel';
 import MapProperties from '@/components/MapProperties';
 import Testimonials from '@/components/Testimonials';
 import ClientMarquee from '@/components/sections/ClientMarquee';
@@ -42,7 +42,7 @@ const HomePage = async () => {
       <CategoryCards counts={typeCounts} />
 
       {/* 3. Featured — best inventory showcase */}
-      <FeaturedProperties />
+      <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured).slice(0, 6)} />
 
       {/* 4. Stats Bar */}
       <StatsBar />
