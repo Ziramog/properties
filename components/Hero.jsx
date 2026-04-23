@@ -127,13 +127,23 @@ const Hero = () => {
             />
             <button
               type='submit'
-              className='bg-primary hover:bg-primary-hover text-white font-bold text-sm uppercase tracking-wider rounded-xl shrink-0 h-[52px] px-8 transition-all shadow-lg shadow-primary/30 flex items-center gap-2'
+              className='hidden sm:flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-bold text-sm uppercase tracking-wider rounded-xl shrink-0 h-[52px] px-8 transition-all shadow-lg shadow-primary/30'
             >
               <FaSearch className='w-4 h-4' />
               Buscar
             </button>
           </form>
         </div>
+
+        {/* Mobile floating buscar button */}
+        <button
+          type='button'
+          onClick={() => router.push('/properties')}
+          className='sm:hidden flex items-center justify-center gap-2 mx-auto mt-3 bg-black/20 backdrop-blur-xl border border-white/10 text-white font-bold text-sm uppercase tracking-wider rounded-full px-10 py-3.5 transition-all shadow-xl'
+        >
+          <FaSearch className='w-4 h-4' />
+          Buscar ahora
+        </button>
       </div>
 
       <style jsx>{`
