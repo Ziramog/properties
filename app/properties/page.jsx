@@ -52,7 +52,7 @@ const PropertiesPage = async ({ searchParams }) => {
 
   return (
     <>
-      <section className='bg-[#1A1A2E] py-4'>
+      <section className='bg-transparent pt-4'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <PropertyFilters variant='full' />
         </div>
