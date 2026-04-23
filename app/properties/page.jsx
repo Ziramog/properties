@@ -52,15 +52,8 @@ const PropertiesPage = async ({ searchParams }) => {
 
   return (
     <div className="min-h-screen bg-[var(--color-surface-soft)]">
-      {/* Filter bar */}
-      <section className="bg-white border-b border-[var(--color-border)] sticky top-[76px] z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <PropertyFilters variant="full" />
-        </div>
-      </section>
-
-      {/* Results */}
-      <section className="px-4 py-8">
+      {/* Results — no separate filter section, filters are inside Navbar on this route */}
+      <section className="pt-[140px] px-4 pb-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
