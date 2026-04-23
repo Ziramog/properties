@@ -1,6 +1,40 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+
+const HERO_LINE1 = 'Tu próximo hogar';
+const HERO_LINE2 = 'te está esperando';
+
+const charVariant = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.02,
+      duration: 0.4,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  }),
+};
+
+const HeadlineChar = ({ text, className }) => (
+  <span className={className} aria-hidden="true" style={{ display: 'inline-block', overflow: 'hidden' }}>
+    {text.split('').map((char, i) => (
+      <motion.span
+        key={i}
+        custom={i}
+        variants={charVariant}
+        initial="hidden"
+        animate="visible"
+        style={{ display: 'inline-block', marginRight: char === ' ' ? '0.3em' : 0 }}
+      >
+        {char}
+      </motion.span>
+    ))}
+  </span>
+);
 
 const Hero = () => {
   const router = useRouter();
@@ -34,8 +68,19 @@ const Hero = () => {
     <section className='relative h-screen min-h-[700px] overflow-hidden'>
       {/* Background Image */}
       <div className='absolute inset-0 z-0'>
+        {/* Mobile */}
         <div
-          className='w-full h-full'
+          className='w-full h-full md:hidden'
+          style={{
+            backgroundImage: "url('/images/mobilehero_1.jpeg')",
+            backgroundPosition: 'center 40%',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
+        {/* Desktop */}
+        <div
+          className='w-full h-full hidden md:block'
           style={{
             backgroundImage: "url('/images/necesito_otro_angulo_202604221402.jpeg')",
             backgroundPosition: 'center 40%',
@@ -43,29 +88,30 @@ const Hero = () => {
             backgroundRepeat: 'no-repeat',
           }}
         />
-        {/* Gradient Overlay */}
         <div
           className='absolute inset-0'
           style={{
-            background:
-              'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.10) 40%, rgba(0,0,0,0.55) 100%)',
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.10) 40%, rgba(0,0,0,0.55) 100%)',
           }}
         />
       </div>
 
       {/* Content Block */}
       <div className='absolute inset-0 flex flex-col items-center justify-center w-full text-center px-6 z-10'>
+
         {/* Eyebrow */}
-        <div
+        <motion.div
           className='flex items-center justify-center gap-3 mb-4'
-          style={{ animation: 'fadeUp 0.6s var(--ease-out) 0.1s both' }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
         >
           <span className='w-7 h-px bg-white/40 flex-shrink-0' />
           <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>
             Córdoba, Argentina
           </span>
           <span className='w-7 h-px bg-white/40 flex-shrink-0' />
-        </div>
+        </motion.div>
 
         {/* Headline Line 1 */}
         <h1
@@ -73,33 +119,36 @@ const Hero = () => {
           style={{
             fontSize: 'clamp(40px, 5vw, 76px)',
             lineHeight: 1.0,
-            animation: 'fadeUp 0.7s var(--ease-out) 0.25s both',
           }}
         >
-          Tu próximo hogar
+          <HeadlineChar
+            text={HERO_LINE1}
+            className='block'
+          />
         </h1>
 
         {/* Headline Line 2 */}
         <h2
-          className='font-display font-bold text-white mb-10 leading-tight'
+          className='font-display font-bold text-white leading-tight'
           style={{
             fontSize: 'clamp(40px, 5vw, 76px)',
             lineHeight: 1.0,
-            animation: 'fadeUp 0.7s var(--ease-out) 0.25s both',
           }}
         >
-          te está esperando
+          <HeadlineChar
+            text={HERO_LINE2}
+            className='block'
+          />
         </h2>
       </div>
 
       {/* Search Bar */}
       <div className='absolute bottom-8 w-full z-20 px-6'>
         <div
-          className='mx-auto max-w-[880px] bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl px-2 py-2 flex items-center'
+          className='mx-auto max-w-[880px] bg-black/20 backdrop-blur-xl border border-white/10 px-2 py-2 flex items-center'
           style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
         >
           <form onSubmit={handleSubmit} className='flex items-center w-full'>
-            {/* Filter Cells */}
             <div className='flex-1 grid grid-cols-4 divide-x divide-white/15'>
               {/* Operación */}
               <div className={heroFilterCls}>
@@ -132,11 +181,12 @@ const Hero = () => {
                     className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'
                   >
                     <option value='Todos' className='text-ink'>Todos</option>
-                    <option value='Casas' className='text-ink'>Casas</option>
-                    <option value='Departamentos' className='text-ink'>Departamentos</option>
-                    <option value='Terrenos' className='text-ink'>Terrenos</option>
-                    <option value='Campos' className='text-ink'>Campos</option>
-                    <option value='Locales' className='text-ink'>Locales</option>
+                    <option value='Casa' className='text-ink'>Casas</option>
+                    <option value='Departamento' className='text-ink'>Departamentos</option>
+                    <option value='Terreno' className='text-ink'>Terrenos</option>
+                    <option value='Campo' className='text-ink'>Campos</option>
+                    <option value='Inmueble Comercial' className='text-ink'>Inmuebles Comerciales</option>
+                    <option value='Gran Inversión' className='text-ink'>Grandes Inversiones</option>
                   </select>
                   <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
                     <path d='M6 9l6 6 6-6' />
@@ -199,7 +249,6 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Keyframes */}
       <style jsx>{`
         @keyframes fadeUp {
           from {
@@ -209,14 +258,6 @@ const Hero = () => {
           to {
             opacity: 1;
             transform: translateY(0);
-          }
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
           }
         }
       `}</style>
