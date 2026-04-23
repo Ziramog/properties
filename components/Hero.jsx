@@ -138,7 +138,7 @@ const Hero = () => {
           <button
             type='button'
             onClick={() => router.push('/properties')}
-            className='sm:hidden flex items-center justify-center gap-2 w-full bg-primary hover:bg-primary-hover text-white font-bold text-sm uppercase tracking-wider rounded-full py-3.5 px-8 transition-all shadow-lg shadow-primary/30'
+            className='sm:hidden flex items-center justify-center gap-2 w-full bg-black/20 backdrop-blur-xl border border-white/10 text-white font-bold text-sm uppercase tracking-wider rounded-full py-3.5 px-8 transition-all shadow-xl'
           >
             <FaSearch className='w-4 h-4' />
             Buscar ahora
