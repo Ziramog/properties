@@ -51,42 +51,63 @@ const PropertiesPage = async ({ searchParams }) => {
     : total > 0 ? `${total} propiedades encontradas` : 'Nuestras Propiedades';
 
   return (
-    <>
-      <section className='bg-transparent pt-4'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <PropertyFilters variant='full' />
+    <div className="min-h-screen bg-[var(--color-surface-soft)]">
+      {/* Filter bar */}
+      <section className="bg-white border-b border-[var(--color-border)] sticky top-[76px] z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+          <PropertyFilters variant="full" />
         </div>
       </section>
-      <section className='bg-[#F8F9FA] px-4 py-6'>
-        <div className='max-w-7xl mx-auto px-4'>
-          <h1 className='text-2xl mb-6 font-bold text-[#1A1A2E]'>
-            {title}
-          </h1>
-          {filteredProperties.length === 0 ? (
-            <div className='text-center py-16'>
-              <p className='text-gray-500 text-lg mb-4'>
-                No se encontraron propiedades con esos filtros.
+
+      {/* Results */}
+      <section className="px-4 py-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] mb-1">
+                {granInversion === 'true' ? 'GRAN INVERSIÓN' : 'PROPIEDADES'}
               </p>
-              <p className='text-gray-400 text-sm'>
+              <h1 className="text-2xl font-bold text-[var(--color-ink)]">
+                {title}
+              </h1>
+            </div>
+            <span className="text-sm text-[var(--color-ink-tertiary)] font-medium">
+              {total > 0 ? `${total} resultados` : ''}
+            </span>
+          </div>
+
+          {/* Grid */}
+          {filteredProperties.length === 0 ? (
+            <div className="text-center py-20">
+              <div className="w-16 h-16 rounded-full bg-[var(--color-surface-soft)] flex items-center justify-center mx-auto mb-4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 text-[var(--color-ink-tertiary)]">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.35-4.35"/>
+                </svg>
+              </div>
+              <p className="text-[15px] font-semibold text-[var(--color-ink)] mb-2">
+                No se encontraron propiedades
+              </p>
+              <p className="text-[13px] text-[var(--color-ink-tertiary)]">
                 Probá cambiando los filtros o{' '}
-                <a href='/properties' className='text-[#E94560] hover:underline'>
-                  ver todas las propiedades
-                </a>
+                <a href="/properties" className="text-primary hover:underline">ver todas</a>
               </p>
             </div>
           ) : (
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProperties.map((property) => (
-                <PropertyCard
-                  property={property}
-                  key={property._id}
-                />
+                <PropertyCard property={property} key={property._id} />
               ))}
             </div>
           )}
+
+          {showPagination && (
+            <Pagination page={parseInt(page)} pageSize={parseInt(pageSize)} totalItems={total} />
+          )}
         </div>
       </section>
-    </>
+    </div>
   );
 };
 

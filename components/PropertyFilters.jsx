@@ -6,14 +6,14 @@ import { FaSearch } from 'react-icons/fa';
 const PropertyFilters = ({ variant = 'hero' }) => {
   const router = useRouter();
   const [filters, setFilters] = useState({
-    type: 'Casas',
+    type: 'Todos',
     city: 'Ciudad',
     minPrice: '',
     maxPrice: '',
-    bedrooms: '2',
+    bedrooms: '',
   });
 
-  const propertyTypes = ['Todos', 'Casas', 'Departamentos', 'Campos', 'Terrenos', 'Comercial', 'Inversiones'];
+  const propertyTypes = ['Todos', 'Casa', 'Departamento', 'Terreno', 'Campo', 'Inmueble Comercial', 'Gran Inversión'];
   const cities = ['Ciudad', 'Alta Gracia', 'Anisacate', 'Despeñaderos', 'Falda del Carmen', 'Huerta Grande'];
   const bedroomOptions = ['', '1', '2', '3', '4', '5'];
 
@@ -47,6 +47,52 @@ const PropertyFilters = ({ variant = 'hero' }) => {
         <button type="submit" className="px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary-hover transition-all">
           Buscar
         </button>
+      </form>
+    );
+  }
+
+  if (variant === 'full') {
+    return (
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 items-end">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[11px] font-bold uppercase tracking-widest text-[var(--color-ink-tertiary)]">Tipo</label>
+            <select name="type" value={filters.type} onChange={handleChange}
+              className="w-full border border-[var(--color-border)] rounded-xl py-3 px-4 text-sm bg-white text-[var(--color-ink)] focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all appearance-none cursor-pointer">
+              {propertyTypes.map((type) => (<option key={type} value={type}>{type}</option>))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[11px] font-bold uppercase tracking-widest text-[var(--color-ink-tertiary)]">Ubicación</label>
+            <select name="city" value={filters.city} onChange={handleChange}
+              className="w-full border border-[var(--color-border)] rounded-xl py-3 px-4 text-sm bg-white text-[var(--color-ink)] focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all appearance-none cursor-pointer">
+              {cities.map((city) => (<option key={city} value={city}>{city}</option>))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[11px] font-bold uppercase tracking-widest text-[var(--color-ink-tertiary)]">Precio Máx (USD)</label>
+            <input type="number" name="maxPrice" value={filters.maxPrice} onChange={handleChange}
+              placeholder="Sin límite"
+              className="w-full border border-[var(--color-border)] rounded-xl py-3 px-4 text-sm bg-white text-[var(--color-ink)] placeholder:text-[var(--color-ink-tertiary)] focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all" />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[11px] font-bold uppercase tracking-widest text-[var(--color-ink-tertiary)]">Dormitorios</label>
+            <select name="bedrooms" value={filters.bedrooms} onChange={handleChange}
+              className="w-full border border-[var(--color-border)] rounded-xl py-3 px-4 text-sm bg-white text-[var(--color-ink)] focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all appearance-none cursor-pointer">
+              <option value="">Cualquiera</option>
+              {bedroomOptions.filter(o => o).map((opt) => (<option key={opt} value={opt}>{opt}+</option>))}
+            </select>
+          </div>
+
+          <button type="submit"
+            className="w-full bg-primary hover:bg-primary-hover text-white font-bold py-3 rounded-xl transition-all shadow-md hover:shadow-lg text-sm uppercase tracking-wider flex items-center justify-center gap-2">
+            <FaSearch className="w-4 h-4" />
+            Buscar
+          </button>
+        </div>
       </form>
     );
   }
