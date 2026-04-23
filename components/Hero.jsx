@@ -128,7 +128,7 @@ const Hero = () => {
       </div>
 
       {/* Search Bar */}
-      <div className='absolute bottom-[-26px] w-full z-20 px-4'>
+      <div className='absolute bottom-[-178px] w-full z-20 px-4'>
         <div
           className='mx-auto max-w-[880px] bg-black/20 backdrop-blur-xl border border-white/10 px-2 py-2 flex items-center'
           style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
