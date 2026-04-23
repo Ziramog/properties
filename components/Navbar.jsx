@@ -26,8 +26,11 @@ const Navbar = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 p-2 md:p-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-3 md:px-12 py-5 md:py-6">
-        {/* Logo */}
-        <Link className="flex flex-shrink-0 items-center" href="/">
+        {/* Mobile: hamburger placeholder for balance */}
+        <div className="md:hidden w-8" />
+
+        {/* Logo — centered on mobile, left on desktop */}
+        <Link className="flex items-center md:items-start absolute left-1/2 md:static -translate-x-1/2 md:translate-x-0" href="/">
           <Image className="h-[72px] md:h-[84px] w-auto brightness-0 invert" src={logo} alt="Roggero & Roma" />
         </Link>
 
