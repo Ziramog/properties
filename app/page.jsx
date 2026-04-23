@@ -61,9 +61,6 @@ const HomePage = async () => {
 
       {/* 9. Agents */}
       <Agents />
-
-      {/* 7. Seller + Investor CTA — lead capture */}
-      <SellerCTA />
     </>
   );
 };
