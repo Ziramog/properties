@@ -39,15 +39,34 @@ const HeadlineChar = ({ text, className }) => (
 
 const Hero = () => {
   const router = useRouter();
-  const [query, setQuery] = useState('');
+  const [filters, setFilters] = useState({
+    operation: 'Venta',
+    type: 'Todos',
+    zone: 'Córdoba',
+    price: 'Cualquiera',
+  });
+
+  const handleChange = (e) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push('/properties');
+    const params = new URLSearchParams();
+    if (filters.type && filters.type !== 'Todos') params.set('type', filters.type);
+    if (filters.zone && filters.zone !== 'Córdoba') params.set('city', filters.zone);
+    if (filters.operation && filters.operation !== 'Todos') params.set('operation', filters.operation);
+    router.push(`/properties${params.toString() ? `?${params.toString()}` : ''}`);
   };
+
+  const heroFilterCls = 'flex flex-col justify-center h-[52px] px-5 border-r border-white/15 last:border-r-0 hover:bg-white/8 transition-all cursor-pointer';
+  const heroLabelCls = 'text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1';
+  const heroValueCls = 'text-white text-sm font-medium flex items-center justify-between gap-2';
+  const heroIconCls = 'w-4 h-4 text-white/50 flex-shrink-0';
 
   return (
     <section className='relative h-screen min-h-[700px] overflow-hidden'>
+
       {/* Background Image */}
       <div className='absolute inset-0 z-0'>
         <img
@@ -65,80 +84,119 @@ const Hero = () => {
         />
       </div>
 
-      {/* Content Block */}
+      {/* Content Block — desktop centered, mobile upper 1/3 */}
       <div className='absolute inset-0 flex flex-col items-center justify-center w-full text-center px-6 z-10'>
-
-        {/* Eyebrow */}
-        <motion.div
-          className='flex items-center justify-center gap-3 mb-4'
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-        >
-          <span className='w-7 h-px bg-white/40 flex-shrink-0' />
-          <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>
-            Córdoba, Argentina
-          </span>
-          <span className='w-7 h-px bg-white/40 flex-shrink-0' />
-        </motion.div>
-
-        {/* Headline Line 1 */}
-        <h1
-          className='font-display italic font-normal text-white mb-1 leading-tight'
-          style={{
-            fontSize: 'clamp(40px, 5vw, 76px)',
-            lineHeight: 1.0,
-          }}
-        >
-          <HeadlineChar
-            text={HERO_LINE1}
-            className='block'
-          />
-        </h1>
-
-        {/* Headline Line 2 */}
-        <h2
-          className='font-display font-bold text-white leading-tight'
-          style={{
-            fontSize: 'clamp(40px, 5vw, 76px)',
-            lineHeight: 1.0,
-          }}
-        >
-          <HeadlineChar
-            text={HERO_LINE2}
-            className='block'
-          />
-        </h2>
+        <div className='hidden md:block'>
+          {/* Desktop: centered */}
+          <motion.div
+            className='flex items-center justify-center gap-3 mb-4'
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          >
+            <span className='w-7 h-px bg-white/40 flex-shrink-0' />
+            <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Córdoba, Argentina</span>
+            <span className='w-7 h-px bg-white/40 flex-shrink-0' />
+          </motion.div>
+          <h1 className='font-display italic font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
+            <HeadlineChar text={HERO_LINE1} className='block' />
+          </h1>
+          <h2 className='font-display font-bold text-white leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
+            <HeadlineChar text={HERO_LINE2} className='block' />
+          </h2>
+        </div>
+        <div className='md:hidden pt-[88px]'>
+          {/* Mobile: upper 1/3 */}
+          <motion.div
+            className='flex items-center justify-center gap-3 mb-4'
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          >
+            <span className='w-7 h-px bg-white/40 flex-shrink-0' />
+            <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Córdoba, Argentina</span>
+            <span className='w-7 h-px bg-white/40 flex-shrink-0' />
+          </motion.div>
+          <h1 className='font-display italic font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
+            <HeadlineChar text={HERO_LINE1} className='block' />
+          </h1>
+          <h2 className='font-display font-bold text-white leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
+            <HeadlineChar text={HERO_LINE2} className='block' />
+          </h2>
+        </div>
       </div>
 
       {/* Search Bar */}
       <div className='absolute bottom-8 w-full z-20 px-6'>
         <div
-          className='mx-auto max-w-[880px] bg-black/20 backdrop-blur-xl border border-white/10 px-4 py-3 flex flex-col sm:flex-row items-center gap-3'
+          className='mx-auto max-w-[880px] bg-black/20 backdrop-blur-xl border border-white/10 px-2 py-2 flex items-center'
           style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
         >
-          {/* Desktop only — form + inline button */}
-          <form onSubmit={handleSubmit} className='hidden sm:flex items-center w-full gap-2'>
-            <input
-              type='text'
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder='Explorá propiedades en Córdoba'
-              className='flex-1 bg-black/20 border border-white/10 text-white text-sm font-medium py-3.5 px-5 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary/30 transition-all outline-none placeholder:text-white/40'
-            />
-            <button
-              type='submit'
-              className='flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-bold text-sm uppercase tracking-wider rounded-xl shrink-0 h-[44px] px-6 transition-all shadow-lg shadow-primary/30'
-            >
-              <FaSearch className='w-4 h-4' />
-              Buscar
+          {/* Desktop: full filters */}
+          <form onSubmit={handleSubmit} className='hidden md:flex items-center w-full'>
+            <div className='flex-1 grid grid-cols-4 divide-x divide-white/15'>
+              <div className={heroFilterCls}>
+                <span className={heroLabelCls}>Operación</span>
+                <span className={heroValueCls}>
+                  <select name='operation' value={filters.operation} onChange={handleChange} className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'>
+                    <option value='Venta' className='text-ink'>Venta</option>
+                    <option value='Alquiler' className='text-ink'>Alquiler</option>
+                    <option value='Todos' className='text-ink'>Todos</option>
+                  </select>
+                  <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                </span>
+              </div>
+              <div className={heroFilterCls}>
+                <span className={heroLabelCls}>Tipo</span>
+                <span className={heroValueCls}>
+                  <select name='type' value={filters.type} onChange={handleChange} className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'>
+                    <option value='Todos' className='text-ink'>Todos</option>
+                    <option value='Casa' className='text-ink'>Casas</option>
+                    <option value='Departamento' className='text-ink'>Departamentos</option>
+                    <option value='Terreno' className='text-ink'>Terrenos</option>
+                    <option value='Campo' className='text-ink'>Campos</option>
+                    <option value='Inmueble Comercial' className='text-ink'>Inmuebles Comerciales</option>
+                    <option value='Gran Inversión' className='text-ink'>Grandes Inversiones</option>
+                  </select>
+                  <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                </span>
+              </div>
+              <div className={heroFilterCls}>
+                <span className={heroLabelCls}>Zona</span>
+                <span className={heroValueCls}>
+                  <select name='zone' value={filters.zone} onChange={handleChange} className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'>
+                    <option value='Córdoba' className='text-ink'>Córdoba</option>
+                    <option value='Alta Gracia' className='text-ink'>Alta Gracia</option>
+                    <option value='Villa Allende' className='text-ink'>Villa Allende</option>
+                    <option value='Mina Clavero' className='text-ink'>Mina Clavero</option>
+                    <option value='Centro' className='text-ink'>Centro</option>
+                  </select>
+                  <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                </span>
+              </div>
+              <div className={heroFilterCls}>
+                <span className={heroLabelCls}>Precio</span>
+                <span className={heroValueCls}>
+                  <select name='price' value={filters.price} onChange={handleChange} className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'>
+                    <option value='Cualquiera' className='text-ink'>Cualquiera</option>
+                    <option value='Hasta 150k' className='text-ink'>Hasta U$S 150k</option>
+                    <option value='150k-300k' className='text-ink'>U$S 150k–300k</option>
+                    <option value='+300k' className='text-ink'>+ U$S 300k</option>
+                  </select>
+                  <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                </span>
+              </div>
+            </div>
+            <button type='submit' className='bg-primary hover:bg-primary-hover text-white font-bold text-sm uppercase tracking-[0.06em] rounded-[18px] shrink-0 h-[52px] px-8 transition-all shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 flex items-center justify-center'>
+              BUSCAR
             </button>
           </form>
-          {/* Mobile only — glass pillar button */}
+
+          {/* Mobile: glass pillar buscar button */}
           <button
             type='button'
             onClick={() => router.push('/properties')}
-            className='sm:hidden flex items-center justify-center gap-2 w-full bg-black/20 backdrop-blur-xl border border-white/10 text-white font-bold text-sm uppercase tracking-wider rounded-full py-3.5 px-8 transition-all shadow-xl'
+            className='md:hidden flex items-center justify-center gap-2 w-full bg-black/20 backdrop-blur-xl border border-white/10 text-white font-bold text-sm uppercase tracking-wider rounded-full py-3.5 px-8 transition-all shadow-xl'
           >
             <FaSearch className='w-4 h-4' />
             Buscar ahora
@@ -148,14 +206,8 @@ const Hero = () => {
 
       <style jsx>{`
         @keyframes fadeUp {
-          from {
-            opacity: 0;
-            transform: translateY(24px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(24px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </section>
