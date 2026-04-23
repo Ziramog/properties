@@ -14,16 +14,47 @@ const PropertyAddForm = () => {
           id='type'
           name='type'
           className='border rounded w-full py-2 px-3'
-          required
         >
+          <option value=''>Sin tipo específico</option>
           <option value='Casa'>Casa</option>
           <option value='Departamento'>Departamento</option>
           <option value='Campo'>Campo</option>
           <option value='Terreno'>Terreno</option>
           <option value='Inmueble Comercial'>Inmueble Comercial</option>
-          <option value='Gran Inversión'>Gran Inversión</option>
-          <option value='Otro'>Otro</option>
         </select>
+      </div>
+
+      <div className='mb-4'>
+        <label className='block text-gray-700 font-bold mb-2'>
+          Categorías (seleccionar una o más)
+        </label>
+        <div className='grid grid-cols-2 md:grid-cols-3 gap-2 bg-[#f5f0e8] p-4 rounded'>
+          <div>
+            <input type='checkbox' id='cat_casa' name='categories' value='Casa' className='mr-2' />
+            <label htmlFor='cat_casa'>Casa</label>
+          </div>
+          <div>
+            <input type='checkbox' id='cat_depto' name='categories' value='Departamento' className='mr-2' />
+            <label htmlFor='cat_depto'>Departamento</label>
+          </div>
+          <div>
+            <input type='checkbox' id='cat_terreno' name='categories' value='Terreno' className='mr-2' />
+            <label htmlFor='cat_terreno'>Terreno</label>
+          </div>
+          <div>
+            <input type='checkbox' id='cat_campo' name='categories' value='Campo' className='mr-2' />
+            <label htmlFor='cat_campo'>Campo</label>
+          </div>
+          <div>
+            <input type='checkbox' id='cat_comercial' name='categories' value='Inmueble Comercial' className='mr-2' />
+            <label htmlFor='cat_comercial'>Inmueble Comercial</label>
+          </div>
+          <div>
+            <input type='checkbox' id='cat_inversion' name='categories' value='Gran Inversión' className='mr-2' />
+            <label htmlFor='cat_inversion'>Gran Inversión</label>
+          </div>
+        </div>
+        <p className='text-xs text-gray-500 mt-1'>Si marcás "Gran Inversión", la propiedad aparecerá en el filtro +300k USD automáticamente.</p>
       </div>
       <div className='mb-4'>
         <label className='block text-gray-700 font-bold mb-2'>

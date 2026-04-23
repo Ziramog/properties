@@ -13,6 +13,10 @@ const PropertySchema = new Schema(
     },
     type: {
       type: String,
+    },
+    categories: {
+      type: [String],
+      default: [],
       required: true,
     },
     description: {

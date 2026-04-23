@@ -19,11 +19,13 @@ async function addProperty(formData) {
 
   // Access all values for amenities and images
   const amenities = formData.getAll('amenities');
+  const categories = formData.getAll('categories');
   const images = formData.getAll('images').filter((image) => image.name !== '');
 
   // Create the propertyData object with embedded seller_info
   const propertyData = {
     type: formData.get('type'),
+    categories,
     name: formData.get('name'),
     description: formData.get('description'),
     location: {
