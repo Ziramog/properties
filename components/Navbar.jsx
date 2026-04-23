@@ -25,45 +25,46 @@ const Navbar = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 p-2 md:p-4">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-3 md:px-12 py-5 md:py-6 bg-black/10 backdrop-blur-xl border border-white/10 md:rounded-full shadow-2xl">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-3 md:px-12 py-5 md:py-6">
         {/* Logo */}
         <Link className="flex flex-shrink-0 items-center" href="/">
-          <Image className="h-12 md:h-14 w-auto brightness-0 invert" src={logo} alt="Roggero & Roma" />
+          <Image className="h-12 md:h-14 w-auto" src={logo} alt="Roggero & Roma" />
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex gap-12 lg:gap-14 text-white text-base md:text-lg font-bold uppercase tracking-wider">
-          <Link href="/" className={`${pathname === '/' ? 'text-primary' : 'text-white/90'} hover:text-primary transition-colors`}>
+        <nav className="hidden md:flex gap-12 lg:gap-14 text-white">
+          <Link href="/" className={`${pathname === '/' ? 'text-primary' : 'text-white'} hover:text-primary transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`} style={{ textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}>
             Inicio
           </Link>
-          <Link href="/properties" className={`${pathname === '/properties' ? 'text-primary' : 'text-white/90'} hover:text-primary transition-colors`}>
+          <Link href="/properties" className={`${pathname === '/properties' ? 'text-primary' : 'text-white'} hover:text-primary transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`} style={{ textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}>
             Propiedades
           </Link>
-          <Link href="/contact" className={`${pathname === '/contact' ? 'text-primary' : 'text-white/90'} hover:text-primary transition-colors`}>
+          <Link href="/contact" className={`${pathname === '/contact' ? 'text-primary' : 'text-white'} hover:text-primary transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`} style={{ textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}>
             Contacto
           </Link>
         </nav>
 
         {/* Right side */}
-        <div className="flex items-center gap-5">
-          <span className="text-white/60 text-sm md:text-base hidden lg:block font-light tracking-widest">
+        <div className="hidden md:flex items-center gap-5">
+          <span className="text-white/75 text-sm font-light tracking-widest" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}>
             {PHONE_DISPLAY}
           </span>
 
           {!session && providers && Object.values(providers).map((provider) => (
-            <button
-              key={provider.name}
-              onClick={() => signIn(provider.id)}
-              className="bg-primary hover:bg-primary-hover text-white px-8 md:px-10 py-3 md:py-4 rounded-full font-bold text-sm md:text-base transition-all uppercase tracking-wider shadow-lg shadow-primary/20"
+            <a
+              href={generateWhatsAppLink({ context: 'general' })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/20 transition-all"
             >
-              Ingresar
-            </button>
+              Contactar
+            </a>
           ))}
 
           {session && (
             <Link
               href="/properties/add"
-              className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-full font-bold text-sm transition-all uppercase tracking-wider shadow-lg shadow-primary/20"
+              className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/20 transition-all"
             >
               Agregar
             </Link>
