@@ -107,7 +107,7 @@ const Hero = () => {
 
       {/* Mobile: aligned to top, pushed down by pt */}
       <div className='md:hidden absolute inset-0 flex flex-col items-center justify-start w-full text-center px-6 z-10'>
-        <div className='pt-[50px]'>
+        <div className='pt-[126px]'>
           <motion.div
             className='flex items-center justify-center gap-3 mb-4'
             initial={{ opacity: 0, y: 16 }}
