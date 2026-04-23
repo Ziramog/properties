@@ -68,25 +68,12 @@ const Hero = () => {
     <section className='relative h-screen min-h-[700px] overflow-hidden'>
       {/* Background Image */}
       <div className='absolute inset-0 z-0'>
-        {/* Mobile */}
-        <div
-          className='w-full h-full md:hidden'
-          style={{
-            backgroundImage: "url('/images/mobilehero_1.jpeg')",
-            backgroundPosition: 'center 40%',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-          }}
-        />
-        {/* Desktop */}
-        <div
-          className='w-full h-full hidden md:block'
-          style={{
-            backgroundImage: "url('/images/necesito_otro_angulo_202604221402.jpeg')",
-            backgroundPosition: 'center 40%',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-          }}
+        <img
+          src='/images/mobilehero_1.jpeg'
+          srcSet='/images/mobilehero_1.jpeg 800w, /images/necesito_otro_angulo_202604221402.jpeg 1600w'
+          sizes='100vw'
+          alt=''
+          className='w-full h-full object-cover object-center'
         />
         <div
           className='absolute inset-0'
