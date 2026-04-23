@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { FaSearch } from 'react-icons/fa';
 
 const HERO_LINE1 = 'Tu próximo hogar';
 const HERO_LINE2 = 'te está esperando';
@@ -38,31 +39,12 @@ const HeadlineChar = ({ text, className }) => (
 
 const Hero = () => {
   const router = useRouter();
-  const [filters, setFilters] = useState({
-    operation: 'Venta',
-    type: 'Todos',
-    zone: 'Córdoba',
-    price: 'Cualquiera',
-  });
-
-  const handleChange = (e) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
-  };
+  const [query, setQuery] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const params = new URLSearchParams();
-    if (filters.type && filters.type !== 'Todos') params.set('type', filters.type);
-    if (filters.zone && filters.zone !== 'Córdoba') params.set('city', filters.zone);
-    if (filters.operation && filters.operation !== 'Todos') params.set('operation', filters.operation);
-    const query = params.toString();
-    router.push(`/properties${query ? `?${query}` : ''}`);
+    router.push('/properties');
   };
-
-  const heroFilterCls = 'flex flex-col justify-center h-[52px] px-5 border-r border-white/15 last:border-r-0 hover:bg-white/8 transition-all cursor-pointer';
-  const heroLabelCls = 'text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1';
-  const heroValueCls = 'text-white text-sm font-medium flex items-center justify-between gap-2';
-  const heroIconCls = 'w-4 h-4 text-white/50 flex-shrink-0';
 
   return (
     <section className='relative h-screen min-h-[700px] overflow-hidden'>
@@ -132,105 +114,23 @@ const Hero = () => {
       {/* Search Bar */}
       <div className='absolute bottom-8 w-full z-20 px-6'>
         <div
-          className='mx-auto max-w-[880px] bg-black/20 backdrop-blur-xl border border-white/10 px-2 py-2 flex items-center'
+          className='mx-auto max-w-[880px] bg-black/20 backdrop-blur-xl border border-white/10 px-2 py-2 flex items-center gap-2'
           style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
         >
-          <form onSubmit={handleSubmit} className='flex items-center w-full'>
-            <div className='flex-1 grid grid-cols-4 divide-x divide-white/15'>
-              {/* Operación */}
-              <div className={heroFilterCls}>
-                <span className={heroLabelCls}>Operación</span>
-                <span className={heroValueCls}>
-                  <select
-                    name='operation'
-                    value={filters.operation}
-                    onChange={handleChange}
-                    className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'
-                  >
-                    <option value='Venta' className='text-ink'>Venta</option>
-                    <option value='Alquiler' className='text-ink'>Alquiler</option>
-                    <option value='Todos' className='text-ink'>Todos</option>
-                  </select>
-                  <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
-                    <path d='M6 9l6 6 6-6' />
-                  </svg>
-                </span>
-              </div>
-
-              {/* Tipo */}
-              <div className={heroFilterCls}>
-                <span className={heroLabelCls}>Tipo</span>
-                <span className={heroValueCls}>
-                  <select
-                    name='type'
-                    value={filters.type}
-                    onChange={handleChange}
-                    className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'
-                  >
-                    <option value='Todos' className='text-ink'>Todos</option>
-                    <option value='Casa' className='text-ink'>Casas</option>
-                    <option value='Departamento' className='text-ink'>Departamentos</option>
-                    <option value='Terreno' className='text-ink'>Terrenos</option>
-                    <option value='Campo' className='text-ink'>Campos</option>
-                    <option value='Inmueble Comercial' className='text-ink'>Inmuebles Comerciales</option>
-                    <option value='Gran Inversión' className='text-ink'>Grandes Inversiones</option>
-                  </select>
-                  <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
-                    <path d='M6 9l6 6 6-6' />
-                  </svg>
-                </span>
-              </div>
-
-              {/* Zona */}
-              <div className={heroFilterCls}>
-                <span className={heroLabelCls}>Zona</span>
-                <span className={heroValueCls}>
-                  <select
-                    name='zone'
-                    value={filters.zone}
-                    onChange={handleChange}
-                    className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'
-                  >
-                    <option value='Córdoba' className='text-ink'>Córdoba</option>
-                    <option value='Alta Gracia' className='text-ink'>Alta Gracia</option>
-                    <option value='Villa Allende' className='text-ink'>Villa Allende</option>
-                    <option value='Mina Clavero' className='text-ink'>Mina Clavero</option>
-                    <option value='Centro' className='text-ink'>Centro</option>
-                  </select>
-                  <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
-                    <path d='M6 9l6 6 6-6' />
-                  </svg>
-                </span>
-              </div>
-
-              {/* Precio */}
-              <div className={heroFilterCls}>
-                <span className={heroLabelCls}>Precio</span>
-                <span className={heroValueCls}>
-                  <select
-                    name='price'
-                    value={filters.price}
-                    onChange={handleChange}
-                    className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'
-                  >
-                    <option value='Cualquiera' className='text-ink'>Cualquiera</option>
-                    <option value='Hasta 150k' className='text-ink'>Hasta U$S 150k</option>
-                    <option value='150k-300k' className='text-ink'>U$S 150k–300k</option>
-                    <option value='+300k' className='text-ink'>+ U$S 300k</option>
-                  </select>
-                  <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
-                    <path d='M6 9l6 6 6-6' />
-                  </svg>
-                </span>
-              </div>
-            </div>
-
-            {/* CTA Button */}
+          <form onSubmit={handleSubmit} className='flex items-center w-full gap-2'>
+            <input
+              type='text'
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder='Explorá propiedades en Córdoba'
+              className='flex-1 bg-black/20 border border-white/10 text-white text-sm font-medium py-4 px-5 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary/30 transition-all outline-none placeholder:text-white/40'
+            />
             <button
               type='submit'
-              className='bg-primary hover:bg-primary-hover text-white font-bold text-sm uppercase tracking-[0.06em] rounded-[18px] shrink-0 h-[52px] px-8 transition-all duration-150 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-px active:translate-y-0 flex items-center justify-center'
+              className='bg-primary hover:bg-primary-hover text-white font-bold text-sm uppercase tracking-wider rounded-xl shrink-0 h-[52px] px-8 transition-all shadow-lg shadow-primary/30 flex items-center gap-2'
             >
-              BUSCAR
+              <FaSearch className='w-4 h-4' />
+              Buscar
             </button>
           </form>
         </div>

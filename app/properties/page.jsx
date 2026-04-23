@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import PropertyCard from '@/components/PropertyCard';
-import PropertyFilters from '@/components/PropertyFilters';
+import FilterDrawer from '@/components/shared/FilterDrawer';
 import Pagination from '@/components/Pagination';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
@@ -52,8 +52,9 @@ const PropertiesPage = async ({ searchParams }) => {
 
   return (
     <div className="min-h-screen bg-[var(--color-surface-soft)]">
+      <FilterDrawer />
       {/* Results */}
-      <section className="px-4 pt-[140px] pb-8">
+      <section className="px-4 pt-28 pb-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
