@@ -2,14 +2,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Home, Building2, Mountain, Sprout, Store, TrendingUp } from 'lucide-react';
+import { isGranInversion } from '@/utils/filterProperties';
 
 const CATEGORIES = [
   { type: 'Casa', icon: Home, label: 'Casas' },
   { type: 'Departamento', icon: Building2, label: 'Departamentos' },
   { type: 'Terreno', icon: Mountain, label: 'Terrenos' },
   { type: 'Campo', icon: Sprout, label: 'Campos' },
-  { type: 'Local', icon: Store, label: 'Locales' },
-  { type: 'Inversión', icon: TrendingUp, label: 'Inversión' },
+  { type: 'Inmueble Comercial', icon: Store, label: 'Locales' },
+  { type: 'Gran Inversión', icon: TrendingUp, label: 'Inversión' },
 ];
 
 const CategoryCards = () => {
@@ -18,7 +19,11 @@ const CategoryCards = () => {
 
   const handleClick = (type) => {
     setActive(type);
-    router.push(`/properties?type=${encodeURIComponent(type)}`);
+    if (type === 'Gran Inversión') {
+      router.push('/properties?granInversion=true');
+    } else {
+      router.push(`/properties?type=${encodeURIComponent(type)}`);
+    }
   };
 
   return (

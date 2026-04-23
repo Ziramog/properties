@@ -56,6 +56,17 @@ function parsePrice(priceStr) {
 }
 
 /**
+ * Check if a property qualifies as a "Gran Inversión":
+ * price >= USD 300,000 OR total area >= 10,000 m²
+ */
+export function isGranInversion(property) {
+  const numericPrice = parsePrice(property.price);
+  if (numericPrice && numericPrice >= 300000) return true;
+  if (property.square_feet && property.square_feet >= 10000) return true;
+  return false;
+}
+
+/**
  * Extract unique cities from properties array.
  */
 export function getUniqueCities(properties) {

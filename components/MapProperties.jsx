@@ -2,11 +2,12 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import ScrollReveal from './shared/ScrollReveal';
-import { filterProperties } from '@/utils/filterProperties';
+import { filterProperties, isGranInversion } from '@/utils/filterProperties';
 import { useFilters } from '@/hooks/useFilters';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
 import { getPriceDisplay } from '@/utils/propertyDisplay';
 import { FaBed, FaBath, FaWhatsapp, FaExpand } from 'react-icons/fa';
+import { TrendingUp } from 'lucide-react';
 
 const MapView = dynamic(() => import('./MapView'), {
   ssr: false,
@@ -24,7 +25,7 @@ const MapView = dynamic(() => import('./MapView'), {
   ),
 });
 
-const PROPERTY_TYPES = ['Casa', 'Departamento', 'Terreno', 'Campo', 'Local'];
+const PROPERTY_TYPES = ['Casa', 'Departamento', 'Terreno', 'Campo', 'Inmueble Comercial'];
 const PRICE_PRESETS = [
   { label: 'Todos los precios', min: '', max: '' },
   { label: 'Hasta U$S 150k', min: '', max: '150000' },
@@ -171,13 +172,17 @@ const MapProperties = ({ initialProperties = [] }) => {
   const [selectedPropertyId, setSelectedPropertyId] = useState(null);
   const [activeType, setActiveType] = useState('Casa');
   const [activePrice, setActivePrice] = useState('Todos los precios');
+  const [showGranInversion, setShowGranInversion] = useState(false);
   const { filters } = useFilters();
   const mapRef = useRef(null);
 
-  const filteredProperties = useMemo(
-    () => filterProperties(initialProperties, { ...filters, type: activeType }),
-    [initialProperties, filters, activeType]
-  );
+  const filteredProperties = useMemo(() => {
+    let result = filterProperties(initialProperties, { ...filters, type: activeType });
+    if (showGranInversion) {
+      result = result.filter(isGranInversion);
+    }
+    return result;
+  }, [initialProperties, filters, activeType, showGranInversion]);
 
   const selectedProperty = useMemo(
     () => initialProperties.find((p) => p._id === selectedPropertyId) || null,
@@ -226,6 +231,24 @@ const MapProperties = ({ initialProperties = [] }) => {
                   {type}
                 </button>
               ))}
+
+              <div className="w-px h-5 bg-[var(--color-border)] flex-shrink-0 mx-1" />
+
+              {/* Gran Inversión — special high-value filter */}
+              <button
+                onClick={() => {
+                  setShowGranInversion((prev) => !prev);
+                  if (!showGranInversion) setActiveType('Todos');
+                }}
+                className={`h-9 px-5 bg-white border text-[13px] font-medium rounded-full transition-all duration-150 flex items-center gap-1.5 ${
+                  showGranInversion
+                    ? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white'
+                    : 'border-[var(--color-border)] text-[var(--color-ink-secondary)] hover:border-[var(--color-border-strong)]'
+                }`}
+              >
+                <TrendingUp className="w-3.5 h-3.5" />
+                +300k USD
+              </button>
 
               <div className="w-px h-5 bg-[var(--color-border)] flex-shrink-0 mx-1" />
 
