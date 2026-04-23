@@ -69,13 +69,14 @@ const Hero = () => {
 
       {/* Background Image */}
       <div className='absolute inset-0 z-0'>
-        <img
-          src='/images/mobilehero_1.jpeg'
-          srcSet='/images/mobilehero_1.jpeg 800w, /images/necesito_otro_angulo_202604221402.jpeg 1600w'
-          sizes='100vw'
-          alt=''
-          className='w-full h-full object-cover object-center'
-        />
+        <picture>
+          <source media='(min-width: 768px)' srcSet='/images/necesito_otro_angulo_202604221402.jpeg' />
+          <img
+            src='/images/mobilehero_1.jpeg'
+            alt=''
+            className='w-full h-full object-cover object-center'
+          />
+        </picture>
         <div
           className='absolute inset-0'
           style={{
