@@ -1,10 +1,10 @@
 export const dynamic = 'force-dynamic';
 
 import PropertyCard from '@/components/PropertyCard';
-import FilterDrawer from '@/components/shared/FilterDrawer';
 import Pagination from '@/components/Pagination';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
+import PropertiesFiltersInline from '@/components/PropertiesFiltersInline';
 
 const PropertiesPage = async ({ searchParams }) => {
   await connectDB();
@@ -20,7 +20,7 @@ const PropertiesPage = async ({ searchParams }) => {
   } else {
     if (type && type !== 'Todos') filter.type = type;
   }
-  if (city && city !== 'Todas las ciudades') filter['location.city'] = city;
+  if (city && city !== 'Todas las ciudades' && city !== 'Ciudad') filter['location.city'] = city;
   if (minPrice) filter['rates.monthly'] = { ...filter['rates.monthly'], $gte: Number(minPrice) };
   if (maxPrice) filter['rates.monthly'] = { ...filter['rates.monthly'], $lte: Number(maxPrice) };
   if (bedrooms) {
@@ -50,31 +50,46 @@ const PropertiesPage = async ({ searchParams }) => {
     ? 'Grandes Inversiones'
     : total > 0 ? `${total} propiedades encontradas` : 'Nuestras Propiedades';
 
+  // Current filter values for the inline component
+  const currentFilters = {
+    type: type || 'Todos',
+    city: city || 'Ciudad',
+    minPrice: minPrice || '',
+    maxPrice: maxPrice || '',
+    bedrooms: bedrooms || '',
+  };
+
   return (
-    <div className="min-h-screen bg-[var(--color-surface-soft)]">
-      <FilterDrawer />
-      {/* Results */}
-      <section className="px-4 pt-28 pb-8">
+    <div className="min-h-screen bg-[#F2F2F0]">
+      {/* Header + Filters */}
+      <section className="px-4 pt-28 pb-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-5">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] mb-1">
                 {granInversion === 'true' ? 'GRAN INVERSIÓN' : 'PROPIEDADES'}
               </p>
-              <h1 className="text-2xl font-bold text-[var(--color-ink)]">
+              <h1 className="text-2xl md:text-3xl font-bold text-[var(--color-ink)]">
                 {title}
               </h1>
             </div>
-            <span className="text-sm text-[var(--color-ink-tertiary)] font-medium">
+            <span className="text-sm text-[var(--color-ink-tertiary)] font-medium hidden md:block">
               {total > 0 ? `${total} resultados` : ''}
             </span>
           </div>
 
-          {/* Grid */}
+          {/* Inline Expandable Filters */}
+          <PropertiesFiltersInline currentFilters={currentFilters} />
+        </div>
+      </section>
+
+      {/* Results */}
+      <section className="px-4 pb-8">
+        <div className="max-w-7xl mx-auto">
           {filteredProperties.length === 0 ? (
             <div className="text-center py-20">
-              <div className="w-16 h-16 rounded-full bg-[var(--color-surface-soft)] flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mx-auto mb-4 shadow-sm">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 text-[var(--color-ink-tertiary)]">
                   <circle cx="11" cy="11" r="8"/>
                   <path d="m21 21-4.35-4.35"/>
@@ -85,7 +100,7 @@ const PropertiesPage = async ({ searchParams }) => {
               </p>
               <p className="text-[13px] text-[var(--color-ink-tertiary)]">
                 Probá cambiando los filtros o{' '}
-                <a href="/properties" className="text-primary hover:underline">ver todas</a>
+                <a href="/properties" className="text-[var(--color-brand)] hover:underline font-medium">ver todas</a>
               </p>
             </div>
           ) : (
