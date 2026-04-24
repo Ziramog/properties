@@ -74,7 +74,7 @@ const Hero = () => {
           <img
             src='/images/mobilehero_1.jpeg'
             alt=''
-            className='w-full h-full object-cover object-center'
+            className='w-full h-full object-cover object-center hero-bg-zoom'
           />
         </picture>
         <div
@@ -83,6 +83,15 @@ const Hero = () => {
             background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.10) 40%, rgba(0,0,0,0.55) 100%)',
           }}
         />
+      </div>
+
+      {/* Scroll indicator */}
+      <div className='absolute bottom-[200px] left-1/2 -translate-x-1/2 z-20 hidden md:block'>
+        <div className='scroll-indicator'>
+          <svg className='w-6 h-6 text-white/50' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M19 9l-7 7-7-7' />
+          </svg>
+        </div>
       </div>
 
       {/* Content Block — desktop centered, mobile upper 1/3 */}
@@ -198,7 +207,8 @@ const Hero = () => {
           <button
             type='button'
             onClick={() => router.push('/properties')}
-            className='md:hidden flex items-center justify-center gap-2 w-full bg-black/20 backdrop-blur-xl border border-white/10 text-white font-bold text-sm uppercase tracking-wider rounded-full py-3.5 px-8 transition-all shadow-xl'
+            className='md:hidden flex items-center justify-center gap-2 w-full text-white font-bold text-sm uppercase tracking-wider rounded-full py-3.5 px-8 transition-all shadow-xl'
+            style={{ background: '#F26B2E' }}
           >
             <FaSearch className='w-4 h-4' />
             Buscar ahora
@@ -210,6 +220,20 @@ const Hero = () => {
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(24px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scrollBounce {
+          0%, 100% { transform: translateY(0px); opacity: 0.6; }
+          50% { transform: translateY(8px); opacity: 1; }
+        }
+        .scroll-indicator {
+          animation: scrollBounce 2s ease-in-out infinite;
+        }
+        .hero-bg-zoom {
+          animation: heroZoom 20s ease-in-out infinite alternate;
+        }
+        @keyframes heroZoom {
+          from { transform: scale(1.0); }
+          to { transform: scale(1.06); }
         }
       `}</style>
     </section>

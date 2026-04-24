@@ -24,7 +24,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 p-2 md:p-4">
+    <header className="fixed top-0 left-0 right-0 z-50 p-2 md:p-4" style={{ paddingTop: 'env(safe-area-inset-top, 8px)' }}>
       <div className="max-w-7xl mx-auto flex items-center justify-between px-3 md:px-12 py-5 md:py-6">
         {/* Mobile: hamburger placeholder for balance */}
         <div className="md:hidden w-8" />
