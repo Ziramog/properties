@@ -85,8 +85,8 @@ const Hero = () => {
         />
       </div>
 
-      {/* Scroll indicator — mobile only, bottom 96px */}
-      <div className='md:hidden absolute bottom-[96px] left-1/2 -translate-x-1/2 z-20 scroll-indicator-container'>
+      {/* Scroll indicator — mobile only, above pill */}
+      <div className='md:hidden absolute bottom-[180px] left-1/2 -translate-x-1/2 z-20 scroll-indicator-container'>
         <svg className='w-[22px] h-[22px] text-white/55' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
           <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M19 9l-7 7-7-7' />
         </svg>
@@ -134,7 +134,7 @@ const Hero = () => {
       </div>
 
       {/* Search Bar */}
-      <div className='absolute bottom-[120px] w-full z-20 px-4'>
+      <div className='absolute bottom-[100px] w-full z-20 px-4'>
         <div
           className='mx-auto max-w-[880px] bg-black/20 backdrop-blur-xl border border-white/10 px-2 py-2 flex items-center'
           style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
