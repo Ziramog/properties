@@ -187,7 +187,7 @@ const MapProperties = ({ initialProperties = [] }) => {
   };
 
   return (
-    <section className="bg-[#DDD9D3] pb-16 md:pb-20 px-4 md:px-6 mb-0 md:mb-0 relative overflow-hidden isolate z-[1]" id="mapa">
+    <section className="bg-[#1C1C1A] pb-16 md:pb-20 px-4 md:px-6 mb-0 md:mb-0 relative overflow-hidden isolate z-[1]" id="mapa">
       {/* Brand accent line at top */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-[var(--color-brand)] rounded-full" />
       <div className="max-w-7xl mx-auto">
@@ -199,7 +199,7 @@ const MapProperties = ({ initialProperties = [] }) => {
             </span>
           </ScrollReveal>
           <ScrollReveal delay={50}>
-            <h2 className="text-3xl md:text-[52px] font-bold text-[var(--color-ink)] leading-[1.1] tracking-[-0.01em] mb-3 md:mb-6">
+            <h2 className="text-3xl md:text-[52px] font-bold text-white leading-[1.1] tracking-[-0.01em] mb-3 md:mb-6">
               Explorá en el mapa
             </h2>
           </ScrollReveal>
@@ -211,27 +211,27 @@ const MapProperties = ({ initialProperties = [] }) => {
                 <button
                   key={type}
                   onClick={() => { setActiveType(type); setShowGranInversion(false); }}
-                  className={`h-8 md:h-9 px-3 md:px-5 bg-white border-[1.5px] text-[12px] md:text-[13px] font-medium rounded-full transition-all duration-150 whitespace-nowrap ${
+                  className={`h-8 md:h-9 px-3 md:px-5 border-[1.5px] text-[12px] md:text-[13px] font-medium rounded-full transition-all duration-150 whitespace-nowrap ${
                     activeType === type && !showGranInversion
                       ? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white shadow-[0_2px_8px_rgba(242,107,46,0.3)]'
-                      : 'border-[var(--color-border-strong)] text-[var(--color-ink)] hover:border-[var(--color-ink-tertiary)] hover:bg-[var(--color-surface-soft)]'
+                      : 'bg-white/10 border-white/20 text-white/80 hover:border-white/40 hover:bg-white/15'
                   }`}
                 >
                   {type}
                 </button>
               ))}
 
-              <div className="w-px h-5 bg-[var(--color-border)] flex-shrink-0 mx-1" />
+              <div className="w-px h-5 bg-white/15 flex-shrink-0 mx-1" />
 
               <button
                 onClick={() => {
                   setShowGranInversion((prev) => !prev);
                   if (!showGranInversion) setActiveType('Casa');
                 }}
-                className={`h-8 md:h-9 px-3 md:px-5 bg-white border-[1.5px] text-[12px] md:text-[13px] font-medium rounded-full transition-all duration-150 flex items-center gap-1.5 whitespace-nowrap ${
+                className={`h-8 md:h-9 px-3 md:px-5 border-[1.5px] text-[12px] md:text-[13px] font-medium rounded-full transition-all duration-150 flex items-center gap-1.5 whitespace-nowrap ${
                   showGranInversion
                     ? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white shadow-[0_2px_8px_rgba(242,107,46,0.3)]'
-                    : 'border-[var(--color-border-strong)] text-[var(--color-ink)] hover:border-[var(--color-ink-tertiary)] hover:bg-[var(--color-surface-soft)]'
+                    : 'bg-white/10 border-white/20 text-white/80 hover:border-white/40 hover:bg-white/15'
                 }`}
               >
                 <TrendingUp className="w-3.5 h-3.5" />

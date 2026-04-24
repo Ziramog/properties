@@ -60,7 +60,7 @@ const StatItem = ({ stat, delay }) => {
 
 const StatsBar = () => {
   return (
-    <section className="bg-[#DDD9D3] py-8 md:py-16 px-4 md:px-6 border-t border-b border-[var(--color-border)]">
+    <section className="bg-[#DDD9D3] py-8 md:py-16 px-4 md:px-6 border-t border-b border-[var(--color-border)] relative after:absolute after:inset-0 after:opacity-[0.03] after:pointer-events-none after:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWx0ZXI9InVybCgjbikiIG9wYWNpdHk9IjEiLz48L3N2Zz4=')]">
       <div className="max-w-3xl mx-auto">
         <div className="grid grid-cols-3">
           {STATS.map((stat, i) => (
