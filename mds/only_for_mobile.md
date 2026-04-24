@@ -1,0 +1,5 @@
+This cropped view is stunning — the photo, typography and eyebrow treatment are all dialed in. Quick decisive answers on your three questions:
+Logo push down — yes, slightly. About 16–20px more top padding. Right now it's fighting the safe area edge. Give it room to breathe against the sky.
+Pill — naked, not glass. At this level of photo quality, a glassmorphism pill competes with the image. Go flat orange #F26B2E, full opacity, no blur. The orange pops against the dark gradient cleanly and reinforces the brand. Glass is the right choice for the desktop search bar where it sits over complex terrain — on mobile the single CTA should be bold and unambiguous.
+Last thing before done — headline vertical position. The headline is sitting slightly high. On this phone it feels like top: 35% — ideally it should be closer to 42–45% vertically, which places it right at the visual center of the landscape (mountains + cabin zone). Right now the sky above the headline has too much empty weight.
+That's it. The mobile is ready.

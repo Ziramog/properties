@@ -194,7 +194,7 @@ const MapProperties = ({ initialProperties = [] }) => {
   };
 
   return (
-    <section className="bg-[var(--color-surface-soft)] pb-16 md:pb-20 px-4 md:px-6 mb-24 md:mb-0 relative overflow-hidden isolate z-[1]" id="mapa">
+    <section className="bg-[var(--color-surface-soft)] pb-16 md:pb-20 px-4 md:px-6 mb-0 md:mb-0 relative overflow-hidden isolate z-[1]" id="mapa">
       <div className="max-w-7xl mx-auto">
         {/* Section Header — compact on mobile */}
         <div className="mb-4 md:mb-6">
@@ -283,7 +283,7 @@ const MapProperties = ({ initialProperties = [] }) => {
           </div>
 
           {/* Mobile: full-screen map + bottom sheet */}
-          <div className="lg:hidden relative">
+          <div className="lg:hidden relative" style={{ minHeight: '65vh' }}>
             <div className="h-[65vh] rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)] relative overflow-hidden" style={{ contain: 'layout paint' }}>
               <MapView
                 ref={mapRef}
@@ -295,23 +295,25 @@ const MapProperties = ({ initialProperties = [] }) => {
 
             {/* Bottom sheet */}
             <div
-              className={`absolute inset-x-0 bottom-0 z-10 bg-white rounded-t-3xl shadow-2xl transition-transform duration-300 ${
+              className={`absolute inset-x-0 bottom-0 z-10 bg-white rounded-t-3xl shadow-2xl transition-transform duration-300 overflow-hidden ${
                 showMobileDetail && selectedProperty ? 'translate-y-0' : 'translate-y-full'
               }`}
-              style={{ height: '60vh', maxHeight: '70vh', zIndex: 10 }}
+              style={{ height: '55vh', maxHeight: '60vh', zIndex: 10 }}
             >
               {/* Handle */}
-              <div className="flex justify-center pt-3 pb-2">
+              <div className="flex justify-center pt-3 pb-2 sticky top-0 bg-white z-10">
                 <div className="w-10 h-1 bg-gray-300 rounded-full" />
               </div>
               {/* Close button */}
               <button
                 onClick={handleCloseMobileDetail}
-                className="absolute top-4 right-4 w-8 h-8 bg-black/10 backdrop-blur-sm rounded-full flex items-center justify-center"
+                className="absolute top-4 right-4 w-8 h-8 bg-black/10 backdrop-blur-sm rounded-full flex items-center justify-center z-20"
               >
                 <FaTimes className="w-4 h-4 text-[var(--color-ink)]" />
               </button>
-              <PropertyDetail property={selectedProperty} />
+              <div className="overflow-y-auto" style={{ height: 'calc(100% - 28px)' }}>
+                <PropertyDetail property={selectedProperty} />
+              </div>
             </div>
 
             {/* Backdrop */}

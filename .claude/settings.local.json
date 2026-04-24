@@ -48,5 +48,9 @@
       "Bash(git checkout *)",
       "Bash(dir *.json)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "minimax-mcp-js"
+  ],
+  "enableAllProjectMcpServers": true
 }

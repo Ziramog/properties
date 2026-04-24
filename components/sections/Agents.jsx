@@ -38,7 +38,7 @@ const AGENTS = [
 
 const Agents = () => {
   return (
-    <section className="bg-[var(--color-surface-soft)] py-20 px-6" id="equipo">
+    <section className="bg-[var(--color-surface-soft)] py-12 md:py-20 px-4 md:px-6" id="equipo">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">

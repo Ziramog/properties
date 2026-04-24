@@ -54,7 +54,7 @@ const Testimonials = () => {
   }, []);
 
   return (
-    <section className="bg-white py-20 px-6 mt-32 md:mt-28 relative z-[2] isolate">
+    <section className="bg-white py-12 md:py-20 px-4 md:px-6 mt-0 md:mt-28 relative z-[2] isolate">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -125,11 +125,11 @@ const Testimonials = () => {
 
         {/* Mobile carousel */}
         <div className="md:hidden">
-          <div className="relative min-h-[300px]">
+          <div className="relative">
             {TESTIMONIALS.map((t, i) => (
               <div key={t.id}
-                className={`absolute inset-0 flex flex-col transition-all duration-500 ${
-                  i === active ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'
+                className={`flex flex-col transition-all duration-500 ${
+                  i === active ? 'block' : 'hidden'
                 }`}>
                 <div className={`
                   relative bg-white border rounded-2xl p-7

@@ -60,7 +60,7 @@ const StatItem = ({ stat, delay }) => {
 
 const StatsBar = () => {
   return (
-    <section className="bg-[var(--color-surface-soft)] py-16 px-6 border-t border-b border-[var(--color-border)]">
+    <section className="bg-[var(--color-surface-soft)] py-10 md:py-16 px-4 md:px-6 border-t border-b border-[var(--color-border)]">
       <div className="max-w-3xl mx-auto">
         <div className="grid grid-cols-3 divide-x divide-[var(--color-border)]">
           {STATS.map((stat, i) => (
