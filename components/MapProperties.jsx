@@ -194,7 +194,7 @@ const MapProperties = ({ initialProperties = [] }) => {
   };
 
   return (
-    <section className="bg-[var(--color-surface-soft)] pb-16 md:pb-20 px-4 md:px-6 mb-24 md:mb-0 overflow-hidden relative z-[1]" id="mapa">
+    <section className="bg-[var(--color-surface-soft)] pb-16 md:pb-20 px-4 md:px-6 mb-24 md:mb-0 relative overflow-hidden isolate z-[1]" id="mapa">
       <div className="max-w-7xl mx-auto">
         {/* Section Header — compact on mobile */}
         <div className="mb-4 md:mb-6">
@@ -284,7 +284,7 @@ const MapProperties = ({ initialProperties = [] }) => {
 
           {/* Mobile: full-screen map + bottom sheet */}
           <div className="lg:hidden relative">
-            <div className="h-[65vh] rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)] overflow-hidden">
+            <div className="h-[65vh] rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)] relative overflow-hidden" style={{ contain: 'layout paint' }}>
               <MapView
                 ref={mapRef}
                 properties={filteredProperties}
@@ -298,7 +298,7 @@ const MapProperties = ({ initialProperties = [] }) => {
               className={`absolute inset-x-0 bottom-0 z-10 bg-white rounded-t-3xl shadow-2xl transition-transform duration-300 ${
                 showMobileDetail && selectedProperty ? 'translate-y-0' : 'translate-y-full'
               }`}
-              style={{ height: '60vh', maxHeight: '70vh' }}
+              style={{ height: '60vh', maxHeight: '70vh', zIndex: 10 }}
             >
               {/* Handle */}
               <div className="flex justify-center pt-3 pb-2">
