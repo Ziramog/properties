@@ -30,9 +30,11 @@ const Navbar = () => {
         <div className="md:hidden w-8" />
 
         {/* Logo — centered on mobile, left on desktop */}
-        <Link className="flex items-center md:items-start absolute left-1/2 top-[19px] md:top-0 md:static -translate-x-1/2 md:translate-x-0" href="/">
-          <Image className="h-[72px] md:h-[84px] w-auto brightness-0 invert" src={logo} alt="Roggero & Roma" />
-        </Link>
+        <div className="absolute left-1/2 -translate-x-1/2 md:static md:-translate-x-0 pt-[19px] md:pt-0">
+          <Link className="flex items-center flex-shrink-0" href="/">
+            <Image className="h-[72px] md:h-[84px] w-auto brightness-0 invert" src={logo} alt="Roggero & Roma" />
+          </Link>
+        </div>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex gap-12 lg:gap-14 text-white">
