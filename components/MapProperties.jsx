@@ -194,7 +194,7 @@ const MapProperties = ({ initialProperties = [] }) => {
   };
 
   return (
-    <section className="bg-[var(--color-surface-soft)] py-12 md:py-20 px-4 md:px-6" id="mapa">
+    <section className="bg-[var(--color-surface-soft)] py-12 md:py-20 px-4 md:px-6 mb-16 md:mb-0" id="mapa">
       <div className="max-w-7xl mx-auto">
         {/* Section Header — compact on mobile */}
         <div className="mb-4 md:mb-6">
@@ -284,7 +284,7 @@ const MapProperties = ({ initialProperties = [] }) => {
 
           {/* Mobile: full-screen map + bottom sheet */}
           <div className="lg:hidden relative">
-            <div className="h-[70vh] rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)] overflow-hidden">
+            <div className="h-[65vh] rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)] overflow-hidden">
               <MapView
                 ref={mapRef}
                 properties={filteredProperties}
