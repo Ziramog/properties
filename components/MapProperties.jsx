@@ -245,7 +245,7 @@ const MapProperties = ({ initialProperties = [] }) => {
         <ScrollReveal delay={150}>
           <div className="hidden lg:block">
             <div className="grid grid-cols-12 gap-0 h-[560px] overflow-hidden rounded-2xl border-2 border-[var(--color-border-strong)] shadow-[0_8px_32px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.08)]">
-              <div className="col-span-8 relative bg-[#E8E6E0] overflow-hidden">
+              <div className="col-span-8 relative bg-[#E8E6E0] overflow-hidden h-full">
                 <MapView
                   ref={mapRef}
                   properties={filteredProperties}
