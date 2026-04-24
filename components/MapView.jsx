@@ -93,7 +93,7 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
     setPopupProperty(property);
   }, [onMarkerClick]);
 
-  const defaultCenter = [-64.43, -31.65]; // [lng, lat] for Mapbox
+  const defaultCenter = [-64.4397, -31.6525]; // Alta Gracia [lng, lat]
 
   if (geocodedProps.length === 0) {
     return (
@@ -116,7 +116,7 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
       initialViewState={{
         longitude: defaultCenter[0],
         latitude: defaultCenter[1],
-        zoom: 11,
+        zoom: 13,
       }}
       style={{ width: '100%', height: '100%' }}
       mapStyle="mapbox://styles/mapbox/streets-v12"
