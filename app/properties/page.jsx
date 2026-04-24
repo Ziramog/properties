@@ -60,12 +60,12 @@ const PropertiesPage = async ({ searchParams }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#DDD9D3]">
+    <div className="min-h-screen bg-[#E8E6E0]">
       {/* Header + Filters */}
-      <section className="px-4 pt-28 pb-6">
+      <section className="px-4 pt-24 md:pt-28 pb-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="flex items-center justify-between mb-5">
+          <div className="flex items-end justify-between mb-5">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] mb-1">
                 {granInversion === 'true' ? 'GRAN INVERSIÓN' : 'PROPIEDADES'}
@@ -74,7 +74,7 @@ const PropertiesPage = async ({ searchParams }) => {
                 {title}
               </h1>
             </div>
-            <span className="text-sm text-[var(--color-ink-tertiary)] font-medium hidden md:block">
+            <span className="text-sm text-[var(--color-ink-tertiary)] font-medium hidden md:block pb-1">
               {total > 0 ? `${total} resultados` : ''}
             </span>
           </div>
@@ -85,7 +85,7 @@ const PropertiesPage = async ({ searchParams }) => {
       </section>
 
       {/* Results */}
-      <section className="px-4 pb-8">
+      <section className="px-4 pb-12">
         <div className="max-w-7xl mx-auto">
           {filteredProperties.length === 0 ? (
             <div className="text-center py-20">
@@ -104,7 +104,7 @@ const PropertiesPage = async ({ searchParams }) => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
               {filteredProperties.map((property) => (
                 <PropertyCard property={property} key={property._id} />
               ))}
@@ -112,7 +112,9 @@ const PropertiesPage = async ({ searchParams }) => {
           )}
 
           {showPagination && (
-            <Pagination page={parseInt(page)} pageSize={parseInt(pageSize)} totalItems={total} />
+            <div className="mt-10">
+              <Pagination page={parseInt(page)} pageSize={parseInt(pageSize)} totalItems={total} />
+            </div>
           )}
         </div>
       </section>

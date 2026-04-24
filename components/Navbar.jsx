@@ -16,6 +16,9 @@ const Navbar = () => {
   const [providers, setProviders] = useState(null);
   const pathname = usePathname();
 
+  const isHeroPage = pathname === '/';
+  const isGlassMode = !isHeroPage || isScrolled;
+
   useEffect(() => {
     const setAuthProviders = async () => {
       const res = await getProviders();
@@ -51,36 +54,49 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Desktop Nav — always visible, no scroll effects */}
-      <header className="hidden md:block fixed top-0 left-0 right-0 z-50 p-4" style={{ paddingTop: 'env(safe-area-inset-top, 8px)' }}>
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-12">
+      {/* Desktop Nav */}
+      <header
+        className={`hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isGlassMode
+            ? 'bg-[#1C1C1A]/80 backdrop-blur-xl border-b border-white/5 shadow-lg shadow-black/10'
+            : 'bg-transparent'
+        }`}
+        style={{ paddingTop: 'env(safe-area-inset-top, 8px)' }}
+      >
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 h-[72px]">
           <Link className="flex items-center flex-shrink-0" href="/">
-            <Image className="h-[84px] w-auto brightness-0 invert" src={logo} alt="Roggero & Roma" />
+            <Image
+              className="brightness-0 invert"
+              src={logo}
+              alt="Roggero & Roma"
+              style={{ height: isGlassMode ? '48px' : '72px', width: 'auto', transition: 'height 0.3s ease' }}
+            />
           </Link>
 
-          <nav className="flex gap-12 lg:gap-14 text-white">
-            <Link href="/" className={`${pathname === '/' ? 'text-primary' : 'text-white'} hover:text-primary transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`} style={{ textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}>
+          <nav className="flex gap-10 lg:gap-14">
+            <Link href="/" className={`${pathname === '/' ? 'text-[var(--color-brand)]' : 'text-white'} hover:text-[var(--color-brand)] transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`}>
               Inicio
             </Link>
-            <Link href="/properties" className={`${pathname === '/properties' ? 'text-primary' : 'text-white'} hover:text-primary transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`} style={{ textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}>
+            <Link href="/properties" className={`${pathname.startsWith('/properties') ? 'text-[var(--color-brand)]' : 'text-white'} hover:text-[var(--color-brand)] transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`}>
               Propiedades
             </Link>
-            <Link href="/contact" className={`${pathname === '/contact' ? 'text-primary' : 'text-white'} hover:text-primary transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`} style={{ textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}>
+            <Link href="/contact" className={`${pathname === '/contact' ? 'text-[var(--color-brand)]' : 'text-white'} hover:text-[var(--color-brand)] transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`}>
               Contacto
             </Link>
           </nav>
 
           <div className="flex items-center gap-5">
-            <span className="text-white/75 text-sm font-light tracking-widest" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}>
+            <span className="text-white/60 text-sm font-light tracking-widest hidden lg:block">
               {PHONE_DISPLAY}
             </span>
 
             {!session && providers && Object.values(providers).map((provider) => (
               <a
+                key={provider.id}
                 href={generateWhatsAppLink({ context: 'general' })}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/20 transition-all"
+                className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-[var(--color-brand)]/20 transition-all"
               >
                 Contactar
               </a>
@@ -89,7 +105,7 @@ const Navbar = () => {
             {session && (
               <Link
                 href="/properties/add"
-                className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/20 transition-all"
+                className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-[var(--color-brand)]/20 transition-all"
               >
                 Agregar
               </Link>
@@ -98,7 +114,7 @@ const Navbar = () => {
         </div>
       </header>
 
-      {/* Mobile Nav — scroll-aware glass bar */}
+      {/* Mobile Nav */}
       <motion.header
         className="md:hidden fixed top-0 left-0 right-0 z-50"
         style={{
@@ -106,27 +122,30 @@ const Navbar = () => {
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
         animate={{
-          height: isScrolled ? '60px' : 'auto',
-          backgroundColor: isScrolled
-            ? 'rgba(0, 0, 0, 0.55)'
+          height: isGlassMode ? '60px' : 'auto',
+          backgroundColor: isGlassMode
+            ? 'rgba(28, 28, 26, 0.85)'
             : 'transparent',
+          borderBottomWidth: isGlassMode ? '1px' : '0px',
+          borderColor: isGlassMode ? 'rgba(255,255,255,0.05)' : 'transparent',
+          backdropFilter: isGlassMode ? 'blur(20px)' : 'blur(0px)',
         }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       >
         <motion.div
           className="max-w-7xl mx-auto flex items-center px-4 relative"
           animate={{
-            paddingTop: isScrolled ? '10px' : '35px',
-            paddingBottom: isScrolled ? '10px' : '0px',
-            justifyContent: isScrolled ? 'space-between' : 'center',
+            paddingTop: isGlassMode ? '10px' : '35px',
+            paddingBottom: isGlassMode ? '10px' : '0px',
+            justifyContent: isGlassMode ? 'space-between' : 'center',
           }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Logo — centered on hero, left-aligned when scrolled */}
+          {/* Logo */}
           <motion.div
             animate={{
-              scale: isScrolled ? 0.75 : 1,
-              opacity: isScrolled ? 0.9 : 1,
+              scale: isGlassMode ? 0.75 : 1,
+              opacity: isGlassMode ? 0.9 : 1,
             }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             style={{ originX: 0.5, originY: 0.5 }}
@@ -136,14 +155,14 @@ const Navbar = () => {
                 className="brightness-0 invert"
                 src={logo}
                 alt="Roggero & Roma"
-                style={{ height: isScrolled ? '44px' : '72px', width: 'auto', transition: 'height 0.35s ease' }}
+                style={{ height: isGlassMode ? '44px' : '72px', width: 'auto', transition: 'height 0.35s ease' }}
               />
             </Link>
           </motion.div>
 
-          {/* Right side — Contact pill on scrolled, hamburger on not scrolled */}
+          {/* Right side */}
           <div className="absolute right-4 top-1/2 -translate-y-1/2">
-          {isScrolled ? (
+          {isGlassMode ? (
             <motion.a
               href={generateWhatsAppLink({ context: 'general' })}
               target="_blank"
@@ -152,7 +171,7 @@ const Navbar = () => {
               animate={{ opacity: 1, scale: 1, x: 0 }}
               exit={{ opacity: 0, scale: 0.8, x: 10 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20"
+              className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-[var(--color-brand)]/20"
             >
               Contactar
             </motion.a>
@@ -168,7 +187,7 @@ const Navbar = () => {
           </div>
         </motion.div>
 
-        {/* Mobile menu — slides in below the bar */}
+        {/* Mobile menu */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
@@ -178,7 +197,7 @@ const Navbar = () => {
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
               className="mx-4 mt-2"
             >
-              <div className="bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 space-y-3">
+              <div className="bg-[#1C1C1A]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 space-y-3">
                 <Link href="/" className="block text-white/90 text-sm font-medium py-2 px-3 rounded-lg hover:bg-white/10">Inicio</Link>
                 <Link href="/properties" className="block text-white/90 text-sm font-medium py-2 px-3 rounded-lg hover:bg-white/10">Propiedades</Link>
                 <Link href="/contact" className="block text-white/90 text-sm font-medium py-2 px-3 rounded-lg hover:bg-white/10">Contacto</Link>
