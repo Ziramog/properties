@@ -195,6 +195,8 @@ const MapProperties = ({ initialProperties = [] }) => {
 
   return (
     <section className="bg-[#F7F6F2] pb-16 md:pb-20 px-4 md:px-6 mb-0 md:mb-0 relative overflow-hidden isolate z-[1]" id="mapa">
+      {/* Brand accent line at top */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-[var(--color-brand)] rounded-full" />
       <div className="max-w-7xl mx-auto">
         {/* Section Header — compact on mobile */}
         <div className="mb-6 md:mb-8">

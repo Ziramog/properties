@@ -4,12 +4,14 @@ import { generateWhatsAppLink } from '@/utils/whatsapp';
 
 const SellerCTA = () => {
   return (
-    <section className="bg-white py-14 md:py-24 px-4 md:px-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+    <section className="bg-white py-14 md:py-24 px-4 md:px-6 relative">
+      {/* Brand accent line at top */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-[var(--color-brand)] rounded-full" />
+      <div className="max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
           {/* Sell CTA — Primary */}
           <ScrollReveal delay={100}>
-            <div className="rounded-3xl p-10 md:p-12 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_60px_rgba(0,0,0,0.28)] h-full" style={{ background: 'linear-gradient(135deg, #1C1C1A 0%, #2A2A27 100%)' }}>
+            <div className="rounded-3xl p-8 md:p-10 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_60px_rgba(0,0,0,0.28)] h-full border-l-4 border-[var(--color-brand)]" style={{ background: 'linear-gradient(135deg, #1C1C1A 0%, #2A2A27 100%)' }}>
               {/* Icon */}
               <div className="w-14 h-14 bg-[rgba(242,107,46,0.15)] rounded-xl flex items-center justify-center mb-6">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7 text-[var(--color-brand)]">
@@ -48,7 +50,7 @@ const SellerCTA = () => {
 
           {/* Invest CTA — Secondary */}
           <ScrollReveal delay={200}>
-            <div className="border border-[rgba(255,255,255,0.08)] rounded-3xl p-10 md:p-12 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_60px_rgba(0,0,0,0.28)] h-full" style={{ background: 'linear-gradient(135deg, #1C1C1A 0%, #2A2A27 100%)' }}>
+            <div className="border border-[rgba(255,255,255,0.08)] rounded-3xl p-8 md:p-10 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_60px_rgba(0,0,0,0.28)] h-full border-l-4 border-[rgba(255,255,255,0.15)]" style={{ background: 'linear-gradient(135deg, #1C1C1A 0%, #2A2A27 100%)' }}>
               {/* Icon */}
               <div className="w-14 h-14 bg-[rgba(242,107,46,0.10)] rounded-xl flex items-center justify-center mb-6">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7 text-[var(--color-brand)]">
@@ -64,7 +66,7 @@ const SellerCTA = () => {
               </p>
 
               {/* Heading */}
-              <h3 className="text-[30px] font-bold text-white leading-tight mb-3"
+              <h3 className="text-[26px] font-bold text-white leading-tight mb-3"
                 style={{ fontFamily: 'var(--font-display)' }}>
                 ¿Buscás invertir?
               </h3>
