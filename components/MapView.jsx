@@ -1,52 +1,9 @@
 'use client';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 import { useEffect, useState, useRef, forwardRef, useImperativeHandle, useCallback } from 'react';
+import Map, { Marker, Popup, useMap } from 'react-map-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import { getPropertyImage } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
-
-// ── Custom price marker icon — orange tag with arrow ──
-function createPriceIcon(property, isSelected = false, isVisited = false) {
-  const priceStr = property.price;
-  let label = '?';
-
-  if (priceStr) {
-    const cleaned = priceStr.replace(/[^0-9]/g, '');
-    const num = parseInt(cleaned, 10);
-    if (!isNaN(num)) {
-      if (num >= 1000000) label = `USD $${(num / 1000000).toFixed(1)}M`;
-      else if (num >= 1000) label = `USD ${Math.round(num / 1000)}k`;
-      else label = `USD $${num}`;
-    }
-  }
-
-  const bg = isVisited ? '#6B7B8D' : isSelected ? '#E94560' : '#C93E15';
-  const textColor = '#FFFFFF';
-  const border = isSelected
-    ? 'border:2.5px solid #fff;'
-    : isVisited
-    ? 'border:2px solid rgba(255,255,255,0.6);'
-    : 'border:2px solid rgba(255,255,255,0.8);';
-  const shadow = isSelected
-    ? 'box-shadow:0 0 0 3px #fff,0 0 0 5.5px #E94560,0 8px 24px rgba(0,0,0,0.4);'
-    : isVisited
-    ? 'box-shadow:0 2px 8px rgba(0,0,0,0.25);'
-    : 'box-shadow:0 4px 14px rgba(0,0,0,0.35),0 1px 3px rgba(0,0,0,0.2);';
-  const scale = isSelected ? 'transform:scale(1.2);' : '';
-  const z = isSelected ? 'z-index:1000;' : '';
-
-  const html = `<div class="price-tag" style="
-    background:${bg};color:${textColor};${border}${shadow}${scale}${z}
-  ">${label}</div>`;
-
-  return L.divIcon({
-    html,
-    className: 'price-marker',
-    iconSize: null,
-    iconAnchor: [40, 38],
-  });
-}
 
 // ── Known city coordinates (geocoding fallback) ──
 const knownCities = {
@@ -86,37 +43,41 @@ const knownCities = {
 
 function geocode(property) {
   if (property.location?.lat && property.location?.lng) {
-    return [property.location.lat, property.location.lng];
+    return { lat: property.location.lat, lng: property.location.lng };
   }
   const city = property.location?.city;
   if (city && knownCities[city]) {
     const base = knownCities[city];
     const offset = () => (Math.random() - 0.5) * 0.008;
-    return [base[0] + offset(), base[1] + offset()];
+    return { lat: base[0] + offset(), lng: base[1] + offset() };
   }
   return null;
 }
 
-// ── Map controller ──
-function MapController({ flyToCoords, flyToZoom }) {
-  const map = useMap();
-  useEffect(() => {
-    if (flyToCoords) {
-      map.flyTo(flyToCoords, flyToZoom || 15, { duration: 0.8 });
-    }
-  }, [flyToCoords, flyToZoom, map]);
-  return null;
+function formatPrice(property) {
+  const priceStr = property.price;
+  if (!priceStr) return '?';
+  const cleaned = priceStr.replace(/[^0-9]/g, '');
+  const num = parseInt(cleaned, 10);
+  if (isNaN(num)) return '?';
+  if (num >= 1000000) return `USD $${(num / 1000000).toFixed(1)}M`;
+  if (num >= 1000) return `USD ${Math.round(num / 1000)}k`;
+  return `USD $${num}`;
 }
 
 // ── Main MapView component ──
 const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref) => {
   const [geocodedProps, setGeocodedProps] = useState([]);
-  const [flyTarget, setFlyTarget] = useState(null);
   const [visitedIds, setVisitedIds] = useState(new Set());
+  const [popupProperty, setPopupProperty] = useState(null);
   const mapRef = useRef(null);
 
   useImperativeHandle(ref, () => ({
-    flyTo: (coords, zoom) => setFlyTarget({ coords, zoom }),
+    flyTo: (coords, zoom) => {
+      if (mapRef.current) {
+        mapRef.current.flyTo({ center: [coords[1], coords[0]], zoom: zoom || 15, duration: 800 });
+      }
+    },
   }));
 
   useEffect(() => {
@@ -126,12 +87,13 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
     setGeocodedProps(geo);
   }, [properties]);
 
-  const handleMarkerClick = useCallback((propertyId) => {
-    onMarkerClick?.(propertyId);
-    setVisitedIds((prev) => new Set([...prev, propertyId]));
+  const handleMarkerClick = useCallback((property) => {
+    onMarkerClick?.(property._id);
+    setVisitedIds((prev) => new Set([...prev, property._id]));
+    setPopupProperty(property);
   }, [onMarkerClick]);
 
-  const defaultCenter = [-31.65, -64.43];
+  const defaultCenter = [-64.43, -31.65]; // [lng, lat] for Mapbox
 
   if (geocodedProps.length === 0) {
     return (
@@ -147,55 +109,89 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
   }
 
   return (
-    <MapContainer
-      center={defaultCenter}
-      zoom={11}
-      className="h-full w-full rounded-lg"
-      scrollWheelZoom={true}
+    <Map
       ref={mapRef}
+      mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+      mapLib={import('mapbox-gl')}
+      initialViewState={{
+        longitude: defaultCenter[0],
+        latitude: defaultCenter[1],
+        zoom: 11,
+      }}
+      style={{ width: '100%', height: '100%' }}
+      mapStyle="mapbox://styles/mapbox/streets-v12"
+      scrollZoom={true}
+      attributionControl={false}
     >
-      {/* High-contrast tile layer */}
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com">CARTO</a>'
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-      />
+      {geocodedProps.map((property) => {
+        const isSelected = selectedId === property._id;
+        const isVisited = visitedIds.has(property._id);
+        const bg = isVisited ? '#6B7B8D' : isSelected ? '#E94560' : '#C93E15';
 
-      <MapController flyToCoords={flyTarget?.coords} flyToZoom={flyTarget?.zoom} />
-
-      {geocodedProps.map((property) => (
-        <Marker
-          key={property._id}
-          position={property.coords}
-          icon={createPriceIcon(property, selectedId === property._id, visitedIds.has(property._id))}
-          eventHandlers={{
-            click: () => handleMarkerClick(property._id),
-          }}
-        >
-          <Popup className="property-popup">
-            <div className="min-w-[220px] max-w-[260px]" style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
-              <img
-                src={getPropertyImage(property)}
-                alt={property.name}
-                className="w-full h-32 object-cover rounded-md mb-2"
-              />
-              <h3 className="font-semibold text-sm text-gray-900 line-clamp-1">{property.name}</h3>
-              <p className="text-xs text-gray-500 mt-0.5">
-                {property.location?.city}, {property.location?.state}
-              </p>
-              <p className="font-bold mt-1 text-base" style={{ color: '#C93E15' }}>{property.price || 'Consultar'}</p>
-              <a
-                href={generateWhatsAppLink({ property })}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 flex items-center justify-center gap-1.5 w-full py-1.5 bg-whatsapp text-white text-xs font-semibold rounded-md hover:bg-whatsapp-hover transition-colors"
-              >
-                WhatsApp
-              </a>
+        return (
+          <Marker
+            key={property._id}
+            longitude={property.coords.lng}
+            latitude={property.coords.lat}
+            anchor="bottom"
+            onClick={(e) => {
+              e.originalEvent.stopPropagation();
+              handleMarkerClick(property);
+            }}
+          >
+            <div
+              className="price-tag"
+              style={{
+                background: bg,
+                color: '#FFFFFF',
+                border: isSelected ? '2.5px solid #fff' : '2px solid rgba(255,255,255,0.8)',
+                boxShadow: isSelected
+                  ? '0 0 0 3px #fff, 0 0 0 5.5px #E94560, 0 8px 24px rgba(0,0,0,0.4)'
+                  : '0 4px 14px rgba(0,0,0,0.35), 0 1px 3px rgba(0,0,0,0.2)',
+                transform: isSelected ? 'scale(1.2)' : 'none',
+                zIndex: isSelected ? 1000 : 'auto',
+              }}
+            >
+              {formatPrice(property)}
             </div>
-          </Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+          </Marker>
+        );
+      })}
+
+      {popupProperty && (
+        <Popup
+          longitude={popupProperty.coords.lng}
+          latitude={popupProperty.coords.lat}
+          anchor="top"
+          onClose={() => setPopupProperty(null)}
+          closeButton={true}
+          closeOnClick={false}
+          maxWidth="280px"
+          className="property-popup"
+        >
+          <div className="min-w-[220px] max-w-[260px]" style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+            <img
+              src={getPropertyImage(popupProperty)}
+              alt={popupProperty.name}
+              className="w-full h-32 object-cover rounded-md mb-2"
+            />
+            <h3 className="font-semibold text-sm text-gray-900 line-clamp-1">{popupProperty.name}</h3>
+            <p className="text-xs text-gray-500 mt-0.5">
+              {popupProperty.location?.city}, {popupProperty.location?.state}
+            </p>
+            <p className="font-bold mt-1 text-base" style={{ color: '#C93E15' }}>{popupProperty.price || 'Consultar'}</p>
+            <a
+              href={generateWhatsAppLink({ property: popupProperty })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 flex items-center justify-center gap-1.5 w-full py-1.5 bg-whatsapp text-white text-xs font-semibold rounded-md hover:bg-whatsapp-hover transition-colors"
+            >
+              WhatsApp
+            </a>
+          </div>
+        </Popup>
+      )}
+    </Map>
   );
 });
 
