@@ -20,7 +20,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-navy text-white">
+    <footer className="text-white" style={{ background: 'linear-gradient(180deg, #1C1C1A 0%, #141412 100%)' }}>
       {/* ============================================
           DESKTOP FOOTER — visible md+ (≥768px)
           ============================================ */}
@@ -32,58 +32,58 @@ const Footer = () => {
               <Link href="/" className="inline-block mb-4">
                 <Image src={logo} alt="Roggero & Roma" width={130} height={40} className="h-auto brightness-0 invert" />
               </Link>
-              <p className="text-white/40 text-sm leading-relaxed max-w-xs">
+              <p className="text-white/55 text-sm leading-relaxed max-w-xs">
                 Más de 10 años de experiencia en el mercado inmobiliario de Córdoba.
               </p>
             </div>
 
             {/* Properties */}
             <div>
-              <h3 className="text-xs font-bold text-white/60 uppercase tracking-wider mb-4">Propiedades</h3>
+              <h3 className="text-xs font-bold text-white/80 uppercase tracking-wider mb-4">Propiedades</h3>
               <ul className="space-y-2.5 text-sm">
-                <li><Link href="/properties?type=Casa" className="text-white/40 hover:text-white transition-colors">Casas</Link></li>
-                <li><Link href="/properties?type=Departamento" className="text-white/40 hover:text-white transition-colors">Departamentos</Link></li>
-                <li><Link href="/properties?type=Terreno" className="text-white/40 hover:text-white transition-colors">Terrenos</Link></li>
-                <li><Link href="/properties?type=Campo" className="text-white/40 hover:text-white transition-colors">Campos</Link></li>
+                <li><Link href="/properties?type=Casa" className="text-white/55 hover:text-white transition-colors">Casas</Link></li>
+                <li><Link href="/properties?type=Departamento" className="text-white/55 hover:text-white transition-colors">Departamentos</Link></li>
+                <li><Link href="/properties?type=Terreno" className="text-white/55 hover:text-white transition-colors">Terrenos</Link></li>
+                <li><Link href="/properties?type=Campo" className="text-white/55 hover:text-white transition-colors">Campos</Link></li>
               </ul>
             </div>
 
             {/* Company */}
             <div>
-              <h3 className="text-xs font-bold text-white/60 uppercase tracking-wider mb-4">Empresa</h3>
+              <h3 className="text-xs font-bold text-white/80 uppercase tracking-wider mb-4">Empresa</h3>
               <ul className="space-y-2.5 text-sm">
-                <li><Link href="/properties" className="text-white/40 hover:text-white transition-colors">Propiedades</Link></li>
-                <li><Link href="/properties?type=Inmueble+Comercial" className="text-white/40 hover:text-white transition-colors">Propiedades Comerciales</Link></li>
-                <li><Link href="/contact" className="text-white/40 hover:text-white transition-colors">Contacto</Link></li>
+                <li><Link href="/properties" className="text-white/55 hover:text-white transition-colors">Propiedades</Link></li>
+                <li><Link href="/properties?type=Inmueble+Comercial" className="text-white/55 hover:text-white transition-colors">Propiedades Comerciales</Link></li>
+                <li><Link href="/contact" className="text-white/55 hover:text-white transition-colors">Contacto</Link></li>
               </ul>
             </div>
 
             {/* Contact */}
             <div>
-              <h3 className="text-xs font-bold text-white/60 uppercase tracking-wider mb-4">Contacto</h3>
-              <div className="flex flex-wrap gap-2 mb-4">
+              <h3 className="text-xs font-bold text-white/80 uppercase tracking-wider mb-4">Contacto</h3>
+              <div className="flex flex-wrap gap-2.5 mb-4">
                 <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer"
-                  className="w-10 h-10 bg-whatsapp rounded-lg flex items-center justify-center text-white hover:scale-105 transition-transform" aria-label="WhatsApp">
+                  className="w-10 h-10 bg-whatsapp rounded-full flex items-center justify-center text-white hover:scale-110 hover:shadow-[0_4px_16px_rgba(37,211,102,0.4)] transition-all duration-200" aria-label="WhatsApp">
                   <FaWhatsapp className="text-base" />
                 </a>
                 <a href={`tel:${PHONE_NUMBER}`}
-                  className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-white hover:bg-white/20 transition-colors" aria-label="Llamar">
+                  className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-[var(--color-brand)] hover:shadow-[0_4px_16px_rgba(242,107,46,0.4)] transition-all duration-200" aria-label="Llamar">
                   <FaPhone className="text-sm" />
                 </a>
                 <a href="#"
-                  className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-white hover:bg-white/20 transition-colors" aria-label="Telegram">
+                  className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-[var(--color-brand)] hover:shadow-[0_4px_16px_rgba(242,107,46,0.4)] transition-all duration-200" aria-label="Telegram">
                   <FaTelegram className="text-base" />
                 </a>
                 <a href="#"
-                  className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-white hover:bg-white/20 transition-colors" aria-label="YouTube">
+                  className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-[var(--color-brand)] hover:shadow-[0_4px_16px_rgba(242,107,46,0.4)] transition-all duration-200" aria-label="YouTube">
                   <FaYoutube className="text-base" />
                 </a>
               </div>
-              <p className="text-white/40 text-sm">{PHONE_DISPLAY}</p>
+              <p className="text-white/55 text-sm">{PHONE_DISPLAY}</p>
             </div>
           </div>
 
-          <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between text-sm text-white/30 gap-2">
+          <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between text-sm text-white/40 gap-2">
             <p>© {currentYear} Roggero & Roma. Todos los derechos reservados.</p>
           </div>
         </div>

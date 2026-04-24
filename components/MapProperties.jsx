@@ -194,10 +194,10 @@ const MapProperties = ({ initialProperties = [] }) => {
   };
 
   return (
-    <section className="bg-[var(--color-surface-soft)] pb-16 md:pb-20 px-4 md:px-6 mb-0 md:mb-0 relative overflow-hidden isolate z-[1]" id="mapa">
+    <section className="bg-[#F7F6F2] pb-16 md:pb-20 px-4 md:px-6 mb-0 md:mb-0 relative overflow-hidden isolate z-[1]" id="mapa">
       <div className="max-w-7xl mx-auto">
         {/* Section Header — compact on mobile */}
-        <div className="mb-4 md:mb-6">
+        <div className="mb-6 md:mb-8">
           <ScrollReveal>
             <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] block mb-1 md:mb-2">
               MAPA INTERACTIVO

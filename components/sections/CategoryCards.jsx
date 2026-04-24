@@ -27,11 +27,11 @@ const CategoryCards = () => {
   };
 
   return (
-    <section className='bg-[var(--color-surface-soft)] py-12 md:py-20 px-4 md:px-6'>
+    <section className='bg-[#F7F6F2] py-14 md:py-24 px-4 md:px-6'>
       <div className='max-w-7xl mx-auto'>
 
         {/* Header */}
-        <div className='text-center mb-8 md:mb-12'>
+        <div className='text-center mb-10 md:mb-14'>
 
           {/* Eyebrow */}
           <span
@@ -55,7 +55,7 @@ const CategoryCards = () => {
         </div>
 
         {/* Cards Grid */}
-        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4'>
+        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-5'>
           {CATEGORIES.map(({ type, label, icon: Icon }) => {
             const isActive = active === type;
             return (
@@ -63,15 +63,15 @@ const CategoryCards = () => {
                 key={type}
                 onClick={() => handleClick(type)}
                 className={`
-                  group relative bg-white border rounded-2xl p-4 pb-3 md:p-7 md:pb-6
-                  flex flex-col items-center gap-2.5 md:gap-3.5 cursor-pointer
+                  group relative bg-white border rounded-2xl p-5 pb-4 md:p-8 md:pb-7
+                  flex flex-col items-center gap-3 md:gap-4 cursor-pointer
                   border-[var(--color-border)]
-                  shadow-[var(--shadow-card)]
+                  shadow-[0_2px_8px_rgba(0,0,0,0.06),0_4px_16px_rgba(0,0,0,0.04)]
                   transition-all duration-200
-                  hover:border-primary
-                  hover:shadow-[var(--shadow-card-hover)]
-                  hover:-translate-y-0.5
-                  ${isActive ? 'bg-[var(--color-brand-light)] border-primary' : ''}
+                  hover:border-[var(--color-brand)]
+                  hover:shadow-[0_8px_32px_rgba(0,0,0,0.10),0_2px_8px_rgba(0,0,0,0.06)]
+                  hover:-translate-y-1
+                  ${isActive ? 'bg-[var(--color-brand-light)] border-[var(--color-brand)]' : ''}
                 `}
               >
                 {/* Icon */}

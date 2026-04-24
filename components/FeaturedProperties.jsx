@@ -56,14 +56,14 @@ const FeaturedProperties = ({ properties = [] }) => {
   }
 
   return (
-    <section className='bg-white py-12 md:py-20 px-4 md:px-6 overflow-hidden'>
+    <section className='bg-white py-14 md:py-24 px-4 md:px-6 overflow-hidden'>
       <div className='max-w-7xl mx-auto'>
 
         {/* Section Header */}
-        <div className='flex justify-between items-end mb-6 md:mb-10'>
+        <div className='flex justify-between items-end mb-8 md:mb-12'>
           <div className='flex flex-col gap-2.5'>
             <ScrollReveal>
-              <span className='text-[11px] font-bold uppercase tracking-[0.1em] text-primary'>
+              <span className='text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)]'>
                 PROPIEDADES DESTACADAS
               </span>
             </ScrollReveal>
@@ -76,7 +76,7 @@ const FeaturedProperties = ({ properties = [] }) => {
           <ScrollReveal>
             <a
               href='/properties'
-              className='text-primary text-sm font-medium hover:underline hidden md:block'
+              className='text-[var(--color-brand)] text-sm font-medium hover:underline hidden md:block'
             >
               Ver todas →
             </a>
@@ -140,8 +140,8 @@ const FeaturedProperties = ({ properties = [] }) => {
                   onClick={() => goTo(i)}
                   className={`rounded-full transition-all ${
                     i === current
-                      ? 'w-6 h-2 bg-primary'
-                      : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
+                      ? 'w-6 h-2 bg-[var(--color-brand)]'
+                      : 'w-2 h-2 bg-[var(--color-border)] hover:bg-[var(--color-ink-tertiary)]'
                   }`}
                   aria-label={`Ir a propiedad ${i + 1}`}
                 />
@@ -178,8 +178,8 @@ const FeaturedProperties = ({ properties = [] }) => {
                 onClick={() => goTo(i)}
                 className={`rounded-full transition-all ${
                   i === current
-                    ? 'w-6 h-2 bg-primary'
-                    : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
+                    ? 'w-6 h-2 bg-[var(--color-brand)]'
+                    : 'w-2 h-2 bg-[var(--color-border)] hover:bg-[var(--color-ink-tertiary)]'
                 }`}
                 aria-label={`Ir a propiedad ${i + 1}`}
               />
@@ -192,7 +192,7 @@ const FeaturedProperties = ({ properties = [] }) => {
           <div className='text-center mt-8 md:mt-12'>
             <a
               href='/properties'
-              className='inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-primary hover:bg-primary-hover text-white rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-px'
+              className='inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200 shadow-lg shadow-[var(--color-brand)]/25 hover:shadow-xl hover:shadow-[var(--color-brand)]/30 hover:-translate-y-px'
             >
               Explorar todas las propiedades
               <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
