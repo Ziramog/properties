@@ -194,7 +194,7 @@ const MapProperties = ({ initialProperties = [] }) => {
   };
 
   return (
-    <section className="bg-[var(--color-surface-soft)] py-12 md:py-20 px-4 md:px-6 mb-16 md:mb-0" id="mapa">
+    <section className="bg-[var(--color-surface-soft)] pb-16 md:pb-20 px-4 md:px-6 mb-24 md:mb-0" id="mapa">
       <div className="max-w-7xl mx-auto">
         {/* Section Header — compact on mobile */}
         <div className="mb-4 md:mb-6">
