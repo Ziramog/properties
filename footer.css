@@ -174,3 +174,126 @@
     text-align: center;
   }
 }
+
+/* ============================================
+   MOBILE FOOTER — max-width: 767px
+   Compact layout: under 280px total height
+   ============================================ */
+@media (max-width: 767px) {
+  /* 1. Overall container */
+  .footer-m-inner {
+    padding: 32px 20px 24px !important;
+  }
+
+  /* 2. Logo + tagline row */
+  .footer-m-brand {
+    margin-bottom: 20px;
+  }
+
+  .footer-m-logo {
+    height: 28px !important;
+    width: auto !important;
+  }
+
+  .footer-m-tagline {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.45);
+    margin-top: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    line-height: 1.4;
+  }
+
+  /* 3. Links grid — 2 columns, flat */
+  .footer-m-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 24px;
+    margin-bottom: 20px;
+  }
+
+  .footer-m-link {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 2.0;
+    text-decoration: none;
+    display: block;
+    transition: color 150ms ease;
+  }
+
+  .footer-m-link:hover {
+    color: #fff;
+  }
+
+  /* 4. Contact row — single horizontal line */
+  .footer-m-contact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .footer-m-icon-wa {
+    width: 34px;
+    height: 34px;
+    background: #25D366;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    text-decoration: none;
+    transition: transform 150ms ease;
+  }
+
+  .footer-m-icon-wa:hover {
+    transform: scale(1.08);
+  }
+
+  .footer-m-icon-wa svg {
+    width: 18px;
+    height: 18px;
+    color: #fff;
+  }
+
+  .footer-m-icon-circle {
+    width: 34px;
+    height: 34px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    text-decoration: none;
+    transition: background 150ms ease;
+  }
+
+  .footer-m-icon-circle:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .footer-m-icon-circle svg {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .footer-m-phone {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.55);
+    margin-left: 4px;
+  }
+
+  /* 5. Copyright strip */
+  .footer-m-copyright {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 16px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.30);
+    text-align: center;
+    line-height: 1.4;
+  }
+}
