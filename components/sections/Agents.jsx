@@ -38,7 +38,7 @@ const AGENTS = [
 
 const Agents = () => {
   return (
-    <section className="bg-[#FAFAF8] py-14 md:py-24 px-4 md:px-6 relative" id="equipo">
+    <section className="bg-[#DDD9D3] py-14 md:py-24 px-4 md:px-6 relative" id="equipo">
       {/* Brand accent line at top */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-[var(--color-brand)] rounded-full" />
       <div className="max-w-7xl mx-auto">
