@@ -26,12 +26,6 @@ const MapView = dynamic(() => import('./MapView'), {
 });
 
 const PROPERTY_TYPES = ['Casa', 'Departamento', 'Terreno', 'Campo', 'Inmueble Comercial'];
-const PRICE_PRESETS = [
-  { label: 'Todos', min: '', max: '' },
-  { label: 'Hasta 150k', min: '', max: '150000' },
-  { label: '150k-300k', min: '150000', max: '300000' },
-  { label: '+300k', min: '300000', max: '' },
-];
 
 const EmptyState = ({ onClose }) => (
   <div className="flex flex-col items-center justify-center h-full text-center px-8">
@@ -158,7 +152,6 @@ const PropertyDetail = ({ property, onClose }) => {
 const MapProperties = ({ initialProperties = [] }) => {
   const [selectedPropertyId, setSelectedPropertyId] = useState(null);
   const [activeType, setActiveType] = useState('Casa');
-  const [activePrice, setActivePrice] = useState('Todos');
   const [showGranInversion, setShowGranInversion] = useState(false);
   const [showMobileDetail, setShowMobileDetail] = useState(false);
   const { filters } = useFilters();
@@ -213,13 +206,13 @@ const MapProperties = ({ initialProperties = [] }) => {
 
           {/* Filter pills — scrollable horizontal on mobile */}
           <ScrollReveal delay={100}>
-            <div className="flex flex-wrap md:flex-nowrap items-center gap-2 md:gap-2.5 overflow-x-auto md:overflow-visible pb-2 md:pb-0 -mx-1 px-1 md:mx-0 md:px-0">
+            <div className="flex flex-wrap items-center gap-2 md:gap-2.5 overflow-x-auto md:overflow-visible pb-2 md:pb-0 -mx-1 px-1 md:mx-0 md:px-0">
               {PROPERTY_TYPES.map((type) => (
                 <button
                   key={type}
-                  onClick={() => setActiveType(type)}
+                  onClick={() => { setActiveType(type); setShowGranInversion(false); }}
                   className={`h-8 md:h-9 px-3 md:px-5 bg-white border-[1.5px] text-[12px] md:text-[13px] font-medium rounded-full transition-all duration-150 whitespace-nowrap ${
-                    activeType === type
+                    activeType === type && !showGranInversion
                       ? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white shadow-[0_2px_8px_rgba(242,107,46,0.3)]'
                       : 'border-[var(--color-border-strong)] text-[var(--color-ink)] hover:border-[var(--color-ink-tertiary)] hover:bg-[var(--color-surface-soft)]'
                   }`}
@@ -228,12 +221,12 @@ const MapProperties = ({ initialProperties = [] }) => {
                 </button>
               ))}
 
-              <div className="w-px h-5 bg-[var(--color-border)] flex-shrink-0 mx-1 hidden md:block" />
+              <div className="w-px h-5 bg-[var(--color-border)] flex-shrink-0 mx-1" />
 
               <button
                 onClick={() => {
                   setShowGranInversion((prev) => !prev);
-                  if (!showGranInversion) setActiveType('Todos');
+                  if (!showGranInversion) setActiveType('Casa');
                 }}
                 className={`h-8 md:h-9 px-3 md:px-5 bg-white border-[1.5px] text-[12px] md:text-[13px] font-medium rounded-full transition-all duration-150 flex items-center gap-1.5 whitespace-nowrap ${
                   showGranInversion
@@ -244,24 +237,6 @@ const MapProperties = ({ initialProperties = [] }) => {
                 <TrendingUp className="w-3.5 h-3.5" />
                 +300k
               </button>
-
-              <div className="w-px h-5 bg-[var(--color-border)] flex-shrink-0 mx-1 hidden md:block" />
-
-              <div className="flex items-center bg-black/[0.06] rounded-full px-1.5 py-1 gap-1 border border-[var(--color-border)]">
-                {PRICE_PRESETS.map((preset) => (
-                  <button
-                    key={preset.label}
-                    onClick={() => setActivePrice(preset.label)}
-                    className={`h-[26px] md:h-[30px] px-2 md:px-3 text-[11px] md:text-[13px] font-medium rounded-full transition-all duration-150 ${
-                      activePrice === preset.label
-                        ? 'bg-[var(--color-brand)] text-white shadow-[0_2px_6px_rgba(242,107,46,0.3)]'
-                        : 'text-[var(--color-ink)] hover:bg-black/[0.08]'
-                    }`}
-                  >
-                    {preset.label}
-                  </button>
-                ))}
-              </div>
             </div>
           </ScrollReveal>
         </div>
