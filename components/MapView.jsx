@@ -144,12 +144,14 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
               style={{
                 background: bg,
                 color: '#FFFFFF',
-                border: isSelected ? '2.5px solid #fff' : '2px solid rgba(255,255,255,0.8)',
+                border: 'none',
+                borderRadius: '10px',
                 boxShadow: isSelected
-                  ? '0 0 0 3px #fff, 0 0 0 5.5px #E94560, 0 8px 24px rgba(0,0,0,0.4)'
-                  : '0 4px 14px rgba(0,0,0,0.35), 0 1px 3px rgba(0,0,0,0.2)',
-                transform: isSelected ? 'scale(1.2)' : 'none',
+                  ? '0 0 0 3px rgba(233,69,96,0.4), 0 8px 24px rgba(0,0,0,0.35)'
+                  : '0 4px 16px rgba(0,0,0,0.3), 0 1px 4px rgba(0,0,0,0.15)',
+                transform: isSelected ? 'scale(1.15)' : 'none',
                 zIndex: isSelected ? 1000 : 'auto',
+                transition: 'all 0.2s ease',
               }}
             >
               {formatPrice(property)}
