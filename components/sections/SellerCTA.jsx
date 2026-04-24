@@ -17,7 +17,7 @@ const SellerCTA = () => {
               {/* Background image */}
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80')" }}
+                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=85')" }}
               />
               {/* Dark overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1A]/90 via-[#1C1C1A]/80 to-[#2A2A27]/85" />
@@ -70,7 +70,7 @@ const SellerCTA = () => {
               {/* Background image */}
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80')" }}
+                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1577495508048-b635879837f1?w=1200&q=85')" }}
               />
               {/* Dark overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1A]/90 via-[#1C1C1A]/80 to-[#2A2A27]/85" />
