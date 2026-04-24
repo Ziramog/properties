@@ -60,7 +60,7 @@ const PropertiesPage = async ({ searchParams }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F2F2F0]">
+    <div className="min-h-screen bg-[#E8E6E1]">
       {/* Header + Filters */}
       <section className="px-4 pt-28 pb-6">
         <div className="max-w-7xl mx-auto">
