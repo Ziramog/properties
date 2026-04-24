@@ -21,17 +21,23 @@ function createPriceIcon(property, isSelected = false, isVisited = false) {
     }
   }
 
-  const bg = isVisited ? '#94a3b8' : isSelected ? '#E94560' : '#D84315';
-  const shadow = isSelected
-    ? 'box-shadow:0 0 0 3px #fff,0 0 0 5px #E94560,0 6px 20px rgba(0,0,0,0.35);'
+  const bg = isVisited ? '#6B7B8D' : isSelected ? '#E94560' : '#C93E15';
+  const textColor = '#FFFFFF';
+  const border = isSelected
+    ? 'border:2.5px solid #fff;'
     : isVisited
-    ? 'box-shadow:0 2px 6px rgba(0,0,0,0.15);'
-    : 'box-shadow:0 4px 12px rgba(0,0,0,0.25);';
+    ? 'border:2px solid rgba(255,255,255,0.6);'
+    : 'border:2px solid rgba(255,255,255,0.8);';
+  const shadow = isSelected
+    ? 'box-shadow:0 0 0 3px #fff,0 0 0 5.5px #E94560,0 8px 24px rgba(0,0,0,0.4);'
+    : isVisited
+    ? 'box-shadow:0 2px 8px rgba(0,0,0,0.25);'
+    : 'box-shadow:0 4px 14px rgba(0,0,0,0.35),0 1px 3px rgba(0,0,0,0.2);';
   const scale = isSelected ? 'transform:scale(1.2);' : '';
   const z = isSelected ? 'z-index:1000;' : '';
 
   const html = `<div class="price-tag" style="
-    background:${bg};${shadow}${scale}${z}
+    background:${bg};color:${textColor};${border}${shadow}${scale}${z}
   ">${label}</div>`;
 
   return L.divIcon({
@@ -165,8 +171,8 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
             click: () => handleMarkerClick(property._id),
           }}
         >
-          <Popup>
-            <div className="min-w-[220px] max-w-[260px]">
+          <Popup className="property-popup">
+            <div className="min-w-[220px] max-w-[260px]" style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
               <img
                 src={getPropertyImage(property)}
                 alt={property.name}
@@ -176,7 +182,7 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
               <p className="text-xs text-gray-500 mt-0.5">
                 {property.location?.city}, {property.location?.state}
               </p>
-              <p className="font-bold text-primary mt-1 text-base">{property.price || 'Consultar'}</p>
+              <p className="font-bold mt-1 text-base" style={{ color: '#C93E15' }}>{property.price || 'Consultar'}</p>
               <a
                 href={generateWhatsAppLink({ property })}
                 target="_blank"
