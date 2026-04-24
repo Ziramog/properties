@@ -86,7 +86,7 @@ const Hero = () => {
       </div>
 
       {/* Scroll indicator */}
-      <div className='absolute bottom-[200px] left-1/2 -translate-x-1/2 z-20 hidden md:block'>
+      <div className='absolute bottom-[200px] left-1/2 -translate-x-1/2 z-20'>
         <div className='scroll-indicator'>
           <svg className='w-6 h-6 text-white/50' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
             <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M19 9l-7 7-7-7' />
@@ -208,7 +208,7 @@ const Hero = () => {
             type='button'
             onClick={() => router.push('/properties')}
             className='md:hidden flex items-center justify-center gap-2 w-full text-white font-bold text-sm uppercase tracking-wider rounded-full py-3.5 px-8 transition-all shadow-xl'
-            style={{ background: '#F26B2E' }}
+            style={{ background: 'rgba(242,107,46,0.95)' }}
           >
             <FaSearch className='w-4 h-4' />
             Buscar ahora
