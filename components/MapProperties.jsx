@@ -194,7 +194,7 @@ const MapProperties = ({ initialProperties = [] }) => {
   };
 
   return (
-    <section className="bg-[var(--color-surface-soft)] pb-16 md:pb-20 px-4 md:px-6 mb-24 md:mb-0" id="mapa">
+    <section className="bg-[var(--color-surface-soft)] pb-16 md:pb-20 px-4 md:px-6 mb-24 md:mb-0 overflow-hidden relative z-[1]" id="mapa">
       <div className="max-w-7xl mx-auto">
         {/* Section Header — compact on mobile */}
         <div className="mb-4 md:mb-6">
@@ -295,7 +295,7 @@ const MapProperties = ({ initialProperties = [] }) => {
 
             {/* Bottom sheet */}
             <div
-              className={`fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-3xl shadow-2xl transition-transform duration-300 ${
+              className={`absolute inset-x-0 bottom-0 z-10 bg-white rounded-t-3xl shadow-2xl transition-transform duration-300 ${
                 showMobileDetail && selectedProperty ? 'translate-y-0' : 'translate-y-full'
               }`}
               style={{ height: '60vh', maxHeight: '70vh' }}
@@ -317,7 +317,7 @@ const MapProperties = ({ initialProperties = [] }) => {
             {/* Backdrop */}
             {showMobileDetail && (
               <div
-                className="fixed inset-0 bg-black/30 z-40 lg:hidden"
+                className="absolute inset-0 bg-black/30 z-[5] lg:hidden"
                 onClick={handleCloseMobileDetail}
               />
             )}
