@@ -114,21 +114,22 @@ const Navbar = () => {
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       >
         <motion.div
-          className="max-w-7xl mx-auto flex items-center justify-between px-4"
+          className="max-w-7xl mx-auto flex items-center px-4 relative"
           animate={{
             paddingTop: isScrolled ? '10px' : '35px',
             paddingBottom: isScrolled ? '10px' : '0px',
+            justifyContent: isScrolled ? 'space-between' : 'center',
           }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Logo */}
+          {/* Logo — centered on hero, left-aligned when scrolled */}
           <motion.div
             animate={{
               scale: isScrolled ? 0.75 : 1,
               opacity: isScrolled ? 0.9 : 1,
             }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            style={{ originX: 0, originY: 0.5 }}
+            style={{ originX: 0.5, originY: 0.5 }}
           >
             <Link className="flex items-center flex-shrink-0" href="/">
               <Image
@@ -141,6 +142,7 @@ const Navbar = () => {
           </motion.div>
 
           {/* Right side — Contact pill on scrolled, hamburger on not scrolled */}
+          <div className="absolute right-4 top-1/2 -translate-y-1/2">
           {isScrolled ? (
             <motion.a
               href={generateWhatsAppLink({ context: 'general' })}
@@ -163,6 +165,7 @@ const Navbar = () => {
               {isMobileMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
             </button>
           )}
+          </div>
         </motion.div>
 
         {/* Mobile menu — slides in below the bar */}
