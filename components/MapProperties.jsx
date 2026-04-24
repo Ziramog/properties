@@ -194,29 +194,29 @@ const MapProperties = ({ initialProperties = [] }) => {
   };
 
   return (
-    <section className="bg-[var(--color-surface-soft)] py-20 px-6" id="mapa">
+    <section className="bg-[var(--color-surface-soft)] py-12 md:py-20 px-4 md:px-6" id="mapa">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="mb-6">
+        {/* Section Header — compact on mobile */}
+        <div className="mb-4 md:mb-6">
           <ScrollReveal>
-            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] block mb-3">
+            <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] block mb-1 md:mb-2">
               MAPA INTERACTIVO
             </span>
           </ScrollReveal>
           <ScrollReveal delay={50}>
-            <h2 className="text-[52px] font-bold text-[var(--color-ink)] leading-[1.1] tracking-[-0.01em] mb-6">
+            <h2 className="text-3xl md:text-[52px] font-bold text-[var(--color-ink)] leading-[1.1] tracking-[-0.01em] mb-3 md:mb-6">
               Explorá en el mapa
             </h2>
           </ScrollReveal>
 
-          {/* Filter pills */}
+          {/* Filter pills — scrollable horizontal on mobile */}
           <ScrollReveal delay={100}>
-            <div className="flex flex-wrap items-center gap-2.5 mb-3">
+            <div className="flex flex-wrap md:flex-nowrap items-center gap-2 md:gap-2.5 overflow-x-auto md:overflow-visible pb-2 md:pb-0 -mx-1 px-1 md:mx-0 md:px-0">
               {PROPERTY_TYPES.map((type) => (
                 <button
                   key={type}
                   onClick={() => setActiveType(type)}
-                  className={`h-9 px-5 bg-white border text-[13px] font-medium rounded-full transition-all duration-150 ${
+                  className={`h-8 md:h-9 px-3 md:px-5 bg-white border text-[12px] md:text-[13px] font-medium rounded-full transition-all duration-150 whitespace-nowrap ${
                     activeType === type
                       ? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white'
                       : 'border-[var(--color-border)] text-[var(--color-ink-secondary)] hover:border-[var(--color-border-strong)]'
@@ -226,31 +226,31 @@ const MapProperties = ({ initialProperties = [] }) => {
                 </button>
               ))}
 
-              <div className="w-px h-5 bg-[var(--color-border)] flex-shrink-0 mx-1" />
+              <div className="w-px h-5 bg-[var(--color-border)] flex-shrink-0 mx-1 hidden md:block" />
 
               <button
                 onClick={() => {
                   setShowGranInversion((prev) => !prev);
                   if (!showGranInversion) setActiveType('Todos');
                 }}
-                className={`h-9 px-5 bg-white border text-[13px] font-medium rounded-full transition-all duration-150 flex items-center gap-1.5 ${
+                className={`h-8 md:h-9 px-3 md:px-5 bg-white border text-[12px] md:text-[13px] font-medium rounded-full transition-all duration-150 flex items-center gap-1.5 whitespace-nowrap ${
                   showGranInversion
                     ? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white'
                     : 'border-[var(--color-border)] text-[var(--color-ink-secondary)] hover:border-[var(--color-border-strong)]'
                 }`}
               >
                 <TrendingUp className="w-3.5 h-3.5" />
-                +300k USD
+                +300k
               </button>
 
-              <div className="w-px h-5 bg-[var(--color-border)] flex-shrink-0 mx-1" />
+              <div className="w-px h-5 bg-[var(--color-border)] flex-shrink-0 mx-1 hidden md:block" />
 
               <div className="flex items-center bg-black/[0.04] rounded-full px-1.5 py-1 gap-1">
                 {PRICE_PRESETS.map((preset) => (
                   <button
                     key={preset.label}
                     onClick={() => setActivePrice(preset.label)}
-                    className={`h-[30px] px-3 text-[13px] font-medium rounded-full transition-all duration-150 ${
+                    className={`h-[26px] md:h-[30px] px-2 md:px-3 text-[11px] md:text-[13px] font-medium rounded-full transition-all duration-150 ${
                       activePrice === preset.label
                         ? 'bg-[var(--color-brand)] text-white'
                         : 'text-[var(--color-ink-secondary)] hover:bg-black/[0.06]'
