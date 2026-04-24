@@ -42,14 +42,14 @@ const StatItem = ({ stat, delay }) => {
   return (
     <div ref={ref}>
       <ScrollReveal delay={delay}>
-        <div className="text-center px-8">
+        <div className="text-center px-3 md:px-8">
           <p
-            className="text-[64px] font-bold text-[var(--color-brand)] leading-none tracking-tight mb-2"
+            className="text-[36px] sm:text-[48px] md:text-[64px] font-bold text-[var(--color-brand)] leading-none tracking-tight mb-1 md:mb-2"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             {count}{stat.suffix}
           </p>
-          <p className="text-[15px] font-normal text-[var(--color-ink-secondary)]">
+          <p className="text-[12px] md:text-[15px] font-normal text-[var(--color-ink-secondary)] leading-tight">
             {stat.label}
           </p>
         </div>
@@ -60,11 +60,13 @@ const StatItem = ({ stat, delay }) => {
 
 const StatsBar = () => {
   return (
-    <section className="bg-[var(--color-surface-soft)] py-10 md:py-16 px-4 md:px-6 border-t border-b border-[var(--color-border)]">
+    <section className="bg-[var(--color-surface-soft)] py-8 md:py-16 px-4 md:px-6 border-t border-b border-[var(--color-border)]">
       <div className="max-w-3xl mx-auto">
-        <div className="grid grid-cols-3 divide-x divide-[var(--color-border)]">
+        <div className="grid grid-cols-3">
           {STATS.map((stat, i) => (
-            <StatItem key={stat.label} stat={stat} delay={i * 80} />
+            <div key={stat.label} className={i < STATS.length - 1 ? 'border-r border-[var(--color-border)]' : ''}>
+              <StatItem stat={stat} delay={i * 80} />
+            </div>
           ))}
         </div>
       </div>
