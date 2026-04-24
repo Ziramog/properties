@@ -30,7 +30,7 @@ const Navbar = () => {
         <div className="md:hidden w-8" />
 
         {/* Logo — centered on mobile, left on desktop */}
-        <Link className="flex items-center md:items-start absolute left-1/2 md:static -translate-x-1/2 md:translate-x-0" href="/">
+        <Link className="flex items-center md:items-start absolute left-1/2 md:static -translate-x-1/2 md:translate-x-0 mt-[57px] md:mt-0" href="/">
           <Image className="h-[72px] md:h-[84px] w-auto brightness-0 invert" src={logo} alt="Roggero & Roma" />
         </Link>
 
