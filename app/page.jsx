@@ -2,8 +2,6 @@ import Hero from '@/components/Hero';
 import CategoryCards from '@/components/sections/CategoryCards';
 import FeaturedPropertiesCarousel from '@/components/FeaturedPropertiesCarousel';
 import MapProperties from '@/components/MapProperties';
-import Testimonials from '@/components/Testimonials';
-import ClientMarquee from '@/components/sections/ClientMarquee';
 import SellerCTA from '@/components/sections/SellerCTA';
 import StatsBar from '@/components/sections/StatsBar';
 import Agents from '@/components/sections/Agents';
@@ -38,30 +36,24 @@ const HomePage = async () => {
       {/* 1. Hero — emotional hook + search + trust strip */}
       <Hero />
 
-      {/* 2. Categories — quick intent selection */}
-      <CategoryCards counts={typeCounts} />
-
-      {/* 3. Featured — best inventory showcase */}
-      <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured).slice(0, 6)} />
-
-      {/* 4. Stats Bar */}
+      {/* 2. Stats Bar — social proof metrics */}
       <StatsBar />
 
-      {/* 5. Dual CTA */}
-      <SellerCTA />
+      {/* 3. Categories — quick intent selection */}
+      <CategoryCards counts={typeCounts} />
 
-      {/* 6. Map — geographic exploration */}
+      {/* 4. Featured — best inventory showcase */}
+      <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured).slice(0, 6)} />
+
+      {/* 5. Map — geographic exploration */}
       <div className="relative" style={{ isolation: 'isolate' }}>
         <MapProperties initialProperties={serializedProperties} />
       </div>
 
-      {/* 7. Social proof — testimonials */}
-      <Testimonials />
+      {/* 6. CTA — seller + investor */}
+      <SellerCTA />
 
-      {/* 8. Client logos */}
-      <ClientMarquee />
-
-      {/* 9. Agents */}
+      {/* 7. Agents */}
       <Agents />
     </>
   );
