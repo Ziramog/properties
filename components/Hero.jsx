@@ -113,8 +113,8 @@ const Hero = () => {
         </h2>
       </div>
 
-      {/* Mobile: content at top: 45%, vertically centered */}
-      <div className='md:hidden absolute top-[45%] left-0 right-0 flex flex-col items-center w-full text-center px-6 z-10' style={{ transform: 'translateY(-50%)' }}>
+      {/* Mobile: content at top: 42%, vertically centered */}
+      <div className='md:hidden absolute top-[42%] left-0 right-0 flex flex-col items-center w-full text-center px-6 z-10' style={{ transform: 'translateY(-50%)' }}>
         <motion.div
           className='flex items-center justify-center gap-3 mb-4'
           initial={{ opacity: 0, y: 16 }}
@@ -204,7 +204,7 @@ const Hero = () => {
             type='button'
             onClick={() => router.push('/properties')}
             className='md:hidden flex items-center justify-center gap-2 w-full text-white font-bold text-sm uppercase tracking-wider rounded-full py-3.5 px-8 transition-all shadow-xl'
-            style={{ background: 'rgba(242,107,46,0.95)' }}
+            style={{ background: '#F26B2E' }}
           >
             <FaSearch className='w-4 h-4' />
             Buscar ahora
