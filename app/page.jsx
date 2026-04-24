@@ -51,12 +51,9 @@ const HomePage = async () => {
       <SellerCTA />
 
       {/* 6. Map — geographic exploration */}
-      <div className="relative overflow-hidden" style={{ contain: 'layout paint style', isolation: 'isolate' }}>
+      <div className="relative" style={{ isolation: 'isolate' }}>
         <MapProperties initialProperties={serializedProperties} />
       </div>
-
-      {/* separator — breaks stacking context between map and testimonials */}
-      <div className="block w-full h-0 clear-both" style={{ isolation: 'isolate' }} />
 
       {/* 7. Social proof — testimonials */}
       <Testimonials />

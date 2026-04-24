@@ -283,8 +283,8 @@ const MapProperties = ({ initialProperties = [] }) => {
           </div>
 
           {/* Mobile: full-screen map + bottom sheet */}
-          <div className="lg:hidden relative" style={{ minHeight: '65vh' }}>
-            <div className="h-[65vh] rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)] relative overflow-hidden" style={{ contain: 'layout paint' }}>
+          <div className="lg:hidden relative overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)]" style={{ height: '65vh' }}>
+            <div className="absolute inset-0">
               <MapView
                 ref={mapRef}
                 properties={filteredProperties}
