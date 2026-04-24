@@ -187,19 +187,19 @@ const MapProperties = ({ initialProperties = [] }) => {
   };
 
   return (
-    <section className="bg-[#1C1C1A] pb-16 md:pb-20 px-4 md:px-6 mb-0 md:mb-0 relative overflow-hidden isolate z-[1]" id="mapa">
+    <section className="bg-[#1C1C1A] pt-14 md:pt-20 pb-16 md:pb-20 px-4 md:px-6 mb-0 md:mb-0 relative overflow-hidden isolate z-[1]" id="mapa">
       {/* Brand accent line at top */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-[var(--color-brand)] rounded-full" />
       <div className="max-w-7xl mx-auto">
-        {/* Section Header — compact on mobile */}
-        <div className="mb-6 md:mb-8">
+        {/* Section Header */}
+        <div className="mb-8 md:mb-10">
           <ScrollReveal>
-            <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] block mb-1 md:mb-2">
+            <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--color-brand)] block mb-2 md:mb-3">
               MAPA INTERACTIVO
             </span>
           </ScrollReveal>
           <ScrollReveal delay={50}>
-            <h2 className="text-3xl md:text-[52px] font-bold text-white leading-[1.1] tracking-[-0.01em] mb-3 md:mb-6">
+            <h2 className="text-3xl md:text-[52px] font-bold text-white leading-[1.1] tracking-[-0.01em] mb-4 md:mb-7">
               Explorá en el mapa
             </h2>
           </ScrollReveal>
