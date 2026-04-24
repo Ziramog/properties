@@ -85,13 +85,11 @@ const Hero = () => {
         />
       </div>
 
-      {/* Scroll indicator */}
-      <div className='absolute bottom-[200px] left-1/2 -translate-x-1/2 z-20'>
-        <div className='scroll-indicator'>
-          <svg className='w-6 h-6 text-white/50' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M19 9l-7 7-7-7' />
-          </svg>
-        </div>
+      {/* Scroll indicator — mobile only, bottom 96px */}
+      <div className='md:hidden absolute bottom-[96px] left-1/2 -translate-x-1/2 z-20 scroll-indicator-container'>
+        <svg className='w-[22px] h-[22px] text-white/55' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+          <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M19 9l-7 7-7-7' />
+        </svg>
       </div>
 
       {/* Content Block — desktop centered, mobile upper 1/3 */}
@@ -115,26 +113,24 @@ const Hero = () => {
         </h2>
       </div>
 
-      {/* Mobile: aligned to top, pushed down by pt */}
-      <div className='md:hidden absolute inset-0 flex flex-col items-center justify-start w-full text-center px-6 z-10'>
-        <div className='pt-[202px]'>
-          <motion.div
-            className='flex items-center justify-center gap-3 mb-4'
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          >
-            <span className='w-7 h-px bg-white/40 flex-shrink-0' />
-            <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Córdoba, Argentina</span>
-            <span className='w-7 h-px bg-white/40 flex-shrink-0' />
-          </motion.div>
-          <h1 className='font-display italic font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
-            <HeadlineChar text={HERO_LINE1} className='block' />
-          </h1>
-          <h2 className='font-display font-bold text-white leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
-            <HeadlineChar text={HERO_LINE2} className='block' />
-          </h2>
-        </div>
+      {/* Mobile: content at top: 45%, vertically centered */}
+      <div className='md:hidden absolute top-[45%] left-0 right-0 flex flex-col items-center w-full text-center px-6 z-10' style={{ transform: 'translateY(-50%)' }}>
+        <motion.div
+          className='flex items-center justify-center gap-3 mb-4'
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+        >
+          <span className='w-7 h-px bg-white/40 flex-shrink-0' />
+          <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Córdoba, Argentina</span>
+          <span className='w-7 h-px bg-white/40 flex-shrink-0' />
+        </motion.div>
+        <h1 className='font-display italic font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
+          <HeadlineChar text={HERO_LINE1} className='block' />
+        </h1>
+        <h2 className='font-display font-bold text-white leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
+          <HeadlineChar text={HERO_LINE2} className='block' />
+        </h2>
       </div>
 
       {/* Search Bar */}
@@ -225,11 +221,16 @@ const Hero = () => {
           0%, 100% { transform: translateY(0px); opacity: 0.6; }
           50% { transform: translateY(8px); opacity: 1; }
         }
-        .scroll-indicator {
+        .scroll-indicator-container {
           animation: scrollBounce 2s ease-in-out infinite;
         }
-        .hero-bg-zoom {
-          animation: heroZoom 20s ease-in-out infinite alternate;
+        @media (prefers-reduced-motion: no-preference) {
+          .hero-bg-zoom {
+            animation: heroZoom 20s ease-in-out infinite alternate;
+          }
+          .scroll-indicator-container {
+            animation: scrollBounce 2s ease-in-out infinite;
+          }
         }
         @keyframes heroZoom {
           from { transform: scale(1.0); }
