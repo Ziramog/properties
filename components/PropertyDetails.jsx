@@ -2,7 +2,7 @@ import BedIcon from './icons/BedIcon';
 import BathtubIcon from './icons/BathtubIcon';
 import AreaIcon from './icons/AreaIcon';
 import MapIcon from './icons/MapIcon';
-import PropertyMap from '@/components/PropertyMap';
+import PropertyLocationTabs from '@/components/PropertyLocationTabs';
 
 const CheckIcon = () => (
   <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 16 16'>
@@ -129,7 +129,8 @@ const PropertyDetails = ({ property }) => {
         </ul>
       </div>
       <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
-        <PropertyMap property={property} />
+        <h3 className='text-lg font-bold mb-4 text-[#1A1A2E]'>Ubicación</h3>
+        <PropertyLocationTabs property={property} />
       </div>
     </main>
   );
