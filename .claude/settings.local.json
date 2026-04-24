@@ -46,8 +46,7 @@
       "Bash(git revert *)",
       "Bash(dir \"F:\\\\property-pulse-nextjs\\\\public\\\\images\\\\mobilehero*\")",
       "Bash(git checkout *)",
-      "Bash(dir *.json)",
-      "Bash(curl -s \"https://api.mapbox.com/styles/v1/mapbox/streets-v12?access_token=pk.eyJ1Ijoid29sZmltNzciLCJhIjoiY21vZDl0OXcyMDByMjJyb2M4d2d1Z3p6aiJ9.f7Mey-Ks7uwGK2aHPyRIPQ\")"
+      "Bash(dir *.json)"
     ]
   },
   "enableAllProjectMcpServers": true,
