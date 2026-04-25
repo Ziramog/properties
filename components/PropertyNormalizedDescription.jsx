@@ -79,8 +79,8 @@ const PropertyNormalizedDescription = ({ property }) => {
             {detalles.map((detail, i) => {
               const { display, full } = truncate(detail);
               return (
-                <li key={i} className='flex items-start gap-2'>
-                  <CheckIcon />
+                <li key={i} className='flex items-start gap-3'>
+                  <span className='flex-shrink-0 mt-0.5'><CheckIcon /></span>
                   <span
                     className='text-[var(--color-ink-secondary)] text-[13px] leading-snug'
                     title={full !== display ? full : undefined}
