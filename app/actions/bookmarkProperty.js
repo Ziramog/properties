@@ -11,40 +11,32 @@ async function bookmarkProperty(propertyId) {
   const sessionUser = await getSessionUser();
 
   if (!sessionUser || !sessionUser.userId) {
-    return { error: 'User ID is required' };
+    return { error: 'Debes iniciar sesión', isBookmarked: false };
   }
 
   const { userId } = sessionUser;
 
-  // Find user in database
   const user = await User.findById(userId);
 
-  // Check if property is bookmarked
-  let isBookmarked = user.bookmarks.some(
-    (bookmark) => bookmark.toString() === propertyId
-  );
-  console.log(isBookmarked);
-
-  let message;
-
-  if (isBookmarked) {
-    // If already bookmarked, remove it
-    user.bookmarks.pull(propertyId);
-    message = 'Bookmark removed successfully';
-    isBookmarked = false;
-  } else {
-    // If not bookmarked, add it
-    user.bookmarks.push(propertyId);
-    message = 'Bookmark added successfully';
-    isBookmarked = true;
+  if (!user) {
+    return { error: 'Usuario no encontrado', isBookmarked: false };
   }
 
-  console.log(message);
+  const isBookmarked = user.bookmarks.some(
+    (bookmark) => bookmark.toString() === propertyId
+  );
 
-  await user.save();
-  revalidatePath('/properties/saved', 'page');
-
-  return { message, isBookmarked };
+  if (isBookmarked) {
+    user.bookmarks.pull(propertyId);
+    await user.save();
+    revalidatePath('/properties/saved', 'page');
+    return { isBookmarked: false };
+  } else {
+    user.bookmarks.push(propertyId);
+    await user.save();
+    revalidatePath('/properties/saved', 'page');
+    return { isBookmarked: true };
+  }
 }
 
 export default bookmarkProperty;

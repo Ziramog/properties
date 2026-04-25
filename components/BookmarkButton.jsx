@@ -20,11 +20,15 @@ const BookmarkButton = ({ property }) => {
     }
 
     checkBookmarkStatus(property._id).then((res) => {
-      if (res.error) toast.error(res.error);
-      if (res.isBookmarked) setIsBookmarked(res.isBookmarked);
+      if (res?.error) {
+        toast.error(res.error);
+      }
+      setIsBookmarked(res?.isBookmarked ?? false);
+      setLoading(false);
+    }).catch(() => {
       setLoading(false);
     });
-  }, [property._id, userId, checkBookmarkStatus]);
+  }, [userId, property._id]);
 
   const handleClick = async () => {
     if (!userId) {
@@ -32,14 +36,20 @@ const BookmarkButton = ({ property }) => {
       return;
     }
 
-    bookmarkProperty(property._id).then((res) => {
-      if (res.error) return toast.error(res.error);
-      setIsBookmarked(res.isBookmarked);
+    const res = await bookmarkProperty(property._id);
+    if (res?.error) {
+      toast.error(res.error);
+      return;
+    }
+    setIsBookmarked(res?.isBookmarked ?? false);
+    if (res?.isBookmarked) {
       toast.success('Propiedad guardada');
-    });
+    } else {
+      toast.success('Propiedad removida de favoritos');
+    }
   };
 
-  if (loading) return <p className='text-center'>Cargando...</p>;
+  if (loading) return <p className='text-center py-3 text-sm text-gray-500'>Cargando...</p>;
 
   return isBookmarked ? (
     <button
