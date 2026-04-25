@@ -7,7 +7,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { FaPhone, FaWhatsapp, FaBars, FaTimes } from 'react-icons/fa';
 import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whatsapp';
 import logo from '@/assets/images/logo.png';
-import { signIn, useSession, getProviders } from 'next-auth/react';
+import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
 
 const Navbar = () => {
   const { data: session } = useSession();
@@ -100,13 +100,18 @@ const Navbar = () => {
               </button>
             ))}
 
-            {session && session.user?.role === 'admin' && (
-              <Link
-                href="/properties/add"
-                className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-[var(--color-brand)]/20 transition-all"
-              >
-                Agregar
-              </Link>
+            {session && (
+              <div className="flex items-center gap-3">
+                <span className="text-white/80 text-sm hidden lg:block">
+                  {session.user?.name?.split(' ')[0]}
+                </span>
+                <button
+                  onClick={() => signOut()}
+                  className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full font-medium text-sm transition-all"
+                >
+                  Salir
+                </button>
+              </div>
             )}
           </div>
         </div>

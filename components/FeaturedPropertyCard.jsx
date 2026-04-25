@@ -1,28 +1,56 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaBed, FaBath, FaRegHeart, FaWhatsapp } from 'react-icons/fa';
+import { FaBed, FaBath, FaRegHeart, FaHeart, FaWhatsapp } from 'react-icons/fa';
 import AreaIcon from './icons/AreaIcon';
 import { getAreaDisplay, getPriceDisplay, getPropertyImage, isNewListing } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
+import bookmarkProperty from '@/app/actions/bookmarkProperty';
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const FeaturedPropertyCard = ({ property }) => {
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
   const image = getPropertyImage(property);
   const area = getAreaDisplay(property);
   const price = getPriceDisplay(property);
   const isNew = isNewListing(property);
 
-  // Status: determine badge variant
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [toggling, setToggling] = useState(false);
+
   const status = property.status;
   const statusLabel = status === 'available' ? 'Disponible'
     : status === 'rented' ? 'Arrendado'
     : status === 'consult' ? 'A consultar'
     : null;
 
+  const handleBookmark = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!userId) {
+      toast.error('Debes iniciar sesión para guardar una propiedad');
+      return;
+    }
+    if (toggling) return;
+    setToggling(true);
+    const res = await bookmarkProperty(property._id);
+    if (res?.error) {
+      toast.error(res.error);
+    } else {
+      setIsBookmarked(res?.isBookmarked ?? false);
+      toast.success(res?.isBookmarked ? 'Propiedad guardada' : 'Propiedad removida');
+    }
+    setToggling(false);
+  };
+
   return (
     <div className="group relative bg-white rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-[0_4px_16px_rgba(0,0,0,0.10),0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.15),0_4px_16px_rgba(0,0,0,0.08)] hover:-translate-y-1">
       <Link href={`/properties/${property._id}`} className="block">
-        {/* Image — fixed 210px height per demo */}
+        {/* Image */}
         <div className="relative h-[210px] overflow-hidden bg-gray-100">
           <Image
             src={image}
@@ -41,7 +69,7 @@ const FeaturedPropertyCard = ({ property }) => {
             </div>
           )}
 
-          {/* Status badge — stacked below price when price exists, otherwise top-left */}
+          {/* Status badge */}
           {statusLabel && (
             <div className={`absolute z-10 ${price ? 'top-[52px]' : 'top-3'} left-3`}>
               <span
@@ -58,13 +86,20 @@ const FeaturedPropertyCard = ({ property }) => {
             </div>
           )}
 
-          {/* Heart icon */}
+          {/* Heart bookmark button */}
           <button
-            className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-white transition-all duration-200 shadow-sm z-10"
-            onClick={(e) => e.preventDefault()}
-            aria-label="Guardar propiedad"
+            onClick={handleBookmark}
+            className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 z-10 ${
+              isBookmarked
+                ? 'bg-red-500 hover:bg-red-600 text-white shadow-md'
+                : 'bg-white/90 backdrop-blur-sm hover:bg-white text-gray-400 hover:text-red-500 shadow-sm'
+            }`}
+            aria-label={isBookmarked ? 'Quitar de favoritos' : 'Guardar en favoritos'}
           >
-            <FaRegHeart className="w-4 h-4" />
+            {isBookmarked
+              ? <FaHeart className="w-4 h-4" />
+              : <FaRegHeart className="w-4 h-4" />
+            }
           </button>
 
           {/* WhatsApp */}
@@ -80,14 +115,12 @@ const FeaturedPropertyCard = ({ property }) => {
           </a>
         </div>
 
-        {/* Content — padding per demo: 16px 18px 18px */}
+        {/* Content */}
         <div className="p-4 pl-[18px] pr-[18px] pb-[18px]">
-          {/* Title */}
           <h3 className="text-[15px] font-semibold text-heading leading-[1.4] line-clamp-2 mb-1.5">
             {property.name}
           </h3>
 
-          {/* Location */}
           <p className="text-[13px] text-[var(--color-ink-tertiary)] mb-3.5 line-clamp-1 flex items-center gap-1">
             <svg className="w-3.5 h-3.5 text-[var(--color-ink-tertiary)] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
@@ -95,10 +128,8 @@ const FeaturedPropertyCard = ({ property }) => {
             {property.location?.city}
           </p>
 
-          {/* Divider */}
           <div className="h-px bg-[var(--color-border)] mb-3.5" />
 
-          {/* Specs Row */}
           <div className="flex items-center gap-4 text-[13px] font-medium text-[var(--color-ink-secondary)]">
             {property.beds != null && (
               <span className="flex items-center gap-1.5">

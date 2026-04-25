@@ -4,19 +4,18 @@ import PropertyCard from '@/components/PropertyCard';
 import Pagination from '@/components/Pagination';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
+import User from '@/models/User';
 import PropertiesFiltersInline from '@/components/PropertiesFiltersInline';
+import { getSessionUser } from '@/utils/getSessionUser';
 
 const PropertiesPage = async ({ searchParams }) => {
   await connectDB();
 
-  // Parse filter params from URL
-  const { pageSize = 9, page = 1, type, city, minPrice, maxPrice, bedrooms, granInversion } = searchParams;
+  const { pageSize = 9, page = 1, type, city, minPrice, maxPrice, bedrooms, granInversion, favoritos } = searchParams;
 
-  // Build MongoDB filter
   const filter = {};
   if (granInversion === 'true') {
-    // Show all high-value properties: price >= 300000 USD OR area >= 10000 m²
-    // We handle this client-side on the full dataset; here just skip type filter
+    // handled client-side below
   } else {
     if (type && type !== 'Todos') filter.type = type;
   }
@@ -28,13 +27,25 @@ const PropertiesPage = async ({ searchParams }) => {
     filter.beds = { $gte: num };
   }
 
+  // Favoritos filter: only show properties in user's bookmarks
+  let bookmarkedIds = [];
+  if (favoritos === 'true') {
+    const sessionUser = await getSessionUser();
+    if (sessionUser?.userId) {
+      const user = await User.findById(sessionUser.userId).lean();
+      bookmarkedIds = (user?.bookmarks || []).map((b) => b.toString());
+      if (bookmarkedIds.length > 0) {
+        filter._id = { $in: bookmarkedIds };
+      }
+    }
+  }
+
   const skip = (Number(page) - 1) * Number(pageSize);
   const total = await Property.countDocuments(filter);
   const properties = await Property.find(filter).skip(skip).limit(Number(pageSize));
 
   const showPagination = total > Number(pageSize);
 
-  // For Gran Inversión: fetch all (no pagination) and filter client-side
   let filteredProperties = properties.map((p) => ({
     ...p.toObject(),
     _id: p._id.toString(),
@@ -46,17 +57,19 @@ const PropertiesPage = async ({ searchParams }) => {
     filteredProperties = filteredProperties.filter(isGranInversion);
   }
 
-  const title = granInversion === 'true'
+  const title = favoritos === 'true'
+    ? 'Mis Favoritos'
+    : granInversion === 'true'
     ? 'Grandes Inversiones'
     : total > 0 ? `${total} propiedades encontradas` : 'Nuestras Propiedades';
 
-  // Current filter values for the inline component
   const currentFilters = {
     type: type || 'Todos',
     city: city || 'Ciudad',
     minPrice: minPrice || '',
     maxPrice: maxPrice || '',
     bedrooms: bedrooms || '',
+    favoritos: favoritos || '',
   };
 
   return (

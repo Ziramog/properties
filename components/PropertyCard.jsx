@@ -1,17 +1,45 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaBed, FaBath, FaRegHeart } from 'react-icons/fa';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaBed, FaBath, FaRegHeart, FaHeart, FaWhatsapp } from 'react-icons/fa';
 import AreaIcon from './icons/AreaIcon';
 import { getAreaDisplay, getPriceDisplay, getPropertyImage, isNewListing } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
+import bookmarkProperty from '@/app/actions/bookmarkProperty';
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const PropertyCard = ({ property, isSelected = false, onMouseEnter, onMouseLeave }) => {
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
   const image = getPropertyImage(property);
   const area = getAreaDisplay(property);
   const price = getPriceDisplay(property);
   const isNew = isNewListing(property);
+
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [toggling, setToggling] = useState(false);
+
+  const handleBookmark = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!userId) {
+      toast.error('Debes iniciar sesión para guardar una propiedad');
+      return;
+    }
+    if (toggling) return;
+    setToggling(true);
+    const res = await bookmarkProperty(property._id);
+    if (res?.error) {
+      toast.error(res.error);
+    } else {
+      setIsBookmarked(res?.isBookmarked ?? false);
+      toast.success(res?.isBookmarked ? 'Propiedad guardada' : 'Propiedad removida');
+    }
+    setToggling(false);
+  };
 
   return (
     <div
@@ -40,13 +68,20 @@ const PropertyCard = ({ property, isSelected = false, onMouseEnter, onMouseLeave
             </span>
           </div>
 
-          {/* Heart */}
+          {/* Heart bookmark button */}
           <button
-            className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-white transition-all duration-200 shadow-sm z-10"
-            onClick={(e) => e.preventDefault()}
-            aria-label="Guardar propiedad"
+            onClick={handleBookmark}
+            className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 z-10 ${
+              isBookmarked
+                ? 'bg-red-500 hover:bg-red-600 text-white shadow-md'
+                : 'bg-white/90 backdrop-blur-sm hover:bg-white text-gray-400 hover:text-red-500 shadow-sm'
+            }`}
+            aria-label={isBookmarked ? 'Quitar de favoritos' : 'Guardar en favoritos'}
           >
-            <FaRegHeart className="w-3.5 h-3.5" />
+            {isBookmarked
+              ? <FaHeart className="w-3.5 h-3.5" />
+              : <FaRegHeart className="w-3.5 h-3.5" />
+            }
           </button>
 
           {isNew && (

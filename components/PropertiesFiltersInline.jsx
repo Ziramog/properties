@@ -1,7 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaSearch, FaChevronDown, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaChevronDown, FaTimes, FaHeart } from 'react-icons/fa';
+import { useSession } from 'next-auth/react';
 
 const PROPERTY_TYPES = ['Todos', 'Casa', 'Departamento', 'Terreno', 'Campo', 'Inmueble Comercial', 'Gran Inversión'];
 const CITIES = ['Ciudad', 'Alta Gracia', 'Anisacate', 'Despeñaderos', 'Falda del Carmen', 'Huerta Grande'];
@@ -9,6 +10,7 @@ const BEDROOM_OPTS = ['', '1', '2', '3', '4', '5'];
 
 const PropertiesFiltersInline = ({ currentFilters }) => {
   const router = useRouter();
+  const { data: session } = useSession();
   const [expanded, setExpanded] = useState(false);
   const [filters, setFilters] = useState({
     type: currentFilters.type || 'Todos',
@@ -16,6 +18,7 @@ const PropertiesFiltersInline = ({ currentFilters }) => {
     minPrice: currentFilters.minPrice || '',
     maxPrice: currentFilters.maxPrice || '',
     bedrooms: currentFilters.bedrooms || '',
+    favoritos: currentFilters.favoritos || '',
   });
 
   const hasActiveFilters =
@@ -23,7 +26,8 @@ const PropertiesFiltersInline = ({ currentFilters }) => {
     (filters.city && filters.city !== 'Ciudad') ||
     filters.minPrice ||
     filters.maxPrice ||
-    filters.bedrooms;
+    filters.bedrooms ||
+    filters.favoritos === 'true';
 
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -37,13 +41,28 @@ const PropertiesFiltersInline = ({ currentFilters }) => {
     if (filters.minPrice) params.set('minPrice', filters.minPrice);
     if (filters.maxPrice) params.set('maxPrice', filters.maxPrice);
     if (filters.bedrooms) params.set('bedrooms', filters.bedrooms);
+    if (filters.favoritos === 'true') params.set('favoritos', 'true');
     const query = params.toString();
     router.push(`/properties${query ? `?${query}` : ''}`);
   };
 
   const handleReset = () => {
-    setFilters({ type: 'Todos', city: 'Ciudad', minPrice: '', maxPrice: '', bedrooms: '' });
+    setFilters({ type: 'Todos', city: 'Ciudad', minPrice: '', maxPrice: '', bedrooms: '', favoritos: '' });
     router.push('/properties');
+  };
+
+  const toggleFavoritos = () => {
+    const newFavoritos = filters.favoritos === 'true' ? '' : 'true';
+    setFilters({ ...filters, favoritos: newFavoritos });
+    const params = new URLSearchParams();
+    if (filters.type && filters.type !== 'Todos') params.set('type', filters.type);
+    if (filters.city && filters.city !== 'Ciudad') params.set('city', filters.city);
+    if (filters.minPrice) params.set('minPrice', filters.minPrice);
+    if (filters.maxPrice) params.set('maxPrice', filters.maxPrice);
+    if (filters.bedrooms) params.set('bedrooms', filters.bedrooms);
+    if (newFavoritos === 'true') params.set('favoritos', 'true');
+    const query = params.toString();
+    router.push(`/properties${query ? `?${query}` : ''}`);
   };
 
   const selectCls = 'w-full bg-white border border-[var(--color-border)] text-[var(--color-ink)] text-sm py-2.5 px-3.5 rounded-xl focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)] outline-none appearance-none cursor-pointer transition-all';
@@ -70,11 +89,26 @@ const PropertiesFiltersInline = ({ currentFilters }) => {
           </span>
           {hasActiveFilters && (
             <span className="text-[11px] font-bold bg-[var(--color-brand)] text-white px-2 py-0.5 rounded-full">
-              {[filters.type !== 'Todos' && filters.type, filters.city !== 'Ciudad' && filters.city, filters.minPrice, filters.maxPrice, filters.bedrooms && `${filters.bedrooms}+ dorm`].filter(Boolean).length}
+              {[filters.type !== 'Todos' && filters.type, filters.city !== 'Ciudad' && filters.city, filters.minPrice, filters.maxPrice, filters.bedrooms && `${filters.bedrooms}+ dorm`, filters.favoritos === 'true' && 'Favoritos'].filter(Boolean).length}
             </span>
           )}
         </div>
-        <FaChevronDown className={`w-4 h-4 text-[var(--color-ink-tertiary)] transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
+        <div className="flex items-center gap-2">
+          {session && (
+            <button
+              onClick={(e) => { e.stopPropagation(); toggleFavoritos(); }}
+              className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                filters.favoritos === 'true'
+                  ? 'bg-red-500 text-white shadow-md'
+                  : 'bg-[var(--color-brand)]/10 text-[var(--color-brand)] hover:bg-red-500/20'
+              }`}
+              title="Mis favoritos"
+            >
+              <FaHeart className={`w-3.5 h-3.5 ${filters.favoritos === 'true' ? 'fill-current' : ''}`} />
+            </button>
+          )}
+          <FaChevronDown className={`w-4 h-4 text-[var(--color-ink-tertiary)] transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
+        </div>
       </button>
 
       {/* Active filter pills — shown when collapsed and filters active */}
@@ -108,6 +142,14 @@ const PropertiesFiltersInline = ({ currentFilters }) => {
             <span className="inline-flex items-center gap-1.5 text-[12px] font-medium bg-[var(--color-brand)]/10 text-[var(--color-brand)] px-3 py-1 rounded-full">
               {filters.minPrice ? `U$S ${Number(filters.minPrice).toLocaleString()}` : 'U$S 0'} — {filters.maxPrice ? `U$S ${Number(filters.maxPrice).toLocaleString()}` : 'Sin límite'}
               <button onClick={() => { setFilters({ ...filters, minPrice: '', maxPrice: '' }); }} className="hover:text-[var(--color-brand-dark)]">
+                <FaTimes className="w-3 h-3" />
+              </button>
+            </span>
+          )}
+          {filters.favoritos === 'true' && (
+            <span className="inline-flex items-center gap-1.5 text-[12px] font-medium bg-red-500/10 text-red-500 px-3 py-1 rounded-full">
+              <FaHeart className="w-3 h-3 fill-current" /> Favoritos
+              <button onClick={() => { setFilters({ ...filters, favoritos: '' }); router.push('/properties'); }} className="hover:text-red-600">
                 <FaTimes className="w-3 h-3" />
               </button>
             </span>
