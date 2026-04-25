@@ -5,6 +5,7 @@ import Property from '@/models/Property';
 import { getSessionUser } from '@/utils/getSessionUser';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import cloudinary from '@/config/cloudinary';
 
 async function updateProperty(propertyId, formData) {
   await connectDB();
@@ -48,14 +49,34 @@ async function updateProperty(propertyId, formData) {
     owner: userId,
   };
 
-  const updatedProperty = await Property.findByIdAndUpdate(
-    propertyId,
-    propertyData
+  // Handle images: get removed images and new uploads
+  const removedImages = formData.getAll('removedImages').filter(Boolean);
+  let currentImages = (existingProperty.images || []).filter(
+    (img) => !removedImages.includes(img)
   );
+
+  const newImages = formData.getAll('images').filter((img) => img.name !== '');
+
+  for (const imageFile of newImages) {
+    const imageBuffer = await imageFile.arrayBuffer();
+    const imageArray = Array.from(new Uint8Array(imageBuffer));
+    const imageData = Buffer.from(imageArray);
+    const imageBase64 = imageData.toString('base64');
+
+    const result = await cloudinary.uploader.upload(
+      `data:image/png;base64,${imageBase64}`,
+      { folder: 'propertypulse' }
+    );
+    currentImages.push(result.secure_url);
+  }
+
+  propertyData.images = currentImages;
+
+  await Property.findByIdAndUpdate(propertyId, propertyData);
 
   revalidatePath('/', 'layout');
 
-  redirect(`/properties/${updatedProperty._id}`);
+  redirect(`/properties/${propertyId}`);
 }
 
 export default updateProperty;
