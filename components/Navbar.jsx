@@ -86,10 +86,6 @@ const Navbar = () => {
           </nav>
 
           <div className="flex items-center gap-5">
-            <span className="text-white/60 text-sm font-light tracking-widest hidden lg:block">
-              {PHONE_DISPLAY}
-            </span>
-
             {!session && providers && Object.values(providers).map((provider) => (
               <button
                 key={provider.id}
@@ -102,6 +98,14 @@ const Navbar = () => {
 
             {session && (
               <div className="flex items-center gap-3">
+                {session.user?.role === 'admin' && (
+                  <Link
+                    href="/properties/add"
+                    className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-4 py-2 rounded-full font-bold text-sm uppercase tracking-wider transition-all"
+                  >
+                    Agregar
+                  </Link>
+                )}
                 <span className="text-white/80 text-sm hidden lg:block">
                   {session.user?.name?.split(' ')[0]}
                 </span>
