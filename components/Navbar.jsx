@@ -102,7 +102,7 @@ const Navbar = () => {
               </a>
             ))}
 
-            {session && (
+            {session && session.user?.role === 'admin' && (
               <Link
                 href="/properties/add"
                 className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-[var(--color-brand)]/20 transition-all"

@@ -20,6 +20,11 @@ const UserSchema = new Schema(
         ref: 'Property',
       },
     ],
+    role: {
+      type: String,
+      enum: ['admin', 'client'],
+      default: 'client',
+    },
   },
   {
     timestamps: true,
