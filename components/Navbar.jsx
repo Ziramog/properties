@@ -170,18 +170,33 @@ const Navbar = () => {
           {/* Right side */}
           <div className="absolute right-4 top-1/2 -translate-y-1/2">
           {isGlassMode ? (
-            <motion.a
-              href={generateWhatsAppLink({ context: 'general' })}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, scale: 0.8, x: 10 }}
-              animate={{ opacity: 1, scale: 1, x: 0 }}
-              exit={{ opacity: 0, scale: 0.8, x: 10 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-[var(--color-brand)]/20"
-            >
-              Contactar
-            </motion.a>
+            <>
+              {session ? (
+                <div className="flex items-center gap-2">
+                  {session.user?.role === 'admin' && (
+                    <Link href="/properties/add" className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-3 py-2 rounded-full font-bold text-xs uppercase tracking-wider transition-all">
+                      Agregar
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => signOut()}
+                    className="bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-full font-medium text-xs transition-all"
+                  >
+                    Salir
+                  </button>
+                </div>
+              ) : (
+                providers && Object.values(providers).map((provider) => (
+                  <button
+                    key={provider.id}
+                    onClick={() => signIn(provider.id)}
+                    className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-[var(--color-brand)]/20 transition-all"
+                  >
+                    Ingresar
+                  </button>
+                ))
+              )}
+            </>
           ) : (
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -208,12 +223,32 @@ const Navbar = () => {
                 <Link href="/" className="block text-white/90 text-sm font-medium py-2 px-3 rounded-lg hover:bg-white/10">Inicio</Link>
                 <Link href="/properties" className="block text-white/90 text-sm font-medium py-2 px-3 rounded-lg hover:bg-white/10">Propiedades</Link>
                 <Link href="/contact" className="block text-white/90 text-sm font-medium py-2 px-3 rounded-lg hover:bg-white/10">Contacto</Link>
-                <div className="pt-3 border-t border-white/10 flex items-center gap-4">
-                  <a href={`tel:${PHONE_NUMBER}`} className="text-white/60 text-sm flex items-center gap-2">
-                    <FaPhone className="text-xs" />{PHONE_DISPLAY}
-                  </a>
-                  <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer"
-                    className="bg-whatsapp text-white p-2 rounded-lg"><FaWhatsapp /></a>
+                <div className="pt-3 border-t border-white/10">
+                  {session ? (
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/80 text-sm">{session.user?.name?.split(' ')[0]}</span>
+                      <button
+                        onClick={() => signOut()}
+                        className="text-white/60 hover:text-white text-sm transition-colors"
+                      >
+                        Salir
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-3">
+                      {providers && Object.values(providers).map((provider) => (
+                        <button
+                          key={provider.id}
+                          onClick={() => signIn(provider.id)}
+                          className="bg-[var(--color-brand)] text-white px-4 py-2 rounded-full font-bold text-xs uppercase tracking-wider transition-all"
+                        >
+                          Ingresar
+                        </button>
+                      ))}
+                      <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer"
+                        className="bg-whatsapp text-white p-2 rounded-lg"><FaWhatsapp /></a>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
