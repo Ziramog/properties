@@ -3,6 +3,7 @@ import BathtubIcon from './icons/BathtubIcon';
 import AreaIcon from './icons/AreaIcon';
 import MapIcon from './icons/MapIcon';
 import PropertyLocationTabs from '@/components/PropertyLocationTabs';
+import PropertyNormalizedDescription from '@/components/PropertyNormalizedDescription';
 
 const CheckIcon = () => (
   <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 16 16'>
@@ -38,36 +39,7 @@ const PropertyDetails = ({ property }) => {
         </div>
       </div>
 
-      <div className='bg-white p-6 rounded-2xl border border-[var(--color-border)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] mt-4'>
-        <h3 className='text-lg font-bold mb-6 text-[#1A1A2E]'>Descripción y Detalles</h3>
-        <div className='flex justify-center gap-4 text-[#E94560] mb-4 text-xl space-x-9'>
-          <p>
-            <BedIcon className='inline-block mr-2 w-5 h-5' /> {property.beds}{' '}
-            <span className='hidden sm:inline'>Dorm.</span>
-          </p>
-          <p>
-            <BathtubIcon className='inline-block mr-2 w-5 h-5' /> {property.baths}{' '}
-            <span className='hidden sm:inline'>Ba&ntilde;os</span>
-          </p>
-          <p>
-            <AreaIcon className='inline-block mr-2 w-5 h-5' />
-            {property.square_feet}{' '}
-            <span className='hidden sm:inline'>m&sup2;</span>
-          </p>
-          {property.garage && (
-            <p>
-              <CheckIcon /> {property.garage}{' '}
-              <span className='hidden sm:inline'>Garage</span>
-            </p>
-          )}
-        </div>
-        {property.covered_area && (
-          <p className='text-gray-600 mb-2'>
-            <strong>Cubierta:</strong> {property.covered_area} m²
-          </p>
-        )}
-        <p className='text-gray-500 mb-4'>{property.description}</p>
-      </div>
+      <PropertyNormalizedDescription property={property} />
 
       {property.interior && (property.interior.aberturas || property.interior.pisos || property.interior.calefaccion) && (
         <div className='bg-white p-6 rounded-2xl border border-[var(--color-border)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] mt-4'>

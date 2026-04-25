@@ -109,6 +109,13 @@ const PropertySchema = new Schema(
     price: {
       type: String,
     },
+    normalizedDescription: {
+      resumen: { type: String },
+      ubicacion: { type: String },
+      detalles: [{ type: String }],
+      highlights: [{ type: String }],
+      nota: { type: String, default: null },
+    },
   },
   {
     timestamps: true,
