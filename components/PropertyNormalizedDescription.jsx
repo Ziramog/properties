@@ -1,8 +1,8 @@
 'use client';
 
 const CheckIcon = () => (
-  <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 16 16'>
-    <path stroke='#16a34a' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='m2.5 8 3.5 3.5 7.5-8' />
+  <svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' viewBox='0 0 14 14'>
+    <path stroke='#16a34a' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='m2 7 3 3 7-7' />
   </svg>
 );
 
@@ -80,7 +80,7 @@ const PropertyNormalizedDescription = ({ property }) => {
               const { display, full } = truncate(detail);
               return (
                 <li key={i} className='flex items-start gap-3'>
-                  <span className='flex-shrink-0 mt-0.5'><CheckIcon /></span>
+                  <span className='flex-shrink-0 w-[18px] mt-0.5'><CheckIcon /></span>
                   <span
                     className='text-[var(--color-ink-secondary)] text-[13px] leading-snug'
                     title={full !== display ? full : undefined}
