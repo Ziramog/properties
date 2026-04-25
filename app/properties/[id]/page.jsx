@@ -1,10 +1,9 @@
 export const dynamic = 'force-dynamic';
 
-import PropertyHeaderImage from '@/components/PropertyHeaderImage';
 import PropertyDetails from '@/components/PropertyDetails';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
-import PropertyImages from '@/components/PropertyImages';
+import PropertyGallery from '@/components/PropertyGallery';
 import BookmarkButton from '@/components/BookmarkButton';
 import ShareButtons from '@/components/ShareButtons';
 import PropertyContactForm from '@/components/PropertyContactForm';
@@ -27,28 +26,32 @@ const PropertyPage = async ({ params }) => {
   const property = convertToSerializeableObject(propertyDoc);
 
   return (
-    <>
-      <PropertyHeaderImage image={property.images[0]} />
-      <section>
-        <div className='container m-auto py-6 px-6'>
-          <Link
-            href='/properties'
-            className='text-[#E94560] hover:text-[#1A1A2E] flex items-center font-medium transition-colors'
-          >
-            <svg className='mr-2 w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 16 16'>
-              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M10 3 6 8l4 5' />
-            </svg>
-            Volver a Propiedades
-          </Link>
-        </div>
-      </section>
-      <section className='bg-gray-50'>
-        <div className='container m-auto py-10 px-6'>
-          <div className='grid grid-cols-1 md:grid-cols-70/30 w-full gap-6'>
+    <div className="bg-[#E8E6E0] min-h-screen">
+      {/* Gallery — full width, no gap */}
+      <PropertyGallery images={property.images} />
+
+      {/* Back button + content */}
+      <section className="px-4 md:px-8 lg:px-12">
+        <div className="max-w-[1400px] mx-auto">
+          {/* Back button */}
+          <div className="py-4">
+            <Link
+              href='/properties'
+              className='text-[var(--color-brand)] hover:text-[var(--color-ink)] flex items-center font-medium transition-colors text-sm'
+            >
+              <svg className='mr-1.5 w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 16 16'>
+                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M10 3 6 8l4 5' />
+              </svg>
+              Volver a Propiedades
+            </Link>
+          </div>
+
+          {/* Main grid */}
+          <div className='grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 pb-12'>
             <PropertyDetails property={property} />
 
-            {/* <!-- Sidebar --> */}
-            <aside className='space-y-4'>
+            {/* Sidebar */}
+            <aside className='space-y-4 lg:sticky lg:top-24 lg:self-start'>
               <WhatsAppButton property={property} />
               <BookmarkButton property={property} />
               <ShareButtons property={property} />
@@ -57,8 +60,7 @@ const PropertyPage = async ({ params }) => {
           </div>
         </div>
       </section>
-      <PropertyImages images={property.images} />
-    </>
+    </div>
   );
 };
 export default PropertyPage;

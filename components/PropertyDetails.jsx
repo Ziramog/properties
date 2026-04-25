@@ -19,7 +19,7 @@ const CloseIcon = () => (
 const PropertyDetails = ({ property }) => {
   return (
     <main>
-      <div className='bg-white p-6 rounded-lg shadow-md text-center md:text-left'>
+      <div className='bg-white p-6 rounded-2xl border border-[var(--color-border)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] text-center md:text-left'>
         <div className='text-[#E94560] mb-4 font-medium'>{property.type}</div>
         <h1 className='text-3xl font-bold mb-4 text-[#1A1A2E]'>{property.name}</h1>
         <div className='text-gray-500 mb-4 flex align-middle justify-center md:justify-start'>
@@ -38,7 +38,7 @@ const PropertyDetails = ({ property }) => {
         </div>
       </div>
 
-      <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+      <div className='bg-white p-6 rounded-2xl border border-[var(--color-border)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] mt-4'>
         <h3 className='text-lg font-bold mb-6 text-[#1A1A2E]'>Descripción y Detalles</h3>
         <div className='flex justify-center gap-4 text-[#E94560] mb-4 text-xl space-x-9'>
           <p>
@@ -70,7 +70,7 @@ const PropertyDetails = ({ property }) => {
       </div>
 
       {property.interior && (property.interior.aberturas || property.interior.pisos || property.interior.calefaccion) && (
-        <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+        <div className='bg-white p-6 rounded-2xl border border-[var(--color-border)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] mt-4'>
           <h3 className='text-lg font-bold mb-4 text-[#1A1A2E]'>Interior</h3>
           <ul className='space-y-2 text-gray-600'>
             {property.interior.aberturas && (
@@ -87,7 +87,7 @@ const PropertyDetails = ({ property }) => {
       )}
 
       {property.exterior && property.exterior.techos && (
-        <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+        <div className='bg-white p-6 rounded-2xl border border-[var(--color-border)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] mt-4'>
           <h3 className='text-lg font-bold mb-4 text-[#1A1A2E]'>Exterior</h3>
           <ul className='space-y-2 text-gray-600'>
             {property.exterior.techos && (
@@ -98,7 +98,7 @@ const PropertyDetails = ({ property }) => {
       )}
 
       {property.services && property.services.length > 0 && (
-        <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+        <div className='bg-white p-6 rounded-2xl border border-[var(--color-border)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] mt-4'>
           <h3 className='text-lg font-bold mb-4 text-[#1A1A2E]'>Servicios</h3>
           <ul className='grid grid-cols-2 md:grid-cols-3 list-none space-y-2'>
             {property.services.map((service, index) => (
@@ -111,13 +111,13 @@ const PropertyDetails = ({ property }) => {
       )}
 
       {property.titles_status && (
-        <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+        <div className='bg-white p-6 rounded-2xl border border-[var(--color-border)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] mt-4'>
           <h3 className='text-lg font-bold mb-4 text-[#1A1A2E]'>Título</h3>
           <p className='text-gray-600'>{property.titles_status}</p>
         </div>
       )}
 
-      <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+      <div className='bg-white p-6 rounded-2xl border border-[var(--color-border)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] mt-4'>
         <h3 className='text-lg font-bold mb-6 text-[#1A1A2E]'>Comodidades</h3>
 
         <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 list-none space-y-2'>
@@ -128,7 +128,7 @@ const PropertyDetails = ({ property }) => {
           ))}
         </ul>
       </div>
-      <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+      <div className='bg-white p-6 rounded-2xl border border-[var(--color-border)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] mt-4'>
         <h3 className='text-lg font-bold mb-4 text-[#1A1A2E]'>Ubicación</h3>
         <PropertyLocationTabs property={property} />
       </div>
