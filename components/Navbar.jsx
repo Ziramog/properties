@@ -91,15 +91,13 @@ const Navbar = () => {
             </span>
 
             {!session && providers && Object.values(providers).map((provider) => (
-              <a
+              <button
                 key={provider.id}
-                href={generateWhatsAppLink({ context: 'general' })}
-                target="_blank"
-                rel="noopener noreferrer"
+                onClick={() => signIn(provider.id)}
                 className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-[var(--color-brand)]/20 transition-all"
               >
-                Contactar
-              </a>
+                Ingresar
+              </button>
             ))}
 
             {session && session.user?.role === 'admin' && (
