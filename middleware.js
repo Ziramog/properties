@@ -3,12 +3,20 @@ import { NextResponse } from 'next/server';
 
 export default withAuth(
   function middleware(req) {
-    if (req.nextauth.token?.role !== 'admin') {
-      const path = req.nextUrl.pathname;
-      if (path.startsWith('/properties/add') || path.match(/\/properties\/[^/]+\/edit/)) {
+    const token = req.nextauth.token;
+    const path = req.nextUrl.pathname;
+
+    if (!token) {
+      return NextResponse.redirect(new URL('/', req.url));
+    }
+
+    // Admin-only routes
+    if (path.startsWith('/properties/add') || path.match(/\/properties\/[^/]+\/edit/)) {
+      if (token?.role !== 'admin') {
         return NextResponse.redirect(new URL('/properties', req.url));
       }
     }
+
     return NextResponse.next();
   },
   {

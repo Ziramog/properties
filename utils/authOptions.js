@@ -18,6 +18,18 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    // Add role to JWT token on sign-in so middleware can access it
+    async jwt({ token, user: oauthUser }) {
+      if (oauthUser?.email) {
+        await connectDB();
+        const mongoUser = await User.findOne({ email: oauthUser.email }).lean();
+        if (mongoUser) {
+          token.role = mongoUser.role;
+          token.id = mongoUser._id.toString();
+        }
+      }
+      return token;
+    },
     // Invoked on successful signin
     async signIn({ profile }) {
       // 1. Connect to database
