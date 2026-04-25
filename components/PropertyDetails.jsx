@@ -44,15 +44,15 @@ const PropertyDetails = ({ property }) => {
       {property.interior && (property.interior.aberturas || property.interior.pisos || property.interior.calefaccion) && (
         <div className='bg-white p-6 rounded-2xl border border-[var(--color-border)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] mt-4'>
           <h3 className='text-lg font-bold mb-4 text-[#1A1A2E]'>Interior</h3>
-          <ul className='space-y-2 text-gray-600'>
+          <ul className='space-y-2'>
             {property.interior.aberturas && (
-              <li><strong>Aberturas:</strong> {property.interior.aberturas}</li>
+              <li className='flex items-center gap-2'><CheckIcon /><span className='text-gray-600'><strong>Aberturas:</strong> {property.interior.aberturas}</span></li>
             )}
             {property.interior.pisos && (
-              <li><strong>Pisos:</strong> {property.interior.pisos}</li>
+              <li className='flex items-center gap-2'><CheckIcon /><span className='text-gray-600'><strong>Pisos:</strong> {property.interior.pisos}</span></li>
             )}
             {property.interior.calefaccion && (
-              <li><strong>Calefacción:</strong> {property.interior.calefaccion}</li>
+              <li className='flex items-center gap-2'><CheckIcon /><span className='text-gray-600'><strong>Calefacción:</strong> {property.interior.calefaccion}</span></li>
             )}
           </ul>
         </div>
@@ -61,9 +61,9 @@ const PropertyDetails = ({ property }) => {
       {property.exterior && property.exterior.techos && (
         <div className='bg-white p-6 rounded-2xl border border-[var(--color-border)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] mt-4'>
           <h3 className='text-lg font-bold mb-4 text-[#1A1A2E]'>Exterior</h3>
-          <ul className='space-y-2 text-gray-600'>
+          <ul className='space-y-2'>
             {property.exterior.techos && (
-              <li><strong>Techos:</strong> {property.exterior.techos}</li>
+              <li className='flex items-center gap-2'><CheckIcon /><span className='text-gray-600'><strong>Techos:</strong> {property.exterior.techos}</span></li>
             )}
           </ul>
         </div>
@@ -74,8 +74,9 @@ const PropertyDetails = ({ property }) => {
           <h3 className='text-lg font-bold mb-4 text-[#1A1A2E]'>Servicios</h3>
           <ul className='grid grid-cols-2 md:grid-cols-3 list-none space-y-2'>
             {property.services.map((service, index) => (
-              <li key={index}>
-                <CheckIcon /> {service}
+              <li key={index} className='flex items-center gap-2'>
+                <CheckIcon />
+                <span className='text-gray-600'>{service}</span>
               </li>
             ))}
           </ul>
@@ -94,8 +95,9 @@ const PropertyDetails = ({ property }) => {
 
         <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 list-none space-y-2'>
           {property.amenities.map((amenity, index) => (
-            <li key={index}>
-              <CheckIcon /> {amenity}
+            <li key={index} className='flex items-center gap-2'>
+              <CheckIcon />
+              <span className='text-gray-600'>{amenity}</span>
             </li>
           ))}
         </ul>
