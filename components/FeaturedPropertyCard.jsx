@@ -20,7 +20,7 @@ const FeaturedPropertyCard = ({ property }) => {
     : null;
 
   return (
-    <div className="group relative bg-white rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-[0_2px_8px_rgba(0,0,0,0.06),0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_8px_32px_rgba(0,0,0,0.10),0_2px_8px_rgba(0,0,0,0.06)] hover:-translate-y-1">
+    <div className="group relative bg-white rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-[0_4px_16px_rgba(0,0,0,0.10),0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.15),0_4px_16px_rgba(0,0,0,0.08)] hover:-translate-y-1">
       <Link href={`/properties/${property._id}`} className="block">
         {/* Image — fixed 210px height per demo */}
         <div className="relative h-[210px] overflow-hidden bg-gray-100">

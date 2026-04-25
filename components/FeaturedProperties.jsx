@@ -75,80 +75,71 @@ const FeaturedProperties = ({ properties = [] }) => {
               </h2>
             </ScrollReveal>
           </div>
-          <ScrollReveal>
-            <a
-              href='/properties'
-              className='text-[var(--color-brand)] text-sm font-medium hover:underline hidden md:block'
-            >
-              Ver todas →
-            </a>
-          </ScrollReveal>
         </div>
 
         {/* Desktop: 3D Carousel */}
-        <div className='hidden md:block'>
-          <div className='relative'>
-            <div className='relative overflow-hidden' style={{ height: '460px' }}>
-              <div className='absolute inset-0 flex items-center justify-center'>
-                {properties.map((property, i) => {
-                  const diff = (i - current + total) % total;
-                  const isCenter = diff === 0;
-                  const isAdjacent = diff === 1 || diff === total - 1;
+        <div className='hidden md:block relative'>
+          {/* Navigation arrows — outside overflow container */}
+          <button
+            onClick={prev}
+            className='absolute left-0 top-1/2 -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-white border border-[var(--color-border)] shadow-lg flex items-center justify-center text-heading hover:bg-gray-50 hover:scale-105 transition-all'
+            aria-label='Anterior'
+          >
+            <ChevronLeft className='w-6 h-6' />
+          </button>
+          <button
+            onClick={next}
+            className='absolute right-0 top-1/2 -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-white border border-[var(--color-border)] shadow-lg flex items-center justify-center text-heading hover:bg-gray-50 hover:scale-105 transition-all'
+            aria-label='Siguiente'
+          >
+            <ChevronRight className='w-6 h-6' />
+          </button>
 
-                  return (
-                    <div
-                      key={property._id?.toString() || i}
-                      className='absolute transition-all duration-500 ease-out'
-                      style={{
-                        width: `${CARD_WIDTH}px`,
-                        transform: getTransform(i),
-                        zIndex: isCenter ? 10 : 1,
-                        opacity: isCenter || isAdjacent ? 1 : 0,
+          {/* Cards */}
+          <div className='relative overflow-hidden px-14' style={{ height: '460px' }}>
+            <div className='absolute inset-0 flex items-center justify-center'>
+              {properties.map((property, i) => {
+                const diff = (i - current + total) % total;
+                const isCenter = diff === 0;
+                const isAdjacent = diff === 1 || diff === total - 1;
+
+                return (
+                  <div
+                    key={property._id?.toString() || i}
+                    className='absolute transition-all duration-500 ease-out'
+                    style={{
+                      width: `${CARD_WIDTH}px`,
+                      transform: getTransform(i),
+                      zIndex: isCenter ? 10 : 1,
+                      opacity: isCenter || isAdjacent ? 1 : 0,
+                    }}
+                  >
+                    <FeaturedPropertyCard
+                      property={{
+                        ...property,
+                        _id: property._id?.toString(),
                       }}
-                    >
-                      <FeaturedPropertyCard
-                        property={{
-                          ...property,
-                          _id: property._id?.toString(),
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
+                    />
+                  </div>
+                );
+              })}
             </div>
+          </div>
 
-            {/* Navigation arrows */}
-            <button
-              onClick={prev}
-              className='absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center text-heading hover:bg-white hover:scale-105 transition-all'
-              aria-label='Anterior'
-            >
-              <ChevronLeft className='w-6 h-6' />
-            </button>
-            <button
-              onClick={next}
-              className='absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center text-heading hover:bg-white hover:scale-105 transition-all'
-              aria-label='Siguiente'
-            >
-              <ChevronRight className='w-6 h-6' />
-            </button>
-
-            {/* Dot indicators */}
-            <div className='flex justify-center gap-2 mt-8'>
-              {properties.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => goTo(i)}
-                  className={`rounded-full transition-all ${
-                    i === current
-                      ? 'w-6 h-2 bg-[var(--color-brand)]'
-                      : 'w-2 h-2 bg-[var(--color-border)] hover:bg-[var(--color-ink-tertiary)]'
-                  }`}
-                  aria-label={`Ir a propiedad ${i + 1}`}
-                />
-              ))}
-            </div>
+          {/* Dot indicators */}
+          <div className='flex justify-center gap-2 mt-8'>
+            {properties.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className={`rounded-full transition-all ${
+                  i === current
+                    ? 'w-6 h-2 bg-[var(--color-brand)]'
+                    : 'w-2 h-2 bg-[var(--color-border)] hover:bg-[var(--color-ink-tertiary)]'
+                }`}
+                aria-label={`Ir a propiedad ${i + 1}`}
+              />
+            ))}
           </div>
         </div>
 
