@@ -143,7 +143,7 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
               className="price-tag"
               style={{
                 background: bg,
-                color: '#FFFFFF',
+                color: bg,
                 border: 'none',
                 borderRadius: '10px',
                 boxShadow: isSelected
