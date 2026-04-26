@@ -150,6 +150,8 @@ const PropertyDetail = ({ property, onClose }) => {
 };
 
 const MapProperties = ({ initialProperties = [] }) => {
+  const getInitialSelected = (props) => props[0]?._id || null;
+
   const [selectedPropertyId, setSelectedPropertyId] = useState(null);
   const [activeType, setActiveType] = useState('Casa');
   const [showGranInversion, setShowGranInversion] = useState(false);
@@ -169,6 +171,13 @@ const MapProperties = ({ initialProperties = [] }) => {
     () => initialProperties.find((p) => p._id === selectedPropertyId) || null,
     [initialProperties, selectedPropertyId]
   );
+
+  // Pre-seleccionar primera propiedad al montar para que el sidebar no esté vacío
+  useEffect(() => {
+    if (!selectedPropertyId && filteredProperties.length > 0) {
+      setSelectedPropertyId(filteredProperties[0]._id);
+    }
+  }, [filteredProperties, selectedPropertyId]);
 
   const handleMarkerClick = useCallback((propertyId) => {
     setSelectedPropertyId(propertyId);
