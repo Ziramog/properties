@@ -43,7 +43,7 @@ const HomePage = async () => {
       <CategoryCards counts={typeCounts} />
 
       {/* 4. Featured — best inventory showcase */}
-      <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured).slice(0, 6)} />
+      <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured && (p.images || []).length > 0).slice(0, 6)} />
 
       {/* 5. Map — geographic exploration */}
       <div className="relative" style={{ isolation: 'isolate' }}>
