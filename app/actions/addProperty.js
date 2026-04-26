@@ -22,6 +22,10 @@ async function addProperty(formData) {
   const categories = formData.getAll('categories');
   const images = formData.getAll('images').filter((image) => image.name !== '');
 
+  if (images.length === 0) {
+    throw new Error('Es necesario agregar al menos una foto de la propiedad.');
+  }
+
   // Create the propertyData object with embedded seller_info
   const propertyData = {
     type: formData.get('type'),

@@ -70,6 +70,10 @@ async function updateProperty(propertyId, formData) {
     currentImages.push(result.secure_url);
   }
 
+  if (currentImages.length === 0) {
+    throw new Error('Es necesario mantener al menos una foto de la propiedad.');
+  }
+
   propertyData.images = currentImages;
 
   await Property.findByIdAndUpdate(propertyId, propertyData);
