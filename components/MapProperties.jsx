@@ -293,9 +293,9 @@ const MapProperties = ({ initialProperties = [] }) => {
               {/* Close button */}
               <button
                 onClick={handleCloseMobileDetail}
-                className="absolute top-4 right-4 w-8 h-8 bg-black/20 backdrop-blur-sm rounded-full flex items-center justify-center z-20 hover:bg-black/30 transition-colors"
+                className="absolute top-4 right-4 w-10 h-10 bg-white/30 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center z-20 hover:bg-white/45 transition-all shadow-sm"
               >
-                <FaTimes className="w-4 h-4 text-[var(--color-ink)]" />
+                <FaTimes className="w-5 h-5 text-[var(--color-ink)]" />
               </button>
               <div className="overflow-y-auto" style={{ height: 'calc(100% - 28px)' }}>
                 <PropertyDetail property={selectedProperty} />
