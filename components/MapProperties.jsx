@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import ScrollReveal from './shared/ScrollReveal';
 import { filterProperties, isGranInversion } from '@/utils/filterProperties';
