@@ -63,7 +63,7 @@ const Navbar = () => {
         }`}
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 8px) + 20px)' }}
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 h-[72px]">
+        <div className={`max-w-7xl mx-auto flex items-center px-6 lg:px-12 h-[72px] ${isGlassMode ? 'justify-center' : 'justify-between'}`}>
           <Link className="flex items-center flex-shrink-0 mt-2" href="/">
             <Image
               className="brightness-0 invert"
