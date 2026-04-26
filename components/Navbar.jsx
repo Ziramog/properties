@@ -69,7 +69,7 @@ const Navbar = () => {
               className="brightness-0 invert"
               src={logo}
               alt="Roggero & Roma"
-              style={{ height: isGlassMode ? '48px' : '72px', width: 'auto', transition: 'height 0.3s ease' }}
+              style={{ height: '48px', width: 'auto' }}
             />
           </Link>
 
