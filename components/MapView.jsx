@@ -154,7 +154,7 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
                 transition: 'all 0.2s ease',
               }}
             >
-              {formatPrice(property)}
+              <span style={{ color: '#fff' }}>{formatPrice(property)}</span>
             </div>
           </Marker>
         );
