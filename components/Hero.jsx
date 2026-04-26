@@ -146,9 +146,9 @@ const Hero = () => {
                 <span className={heroLabelCls}>Operación</span>
                 <span className={heroValueCls}>
                   <select name='operation' value={filters.operation} onChange={handleChange} className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'>
-                    <option value='Venta' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Venta</option>
-                    <option value='Alquiler' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Alquiler</option>
-                    <option value='Todos' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Todos</option>
+                    <option value='Venta' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Venta</option>
+                    <option value='Alquiler' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Alquiler</option>
+                    <option value='Todos' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Todos</option>
                   </select>
                   <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                 </span>
@@ -157,13 +157,13 @@ const Hero = () => {
                 <span className={heroLabelCls}>Tipo</span>
                 <span className={heroValueCls}>
                   <select name='type' value={filters.type} onChange={handleChange} className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'>
-                    <option value='Todos' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Todos</option>
-                    <option value='Casa' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Casas</option>
-                    <option value='Departamento' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Departamentos</option>
-                    <option value='Terreno' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Terrenos</option>
-                    <option value='Campo' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Campos</option>
-                    <option value='Inmueble Comercial' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Inmuebles Comerciales</option>
-                    <option value='Gran Inversión' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Grandes Inversiones</option>
+                    <option value='Todos' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Todos</option>
+                    <option value='Casa' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Casas</option>
+                    <option value='Departamento' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Departamentos</option>
+                    <option value='Terreno' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Terrenos</option>
+                    <option value='Campo' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Campos</option>
+                    <option value='Inmueble Comercial' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Inmuebles Comerciales</option>
+                    <option value='Gran Inversión' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Grandes Inversiones</option>
                   </select>
                   <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                 </span>
@@ -172,11 +172,11 @@ const Hero = () => {
                 <span className={heroLabelCls}>Zona</span>
                 <span className={heroValueCls}>
                   <select name='zone' value={filters.zone} onChange={handleChange} className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'>
-                    <option value='Córdoba' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Córdoba</option>
-                    <option value='Alta Gracia' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Alta Gracia</option>
-                    <option value='Villa Allende' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Villa Allende</option>
-                    <option value='Mina Clavero' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Mina Clavero</option>
-                    <option value='Centro' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Centro</option>
+                    <option value='Córdoba' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Córdoba</option>
+                    <option value='Alta Gracia' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Alta Gracia</option>
+                    <option value='Villa Allende' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Villa Allende</option>
+                    <option value='Mina Clavero' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Mina Clavero</option>
+                    <option value='Centro' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Centro</option>
                   </select>
                   <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                 </span>
@@ -185,10 +185,10 @@ const Hero = () => {
                 <span className={heroLabelCls}>Precio</span>
                 <span className={heroValueCls}>
                   <select name='price' value={filters.price} onChange={handleChange} className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'>
-                    <option value='Cualquiera' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Cualquiera</option>
-                    <option value='Hasta 150k' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>Hasta U$S 150k</option>
-                    <option value='150k-300k' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>U$S 150k–300k</option>
-                    <option value='+300k' style={{ color: '#1C1C1A', backgroundColor: '#fff' }}>+ U$S 300k</option>
+                    <option value='Cualquiera' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Cualquiera</option>
+                    <option value='Hasta 150k' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Hasta U$S 150k</option>
+                    <option value='150k-300k' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>U$S 150k–300k</option>
+                    <option value='+300k' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>+ U$S 300k</option>
                   </select>
                   <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                 </span>
