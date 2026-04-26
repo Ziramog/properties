@@ -71,9 +71,9 @@ const PropertyDetail = ({ property, onClose }) => {
         )}
         <a
           href={`/properties/${property._id}`}
-          className="absolute top-3 right-3 w-8 h-8 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
+          className="absolute top-3 right-3 w-10 h-10 bg-white/40 backdrop-blur-md border border-white/40 rounded-full flex items-center justify-center hover:bg-white/60 transition-all shadow-sm"
         >
-          <FaExpand className="w-4 h-4 text-white" />
+          <FaExpand className="w-5 h-5 text-[var(--color-ink)]" />
         </a>
       </div>
 

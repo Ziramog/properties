@@ -225,4 +225,26 @@
   .leaflet-popup-close-button:hover {
     color: #1A1A18 !important;
   }
+
+  /* ── Mapbox Popup glass close button ── */
+  .mapboxgl-popup-close-button {
+    width: 32px !important;
+    height: 32px !important;
+    top: 8px !important;
+    right: 8px !important;
+    font-size: 18px !important;
+    color: #4B4B48 !important;
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+  }
+  .mapboxgl-popup-close-button:hover {
+    background: rgba(255, 255, 255, 0.85) !important;
+    color: #1A1A18 !important;
+  }
 }
