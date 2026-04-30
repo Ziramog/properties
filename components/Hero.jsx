@@ -80,7 +80,7 @@ const Hero = () => {
         />
         {/* Desktop video */}
         <video
-          src='/images/video_hero.mp4'
+          src='/images/Modern_residential_building_Córd…_202604301151.mp4'
           autoPlay
           muted
           loop
