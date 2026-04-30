@@ -94,7 +94,7 @@ const Hero = () => {
           }}
         />
         <div className='absolute inset-0' style={{ background: 'rgba(0,0,0,0.39)' }} />
-        <div className='absolute inset-0 z-10 pointer-events-none' style={{ backgroundImage: 'url(/senada/images/overlay-pattern.png)', backgroundRepeat: 'repeat' }} />
+        <div className='absolute inset-0 z-10 pointer-events-none mix-blend-overlay' style={{ backgroundImage: 'url(/senada/images/overlay-pattern.png)', backgroundRepeat: 'repeat' }} />
       </div>
 
       {/* Scroll indicator — mobile only, above pill */}
