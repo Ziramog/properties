@@ -1,19 +1,16 @@
 'use client';
+import SectionBox from '@/components/sections/SectionBox';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
 
 const SellerCTA = () => {
   return (
-    <section className="bg-white py-14 md:py-24 px-4 md:px-6 relative">
-      {/* Brand accent line at top */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-[var(--color-brand)] rounded-full" />
-      <div className="max-w-5xl mx-auto">
+    <section className="py-14 md:py-20 px-4">
+      <SectionBox className="max-w-5xl mx-auto px-4 md:px-8 py-14 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
-          {/* Sell CTA — Glass with background image */}
+          {/* Sell CTA */}
           <ScrollReveal delay={100}>
-            <div
-              className="relative rounded-3xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)] h-full group"
-            >
+            <div className="relative rounded-3xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] h-full group">
               {/* Background image */}
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
@@ -40,12 +37,12 @@ const SellerCTA = () => {
 
                 {/* Heading */}
                 <h3 className="text-[30px] font-bold text-white leading-tight mb-3"
-                  style={{ fontFamily: 'var(--font-display)' }}>
+                  style={{ fontFamily: 'var(--font-heading)' }}>
                   ¿Querés vender tu propiedad?
                 </h3>
 
                 {/* Body */}
-                <p className="text-[15px] font-normal text-white/70 leading-[1.6] mb-8 flex-1">
+                <p className="text-[15px] font-light text-white/70 leading-[1.6] mb-8 flex-1">
                   Te ayudamos a valuar tu propiedad con el mercado actual y te acompañamos en cada paso del proceso de venta.
                 </p>
 
@@ -62,11 +59,9 @@ const SellerCTA = () => {
             </div>
           </ScrollReveal>
 
-          {/* Invest CTA — Glass with background image */}
+          {/* Invest CTA */}
           <ScrollReveal delay={200}>
-            <div
-              className="relative rounded-3xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)] h-full group"
-            >
+            <div className="relative rounded-3xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] h-full group">
               {/* Background image */}
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
@@ -94,12 +89,12 @@ const SellerCTA = () => {
 
                 {/* Heading */}
                 <h3 className="text-[26px] font-bold text-white leading-tight mb-3"
-                  style={{ fontFamily: 'var(--font-display)' }}>
+                  style={{ fontFamily: 'var(--font-heading)' }}>
                   ¿Buscás invertir?
                 </h3>
 
                 {/* Body */}
-                <p className="text-[15px] font-normal text-white/70 leading-[1.6] mb-8 flex-1">
+                <p className="text-[15px] font-light text-white/70 leading-[1.6] mb-8 flex-1">
                   Encontrá las mejores oportunidades de inversión en propiedades seleccionadas por nuestro equipo de análisis de mercado.
                 </p>
 
@@ -114,7 +109,7 @@ const SellerCTA = () => {
             </div>
           </ScrollReveal>
         </div>
-      </div>
+      </SectionBox>
     </section>
   );
 };

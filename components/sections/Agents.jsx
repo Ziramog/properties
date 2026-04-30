@@ -1,4 +1,5 @@
 'use client';
+import SectionBox from '@/components/sections/SectionBox';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 
 const AGENTS = [
@@ -18,24 +19,22 @@ const AGENTS = [
 
 const Agents = () => {
   return (
-    <section className="bg-[#E8E6E0] py-14 md:py-24 px-4 md:px-6 relative" id="equipo">
-      {/* Brand accent line at top */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-[var(--color-brand)] rounded-full" />
-      <div className="max-w-7xl mx-auto">
+    <section className="py-14 md:py-20 px-4" id="equipo">
+      <SectionBox className="max-w-7xl mx-auto px-4 md:px-8 py-14 md:py-16">
         {/* Section Header */}
         <div className="text-center mb-10 md:mb-14">
           <ScrollReveal>
-            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] block mb-3">
+            <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#652660] block mb-3">
               EL EQUIPO
             </span>
           </ScrollReveal>
           <ScrollReveal delay={50}>
-            <h2 className="text-[32px] font-semibold text-[var(--color-ink)] leading-tight tracking-[-0.01em] mb-3">
+            <h2 className="text-[28px] md:text-[36px] font-normal text-[#0F172A] leading-tight mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
               Nuestros asesores
             </h2>
           </ScrollReveal>
           <ScrollReveal delay={100}>
-            <p className="text-[17px] font-normal text-[var(--color-ink-secondary)] leading-[1.7]">
+            <p className="text-[15px] font-light text-[#475569] leading-[1.7]">
               Profesionales con conocimiento profundo del mercado cordobés
             </p>
           </ScrollReveal>
@@ -45,9 +44,9 @@ const Agents = () => {
         <div className="grid grid-cols-2 gap-5 md:gap-8 max-w-2xl mx-auto">
           {AGENTS.map((agent, i) => (
             <ScrollReveal key={agent.id} delay={i * 100}>
-              <div className="bg-white border border-[var(--color-border)] rounded-2xl p-6 md:p-8 flex flex-col items-center text-center shadow-[0_2px_8px_rgba(0,0,0,0.06),0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.10),0_2px_8px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300">
-                {/* Photo — circle frame */}
-                <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-[var(--color-brand)]/10 mb-5 shadow-md">
+              <div className="border border-[#e1e1e1] rounded-2xl p-6 md:p-8 flex flex-col items-center text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                {/* Photo */}
+                <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-[#f0f0f0] mb-5 shadow-md">
                   <img
                     src={agent.image}
                     alt={agent.name}
@@ -56,17 +55,17 @@ const Agents = () => {
                 </div>
 
                 {/* Info */}
-                <h3 className="text-[15px] font-semibold text-[var(--color-ink)] mb-1">
+                <h3 className="text-[15px] font-medium text-[#0F172A] mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
                   {agent.name}
                 </h3>
-                <p className="text-[13px] text-[var(--color-brand)] font-medium">
+                <p className="text-[13px] text-[#652660] font-normal">
                   {agent.specialty}
                 </p>
               </div>
             </ScrollReveal>
           ))}
         </div>
-      </div>
+      </SectionBox>
     </section>
   );
 };

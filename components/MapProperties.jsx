@@ -27,7 +27,7 @@ const MapView = dynamic(() => import('./MapView'), {
 
 const PROPERTY_TYPES = ['Casa', 'Departamento', 'Terreno', 'Campo', 'Inmueble Comercial'];
 
-const EmptyState = ({ onClose }) => (
+const EmptyState = () => (
   <div className="flex flex-col items-center justify-center h-full text-center px-8">
     <div className="w-16 h-16 rounded-full bg-[var(--color-brand-light)] flex items-center justify-center mb-4">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 text-[var(--color-brand)]">
@@ -44,14 +44,13 @@ const EmptyState = ({ onClose }) => (
 );
 
 const PropertyDetail = ({ property, onClose }) => {
-  if (!property) return <EmptyState onClose={onClose} />;
+  if (!property) return <EmptyState />;
 
   const price = getPriceDisplay(property);
   const image = property.images?.[0] || '/images/property-placeholder.jpg';
 
   return (
     <div className="flex flex-col h-full overflow-y-auto scrollbar-hide">
-      {/* Full-width image */}
       <div className="relative h-[220px] bg-[var(--color-surface-soft)] flex-shrink-0 overflow-hidden">
         <img
           src={image}
@@ -77,7 +76,6 @@ const PropertyDetail = ({ property, onClose }) => {
         </a>
       </div>
 
-      {/* Content */}
       <div className="flex-1 px-5 py-4 flex flex-col gap-3">
         <div>
           <p className="text-[24px] font-bold leading-tight" style={{ color: '#C93E15' }}>
@@ -114,7 +112,7 @@ const PropertyDetail = ({ property, onClose }) => {
                 <line x1="21" y1="3" x2="14" y2="10"/>
                 <line x1="3" y1="21" x2="10" y2="14"/>
               </svg>
-              {property.area} m²
+              {property.area} m&sup2;
             </span>
           )}
         </div>
@@ -150,8 +148,6 @@ const PropertyDetail = ({ property, onClose }) => {
 };
 
 const MapProperties = ({ initialProperties = [] }) => {
-  const getInitialSelected = (props) => props[0]?._id || null;
-
   const [selectedPropertyId, setSelectedPropertyId] = useState(null);
   const [activeType, setActiveType] = useState('Casa');
   const [showGranInversion, setShowGranInversion] = useState(false);
@@ -161,9 +157,7 @@ const MapProperties = ({ initialProperties = [] }) => {
 
   const filteredProperties = useMemo(() => {
     let result = filterProperties(initialProperties, { ...filters, type: activeType });
-    if (showGranInversion) {
-      result = result.filter(isGranInversion);
-    }
+    if (showGranInversion) result = result.filter(isGranInversion);
     return result;
   }, [initialProperties, filters, activeType, showGranInversion]);
 
@@ -172,7 +166,6 @@ const MapProperties = ({ initialProperties = [] }) => {
     [initialProperties, selectedPropertyId]
   );
 
-  // Pre-seleccionar primera propiedad al montar para que el sidebar no esté vacío
   useEffect(() => {
     if (!selectedPropertyId && filteredProperties.length > 0) {
       setSelectedPropertyId(filteredProperties[0]._id);
@@ -196,11 +189,8 @@ const MapProperties = ({ initialProperties = [] }) => {
   };
 
   return (
-    <section className="bg-[#1C1C1A] pt-14 md:pt-20 pb-16 md:pb-20 px-4 md:px-6 mb-0 md:mb-0 relative overflow-hidden isolate z-[1]" id="mapa">
-      {/* Brand accent line at top */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-[var(--color-brand)] rounded-full" />
+    <section className="bg-[#1C1C1A] pt-14 md:pt-20 pb-16 md:pb-20 px-4 md:px-6 relative overflow-hidden isolate z-10" id="mapa">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
         <div className="mb-8 md:mb-10">
           <ScrollReveal>
             <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--color-brand)] block mb-2 md:mb-3">
@@ -209,11 +199,10 @@ const MapProperties = ({ initialProperties = [] }) => {
           </ScrollReveal>
           <ScrollReveal delay={50}>
             <h2 className="text-3xl md:text-[52px] font-bold text-white leading-[1.1] tracking-[-0.01em] mb-4 md:mb-7">
-              Explorá en el mapa
+              Explor&aacute; en el mapa
             </h2>
           </ScrollReveal>
 
-          {/* Filter pills — scrollable horizontal on mobile */}
           <ScrollReveal delay={100}>
             <div className="flex flex-wrap items-center gap-2 md:gap-2.5 overflow-x-auto md:overflow-visible pb-2 md:pb-0 -mx-1 px-1 md:mx-0 md:px-0">
               {PROPERTY_TYPES.map((type) => (
@@ -250,7 +239,6 @@ const MapProperties = ({ initialProperties = [] }) => {
           </ScrollReveal>
         </div>
 
-        {/* Desktop: Map + Sidebar | Mobile: Full-screen Map + Bottom Sheet */}
         <ScrollReveal delay={150}>
           <div className="hidden lg:block">
             <div className="grid grid-cols-12 gap-0 h-[560px] overflow-hidden rounded-2xl border-2 border-[var(--color-border-strong)] shadow-[0_8px_32px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.08)]">
@@ -268,7 +256,6 @@ const MapProperties = ({ initialProperties = [] }) => {
             </div>
           </div>
 
-          {/* Mobile: full-screen map + bottom sheet */}
           <div className="lg:hidden relative overflow-hidden rounded-2xl border-2 border-[var(--color-border-strong)] shadow-[0_8px_32px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.08)]" style={{ height: '65vh' }}>
             <div className="absolute inset-0">
               <MapView
@@ -279,18 +266,15 @@ const MapProperties = ({ initialProperties = [] }) => {
               />
             </div>
 
-            {/* Bottom sheet */}
             <div
-              className={`absolute inset-x-0 bottom-0 z-10 bg-white rounded-t-3xl transition-transform duration-300 overflow-hidden ${
+              className={`absolute inset-x-0 bottom-0 z-20 bg-white rounded-t-3xl transition-transform duration-300 overflow-hidden ${
                 showMobileDetail && selectedProperty ? 'translate-y-0' : 'translate-y-full'
               }`}
-              style={{ height: '55vh', maxHeight: '60vh', zIndex: 10, boxShadow: '0 -8px 40px rgba(0,0,0,0.2), 0 -2px 12px rgba(0,0,0,0.1)' }}
+              style={{ height: '55vh', maxHeight: '60vh', boxShadow: '0 -8px 40px rgba(0,0,0,0.2), 0 -2px 12px rgba(0,0,0,0.1)' }}
             >
-              {/* Handle */}
-              <div className="flex justify-center pt-3 pb-2 sticky top-0 bg-white z-10">
+              <div className="flex justify-center pt-3 pb-2 sticky top-0 bg-white z-20">
                 <div className="w-10 h-1.5 bg-[var(--color-border-strong)] rounded-full" />
               </div>
-              {/* Close button */}
               <button
                 onClick={handleCloseMobileDetail}
                 className="absolute top-4 right-4 w-10 h-10 bg-white/30 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center z-20 hover:bg-white/45 transition-all shadow-sm"
@@ -302,10 +286,9 @@ const MapProperties = ({ initialProperties = [] }) => {
               </div>
             </div>
 
-            {/* Backdrop */}
             {showMobileDetail && (
               <div
-                className="absolute inset-0 bg-black/30 z-[5] lg:hidden"
+                className="absolute inset-0 z-10 lg:hidden"
                 onClick={handleCloseMobileDetail}
               />
             )}
