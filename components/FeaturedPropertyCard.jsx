@@ -70,7 +70,7 @@ const FeaturedPropertyCard = ({ property }) => {
     <article className="group">
       <Link href={`/properties/${property._id}`} className="block">
         {/* Card image area */}
-        <div className="relative h-[290px] overflow-hidden rounded-xl">
+        <div className="relative overflow-hidden rounded-xl" style={{ aspectRatio: '3/2' }}>
           <Image
             src={image}
             alt={property.name}
