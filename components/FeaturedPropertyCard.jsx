@@ -1,15 +1,17 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaBed, FaBath, FaRegHeart, FaHeart, FaWhatsapp } from 'react-icons/fa';
+import { FaRegHeart, FaHeart } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
-import AreaIcon from './icons/AreaIcon';
 import { getAreaDisplay, getPriceDisplay, getPropertyImage, isNewListing } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
 import bookmarkProperty from '@/app/actions/bookmarkProperty';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import BedIcon from '@/components/icons/ico_bed.svg';
+import BathIcon from '@/components/icons/ico_bath.svg';
+import SqftIcon from '@/components/icons/ico_sqfoot.svg';
 
 const FeaturedPropertyCard = ({ property }) => {
   const { data: session } = useSession();
@@ -24,12 +26,7 @@ const FeaturedPropertyCard = ({ property }) => {
 
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [toggling, setToggling] = useState(false);
-
-  const status = property.status;
-  const statusLabel = status === 'available' ? 'Disponible'
-    : status === 'rented' ? 'Arrendado'
-    : status === 'consult' ? 'A consultar'
-    : null;
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   const handleBookmark = async (e) => {
     e.preventDefault();
@@ -51,77 +48,51 @@ const FeaturedPropertyCard = ({ property }) => {
   };
 
   return (
-    <div className="group relative bg-white rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-[0_4px_16px_rgba(0,0,0,0.10),0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.15),0_4px_16px_rgba(0,0,0,0.08)] hover:-translate-y-1">
+    <article className="group">
       <Link href={`/properties/${property._id}`} className="block">
-        {/* Image */}
-        <div className="relative h-[210px] overflow-hidden bg-gray-100">
+        {/* Card image area — matches Senada style */}
+        <div className="relative h-[290px] overflow-hidden rounded-xl">
+          {/* Image */}
           <Image
             src={image}
             alt={property.name}
             fill
-            className="object-cover group-hover:scale-[1.04] transition-transform duration-500"
+            className={`object-cover transition-transform duration-500 ${imgLoaded ? 'loaded' : ''}`}
+            onLoad={() => setImgLoaded(true)}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
 
-          {/* Price badge */}
-          {price && (
-            <div className="absolute top-3 left-3 z-10">
-              <span className="bg-[var(--color-ink)] text-white text-[13px] font-semibold px-[10px] py-1 rounded-[6px] shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
-                {price}
-              </span>
-            </div>
+          {/* Gradient overlay — bottom of image */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+          {/* Purple tint on hover */}
+          <div className="absolute inset-0 bg-[#652660] opacity-0 group-hover:opacity-40 transition-opacity duration-300" />
+
+          {/* Tag — top left */}
+          {isNew && (
+            <span className="absolute top-3 left-3 z-10 bg-[#652660] text-white text-[11px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+              Nuevo
+            </span>
           )}
 
-          {/* Status badge */}
-          {statusLabel && (
-            <div className={`absolute z-10 ${price ? 'top-[52px]' : 'top-3'} left-3`}>
-              <span
-                className={`
-                  text-[11px] font-bold px-[10px] py-1 rounded-[6px]
-                  uppercase tracking-wider
-                  ${status === 'available' ? 'bg-[var(--color-success-bg)] text-[var(--color-success)]' : ''}
-                  ${status === 'rented' ? 'bg-[var(--color-warn-bg)] text-[var(--color-warn)]' : ''}
-                  ${status === 'consult' ? 'bg-white text-[var(--color-brand)] border border-[var(--color-brand)]' : ''}
-                `}
-              >
-                {statusLabel}
-              </span>
-            </div>
-          )}
-
-          {/* Heart bookmark button */}
+          {/* Heart bookmark — top right */}
           <button
             onClick={handleBookmark}
-            className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 z-10 ${
+            className={`absolute top-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
               isBookmarked
-                ? 'bg-red-500 hover:bg-red-600 text-white shadow-md'
-                : 'bg-white/90 backdrop-blur-sm hover:bg-white text-gray-400 hover:text-red-500 shadow-sm'
+                ? 'bg-red-500 text-white'
+                : 'bg-white/80 backdrop-blur-sm text-gray-400 hover:text-red-500'
             }`}
             aria-label={isBookmarked ? 'Quitar de favoritos' : 'Guardar en favoritos'}
           >
-            {isBookmarked
-              ? <FaHeart className="w-4 h-4" />
-              : <FaRegHeart className="w-4 h-4" />
-            }
+            {isBookmarked ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
           </button>
-
-          {/* WhatsApp */}
-          <a
-            href={generateWhatsAppLink({ property })}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="absolute bottom-3 right-3 bg-whatsapp hover:bg-whatsapp-hover text-white p-2 rounded-full shadow-md transition-all duration-200 hover:scale-110 z-10"
-            onClick={(e) => e.stopPropagation()}
-            aria-label="Consultar por WhatsApp"
-          >
-            <FaWhatsapp className="w-4 h-4" />
-          </a>
 
           {/* Edit button — admin only */}
           {isAdmin && (
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); router.push(`/properties/${property._id}/edit`); }}
-              className="absolute bottom-12 right-3 bg-[var(--color-ink)]/80 hover:bg-[var(--color-ink)] text-white p-2 rounded-full shadow-md transition-all duration-200 hover:scale-110 z-10 opacity-0 group-hover:opacity-100"
+              className="absolute top-3 right-12 bg-white/80 hover:bg-white text-gray-700 p-1.5 rounded-full transition-all duration-200 z-10 opacity-0 group-hover:opacity-100"
               aria-label="Editar propiedad"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
@@ -130,46 +101,68 @@ const FeaturedPropertyCard = ({ property }) => {
               </svg>
             </button>
           )}
-        </div>
 
-        {/* Content */}
-        <div className="p-4 pl-[18px] pr-[18px] pb-[18px]">
-          <h3 className="text-[15px] font-semibold text-heading leading-[1.4] line-clamp-2 mb-1.5">
-            {property.name}
-          </h3>
+          {/* Features overlay — bottom of image */}
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center gap-3 px-4 pb-4">
+            {/* Beds, Baths, Sqft */}
+            <div className="flex items-center gap-3">
+              {property.beds != null && (
+                <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
+                  <BedIcon className="w-6 h-5" />
+                  {property.beds}
+                </span>
+              )}
+              {property.baths != null && (
+                <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
+                  <BathIcon className="w-6 h-5" />
+                  {property.baths}
+                </span>
+              )}
+              {area && (
+                <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
+                  <SqftIcon className="w-5 h-5" />
+                  {area}
+                </span>
+              )}
+            </div>
 
-          <p className="text-[13px] text-[var(--color-ink-tertiary)] mb-3.5 line-clamp-1 flex items-center gap-1">
-            <svg className="w-3.5 h-3.5 text-[var(--color-ink-tertiary)] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-            </svg>
-            {property.location?.city}
-          </p>
-
-          <div className="h-px bg-[var(--color-border)] mb-3.5" />
-
-          <div className="flex items-center gap-4 text-[13px] font-medium text-[var(--color-ink-secondary)]">
-            {property.beds != null && (
-              <span className="flex items-center gap-1.5">
-                <FaBed className="w-4 h-4 text-[var(--color-ink-tertiary)]" />
-                {property.beds} Dorm.
-              </span>
-            )}
-            {property.baths != null && (
-              <span className="flex items-center gap-1.5">
-                <FaBath className="w-4 h-4 text-[var(--color-ink-tertiary)]" />
-                {property.baths} Baños
-              </span>
-            )}
-            {area && (
-              <span className="flex items-center gap-1.5">
-                <AreaIcon className="w-4 h-4 text-[var(--color-ink-tertiary)]" />
-                {area}
+            {/* Price */}
+            {price && (
+              <span
+                className="ml-auto text-white text-[28px] font-bold leading-none"
+                style={{ fontFamily: 'var(--font-heading)' }}
+              >
+                {price}
               </span>
             )}
           </div>
+
+          {/* WhatsApp button */}
+          <a
+            href={generateWhatsAppLink({ property })}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute bottom-4 right-4 bg-[#25D366] hover:bg-[#20BD5A] text-white p-2 rounded-full transition-all duration-200 hover:scale-110 z-10"
+            onClick={(e) => e.stopPropagation()}
+            aria-label="Consultar por WhatsApp"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </a>
+        </div>
+
+        {/* Footer */}
+        <div className="px-4 py-3">
+          <h3 className="text-[16px] font-medium text-[#0F172A] leading-snug line-clamp-2 mb-0.5" style={{ fontFamily: 'var(--font-heading)' }}>
+            {property.name}
+          </h3>
+          <p className="text-[13px] text-[#878787] leading-tight">
+            {property.location?.city}
+          </p>
         </div>
       </Link>
-    </div>
+    </article>
   );
 };
 

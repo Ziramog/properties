@@ -1,199 +1,68 @@
 'use client';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import FeaturedPropertyCard from '@/components/FeaturedPropertyCard';
-import ScrollReveal from '@/components/shared/ScrollReveal';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-const CARD_WIDTH = 380;
-const CARD_GAP = 24;
 
 const FeaturedProperties = ({ properties = [] }) => {
-  const [current, setCurrent] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const scrollRef = useRef(null);
+  const [visible, setVisible] = useState(false);
+  const ref = useRef(null);
 
-  const total = properties.length;
-
-  // Detect mobile on mount and resize
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      { threshold: 0.1 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
   }, []);
 
-  const next = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % total);
-  }, [total]);
-
-  const prev = () => {
-    setCurrent((prev) => (prev - 1 + total) % total);
-  };
-
-  const goTo = (index) => {
-    setCurrent(index);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 5000);
-  };
-
-  useEffect(() => {
-    if (isMobile || total <= 1) return;
-    const interval = setInterval(next, 2000);
-    return () => clearInterval(interval);
-  }, [next, isAutoPlaying, isMobile, total]);
-
-  const getTransform = (index) => {
-    const diff = (index - current + total) % total;
-    if (diff === 0) return 'translateX(0) scale(1)';
-    if (diff === 1) return `translateX(${CARD_WIDTH + CARD_GAP}px) scale(0.92)`;
-    if (diff === total - 1) return `translateX(-${CARD_WIDTH + CARD_GAP}px) scale(0.92)`;
-    return 'translateX(100vw)';
-  };
-
-  if (properties.length === 0) {
-    return null;
-  }
+  if (properties.length === 0) return null;
 
   return (
-    <section className='bg-[#DDD9D3] py-14 md:py-24 px-4 md:px-6 overflow-hidden relative'>
-      {/* Brand accent line at top */}
-      <div className='absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-[var(--color-brand)] rounded-full' />
-      <div className='max-w-7xl mx-auto'>
+    <section className="bg-white py-14 md:py-20 px-4" ref={ref}>
+      <div className="max-w-7xl mx-auto">
 
         {/* Section Header */}
-        <div className='flex justify-between items-end mb-8 md:mb-12'>
-          <div className='flex flex-col gap-2.5'>
-            <ScrollReveal>
-              <span className='text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)]'>
-                PROPIEDADES DESTACADAS
-              </span>
-            </ScrollReveal>
-            <ScrollReveal delay={50}>
-              <h2 className='text-2xl md:text-[32px] font-semibold text-heading leading-tight tracking-[-0.01em]'>
-                Seleccionadas para vos
-              </h2>
-            </ScrollReveal>
-          </div>
+        <div className="text-center mb-10 md:mb-14">
+          <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+            Propiedades Destacadas
+          </h2>
+          <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#652660]">
+            Las mejores opciones del mercado
+          </p>
         </div>
 
-        {/* Desktop: 3D Carousel */}
-        <div className='hidden md:block relative'>
-          {/* Navigation arrows — outside overflow container */}
-          <button
-            onClick={prev}
-            className='absolute left-0 top-1/2 -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-white border border-[var(--color-border)] shadow-lg flex items-center justify-center text-heading hover:bg-gray-50 hover:scale-105 transition-all'
-            aria-label='Anterior'
-          >
-            <ChevronLeft className='w-6 h-6' />
-          </button>
-          <button
-            onClick={next}
-            className='absolute right-0 top-1/2 -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-white border border-[var(--color-border)] shadow-lg flex items-center justify-center text-heading hover:bg-gray-50 hover:scale-105 transition-all'
-            aria-label='Siguiente'
-          >
-            <ChevronRight className='w-6 h-6' />
-          </button>
-
-          {/* Cards */}
-          <div className='relative overflow-hidden px-14' style={{ height: '460px' }}>
-            <div className='absolute inset-0 flex items-center justify-center'>
-              {properties.map((property, i) => {
-                const diff = (i - current + total) % total;
-                const isCenter = diff === 0;
-                const isAdjacent = diff === 1 || diff === total - 1;
-
-                return (
-                  <div
-                    key={property._id?.toString() || i}
-                    className='absolute transition-all duration-500 ease-out'
-                    style={{
-                      width: `${CARD_WIDTH}px`,
-                      transform: getTransform(i),
-                      zIndex: isCenter ? 10 : 1,
-                      opacity: isCenter || isAdjacent ? 1 : 0,
-                    }}
-                  >
-                    <FeaturedPropertyCard
-                      property={{
-                        ...property,
-                        _id: property._id?.toString(),
-                      }}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Dot indicators */}
-          <div className='flex justify-center gap-2 mt-8'>
-            {properties.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                className={`rounded-full transition-all ${
-                  i === current
-                    ? 'w-6 h-2 bg-[var(--color-brand)]'
-                    : 'w-2 h-2 bg-[var(--color-border)] hover:bg-[var(--color-ink-tertiary)]'
-                }`}
-                aria-label={`Ir a propiedad ${i + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Mobile: Horizontal scroll cards */}
-        <div className='md:hidden'>
-          <div
-            ref={scrollRef}
-            className='flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-4 px-4 pb-4'
-          >
-            {properties.map((property, i) => (
-              <div
-                key={property._id?.toString() || i}
-                className='flex-shrink-0 w-[85vw] max-w-[340px] snap-start'
-              >
-                <FeaturedPropertyCard
-                  property={{
-                    ...property,
-                    _id: property._id?.toString(),
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-          {/* Dot indicators */}
-          <div className='flex justify-center gap-2 mt-4'>
-            {properties.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                className={`rounded-full transition-all ${
-                  i === current
-                    ? 'w-6 h-2 bg-[var(--color-brand)]'
-                    : 'w-2 h-2 bg-[var(--color-border)] hover:bg-[var(--color-ink-tertiary)]'
-                }`}
-                aria-label={`Ir a propiedad ${i + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom CTA */}
-        <ScrollReveal delay={200}>
-          <div className='text-center mt-8 md:mt-12'>
-            <a
-              href='/properties'
-              className='inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200 shadow-lg shadow-[var(--color-brand)]/25 hover:shadow-xl hover:shadow-[var(--color-brand)]/30 hover:-translate-y-px'
+        {/* 6-card grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
+          {properties.slice(0, 6).map((property, i) => (
+            <div
+              key={property._id?.toString() || i}
+              className={`transition-all duration-500 ${
+                visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+              style={{ transitionDelay: visible ? `${i * 80}ms` : '0ms' }}
             >
-              Explorar todas las propiedades
-              <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17 8l4 4m0 0l-4 4m4-4H3' />
-              </svg>
-            </a>
-          </div>
-        </ScrollReveal>
+              <FeaturedPropertyCard
+                property={{
+                  ...property,
+                  _id: property._id?.toString(),
+                }}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div className="text-center">
+          <a
+            href="/properties"
+            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#652660] hover:bg-[#521f50] text-white text-[13px] font-bold uppercase tracking-wider rounded-full transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-px"
+          >
+            Ver todas las propiedades
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </div>
       </div>
     </section>
   );
