@@ -198,7 +198,7 @@ const MapProperties = ({ initialProperties = [] }) => {
             </span>
           </ScrollReveal>
           <ScrollReveal delay={50}>
-            <h2 className="text-3xl md:text-[52px] font-bold text-white leading-[1.1] tracking-[-0.01em] mb-4 md:mb-7">
+            <h2 className="text-3xl md:text-[52px] font-bold text-[#1A1A18] leading-[1.1] tracking-[-0.01em] mb-4 md:mb-7">
               Explor&aacute; en el mapa
             </h2>
           </ScrollReveal>
@@ -209,27 +209,27 @@ const MapProperties = ({ initialProperties = [] }) => {
                 <button
                   key={type}
                   onClick={() => { setActiveType(type); setShowGranInversion(false); }}
-                  className={`h-8 md:h-9 px-3 md:px-5 border-[1.5px] text-[12px] md:text-[13px] font-medium rounded-full transition-all duration-150 whitespace-nowrap ${
+                  className={`h-8 md:h-9 px-3 md:px-5 border-[1.5px] text-[12px] md:text-[13px] font-medium rounded transition-all duration-150 whitespace-nowrap ${
                     activeType === type && !showGranInversion
                       ? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white shadow-[0_2px_8px_rgba(242,107,46,0.3)]'
-                      : 'bg-white/10 border-white/20 text-white/80 hover:border-white/40 hover:bg-white/15'
+                      : 'bg-white border-[var(--color-border-strong)] text-[var(--color-ink)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]'
                   }`}
                 >
                   {type}
                 </button>
               ))}
 
-              <div className="w-px h-5 bg-white/15 flex-shrink-0 mx-1" />
+              <div className="w-px h-5 bg-[var(--color-border-strong)] flex-shrink-0 mx-1" />
 
               <button
                 onClick={() => {
                   setShowGranInversion((prev) => !prev);
                   if (!showGranInversion) setActiveType('Casa');
                 }}
-                className={`h-8 md:h-9 px-3 md:px-5 border-[1.5px] text-[12px] md:text-[13px] font-medium rounded-full transition-all duration-150 flex items-center gap-1.5 whitespace-nowrap ${
+                className={`h-8 md:h-9 px-3 md:px-5 border-[1.5px] text-[12px] md:text-[13px] font-medium rounded transition-all duration-150 flex items-center gap-1.5 whitespace-nowrap ${
                   showGranInversion
                     ? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white shadow-[0_2px_8px_rgba(242,107,46,0.3)]'
-                    : 'bg-white/10 border-white/20 text-white/80 hover:border-white/40 hover:bg-white/15'
+                    : 'bg-white border-[var(--color-border-strong)] text-[var(--color-ink)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]'
                 }`}
               >
                 <TrendingUp className="w-3.5 h-3.5" />
