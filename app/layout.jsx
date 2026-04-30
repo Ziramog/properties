@@ -36,7 +36,7 @@ const MainLayout = ({ children }) => {
     <AuthProvider>
       <GlobalProvider>
         <html lang='es' className={`${lato.variable} ${ptSerif.variable}`}>
-          <body className='font-sans antialiased text-body bg-white'>
+          <body className='font-sans antialiased text-body'>
             <Navbar />
             <main>{children}</main>
             <Footer />

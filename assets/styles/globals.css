@@ -77,7 +77,8 @@
     overflow-x: hidden;
   }
   body {
-    @apply text-body bg-site;
+    background-color: #F6F6F6;
+    @apply text-body;
     overflow-x: hidden;
   }
   *, *::before, *::after {
