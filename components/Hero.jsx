@@ -70,7 +70,7 @@ const Hero = () => {
       {/* Background Video */}
       <div className='absolute inset-0 z-0'>
         <video
-          src='/images/Modern_residential_building_Córd…_202604301151.mp4'
+          src='/images/remove_EEUU_flag,_and_empire_202604301710.mp4'
           autoPlay
           muted
           loop
