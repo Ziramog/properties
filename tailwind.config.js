@@ -14,6 +14,7 @@ module.exports = {
         whatsapp: { DEFAULT: '#25D366', hover: '#20BD5A' },
         gold: '#C5A880',
         surface: { DEFAULT: '#F8FAFC', alt: '#FFFFFF', muted: '#F1F5F9' },
+        site: '#F6F6F6',
         heading: '#0F172A',
         body: '#475569',
         muted: '#94A3B8',
