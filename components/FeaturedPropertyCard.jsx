@@ -120,40 +120,40 @@ const FeaturedPropertyCard = ({ property }) => {
 
           {/* Features overlay — bottom */}
           <div className="absolute bottom-0 left-0 right-0 z-20 flex items-center gap-3 px-4 pb-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 relative z-20">
               {property.beds != null && (
                 <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
-                  <BedIcon className="w-5 h-4" />
+                  <BedIcon className="w-5 h-5" />
                   {property.beds}
                 </span>
               )}
               {property.baths != null && (
                 <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
-                  <BathIcon className="w-5 h-4" />
+                  <BathIcon className="w-5 h-5" />
                   {property.baths}
                 </span>
               )}
               {area && (
                 <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
-                  <SqftIcon className="w-4 h-4" />
+                  <SqftIcon className="w-5 h-5" />
                   {area}
                 </span>
               )}
             </div>
 
             {price && (
-              <span className="ml-auto text-white text-[28px] font-bold leading-none" style={{ fontFamily: 'var(--font-heading)' }}>
+              <span className="ml-auto text-white text-[28px] font-bold leading-none relative z-20" style={{ fontFamily: 'var(--font-heading)' }}>
                 {price}
               </span>
             )}
           </div>
 
-          {/* WhatsApp button */}
+          {/* WhatsApp button — above price, top-right of bottom area */}
           <a
             href={generateWhatsAppLink({ property })}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute bottom-4 right-12 bg-[#25D366] hover:bg-[#20BD5A] text-white p-2 rounded-full transition-all duration-200 hover:scale-110 z-20"
+            className="absolute bottom-16 right-4 bg-[#25D366] hover:bg-[#20BD5A] text-white p-2 rounded-full transition-all duration-200 hover:scale-110 z-20"
             onClick={(e) => e.stopPropagation()}
             aria-label="Consultar por WhatsApp"
           >
