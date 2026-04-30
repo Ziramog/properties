@@ -189,7 +189,7 @@ const MapProperties = ({ initialProperties = [] }) => {
   };
 
   return (
-    <section className="bg-[#1C1C1A] pt-14 md:pt-20 pb-16 md:pb-20 px-4 md:px-6 relative overflow-hidden isolate z-10" id="mapa">
+    <section className="bg-[#1C1C1A] pt-14 md:pt-20 pb-16 md:pb-20 px-4 md:px-6 relative overflow-hidden isolate z-10 rounded-2xl" id="mapa">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 md:mb-10">
           <ScrollReveal>
