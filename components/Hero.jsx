@@ -93,7 +93,7 @@ const Hero = () => {
             background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.10) 40%, rgba(0,0,0,0.55) 100%)',
           }}
         />
-        <div className='absolute inset-0 z-10 pointer-events-none' style={{ backgroundImage: 'url(/senada/images/overlay-pattern.png)', backgroundRepeat: 'repeat', backgroundSize: '4px 4px' }} />
+        <div className='absolute inset-0 z-10 pointer-events-none' style={{ backgroundImage: 'url(/senada/images/overlay-pattern.png)', backgroundRepeat: 'repeat', backgroundSize: '4px' }} />
       </div>
 
       {/* Scroll indicator — mobile only, above pill */}
