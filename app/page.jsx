@@ -46,7 +46,7 @@ const HomePage = async () => {
       <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured && (p.images || []).length > 0).slice(0, 6)} />
 
       {/* 5. Map — geographic exploration */}
-      <div className="bg-[#1C1C1A] relative rounded-2xl overflow-hidden" style={{ isolation: 'isolate' }}>
+      <div className="relative rounded-2xl overflow-hidden" style={{ isolation: 'isolate' }}>
         <MapProperties initialProperties={serializedProperties} />
       </div>
 
