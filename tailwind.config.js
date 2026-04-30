@@ -20,10 +20,10 @@ module.exports = {
         success: '#25D366',
       },
       fontFamily: {
-        sans: ['var(--font-heading)', 'var(--font-inter)', 'Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
-        heading: ['var(--font-heading)', 'var(--font-inter)', 'Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
-        serif: ['var(--font-playfair)', 'Playfair Display', 'Georgia', 'Cambria', 'Cambria Math', 'Times New Roman', 'serif'],
-        display: ['var(--font-display)', 'Cormorant Garamond', 'Georgia', 'serif'],
+        sans: ['var(--font-body)', 'Lato', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-heading)', 'PT Serif', 'Georgia', 'serif'],
+        serif: ['var(--font-heading)', 'PT Serif', 'Georgia', 'serif'],
+        display: ['var(--font-heading)', 'PT Serif', 'Georgia', 'serif'],
       },
       borderRadius: {
         card: '12px',
