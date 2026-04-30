@@ -105,10 +105,10 @@ const Hero = () => {
           <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Córdoba, Argentina</span>
           <span className='w-7 h-px bg-white/40 flex-shrink-0' />
         </motion.div>
-        <h1 className='font-display italic font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
+        <h1 className='font-display font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
           <HeadlineChar text={HERO_LINE1} className='block' />
         </h1>
-        <h2 className='font-display font-bold text-white leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
+        <h2 className='font-display font-normal text-white leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
           <HeadlineChar text={HERO_LINE2} className='block' />
         </h2>
       </div>
@@ -125,10 +125,10 @@ const Hero = () => {
           <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Córdoba, Argentina</span>
           <span className='w-7 h-px bg-white/40 flex-shrink-0' />
         </motion.div>
-        <h1 className='font-display italic font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
+        <h1 className='font-display font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
           <HeadlineChar text={HERO_LINE1} className='block' />
         </h1>
-        <h2 className='font-display font-bold text-white leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
+        <h2 className='font-display font-normal text-white leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
           <HeadlineChar text={HERO_LINE2} className='block' />
         </h2>
       </div>
