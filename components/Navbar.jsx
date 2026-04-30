@@ -58,10 +58,13 @@ const Navbar = () => {
       <header
         className={`hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isGlassMode
-            ? 'bg-[#1C1C1A]/80 backdrop-blur-xl shadow-lg shadow-black/10'
+            ? 'bg-black/70 backdrop-blur-2xl shadow-lg shadow-black/20 border-b border-white/5'
             : 'bg-transparent'
         }`}
-        style={{ paddingTop: 'env(safe-area-inset-top, 8px)' }}
+        style={{
+          paddingTop: isGlassMode ? 'calc(env(safe-area-inset-top, 8px) + 15px)' : 'env(safe-area-inset-top, 8px)',
+          paddingBottom: isGlassMode ? '15px' : '0px',
+        }}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 h-full">
           <Link className="flex items-center flex-shrink-0" href="/">
