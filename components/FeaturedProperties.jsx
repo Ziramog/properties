@@ -19,7 +19,7 @@ const FeaturedProperties = ({ properties = [] }) => {
   if (properties.length === 0) return null;
 
   return (
-    <section className="py-16 md:py-24 px-4" ref={ref}>
+    <section className="pb-[30px] pt-[30px] px-4" ref={ref}>
       <SectionBox className="max-w-[92vw] mx-auto px-4 md:px-8 py-16 md:py-24">
         {/* Section Header */}
         <div className="text-center mb-10 md:mb-14">
