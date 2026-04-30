@@ -11,10 +11,10 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 const BedIcon = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30.23 24.184" fill="none" className={className}>
-    <g transform="translate(-1.2, 14.542)">
-      <path d="M27.192-14.542a4.029,4.029,0,0,0-4.031,4.031H21.146V-8.5h6.046v-2.015H25.176a1.913,1.913,0,0,1,2.015-2.015,1.913,1.913,0,0,1,2.015,2.015v6.046H2V-2.45H3.2L4.74,5.2v.031A3.085,3.085,0,0,0,6.755,7.469L6.031,9.642H8.046l.661-2.015H25.523l.661,2.015H28.2l-.724-2.173a3.055,3.055,0,0,0,2.11-2.236V5.2L31.034-2.45h1.2V-4.466H31.222v-6.046A4.028,4.028,0,0,0,27.192-14.542Z" fill="#fff"/>
-    </g>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
+    <rect x="2" y="8" width="20" height="12" rx="2" fill="#fff"/>
+    <path d="M0 18h24v2H0z" fill="#fff"/>
+    <path d="M7 8V5a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v3" fill="none" stroke="#fff" strokeWidth="1.5"/>
   </svg>
 );
 
