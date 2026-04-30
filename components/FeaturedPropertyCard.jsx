@@ -10,14 +10,14 @@ import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const BedIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="30.23" height="24.184" viewBox="0 0 30.23 24.184" fill="none">
+const BedIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="30.23" height="24.184" viewBox="0 0 30.23 24.184" fill="none" className={className}>
     <path d="M25.192-14.542a4.029,4.029,0,0,0-4.031,4.031H19.146V-8.5h6.046v-2.015H23.176a1.913,1.913,0,0,1,2.015-2.015,1.913,1.913,0,0,1,2.015,2.015v6.046H0V-2.45H1.2L2.74,5.2v.031A3.085,3.085,0,0,0,4.755,7.469L4.031,9.642H6.046l.661-2.015H23.523l.661,2.015H26.2l-.724-2.173a3.055,3.055,0,0,0,2.11-2.236V5.2L29.034-2.45h1.2V-4.466H29.222v-6.046A4.028,4.028,0,0,0,25.192-14.542ZM3.244-2.45H27.018L25.6,4.824a1.032,1.032,0,0,1-1.008.787H5.731a1.006,1.006,0,0,1-1.008-.819Z" transform="translate(0 14.542)" fill="#fff"/>
   </svg>
 );
 
-const BathIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="33.034" height="25.627" viewBox="0 0 33.034 25.627" fill="none">
+const BathIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="33.034" height="25.627" viewBox="0 0 33.034 25.627" fill="none" className={className}>
     <path d="M27.386-4.2H2.7v-8.024a3.11,3.11,0,0,1,3.086-3.086H24.3a3.11,3.11,0,0,1,3.086,3.086Z" transform="translate(777.008 1112.272)" stroke="#fff" strokeWidth="1.5"/>
     <path d="M.468,4.945V-3.7A4.976,4.976,0,0,1,5.406-8.634H27.628A4.976,4.976,0,0,1,32.566-3.7V4.945" transform="translate(775.532 1116.702)" stroke="#fff" strokeWidth="1.5"/>
     <path d="M.468.516V-.1A1.866,1.866,0,0,1,2.32-1.953H30.714A1.866,1.866,0,0,1,32.566-.1V.516" transform="translate(775.532 1121.131)" stroke="#fff" strokeWidth="1.5"/>
@@ -26,8 +26,8 @@ const BathIcon = () => (
   </svg>
 );
 
-const SqftIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24.739" height="24.739" viewBox="0 0 24.739 24.739" fill="none">
+const SqftIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24.739" height="24.739" viewBox="0 0 24.739 24.739" fill="none" className={className}>
     <path d="M18.2-16.364h7.624V7.356H2.1v-23.72H8.877l5.083,3.389M12.266,7.356V-4.5M8.03-4.5H16.5m5.083,0h4.236" transform="translate(-1.591 16.873)" stroke="#fff" strokeWidth="1.019"/>
   </svg>
 );
@@ -153,7 +153,7 @@ const FeaturedPropertyCard = ({ property }) => {
             href={generateWhatsAppLink({ property })}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute bottom-4 right-4 bg-[#25D366] hover:bg-[#20BD5A] text-white p-2 rounded-full transition-all duration-200 hover:scale-110 z-20"
+            className="absolute bottom-4 right-12 bg-[#25D366] hover:bg-[#20BD5A] text-white p-2 rounded-full transition-all duration-200 hover:scale-110 z-20"
             onClick={(e) => e.stopPropagation()}
             aria-label="Consultar por WhatsApp"
           >
