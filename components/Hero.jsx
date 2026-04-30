@@ -67,16 +67,16 @@ const Hero = () => {
   return (
     <section className='relative h-screen min-h-[700px] overflow-hidden'>
 
-      {/* Background Image */}
+      {/* Background Video */}
       <div className='absolute inset-0 z-0'>
-        <picture>
-          <source media='(min-width: 768px)' srcSet='/images/necesito_otro_angulo_202604221402.jpeg' />
-          <img
-            src='/images/mobilehero_1.jpeg'
-            alt=''
-            className='w-full h-full object-cover object-center hero-bg-zoom'
-          />
-        </picture>
+        <video
+          src='/images/Modern_residential_building_Córd…_202604301151.mp4'
+          autoPlay
+          muted
+          loop
+          playsInline
+          className='w-full h-full object-cover'
+        />
         <div
           className='absolute inset-0'
           style={{
@@ -225,16 +225,9 @@ const Hero = () => {
           animation: scrollBounce 2s ease-in-out infinite;
         }
         @media (prefers-reduced-motion: no-preference) {
-          .hero-bg-zoom {
-            animation: heroZoom 20s ease-in-out infinite alternate;
-          }
           .scroll-indicator-container {
             animation: scrollBounce 2s ease-in-out infinite;
           }
-        }
-        @keyframes heroZoom {
-          from { transform: scale(1.0); }
-          to { transform: scale(1.06); }
         }
       `}</style>
     </section>
