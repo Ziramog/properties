@@ -69,13 +69,23 @@ const Hero = () => {
 
       {/* Background Video */}
       <div className='absolute inset-0 z-0'>
+        {/* Mobile video */}
         <video
-          src='/images/remove_EEUU_flag,_and_empire_202604301710.mp4'
+          src='/images/Modern_residential_building_Córd…_202604301151.mp4'
           autoPlay
           muted
           loop
           playsInline
-          className='w-full h-full object-cover'
+          className='w-full h-full object-cover md:hidden'
+        />
+        {/* Desktop video */}
+        <video
+          src='/images/video_hero.mp4'
+          autoPlay
+          muted
+          loop
+          playsInline
+          className='w-full h-full object-cover hidden md:block'
         />
         <div
           className='absolute inset-0'
