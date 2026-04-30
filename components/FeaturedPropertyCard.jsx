@@ -81,8 +81,8 @@ const FeaturedPropertyCard = ({ property }) => {
           />
 
           {/* Gradient overlay — black default, purple on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#652660] to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-[5]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#652660] to-transparent z-[5] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Tag — top left */}
           {isNew && (
@@ -119,23 +119,23 @@ const FeaturedPropertyCard = ({ property }) => {
           )}
 
           {/* Features overlay — bottom */}
-          <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center gap-3 px-4 pb-4">
+          <div className="absolute bottom-0 left-0 right-0 z-20 flex items-center gap-3 px-4 pb-4">
             <div className="flex items-center gap-3">
               {property.beds != null && (
                 <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
-                  <BedIcon />
+                  <BedIcon className="w-5 h-4" />
                   {property.beds}
                 </span>
               )}
               {property.baths != null && (
                 <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
-                  <BathIcon />
+                  <BathIcon className="w-5 h-4" />
                   {property.baths}
                 </span>
               )}
               {area && (
                 <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
-                  <SqftIcon />
+                  <SqftIcon className="w-4 h-4" />
                   {area}
                 </span>
               )}
@@ -153,7 +153,7 @@ const FeaturedPropertyCard = ({ property }) => {
             href={generateWhatsAppLink({ property })}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute bottom-4 right-4 bg-[#25D366] hover:bg-[#20BD5A] text-white p-2 rounded-full transition-all duration-200 hover:scale-110 z-10"
+            className="absolute bottom-4 right-4 bg-[#25D366] hover:bg-[#20BD5A] text-white p-2 rounded-full transition-all duration-200 hover:scale-110 z-20"
             onClick={(e) => e.stopPropagation()}
             aria-label="Consultar por WhatsApp"
           >
