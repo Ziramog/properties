@@ -75,14 +75,13 @@ const FeaturedPropertyCard = ({ property }) => {
             src={image}
             alt={property.name}
             fill
-            className={`object-cover transition-transform duration-500 ${imgLoaded ? '' : ''}`}
+            className="object-cover transition-transform duration-500 z-0"
             onLoad={() => setImgLoaded(true)}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
 
-          {/* Gradient overlay — black default, purple on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-[5]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#652660] to-transparent z-[5] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
 
           {/* Tag — top left */}
           {isNew && (
@@ -119,8 +118,8 @@ const FeaturedPropertyCard = ({ property }) => {
           )}
 
           {/* Features overlay — bottom */}
-          <div className="absolute bottom-0 left-0 right-0 z-20 flex items-center gap-3 px-4 pb-4">
-            <div className="flex items-center gap-3 relative z-20">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center gap-3 px-4 pb-4">
+            <div className="flex items-center gap-3">
               {property.beds != null && (
                 <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
                   <BedIcon className="w-5 h-5" />
@@ -142,18 +141,18 @@ const FeaturedPropertyCard = ({ property }) => {
             </div>
 
             {price && (
-              <span className="ml-auto text-white text-[28px] font-bold leading-none relative z-20" style={{ fontFamily: 'var(--font-heading)' }}>
+              <span className="ml-auto text-white text-[28px] font-bold leading-none" style={{ fontFamily: 'var(--font-heading)' }}>
                 {price}
               </span>
             )}
           </div>
 
-          {/* WhatsApp button — above price, top-right of bottom area */}
+          {/* WhatsApp button */}
           <a
             href={generateWhatsAppLink({ property })}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute bottom-16 right-4 bg-[#25D366] hover:bg-[#20BD5A] text-white p-2 rounded-full transition-all duration-200 hover:scale-110 z-20"
+            className="absolute bottom-16 right-4 bg-[#25D366] hover:bg-[#20BD5A] text-white p-2 rounded-full transition-all duration-200 hover:scale-110 z-10"
             onClick={(e) => e.stopPropagation()}
             aria-label="Consultar por WhatsApp"
           >
