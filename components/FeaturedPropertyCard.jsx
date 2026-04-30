@@ -80,11 +80,9 @@ const FeaturedPropertyCard = ({ property }) => {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
 
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-
-          {/* Purple tint on hover */}
-          <div className="absolute inset-0 bg-[#652660] opacity-0 group-hover:opacity-40 transition-opacity duration-300" />
+          {/* Gradient overlay — black default, purple on hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#652660] to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Tag — top left */}
           {isNew && (
