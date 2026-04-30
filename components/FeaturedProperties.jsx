@@ -26,9 +26,13 @@ const FeaturedProperties = ({ properties = [] }) => {
           <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
             Propiedades Destacadas
           </h2>
-          <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#652660]">
-            Las mejores opciones del mercado
-          </p>
+          <div className="flex items-center justify-center gap-3">
+            <span className="w-7 h-px bg-[#652660] flex-shrink-0" />
+            <p className="text-[13px] md:text-[15px] font-medium text-[#652660] uppercase tracking-[0.15em]">
+              Las mejores opciones del mercado
+            </p>
+            <span className="w-7 h-px bg-[#652660] flex-shrink-0" />
+          </div>
         </div>
 
         {/* 6-card grid */}
