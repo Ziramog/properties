@@ -80,7 +80,7 @@ const Hero = () => {
         />
         {/* Desktop video */}
         <video
-          src='/images/remove_EEUU_flag,_and_empire_202604301914.mp4'
+          src='/images/Modern_residential_building_Córd…_202604301151.mp4'
           autoPlay
           muted
           loop
