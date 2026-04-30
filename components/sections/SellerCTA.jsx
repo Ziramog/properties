@@ -6,7 +6,7 @@ import { generateWhatsAppLink } from '@/utils/whatsapp';
 const SellerCTA = () => {
   return (
     <section className="py-14 md:py-20 px-4">
-      <SectionBox className="max-w-5xl mx-auto px-4 md:px-8 py-14 md:py-20">
+      <SectionBox className="max-w-[90vw] mx-auto px-4 md:px-8 py-14 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
           {/* Sell CTA */}
           <ScrollReveal delay={100}>
