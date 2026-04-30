@@ -19,8 +19,8 @@ const AGENTS = [
 
 const Agents = () => {
   return (
-    <section className="py-14 md:py-20 px-4" id="equipo">
-      <SectionBox className="max-w-[92vw] mx-auto px-4 md:px-8 py-14 md:py-16">
+    <section className="py-16 md:py-24 px-4" id="equipo">
+      <SectionBox className="max-w-[92vw] mx-auto px-4 md:px-8 py-16 md:py-24">
         {/* Section Header */}
         <div className="text-center mb-10 md:mb-14">
           <ScrollReveal>

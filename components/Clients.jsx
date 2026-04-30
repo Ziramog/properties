@@ -19,7 +19,7 @@ const Clients = () => {
   const next = () => setCurrent(c => (c + 1) % CLIENTS.length)
 
   return (
-    <section className='bg-white py-16 md:py-20 px-4'>
+    <section className='bg-white py-16 md:py-24 px-4'>
       <div className='max-w-6xl mx-auto'>
         <ScrollReveal>
           <div className='text-center mb-12'>

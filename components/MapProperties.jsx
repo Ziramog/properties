@@ -189,7 +189,7 @@ const MapProperties = ({ initialProperties = [] }) => {
   };
 
   return (
-    <section className="pt-14 md:pt-20 pb-16 md:pb-20 px-4 md:px-6 relative overflow-hidden isolate z-10" id="mapa">
+    <section className="py-16 md:py-24 px-4 md:px-6 relative overflow-hidden isolate z-10" id="mapa">
       <div className="max-w-[80vw] mx-auto">
         <div className="mb-8 md:mb-10">
           <ScrollReveal>

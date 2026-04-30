@@ -13,7 +13,7 @@ const ClientMarquee = () => {
   const items = [...CLIENTS, ...CLIENTS];
 
   return (
-    <section className="bg-white py-10 md:py-14 border-t border-[var(--color-border)] overflow-hidden">
+    <section className="bg-white py-16 md:py-24 border-t border-[var(--color-border)] overflow-hidden">
       <ScrollReveal>
         <p className="text-center text-[13px] font-medium text-[var(--color-ink-tertiary)] uppercase tracking-widest mb-10">
           Empresas que confían en nosotros

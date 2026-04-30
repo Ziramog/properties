@@ -19,8 +19,8 @@ const FeaturedProperties = ({ properties = [] }) => {
   if (properties.length === 0) return null;
 
   return (
-    <section className="py-14 md:py-20 px-4" ref={ref}>
-      <SectionBox className="max-w-[92vw] mx-auto px-4 md:px-8 py-14 md:py-20">
+    <section className="py-16 md:py-24 px-4" ref={ref}>
+      <SectionBox className="max-w-[92vw] mx-auto px-4 md:px-8 py-16 md:py-24">
         {/* Section Header */}
         <div className="text-center mb-10 md:mb-14">
           <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
