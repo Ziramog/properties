@@ -27,7 +27,9 @@ const HomePage = async () => {
       <Hero />
 
       {/* 2. Stats Bar — social proof metrics */}
-      <StatsBar />
+      <div style={{ paddingTop: '16px' }}>
+        <StatsBar />
+      </div>
 
       {/* 3. Featured — best inventory showcase */}
       <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured && (p.images || []).length > 0).slice(0, 6)} />

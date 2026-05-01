@@ -79,13 +79,13 @@ const FeaturedPropertyCard = ({ property }) => {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
 
-          {/* Gradient overlay — black default, purple on hover */}
+          {/* Gradient overlay — black default, orange on hover */}
           <div className="absolute inset-0 z-10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#652660] to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-brand)] to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Tag — top left */}
           {isNew && (
-            <span className="absolute top-3 left-3 z-10 bg-[#652660] text-white text-[11px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+            <span className="absolute top-3 left-3 z-10 bg-[var(--color-brand)] text-white text-[11px] font-bold px-2 py-1 rounded uppercase tracking-wider">
               Nuevo
             </span>
           )}

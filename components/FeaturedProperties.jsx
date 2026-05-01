@@ -27,11 +27,11 @@ const FeaturedProperties = ({ properties = [] }) => {
             Propiedades Destacadas
           </h2>
           <div className="flex items-center justify-center gap-3">
-            <span className="w-7 h-px bg-[#652660] flex-shrink-0" />
-            <p className="text-[13px] md:text-[15px] font-medium text-[#652660] uppercase tracking-[0.15em]">
+            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
+            <p className="text-[13px] md:text-[15px] font-medium text-[var(--color-brand)] uppercase tracking-[0.15em]">
               Las mejores opciones del mercado
             </p>
-            <span className="w-7 h-px bg-[#652660] flex-shrink-0" />
+            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
           </div>
         </div>
 
@@ -61,12 +61,9 @@ const FeaturedProperties = ({ properties = [] }) => {
         <div className="text-center">
           <a
             href="/properties"
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#652660] hover:bg-[#521f50] text-white text-[13px] font-bold uppercase tracking-wider rounded-full transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-px"
+            className="inline-block px-8 py-3 border-2 border-primary text-primary text-[13px] font-bold uppercase tracking-wider transition-all duration-200 hover:bg-primary hover:text-white"
           >
             Ver todas las propiedades
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
           </a>
         </div>
       </SectionBox>

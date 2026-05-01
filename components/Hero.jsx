@@ -75,7 +75,7 @@ const Hero = () => {
   const heroIconCls = 'w-4 h-4 text-white/50 flex-shrink-0';
 
   return (
-    <section className='relative h-screen min-h-[700px] overflow-hidden'>
+    <section className='relative overflow-hidden' style={{ height: 'calc(100vh + 200px)', minHeight: 'calc(100vh + 100px)' }}>
 
       {/* Background Video */}
       <div className='absolute inset-0 z-0'>
@@ -119,7 +119,7 @@ const Hero = () => {
 
       {/* Content Block — desktop centered, mobile upper 1/3 */}
       {/* Desktop: centered vertically and horizontally */}
-      <div className='hidden md:flex absolute inset-0 flex-col items-center justify-center w-full text-center px-6 z-10'>
+      <div className='hidden md:flex absolute inset-0 flex-col items-center justify-center w-full text-center px-6 z-10' style={{ paddingBottom: '200px' }}>
         <motion.div
           className='flex items-center justify-center gap-3 mb-4'
           initial={{ opacity: 0, y: 16 }}
@@ -139,7 +139,7 @@ const Hero = () => {
       </div>
 
       {/* Mobile: content at top: 42%, vertically centered */}
-      <div className='md:hidden absolute top-[42%] left-0 right-0 flex flex-col items-center w-full text-center px-6 z-10' style={{ transform: 'translateY(-50%)' }}>
+      <div className='md:hidden absolute top-[42%] left-0 right-0 flex flex-col items-center w-full text-center px-6 z-10' style={{ transform: 'translateY(calc(-50% - 100px))' }}>
         <motion.div
           className='flex items-center justify-center gap-3 mb-4'
           initial={{ opacity: 0, y: 16 }}
@@ -158,8 +158,8 @@ const Hero = () => {
         </h2>
       </div>
 
-      {/* Search Bar */}
-      <div className='absolute bottom-0 w-full z-20 px-4 pb-6'>
+      {/* Search Bar — at bottom of hero section, moved up 200px */}
+      <div className='absolute bottom-[200px] w-full z-20 px-4 pb-6'>
         <div
           className='mx-auto max-w-[880px] bg-black border border-white/10 px-2 py-2 flex items-center'
           style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}

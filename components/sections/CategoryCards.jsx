@@ -31,7 +31,7 @@ const CategoryCards = () => {
       <SectionBox className="max-w-[92vw] mx-auto px-4 md:px-8 py-16 md:py-24">
         {/* Header */}
         <div className="text-center mb-10 md:mb-14">
-          <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#652660] block mb-3">
+          <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--color-brand)] block mb-3">
             CATEGORÍAS
           </span>
           <h2 className="text-2xl md:text-[32px] font-medium text-[#0F172A] leading-tight tracking-[-0.01em] mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
@@ -56,10 +56,10 @@ const CategoryCards = () => {
                   border-[#e1e1e1]
                   shadow-[0_2px_8px_rgba(0,0,0,0.06),0_4px_16px_rgba(0,0,0,0.04)]
                   transition-all duration-200
-                  hover:border-[#652660]
+                  hover:border-[var(--color-brand)]
                   hover:shadow-[0_8px_32px_rgba(0,0,0,0.10),0_2px_8px_rgba(0,0,0,0.06)]
                   hover:-translate-y-1
-                  ${isActive ? 'bg-[#FFF3E8] border-[#652660]' : ''}
+                  ${isActive ? 'bg-[#FFF3E8] border-[var(--color-brand)]' : ''}
                 `}
               >
                 {/* Icon */}
@@ -73,7 +73,7 @@ const CategoryCards = () => {
                   `}
                 >
                   <Icon
-                    className={`w-5 h-5 md:w-7 md:h-7 ${isActive ? 'text-[#652660]' : 'text-[#652660]'}`}
+                    className={`w-5 h-5 md:w-7 md:h-7 ${isActive ? 'text-[var(--color-brand)]' : 'text-[var(--color-brand)]'}`}
                     strokeWidth={1.5}
                   />
                 </div>
@@ -82,9 +82,9 @@ const CategoryCards = () => {
                 <span
                   className={`
                     text-[12px] md:text-sm font-medium text-center
-                    ${isActive ? 'text-[#652660]' : 'text-[#475569]'}
+                    ${isActive ? 'text-[var(--color-brand)]' : 'text-[#475569]'}
                     transition-colors duration-150
-                    group-hover:text-[#652660]
+                    group-hover:text-[var(--color-brand)]
                   `}
                 >
                   {label}

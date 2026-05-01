@@ -24,7 +24,7 @@ const Agents = () => {
         {/* Section Header */}
         <div className="text-center mb-10 md:mb-14">
           <ScrollReveal>
-            <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#652660] block mb-3">
+            <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--color-brand)] block mb-3">
               EL EQUIPO
             </span>
           </ScrollReveal>
@@ -58,7 +58,7 @@ const Agents = () => {
                 <h3 className="text-[15px] font-medium text-[#0F172A] mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
                   {agent.name}
                 </h3>
-                <p className="text-[13px] text-[#652660] font-normal">
+                <p className="text-[13px] text-[var(--color-brand)] font-normal">
                   {agent.specialty}
                 </p>
               </div>

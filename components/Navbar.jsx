@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { FaPhone, FaWhatsapp, FaTimes, FaInstagram, FaLinkedin, FaFacebook, FaEnvelope } from 'react-icons/fa';
+import { FaWhatsapp } from 'react-icons/fa';
 import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whatsapp';
 import logo from '@/assets/images/logo-white.png';
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
@@ -127,47 +127,59 @@ const Navbar = () => {
         {/* Fullscreen Overlay — senada style: rOptions */}
         <div className={`rOptions fixed left-0 right-0 bg-black flex flex-col ${isMobileMenuOpen ? 'menu-open' : 'menu-closed'}`}
           style={{ top: 0, height: 'calc((var(--vh, 1vh) * 100))' }}>
-          {/* Top row: isotipo + close — at top of screen */}
-          <div className="flex items-center justify-between px-4 h-[60px] flex-shrink-0" style={{ paddingTop: 'calc(env(safe-area-inset-top, 8px))' }}>
+          {/* Top row: isotipo + close */}
+          <div className="flex items-center justify-between px-4 h-[60px] flex-shrink-0">
             <Link className="flex items-center flex-shrink-0" href="/">
-              <Image src="/images/ISOTIPO R&R-Photoroom.png" alt="Roggero & Roma" width={120} height={40} style={{ height: '40px', width: 'auto' }} />
+              <Image src="/images/ISOTIPO R&R-Photoroom.png" alt="Roggero & Roma" width={120} height={40} style={{ height: '40px', width: 'auto' }} className="brightness-0 invert" />
             </Link>
             <button
               onClick={() => setIsMobileMenuOpen(false)}
               className="w-8 h-8 flex items-center justify-center text-white"
               aria-label="Cerrar menú"
             >
-              <FaTimes size={24} />
+              <img src="/senada/images/icons/ico_close.svg" alt="cerrar" className="w-6 h-6" />
             </button>
           </div>
 
           {/* Nav links */}
-          <nav className="flex-1 flex flex-col justify-center px-8 gap-6">
-            <Link href="/" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Inicio</Link>
-            <Link href="/properties" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Propiedades</Link>
-            <Link href="/contact" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Contacto</Link>
+          <nav className="flex-1 flex flex-col justify-center px-8">
+            <Link href="/" className="flex items-center justify-between text-white text-[28px] font-normal py-4 border-b border-white/10" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
+              Inicio
+              <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-50" style={{ filter: 'brightness(0) invert(1)' }} />
+            </Link>
+            <Link href="/properties" className="flex items-center justify-between text-white text-[28px] font-normal py-4 border-b border-white/10" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
+              Propiedades
+              <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-50" style={{ filter: 'brightness(0) invert(1)' }} />
+            </Link>
+            <Link href="/contact" className="flex items-center justify-between text-white text-[28px] font-normal py-4 border-b border-white/10" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
+              Contacto
+              <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-50" style={{ filter: 'brightness(0) invert(1)' }} />
+            </Link>
             {session && (
-              <Link href="/profile" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Perfil</Link>
+              <Link href="/profile" className="flex items-center justify-between text-white text-[28px] font-normal py-4 border-b border-white/10" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
+                Perfil
+                <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-50" style={{ filter: 'brightness(0) invert(1)' }} />
+              </Link>
             )}
           </nav>
 
-          {/* Bottom: phone, email, icons */}
-          <div className="flex-shrink-0 px-8 pb-10" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 16px)' }}>
-            <div className="flex flex-col gap-3 mb-6">
-              <a href={`tel:${PHONE_NUMBER}`} className="flex items-center gap-3 text-white text-[15px]">
-                <FaPhone size={16} />
+          {/* Bottom: phone, email, icons — using senada SVG icons */}
+          <div className="flex-shrink-0 px-8 pt-6 pb-10 border-t border-white/10" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 16px)' }}>
+            <div className="flex flex-col gap-4 mb-6">
+              <a href={`tel:${PHONE_NUMBER}`} className="flex items-center gap-4 text-white text-[16px]">
+                <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-6 h-6" style={{ filter: 'brightness(0) invert(1)' }} />
                 {PHONE_DISPLAY}
               </a>
-              <a href={`mailto:${EMAIL}`} className="flex items-center gap-3 text-white text-[15px]">
-                <FaEnvelope size={16} />
+              <a href={`mailto:${EMAIL}`} className="flex items-center gap-4 text-white text-[16px]">
+                <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-6 h-6" style={{ filter: 'brightness(0) invert(1)' }} />
                 {EMAIL}
               </a>
             </div>
             <div className="flex items-center gap-5">
-              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="text-white"><FaWhatsapp size={20} /></a>
-              <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><FaInstagram size={20} /></a>
-              <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><FaFacebook size={20} /></a>
-              <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><FaLinkedin size={20} /></a>
+              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="text-white"><FaWhatsapp size={24} /></a>
+              <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-6 h-6" /></a>
+              <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-6 h-6" /></a>
+              <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><img src="/senada/images/icons/ico_linked.svg" alt="linkedin" className="w-6 h-6" /></a>
             </div>
           </div>
         </div>
@@ -190,7 +202,6 @@ const Navbar = () => {
         }
         .rButton.active .hamburger span:nth-child(2) {
           opacity: 0;
-          transform: translateX(-30px);
         }
         .rButton.active .hamburger span:nth-child(3) {
           top: -8px;

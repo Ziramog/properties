@@ -8,7 +8,7 @@ const SellerCTA = () => {
     <section className="pt-[30px] pb-[30px]">
       <div className="bg-white w-full">
         <div className="px-6 md:px-12 py-12 md:py-20">
-          <div className="flex justify-center gap-5 items-stretch">
+          <div className="flex flex-col md:flex-row justify-center gap-5 items-stretch">
           {/* Sell CTA */}
           <ScrollReveal delay={100}>
             <div className="relative rounded-3xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] h-full group">
