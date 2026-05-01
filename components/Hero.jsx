@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaSearch } from 'react-icons/fa';
@@ -45,6 +45,16 @@ const Hero = () => {
     zone: 'Córdoba',
     price: 'Cualquiera',
   });
+  const [showMore, setShowMore] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 80);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -96,12 +106,16 @@ const Hero = () => {
         <div className='absolute inset-0 z-10 pointer-events-none' style={{ backgroundImage: 'url(/senada/images/overlay-pattern.png)', backgroundRepeat: 'repeat', backgroundSize: '4px' }} />
       </div>
 
-      {/* Scroll indicator — mobile only, above pill */}
-      <div className='md:hidden absolute bottom-[180px] left-1/2 -translate-x-1/2 z-20 scroll-indicator-container'>
-        <svg className='w-[22px] h-[22px] text-white/55' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-          <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M19 9l-7 7-7-7' />
-        </svg>
-      </div>
+      {/* Scroll indicator — mobile only, shows before scroll */}
+      {!scrolled && (
+        <div className='md:hidden absolute bottom-[180px] left-1/2 -translate-x-1/2 z-20 scroll-indicator-container'>
+          <img
+            src='/senada/images/icons/ico_arrow-down.svg'
+            alt='scroll'
+            className='w-[25px] h-[23px]'
+          />
+        </div>
+      )}
 
       {/* Content Block — desktop centered, mobile upper 1/3 */}
       {/* Desktop: centered vertically and horizontally */}
@@ -145,9 +159,9 @@ const Hero = () => {
       </div>
 
       {/* Search Bar */}
-      <div className='absolute bottom-[100px] w-full z-20 px-4'>
+      <div className='absolute bottom-0 w-full z-20 px-4 pb-6'>
         <div
-          className='mx-auto max-w-[880px] bg-black/20 backdrop-blur-xl border border-white/10 px-2 py-2 flex items-center'
+          className='mx-auto max-w-[880px] bg-black border border-white/10 px-2 py-2 flex items-center'
           style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
         >
           {/* Desktop: full filters */}
@@ -210,16 +224,102 @@ const Hero = () => {
             </button>
           </form>
 
-          {/* Mobile: glass pillar buscar button */}
-          <button
-            type='button'
-            onClick={() => router.push('/properties')}
-            className='md:hidden flex items-center justify-center gap-2 w-full text-white font-bold text-sm uppercase tracking-wider rounded-full py-3.5 px-8 transition-all shadow-xl'
-            style={{ background: '#F26B2E' }}
-          >
-            <FaSearch className='w-4 h-4' />
-            Buscar ahora
-          </button>
+          {/* Mobile: text input + Show More toggle (senada style) */}
+          <div className='md:hidden w-full relative'>
+            {/* Single black container like senada's .top-part */}
+            <div className='bg-black border border-white/10 flex items-center gap-2 px-3 py-2.5' style={{ borderRadius: 12 }}>
+              {/* Black search icon */}
+              <svg className='w-5 h-5 text-black flex-shrink-0' viewBox='0 0 24 24' fill='currentColor'>
+                <path d='M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z'/>
+              </svg>
+              <input
+                type='text'
+                placeholder='Buscar por ciudad, zona o tipo'
+                className='bg-transparent text-white text-sm placeholder:text-white/40 w-full outline-none'
+              />
+            </div>
+
+            {/* Full-width CTA Button - below container */}
+            <button
+              type='button'
+              onClick={() => router.push('/properties')}
+              className='w-full bg-primary hover:bg-[#e05a23] text-white font-bold text-sm uppercase tracking-wider rounded-xl h-12 flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/30 mt-3'
+            >
+              <FaSearch className='w-4 h-4' />
+              BUSCAR
+            </button>
+
+            {/* Show More / Show Less Toggle — only visible after scroll */}
+            {scrolled && (
+              <button
+                type='button'
+                onClick={() => setShowMore(!showMore)}
+                className='flex items-center gap-1.5 w-full py-3 text-white/60 text-xs font-normal uppercase tracking-wide hover:text-white/80 transition-all'
+              >
+                {/* Plus/Minus icon like senada */}
+                <span className={`w-2.5 h-2.5 flex-shrink-0 bg-no-repeat bg-center bg-contain`} style={{ backgroundImage: showMore ? "url('data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'%23919191\\'><path d=\\'M19 13H5v-2h14v2z\'/></svg>')" : "url('data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'%23919191\\'><path d=\\'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\'/></svg>')" }} />
+                <span>{showMore ? 'Mostrar menos' : 'Mostrar más'}</span>
+              </button>
+            )}
+
+            {/* Expanded Filters (shown when Show More is clicked) - senada style: position absolute */}
+            <div
+              className={`bg-black overflow-hidden w-full ${showMore ? 'block' : 'hidden'}`}
+              style={{ borderRadius: 12, marginTop: 7 }}
+            >
+              <div className='grid grid-cols-2'>
+                {/* Tipo */}
+                <div className='h-14 px-4 flex flex-col justify-center border-b border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
+                  <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Tipo</span>
+                  <span className='text-white text-sm font-medium flex items-center justify-between'>
+                    {filters.type}
+                    <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                  </span>
+                </div>
+                {/* Operacion */}
+                <div className='h-14 px-4 flex flex-col justify-center border-b border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
+                  <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Operación</span>
+                  <span className='text-white text-sm font-medium flex items-center justify-between'>
+                    {filters.operation}
+                    <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                  </span>
+                </div>
+                {/* Zona */}
+                <div className='h-14 px-4 flex flex-col justify-center border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
+                  <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Zona</span>
+                  <span className='text-white text-sm font-medium flex items-center justify-between'>
+                    {filters.zone}
+                    <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                  </span>
+                </div>
+                {/* Precio */}
+                <div className='h-14 px-4 flex flex-col justify-center cursor-pointer hover:bg-white/5 transition-all'>
+                  <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Precio</span>
+                  <span className='text-white text-sm font-medium flex items-center justify-between'>
+                    {filters.price}
+                    <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                  </span>
+                </div>
+              </div>
+              {/* Expanded: Dormitorios y Baños */}
+              <div className='grid grid-cols-2 border-t border-white/10'>
+                <div className='h-14 px-4 flex flex-col justify-center border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
+                  <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Dormitorios</span>
+                  <span className='text-white text-sm font-medium flex items-center justify-between'>
+                    Cualquiera
+                    <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                  </span>
+                </div>
+                <div className='h-14 px-4 flex flex-col justify-center cursor-pointer hover:bg-white/5 transition-all'>
+                  <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Baños</span>
+                  <span className='text-white text-sm font-medium flex items-center justify-between'>
+                    Cualquiera
+                    <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
