@@ -46,7 +46,9 @@
       "Bash(git revert *)",
       "Bash(dir \"F:\\\\property-pulse-nextjs\\\\public\\\\images\\\\mobilehero*\")",
       "Bash(git checkout *)",
-      "Bash(dir *.json)"
+      "Bash(dir *.json)",
+      "WebFetch(domain:www.senadaadzem.com)",
+      "mcp__claude_ai_Figma__get_screenshot"
     ]
   },
   "enableAllProjectMcpServers": true,

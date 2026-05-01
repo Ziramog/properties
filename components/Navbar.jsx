@@ -62,8 +62,8 @@ const Navbar = () => {
             : 'bg-transparent'
         }`}
         style={{
-          paddingTop: isGlassMode ? 'calc(env(safe-area-inset-top, 8px) + 15px)' : 'env(safe-area-inset-top, 8px)',
-          paddingBottom: isGlassMode ? '15px' : '0px',
+          paddingTop: 'calc(env(safe-area-inset-top, 8px) + 15px)',
+          paddingBottom: '15px',
         }}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 h-full">
