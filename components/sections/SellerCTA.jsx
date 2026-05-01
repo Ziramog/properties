@@ -11,7 +11,7 @@ const SellerCTA = () => {
           <div className="max-w-[80vw] mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
           {/* Sell CTA */}
           <ScrollReveal delay={100}>
-            <div className="relative rounded-3xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] h-full group">
+            <div className="relative rounded-3xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] h-full group max-w-[25vw]">
               {/* Background image */}
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
@@ -62,7 +62,7 @@ const SellerCTA = () => {
 
           {/* Invest CTA */}
           <ScrollReveal delay={200}>
-            <div className="relative rounded-3xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] h-full group">
+            <div className="relative rounded-3xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] h-full group max-w-[25vw]">
               {/* Background image */}
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
