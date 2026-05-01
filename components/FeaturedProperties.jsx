@@ -19,8 +19,8 @@ const FeaturedProperties = ({ properties = [] }) => {
   if (properties.length === 0) return null;
 
   return (
-    <section className="pb-[30px] pt-[30px] px-4" ref={ref}>
-      <SectionBox className="max-w-[92vw] mx-auto px-4 md:px-8 py-16 md:py-24">
+    <section className="pb-[30px] pt-[30px]" ref={ref}>
+      <SectionBox className="px-4 md:px-8 py-16 md:py-24">
         {/* Section Header */}
         <div className="text-center mb-10 md:mb-14">
           <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
@@ -36,7 +36,7 @@ const FeaturedProperties = ({ properties = [] }) => {
         </div>
 
         {/* 6-card grid */}
-        <div className="max-w-[80vw] mx-auto">
+        <div className="w-full">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
           {properties.slice(0, 6).map((property, i) => (
             <div
