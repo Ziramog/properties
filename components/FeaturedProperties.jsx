@@ -36,7 +36,8 @@ const FeaturedProperties = ({ properties = [] }) => {
         </div>
 
         {/* 6-card grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
+        <div className="max-w-[80vw] mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
           {properties.slice(0, 6).map((property, i) => (
             <div
               key={property._id?.toString() || i}
@@ -53,6 +54,7 @@ const FeaturedProperties = ({ properties = [] }) => {
               />
             </div>
           ))}
+          </div>
         </div>
 
         {/* CTA */}
