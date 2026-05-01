@@ -11,20 +11,17 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 const BedIcon = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
-    <rect x="2" y="8" width="20" height="12" rx="2" fill="#fff"/>
-    <path d="M0 18h24v2H0z" fill="#fff"/>
-    <path d="M7 8V5a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v3" fill="none" stroke="#fff" strokeWidth="1.5"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className} fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="9" width="20" height="11" rx="2"/>
+    <path d="M0 18h24v2H0z"/>
+    <path d="M7 9V6a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v3"/>
   </svg>
 );
 
 const BathIcon = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="33.034" height="25.627" viewBox="0 0 33.034 25.627" fill="none" className={className}>
-    <path d="M27.386-4.2H2.7v-8.024a3.11,3.11,0,0,1,3.086-3.086H24.3a3.11,3.11,0,0,1,3.086,3.086Z" transform="translate(777.008 1112.272)" stroke="#fff" strokeWidth="1.5"/>
-    <path d="M.468,4.945V-3.7A4.976,4.976,0,0,1,5.406-8.634H27.628A4.976,4.976,0,0,1,32.566-3.7V4.945" transform="translate(775.532 1116.702)" stroke="#fff" strokeWidth="1.5"/>
-    <path d="M.468.516V-.1A1.866,1.866,0,0,1,2.32-1.953H30.714A1.866,1.866,0,0,1,32.566-.1V.516" transform="translate(775.532 1121.131)" stroke="#fff" strokeWidth="1.5"/>
-    <path d="M3.438-7.158V-8.392a2.488,2.488,0,0,1,2.469-2.469h6.173a2.488,2.488,0,0,1,2.469,2.469v1.235" transform="translate(777.5 1115.225)" stroke="#fff" strokeWidth="1.5"/>
-    <path d="M10.119-7.158V-8.392a2.488,2.488,0,0,1,2.469-2.469H18.76a2.487,2.487,0,0,1,2.469,2.469v1.235" transform="translate(781.93 1115.225)" stroke="#fff" strokeWidth="1.5"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
+    <path d="M2 12h20v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3v-6z" fill="#fff"/>
+    <path d="M6 12V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 
