@@ -5,7 +5,6 @@ const STATS = [
   { value: 500, suffix: '+', label: 'Propiedades' },
   { value: 10, suffix: '+', label: 'Años de experiencia' },
   { value: 4.8, suffix: '', label: 'Calificación', decimals: 1 },
-  { value: 98, suffix: '%', label: 'Clientes satisfechos' },
 ];
 
 const StatItem = ({ stat, isLast }) => {
@@ -44,10 +43,10 @@ const StatItem = ({ stat, isLast }) => {
       ref={ref}
       className={`flex-1 px-6 md:px-10 ${!isLast ? 'border-r border-[#e1e1e1]' : ''}`}
     >
-      <h3 className="text-[32px] md:text-[50px] leading-none text-[#0F172A]" style={{ fontFamily: 'var(--font-display)' }}>
+      <h3 className="text-[32px] md:text-[50px] leading-none text-[var(--color-brand)]" style={{ fontFamily: 'var(--font-display)' }}>
         {count}{stat.suffix}
       </h3>
-      <p className="text-[14px] md:text-[18px] leading-[24px] text-[#475569] mt-2 md:mt-3" style={{ fontFamily: 'var(--font-body)' }}>
+      <p className="text-[14px] md:text-[18px] leading-[24px] text-yellow-500 mt-2 md:mt-3" style={{ fontFamily: 'var(--font-body)' }}>
         {stat.label}
       </p>
     </div>
