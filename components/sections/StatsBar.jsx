@@ -41,7 +41,7 @@ const StatItem = ({ stat, isLast }) => {
   return (
     <div
       ref={ref}
-      className={`flex-1 px-6 md:px-10 ${!isLast ? 'border-r border-[#e1e1e1]' : ''}`}
+      className="flex-1 text-center px-2"
     >
       <h3 className="text-[40px] md:text-[60px] leading-none text-[var(--color-brand)] font-bold" style={{ fontFamily: 'var(--font-display)' }}>
         {count}{stat.suffix}

@@ -31,7 +31,17 @@ export function getAreaDisplay(property) {
  * Return a formatted price string.
  */
 export function getPriceDisplay(property) {
-  if (property.price) return property.price;
+  if (property.price) {
+    // Handle both string ('USD 320,000') and number prices
+    let num = typeof property.price === 'number'
+      ? property.price
+      : parseFloat(property.price.replace(/[^0-9.]/g, ''));
+    if (!isNaN(num) && num >= 1000) {
+      const k = num / 1000;
+      return `U$D ${k % 1 === 0 ? k : k.toFixed(k < 10 ? 2 : 1)}k`;
+    }
+    if (!isNaN(num)) return `U$D ${num.toLocaleString('es-AR')}`;
+  }
   if (property.rates?.monthly) return `$${property.rates.monthly.toLocaleString()}/mes`;
   if (property.rates?.weekly) return `$${property.rates.weekly.toLocaleString()}/sem`;
   if (property.rates?.nightly) return `$${property.rates.nightly.toLocaleString()}/noche`;

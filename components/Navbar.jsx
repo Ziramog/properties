@@ -1,13 +1,16 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { FaPhone, FaWhatsapp, FaBars, FaTimes } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaPhone, FaWhatsapp, FaBars, FaTimes, FaInstagram, FaLinkedin, FaFacebook, FaEnvelope } from 'react-icons/fa';
 import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whatsapp';
-import logo from '@/assets/images/logo.png';
+import logo from '@/assets/images/logo-white.png';
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
+
+const EMAIL = 'info@roggeroyroma.com.ar';
+const WHATSAPP_NUMBER = '5493547563911';
 
 const Navbar = () => {
   const { data: session } = useSession();
@@ -26,20 +29,15 @@ const Navbar = () => {
     };
     setAuthProviders();
 
-    const handleResize = () => {
-      setIsMobileMenuOpen(false);
-    };
+    const handleResize = () => setIsMobileMenuOpen(false);
     window.addEventListener('resize', handleResize);
 
-    // Scroll detection — threshold ~40% of viewport
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const threshold = window.innerHeight * 0.4;
-      setIsScrolled(scrollY > threshold);
+      setIsScrolled(window.scrollY > window.innerHeight * 0.4);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // check initial state
+    handleScroll();
 
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -47,77 +45,46 @@ const Navbar = () => {
     };
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isMobileMenuOpen]);
 
   return (
     <>
       {/* Desktop Nav */}
       <header
         className={`hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isGlassMode
-            ? 'bg-black shadow-lg shadow-black/20'
-            : 'bg-transparent'
+          isGlassMode ? 'bg-black shadow-lg shadow-black/20' : 'bg-transparent'
         }`}
-        style={{
-          paddingTop: 'calc(env(safe-area-inset-top, 8px) + 15px)',
-          paddingBottom: '15px',
-        }}
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 8px) + 15px)', paddingBottom: '15px' }}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 h-full">
           <Link className="flex items-center flex-shrink-0" href="/">
-            <Image
-              className="brightness-0 invert"
-              src={logo}
-              alt="Roggero & Roma"
-              style={{ height: '48px', width: 'auto' }}
-            />
+            <Image className="brightness-0 invert" src={logo} alt="Roggero & Roma" style={{ height: '48px', width: 'auto' }} />
           </Link>
 
           <nav className="flex gap-10 lg:gap-14">
-            <Link href="/" className={`${pathname === '/' ? 'text-[var(--color-brand)]' : 'text-white'} hover:text-[var(--color-brand)] transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`}>
-              Inicio
-            </Link>
-            <Link href="/properties" className={`${pathname.startsWith('/properties') ? 'text-[var(--color-brand)]' : 'text-white'} hover:text-[var(--color-brand)] transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`}>
-              Propiedades
-            </Link>
-            <Link href="/contact" className={`${pathname === '/contact' ? 'text-[var(--color-brand)]' : 'text-white'} hover:text-[var(--color-brand)] transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`}>
-              Contacto
-            </Link>
+            <Link href="/" className={`${pathname === '/' ? 'text-[var(--color-brand)]' : 'text-white'} hover:text-[var(--color-brand)] transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`}>Inicio</Link>
+            <Link href="/properties" className={`${pathname.startsWith('/properties') ? 'text-[var(--color-brand)]' : 'text-white'} hover:text-[var(--color-brand)] transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`}>Propiedades</Link>
+            <Link href="/contact" className={`${pathname === '/contact' ? 'text-[var(--color-brand)]' : 'text-white'} hover:text-[var(--color-brand)] transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`}>Contacto</Link>
           </nav>
 
           <div className="flex items-center gap-5">
             {!session && providers && Object.values(providers).map((provider) => (
-              <button
-                key={provider.id}
-                onClick={() => signIn(provider.id)}
-                className="text-white hover:text-[var(--color-brand)] px-6 py-2.5 font-bold text-sm uppercase tracking-wider transition-all"
-              >
-                Ingresar
-              </button>
+              <button key={provider.id} onClick={() => signIn(provider.id)} className="text-white hover:text-[var(--color-brand)] px-6 py-2.5 font-bold text-sm uppercase tracking-wider transition-all">Ingresar</button>
             ))}
-
             {session && (
               <div className="flex items-center gap-3">
                 {session.user?.role === 'admin' && (
-                  <Link
-                    href="/properties/add"
-                    className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-4 py-2 rounded-full font-bold text-sm uppercase tracking-wider transition-all"
-                  >
-                    Agregar
-                  </Link>
+                  <Link href="/properties/add" className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-4 py-2 rounded-full font-bold text-sm uppercase tracking-wider transition-all">Agregar</Link>
                 )}
-                <span className="text-white/80 text-sm hidden lg:block">
-                  {session.user?.name?.split(' ')[0]}
-                </span>
-                <button
-                  onClick={() => signOut()}
-                  className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full font-medium text-sm transition-all"
-                >
-                  Salir
-                </button>
+                <span className="text-white/80 text-sm hidden lg:block">{session.user?.name?.split(' ')[0]}</span>
+                <button onClick={() => signOut()} className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full font-medium text-sm transition-all">Salir</button>
               </div>
             )}
           </div>
@@ -125,139 +92,95 @@ const Navbar = () => {
       </header>
 
       {/* Mobile Nav */}
-      <motion.header
-        className="md:hidden fixed top-0 left-0 right-0 z-50"
-        style={{
-          paddingTop: 'env(safe-area-inset-top, 8px)',
-          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-        }}
-        animate={{
-          height: isGlassMode ? '60px' : 'auto',
-          backgroundColor: isGlassMode
-            ? 'rgba(0, 0, 0, 1)'
-            : 'transparent',
-          borderBottomWidth: isGlassMode ? '0px' : '0px',
-          borderColor: 'transparent',
-          backdropFilter: 'blur(0px)',
-        }}
-        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      <div
+        className="md:hidden fixed top-0 left-0 right-0 z-[60] transition-all duration-300"
+        style={{ height: 'calc(env(safe-area-inset-top, 8px) + 60px)', backgroundColor: isGlassMode ? 'rgba(0,0,0,1)' : 'transparent' }}
       >
-        <motion.div
-          className="max-w-7xl mx-auto flex items-center px-4 relative"
-          animate={{
-            paddingTop: isGlassMode ? '10px' : '35px',
-            paddingBottom: isGlassMode ? '10px' : '0px',
-            justifyContent: isGlassMode ? 'space-between' : 'center',
-          }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {/* Logo */}
-          <motion.div
-            animate={{
-              scale: isGlassMode ? 0.75 : 1,
-              opacity: isGlassMode ? 0.9 : 1,
-            }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            style={{ originX: 0.5, originY: 0.5 }}
+        <div className="flex items-center justify-between px-6 h-full">
+          {/* Logo — isotipo */}
+          <Link className="flex items-center flex-shrink-0" href="/">
+            <Image
+              className="brightness-0 invert"
+              src="/images/ISOTIPO R&R-Photoroom.png"
+              alt="Roggero & Roma"
+              width={120}
+              height={40}
+              style={{ height: '40px', width: 'auto' }}
+            />
+          </Link>
+
+          {/* Hamburger / Close */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="w-8 h-8 flex items-center justify-center text-white"
+            aria-label="Menú"
           >
-            <Link className="flex items-center flex-shrink-0" href="/">
-              <Image
-                className="brightness-0 invert"
-                src={logo}
-                alt="Roggero & Roma"
-                style={{ height: isGlassMode ? '44px' : '72px', width: 'auto', transition: 'height 0.35s ease' }}
-              />
-            </Link>
-          </motion.div>
+            <motion.div initial={false} animate={{ rotate: isMobileMenuOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
+              {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+            </motion.div>
+          </button>
+        </div>
 
-          {/* Right side */}
-          <div className="absolute right-4 top-1/2 -translate-y-1/2">
-          {isGlassMode ? (
-            <>
-              {session ? (
-                <div className="flex items-center gap-2">
-                  {session.user?.role === 'admin' && (
-                    <Link href="/properties/add" className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-3 py-2 rounded-full font-bold text-xs uppercase tracking-wider transition-all">
-                      Agregar
-                    </Link>
-                  )}
-                  <button
-                    onClick={() => signOut()}
-                    className="bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-full font-medium text-xs transition-all"
-                  >
-                    Salir
-                  </button>
-                </div>
-              ) : (
-                providers && Object.values(providers).map((provider) => (
-                  <button
-                    key={provider.id}
-                    onClick={() => signIn(provider.id)}
-                    className="text-white hover:text-[var(--color-brand)] font-bold text-xs uppercase tracking-wider transition-all"
-                  >
-                    Ingresar
-                  </button>
-                ))
-              )}
-            </>
-          ) : (
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-8 flex items-center justify-center text-white/80 hover:text-white transition-colors"
-              aria-label="Menú"
-            >
-              {isMobileMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
-            </button>
-          )}
-          </div>
-        </motion.div>
-
-        {/* Mobile menu */}
+        {/* Fullscreen Overlay — below header */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: '-60px' }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              className="mx-4 mt-2"
+              exit={{ opacity: 0, y: '-60px' }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              className="fixed left-0 right-0 bg-black flex flex-col"
+              style={{ top: 'calc(env(safe-area-inset-top, 8px) + 60px)', bottom: 0 }}
             >
-              <div className="bg-[#1C1C1A]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 space-y-3">
-                <Link href="/" className="block text-white/90 text-sm font-medium py-2 px-3 rounded-lg hover:bg-white/10">Inicio</Link>
-                <Link href="/properties" className="block text-white/90 text-sm font-medium py-2 px-3 rounded-lg hover:bg-white/10">Propiedades</Link>
-                <Link href="/contact" className="block text-white/90 text-sm font-medium py-2 px-3 rounded-lg hover:bg-white/10">Contacto</Link>
-                <div className="pt-3 border-t border-white/10">
-                  {session ? (
-                    <div className="flex items-center justify-between">
-                      <span className="text-white/80 text-sm">{session.user?.name?.split(' ')[0]}</span>
-                      <button
-                        onClick={() => signOut()}
-                        className="text-white/60 hover:text-white text-sm transition-colors"
-                      >
-                        Salir
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-3">
-                      {providers && Object.values(providers).map((provider) => (
-                        <button
-                          key={provider.id}
-                          onClick={() => signIn(provider.id)}
-                          className="text-white hover:text-[var(--color-brand)] font-bold text-xs uppercase tracking-wider transition-all"
-                        >
-                          Ingresar
-                        </button>
-                      ))}
-                      <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer"
-                        className="bg-whatsapp text-white p-2 rounded-lg"><FaWhatsapp /></a>
-                    </div>
-                  )}
+              {/* Top row: isotipo + close */}
+              <div className="flex items-center justify-between px-4 h-[60px] flex-shrink-0">
+                <Link className="flex items-center flex-shrink-0" href="/">
+                  <Image src="/images/ISOTIPO R&R-Photoroom.png" alt="Roggero & Roma" width={120} height={40} style={{ height: '40px', width: 'auto' }} />
+                </Link>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-8 h-8 flex items-center justify-center text-white"
+                  aria-label="Cerrar menú"
+                >
+                  <motion.div initial={false} animate={{ rotate: 90 }} transition={{ duration: 0.2 }}>
+                    <FaTimes size={24} />
+                  </motion.div>
+                </button>
+              </div>
+
+              {/* Nav links */}
+              <nav className="flex-1 flex flex-col justify-center px-8 gap-6">
+                <Link href="/" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Inicio</Link>
+                <Link href="/properties" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Propiedades</Link>
+                <Link href="/contact" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Contacto</Link>
+                {session && (
+                  <Link href="/profile" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Perfil</Link>
+                )}
+              </nav>
+
+              {/* Bottom: phone, email, icons */}
+              <div className="flex-shrink-0 px-8 pb-10" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 16px)' }}>
+                <div className="flex flex-col gap-3 mb-6">
+                  <a href={`tel:${PHONE_NUMBER}`} className="flex items-center gap-3 text-white text-[15px]">
+                    <FaPhone size={16} />
+                    {PHONE_DISPLAY}
+                  </a>
+                  <a href={`mailto:${EMAIL}`} className="flex items-center gap-3 text-white text-[15px]">
+                    <FaEnvelope size={16} />
+                    {EMAIL}
+                  </a>
+                </div>
+                <div className="flex items-center gap-5">
+                  <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="text-white"><FaWhatsapp size={20} /></a>
+                  <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><FaInstagram size={20} /></a>
+                  <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><FaFacebook size={20} /></a>
+                  <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><FaLinkedin size={20} /></a>
                 </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.header>
+      </div>
     </>
   );
 };
