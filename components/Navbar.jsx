@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaPhone, FaWhatsapp, FaBars, FaTimes, FaInstagram, FaLinkedin, FaFacebook, FaEnvelope } from 'react-icons/fa';
+import { FaPhone, FaWhatsapp, FaTimes, FaInstagram, FaLinkedin, FaFacebook, FaEnvelope } from 'react-icons/fa';
 import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whatsapp';
 import logo from '@/assets/images/logo-white.png';
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
@@ -93,8 +92,10 @@ const Navbar = () => {
 
       {/* Mobile Nav */}
       <div
-        className="md:hidden fixed top-0 left-0 right-0 z-[60] transition-all duration-300"
-        style={{ height: 'calc(env(safe-area-inset-top, 8px) + 60px)', backgroundColor: isGlassMode ? 'rgba(0,0,0,1)' : 'transparent' }}
+        className={`md:hidden fixed top-0 left-0 right-0 z-[60] transition-all duration-300 ${
+          isGlassMode ? 'bg-black' : 'bg-transparent'
+        }`}
+        style={{ height: 'calc(env(safe-area-inset-top, 8px) + 60px)' }}
       >
         <div className="flex items-center justify-between px-6 h-full">
           {/* Logo — isotipo */}
@@ -109,78 +110,100 @@ const Navbar = () => {
             />
           </Link>
 
-          {/* Hamburger / Close */}
+          {/* Hamburger / Close — senada style */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="w-8 h-8 flex items-center justify-center text-white"
-            aria-label="Menú"
+            className={`rButton w-8 h-8 flex items-center justify-center ${isMobileMenuOpen ? 'active' : ''}`}
+            aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
           >
-            <motion.div initial={false} animate={{ rotate: isMobileMenuOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
-              {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-            </motion.div>
+            <div className="hamburger">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
           </button>
         </div>
 
-        {/* Fullscreen Overlay — below header */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: '-60px' }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: '-60px' }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed left-0 right-0 bg-black flex flex-col"
-              style={{ top: 'calc(env(safe-area-inset-top, 8px) + 60px)', bottom: 0 }}
+        {/* Fullscreen Overlay — senada style: rOptions */}
+        <div className={`rOptions fixed left-0 right-0 bg-black flex flex-col ${isMobileMenuOpen ? 'menu-open' : 'menu-closed'}`}
+          style={{ top: 0, height: 'calc((var(--vh, 1vh) * 100))' }}>
+          {/* Top row: isotipo + close — at top of screen */}
+          <div className="flex items-center justify-between px-4 h-[60px] flex-shrink-0" style={{ paddingTop: 'calc(env(safe-area-inset-top, 8px))' }}>
+            <Link className="flex items-center flex-shrink-0" href="/">
+              <Image src="/images/ISOTIPO R&R-Photoroom.png" alt="Roggero & Roma" width={120} height={40} style={{ height: '40px', width: 'auto' }} />
+            </Link>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-8 h-8 flex items-center justify-center text-white"
+              aria-label="Cerrar menú"
             >
-              {/* Top row: isotipo + close */}
-              <div className="flex items-center justify-between px-4 h-[60px] flex-shrink-0">
-                <Link className="flex items-center flex-shrink-0" href="/">
-                  <Image src="/images/ISOTIPO R&R-Photoroom.png" alt="Roggero & Roma" width={120} height={40} style={{ height: '40px', width: 'auto' }} />
-                </Link>
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center text-white"
-                  aria-label="Cerrar menú"
-                >
-                  <motion.div initial={false} animate={{ rotate: 90 }} transition={{ duration: 0.2 }}>
-                    <FaTimes size={24} />
-                  </motion.div>
-                </button>
-              </div>
+              <FaTimes size={24} />
+            </button>
+          </div>
 
-              {/* Nav links */}
-              <nav className="flex-1 flex flex-col justify-center px-8 gap-6">
-                <Link href="/" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Inicio</Link>
-                <Link href="/properties" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Propiedades</Link>
-                <Link href="/contact" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Contacto</Link>
-                {session && (
-                  <Link href="/profile" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Perfil</Link>
-                )}
-              </nav>
+          {/* Nav links */}
+          <nav className="flex-1 flex flex-col justify-center px-8 gap-6">
+            <Link href="/" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Inicio</Link>
+            <Link href="/properties" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Propiedades</Link>
+            <Link href="/contact" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Contacto</Link>
+            {session && (
+              <Link href="/profile" className="text-white text-[28px] font-normal" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>Perfil</Link>
+            )}
+          </nav>
 
-              {/* Bottom: phone, email, icons */}
-              <div className="flex-shrink-0 px-8 pb-10" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 16px)' }}>
-                <div className="flex flex-col gap-3 mb-6">
-                  <a href={`tel:${PHONE_NUMBER}`} className="flex items-center gap-3 text-white text-[15px]">
-                    <FaPhone size={16} />
-                    {PHONE_DISPLAY}
-                  </a>
-                  <a href={`mailto:${EMAIL}`} className="flex items-center gap-3 text-white text-[15px]">
-                    <FaEnvelope size={16} />
-                    {EMAIL}
-                  </a>
-                </div>
-                <div className="flex items-center gap-5">
-                  <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="text-white"><FaWhatsapp size={20} /></a>
-                  <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><FaInstagram size={20} /></a>
-                  <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><FaFacebook size={20} /></a>
-                  <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><FaLinkedin size={20} /></a>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          {/* Bottom: phone, email, icons */}
+          <div className="flex-shrink-0 px-8 pb-10" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 16px)' }}>
+            <div className="flex flex-col gap-3 mb-6">
+              <a href={`tel:${PHONE_NUMBER}`} className="flex items-center gap-3 text-white text-[15px]">
+                <FaPhone size={16} />
+                {PHONE_DISPLAY}
+              </a>
+              <a href={`mailto:${EMAIL}`} className="flex items-center gap-3 text-white text-[15px]">
+                <FaEnvelope size={16} />
+                {EMAIL}
+              </a>
+            </div>
+            <div className="flex items-center gap-5">
+              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="text-white"><FaWhatsapp size={20} /></a>
+              <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><FaInstagram size={20} /></a>
+              <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><FaFacebook size={20} /></a>
+              <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><FaLinkedin size={20} /></a>
+            </div>
+          </div>
+        </div>
       </div>
+    {/* CSS for hamburger animation — senada style */}
+      <style jsx>{`
+        .rButton .hamburger span {
+          display: block;
+          width: 25px;
+          height: 3px;
+          background: #fff;
+          border-radius: 3px;
+          margin: 5px 0;
+          position: relative;
+          transition: all 0.3s ease;
+        }
+        .rButton.active .hamburger span:nth-child(1) {
+          top: 8px;
+          transform: rotate(135deg);
+        }
+        .rButton.active .hamburger span:nth-child(2) {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        .rButton.active .hamburger span:nth-child(3) {
+          top: -8px;
+          transform: rotate(-135deg);
+        }
+        .rOptions {
+          transform: translateY(-100%);
+          transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .rOptions.menu-open {
+          transform: translateY(0);
+        }
+      `}</style>
     </>
   );
 };
