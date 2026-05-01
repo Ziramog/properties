@@ -1,6 +1,5 @@
 import Hero from '@/components/Hero';
 import FeaturedPropertiesCarousel from '@/components/FeaturedPropertiesCarousel';
-import MapProperties from '@/components/MapProperties';
 import SellerCTA from '@/components/sections/SellerCTA';
 import StatsBar from '@/components/sections/StatsBar';
 import Agents from '@/components/sections/Agents';
@@ -33,15 +32,10 @@ const HomePage = async () => {
       {/* 3. Featured — best inventory showcase */}
       <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured && (p.images || []).length > 0).slice(0, 6)} />
 
-      {/* 4. Map — geographic exploration */}
-      <div className="bg-white rounded-3xl overflow-hidden max-w-[92vw] mx-auto">
-        <MapProperties initialProperties={serializedProperties} />
-      </div>
-
-      {/* 5. CTA — seller + investor */}
+      {/* 4. CTA — seller + investor */}
       <SellerCTA />
 
-      {/* 6. Agents */}
+      {/* 5. Agents */}
       <Agents />
     </>
   );
