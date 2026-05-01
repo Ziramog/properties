@@ -27,16 +27,16 @@ const HomePage = async () => {
       {/* 1. Hero — emotional hook + search + trust strip */}
       <Hero />
 
-      {/* 2. Featured — best inventory showcase */}
+      {/* 2. Stats Bar — social proof metrics */}
+      <StatsBar />
+
+      {/* 3. Featured — best inventory showcase */}
       <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured && (p.images || []).length > 0).slice(0, 6)} />
 
-      {/* 3. Map — geographic exploration */}
+      {/* 4. Map — geographic exploration */}
       <div className="bg-white rounded-3xl overflow-hidden max-w-[92vw] mx-auto">
         <MapProperties initialProperties={serializedProperties} />
       </div>
-
-      {/* 4. Stats Bar — social proof metrics */}
-      <StatsBar />
 
       {/* 5. CTA — seller + investor */}
       <SellerCTA />
