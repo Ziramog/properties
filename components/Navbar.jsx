@@ -93,7 +93,7 @@ const Navbar = () => {
               <button
                 key={provider.id}
                 onClick={() => signIn(provider.id)}
-                className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-[var(--color-brand)]/20 transition-all"
+                className="text-white hover:text-[var(--color-brand)] px-6 py-2.5 font-bold text-sm uppercase tracking-wider transition-all"
               >
                 Ingresar
               </button>
@@ -193,7 +193,7 @@ const Navbar = () => {
                   <button
                     key={provider.id}
                     onClick={() => signIn(provider.id)}
-                    className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-[var(--color-brand)]/20 transition-all"
+                    className="text-white hover:text-[var(--color-brand)] font-bold text-xs uppercase tracking-wider transition-all"
                   >
                     Ingresar
                   </button>
@@ -243,7 +243,7 @@ const Navbar = () => {
                         <button
                           key={provider.id}
                           onClick={() => signIn(provider.id)}
-                          className="bg-[var(--color-brand)] text-white px-4 py-2 rounded-full font-bold text-xs uppercase tracking-wider transition-all"
+                          className="text-white hover:text-[var(--color-brand)] font-bold text-xs uppercase tracking-wider transition-all"
                         >
                           Ingresar
                         </button>
