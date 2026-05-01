@@ -1,5 +1,4 @@
 import Hero from '@/components/Hero';
-import CategoryCards from '@/components/sections/CategoryCards';
 import FeaturedPropertiesCarousel from '@/components/FeaturedPropertiesCarousel';
 import MapProperties from '@/components/MapProperties';
 import SellerCTA from '@/components/sections/SellerCTA';
@@ -23,37 +22,26 @@ const HomePage = async () => {
     updatedAt: p.updatedAt?.toISOString(),
   }));
 
-  // Compute type counts for category cards
-  const typeCounts = {};
-  serializedProperties.forEach((p) => {
-    if (p.type) {
-      typeCounts[p.type] = (typeCounts[p.type] || 0) + 1;
-    }
-  });
-
   return (
     <>
       {/* 1. Hero — emotional hook + search + trust strip */}
       <Hero />
 
-      {/* 2. Stats Bar — social proof metrics */}
-      <StatsBar />
-
-      {/* 3. Categories — quick intent selection */}
-      <CategoryCards counts={typeCounts} />
-
-      {/* 4. Featured — best inventory showcase */}
+      {/* 2. Featured — best inventory showcase */}
       <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured && (p.images || []).length > 0).slice(0, 6)} />
 
-      {/* 5. Map — geographic exploration */}
+      {/* 3. Map — geographic exploration */}
       <div className="bg-white rounded-3xl overflow-hidden max-w-[92vw] mx-auto">
         <MapProperties initialProperties={serializedProperties} />
       </div>
 
-      {/* 6. CTA — seller + investor */}
+      {/* 4. Stats Bar — social proof metrics */}
+      <StatsBar />
+
+      {/* 5. CTA — seller + investor */}
       <SellerCTA />
 
-      {/* 7. Agents */}
+      {/* 6. Agents */}
       <Agents />
     </>
   );
