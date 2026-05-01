@@ -1,10 +1,10 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaBed, FaBath, FaRegHeart, FaHeart, FaWhatsapp } from 'react-icons/fa';
+import { FaRegHeart, FaHeart, FaWhatsapp } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
-import AreaIcon from './icons/AreaIcon';
-import { getAreaDisplay, getPriceDisplay, getPropertyImage, isNewListing } from '@/utils/propertyDisplay';
+import PropertyCardInfo from '@/components/PropertyCardInfo';
+import { getPriceDisplay, getPropertyImage, isNewListing } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
 import bookmarkProperty from '@/app/actions/bookmarkProperty';
 import { useSession } from 'next-auth/react';
@@ -18,7 +18,6 @@ const PropertyCard = ({ property, isSelected = false, onMouseEnter, onMouseLeave
   const router = useRouter();
 
   const image = getPropertyImage(property);
-  const area = getAreaDisplay(property);
   const price = getPriceDisplay(property);
   const isNew = isNewListing(property);
 
@@ -122,37 +121,7 @@ const PropertyCard = ({ property, isSelected = false, onMouseEnter, onMouseLeave
         </div>
 
         <div className="p-4">
-          <h3 className="text-sm font-bold text-heading leading-snug line-clamp-2 mb-1">
-            {property.name}
-          </h3>
-
-          <p className="text-xs text-muted mb-3 line-clamp-1 flex items-center gap-1">
-            <svg className="w-3 h-3 text-muted" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/></svg>
-            {property.location?.street
-              ? `${property.location.street}, ${property.location?.city}`
-              : `${property.location?.city}, ${property.location?.state}`}
-          </p>
-
-          <div className="flex items-center gap-4 text-xs text-muted border-t border-gray-100 pt-3">
-            {property.beds != null && (
-              <span className="flex items-center gap-1">
-                <FaBed className="text-muted" />
-                <span className="font-semibold text-body">{property.beds}</span>
-              </span>
-            )}
-            {property.baths != null && (
-              <span className="flex items-center gap-1">
-                <FaBath className="text-muted" />
-                <span className="font-semibold text-body">{property.baths}</span>
-              </span>
-            )}
-            {area && (
-              <span className="flex items-center gap-1">
-                <AreaIcon className="w-3.5 h-3.5 text-muted" />
-                <span className="font-semibold text-body">{area}</span>
-              </span>
-            )}
-          </div>
+          <PropertyCardInfo property={property} />
         </div>
       </Link>
     </div>

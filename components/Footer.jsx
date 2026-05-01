@@ -32,7 +32,7 @@ const Footer = () => {
             {/* Brand */}
             <div className="col-span-2 md:col-span-1">
               <Link href="/" className="inline-block mb-4">
-                <Image src={logo} alt="Roggero & Roma" width={130} height={40} className="h-auto brightness-0 invert" />
+                <Image src={logo} alt="Roggero & Roma" style={{ height: '40px', width: 'auto' }} className="h-auto brightness-0 invert" />
               </Link>
               <p className="text-white/55 text-sm leading-relaxed max-w-xs">
                 Más de 10 años de experiencia en el mercado inmobiliario de Córdoba.
@@ -104,7 +104,7 @@ const Footer = () => {
           {/* 2. Logo + tagline */}
           <div className="footer-m-brand">
             <Link href="/" className="inline-block">
-              <Image src={logo} alt="Roggero & Roma" width={130} height={40} className="footer-m-logo brightness-0 invert" />
+              <Image src={logo} alt="Roggero & Roma" style={{ height: '40px', width: 'auto' }} className="footer-m-logo brightness-0 invert" />
             </Link>
             <p className="footer-m-tagline">
               Más de 10 años de experiencia en el mercado inmobiliario de Córdoba.

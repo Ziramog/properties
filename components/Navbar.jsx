@@ -64,7 +64,7 @@ const Navbar = () => {
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 h-full">
           <Link className="flex items-center flex-shrink-0" href="/">
-            <Image className="brightness-0 invert" src={logo} alt="Roggero & Roma" style={{ height: '48px', width: 'auto' }} />
+            <Image className="brightness-0 invert" src={logo} alt="Roggero & Roma" style={{ height: '48px', width: 'auto' }} unoptimized />
           </Link>
 
           <nav className="flex gap-10 lg:gap-14">

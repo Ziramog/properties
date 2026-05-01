@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FaRegHeart, FaHeart } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import PropertyCardInfo from '@/components/PropertyCardInfo';
 import { getAreaDisplay, getPriceDisplay, getPropertyImage, isNewListing } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
 import bookmarkProperty from '@/app/actions/bookmarkProperty';
@@ -122,14 +123,7 @@ const FeaturedPropertyCard = ({ property }) => {
         </div>
 
         {/* Footer */}
-        <div className="px-3 py-3">
-          <h3 className="text-[22px] font-medium text-[#0F172A] leading-snug line-clamp-2 mb-0.5" style={{ fontFamily: 'var(--font-heading)' }}>
-            {property.name}
-          </h3>
-          <p className="text-[16px] text-[#878787] leading-tight">
-            {property.location?.city}
-          </p>
-        </div>
+        <PropertyCardInfo property={property} />
       </Link>
     </article>
   );
