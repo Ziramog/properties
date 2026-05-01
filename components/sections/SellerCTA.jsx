@@ -7,8 +7,8 @@ const SellerCTA = () => {
   return (
     <section className="pt-[30px] pb-[30px] px-4">
       <div className="bg-white rounded-3xl overflow-hidden max-w-[92vw] mx-auto">
-        <div className="px-4 md:px-8 py-16 md:py-24">
-          <div className="max-w-[80vw] mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
+        <div className="px-6 md:px-12 py-12 md:py-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
           {/* Sell CTA */}
           <ScrollReveal delay={100}>
             <div className="relative rounded-3xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] h-full group">
