@@ -3,7 +3,7 @@ import Footer from '@/components/Footer';
 import AuthProvider from '@/components/AuthProvider';
 import { GlobalProvider } from '@/context/GlobalContext';
 import { ToastContainer } from 'react-toastify';
-import { Lato, PT_Serif } from 'next/font/google';
+import { Lato, PT_Serif, Cormorant_Garamond } from 'next/font/google';
 import 'react-toastify/dist/ReactToastify.css';
 import '@/assets/styles/globals.css';
 import 'photoswipe/dist/photoswipe.css';
@@ -23,6 +23,14 @@ const ptSerif = PT_Serif({
   display: 'swap',
 });
 
+const cormorantGaramond = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-display',
+  display: 'swap',
+});
+
 export const metadata = {
   title: 'Roggero & Roma | Negocios Inmobiliarios',
   description:
@@ -35,7 +43,7 @@ const MainLayout = ({ children }) => {
   return (
     <AuthProvider>
       <GlobalProvider>
-        <html lang='es' className={`${lato.variable} ${ptSerif.variable}`}>
+        <html lang='es' className={`${lato.variable} ${ptSerif.variable} ${cormorantGaramond.variable}`}>
           <body className='font-sans antialiased text-body'>
             <Navbar />
             <main>{children}</main>
