@@ -58,7 +58,7 @@ const Navbar = () => {
       <header
         className={`hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isGlassMode
-            ? 'bg-black/70 backdrop-blur-2xl shadow-lg shadow-black/20 border-b border-white/5'
+            ? 'bg-black shadow-lg shadow-black/20'
             : 'bg-transparent'
         }`}
         style={{
@@ -134,11 +134,11 @@ const Navbar = () => {
         animate={{
           height: isGlassMode ? '60px' : 'auto',
           backgroundColor: isGlassMode
-            ? 'rgba(28, 28, 26, 0.85)'
+            ? 'rgba(0, 0, 0, 1)'
             : 'transparent',
-          borderBottomWidth: isGlassMode ? '1px' : '0px',
-          borderColor: isGlassMode ? 'rgba(255,255,255,0.05)' : 'transparent',
-          backdropFilter: isGlassMode ? 'blur(20px)' : 'blur(0px)',
+          borderBottomWidth: isGlassMode ? '0px' : '0px',
+          borderColor: 'transparent',
+          backdropFilter: 'blur(0px)',
         }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       >

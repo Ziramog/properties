@@ -74,13 +74,13 @@ const FeaturedPropertyCard = ({ property }) => {
             src={image}
             alt={property.name}
             fill
-            className="object-cover transition-transform duration-500 z-0"
+            className="object-cover transition-transform duration-500 z-0 group-hover:scale-110"
             onLoad={() => setImgLoaded(true)}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
 
           {/* Gradient overlay — black default, purple on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
+          <div className="absolute inset-0 z-10" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#652660] to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Tag — top left */}
@@ -141,7 +141,7 @@ const FeaturedPropertyCard = ({ property }) => {
             </div>
 
             {price && (
-              <span className="ml-auto text-white text-[28px] font-bold leading-none" style={{ fontFamily: 'var(--font-heading)' }}>
+              <span className="ml-auto text-white text-[28px] font-bold leading-none group-hover:scale-110 transition-transform duration-300" style={{ fontFamily: 'var(--font-heading)' }}>
                 {price}
               </span>
             )}
@@ -164,10 +164,10 @@ const FeaturedPropertyCard = ({ property }) => {
 
         {/* Footer */}
         <div className="px-4 py-3">
-          <h3 className="text-[16px] font-medium text-[#0F172A] leading-snug line-clamp-2 mb-0.5" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h3 className="text-[22px] font-medium text-[#0F172A] leading-snug line-clamp-2 mb-0.5" style={{ fontFamily: 'var(--font-heading)' }}>
             {property.name}
           </h3>
-          <p className="text-[13px] text-[#878787] leading-tight">
+          <p className="text-[16px] text-[#878787] leading-tight">
             {property.location?.city}
           </p>
         </div>
