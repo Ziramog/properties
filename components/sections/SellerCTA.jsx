@@ -109,6 +109,7 @@ const SellerCTA = () => {
               </div>
             </div>
           </ScrollReveal>
+          </div>
         </div>
       </div>
     </section>
