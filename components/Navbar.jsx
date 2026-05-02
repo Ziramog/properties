@@ -137,7 +137,7 @@ const Navbar = () => {
               className="w-8 h-8 flex items-center justify-center text-white"
               aria-label="Cerrar menú"
             >
-              <img src="/senada/images/icons/ico_close.svg" alt="cerrar" className="w-6 h-6" />
+              <img src="/senada/images/icons/ico_close.svg" alt="cerrar" className="w-6 h-6" style={{ filter: 'brightness(0) invert(1)' }} />
             </button>
           </div>
 
