@@ -7,6 +7,7 @@ import { Lato, PT_Serif, Cormorant_Garamond } from 'next/font/google';
 import 'react-toastify/dist/ReactToastify.css';
 import '@/assets/styles/globals.css';
 import 'photoswipe/dist/photoswipe.css';
+import ScrollAnimation from '@/components/ScrollAnimation';
 
 const lato = Lato({
   subsets: ['latin'],
@@ -49,6 +50,7 @@ const MainLayout = ({ children }) => {
             <main>{children}</main>
             <Footer />
             <ToastContainer />
+            <ScrollAnimation />
           </body>
         </html>
       </GlobalProvider>

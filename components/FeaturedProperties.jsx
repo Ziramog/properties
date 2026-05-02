@@ -22,7 +22,7 @@ const FeaturedProperties = ({ properties = [] }) => {
     <section className="pb-[30px] pt-[30px]" ref={ref}>
       <SectionBox className="px-3 md:px-8 py-16 md:py-24">
         {/* Section Header */}
-        <div className="text-center mb-10 md:mb-14">
+        <div className="text-center mb-10 md:mb-14 js-animate">
           <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
             Propiedades Destacadas
           </h2>

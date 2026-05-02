@@ -80,9 +80,9 @@ const FeaturedPropertyCard = ({ property }) => {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
 
-          {/* Gradient overlay — black default, orange on hover */}
-          <div className="absolute inset-0 z-10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-brand)] to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          {/* Gradient overlay — black default (bottom 1/5), orange on hover (bottom 1/5) */}
+          <div className="absolute inset-0 z-10 group-hover:opacity-0 transition-opacity duration-300" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 20%, transparent 100%)' }} />
+          <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(180deg, transparent 60%, var(--color-brand))' }} />
 
           {/* Tag — top left */}
           {isNew && (
@@ -115,7 +115,10 @@ const FeaturedPropertyCard = ({ property }) => {
             </div>
 
             {price && (
-              <span className="ml-auto self-end text-white text-[28px] font-bold leading-none group-hover:scale-110 transition-transform duration-300" style={{ fontFamily: 'var(--font-heading)' }}>
+              <span
+                className="ml-auto self-end text-white text-[32px] font-bold leading-none group-hover:scale-[1.1] transition-transform duration-300"
+                style={{ fontFamily: 'var(--font-heading)', transformOrigin: 'right bottom' }}
+              >
                 {price}
               </span>
             )}
