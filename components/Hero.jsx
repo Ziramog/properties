@@ -47,7 +47,6 @@ const Hero = () => {
   });
   const [showMore, setShowMore] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [expandedHeight, setExpandedHeight] = useState(0);
   const filtersRef = useRef(null);
 
   useEffect(() => {
@@ -58,26 +57,12 @@ const Hero = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Measure actual content height for accurate max-height transition
+  // Pre-measure content height once when component mounts
   useEffect(() => {
-    if (!filtersRef.current) return;
-    const el = filtersRef.current;
-    if (showMore) {
-      // When opening: measure natural height, then animate to it
-      el.style.maxHeight = '0px';
-      el.style.opacity = '0';
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const h = el.scrollHeight;
-          setExpandedHeight(h);
-          el.style.opacity = '1';
-        });
-      });
-    } else {
-      // When closing: animate to 0
-      setExpandedHeight(0);
+    if (filtersRef.current) {
+      filtersRef.current.dataset.maxH = filtersRef.current.scrollHeight;
     }
-  }, [showMore]);
+  }, []);
 
   const handleShowMoreToggle = () => {
     setShowMore(!showMore);
@@ -295,7 +280,7 @@ const Hero = () => {
               style={{
                 overflow: 'hidden',
                 transition: 'max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
-                maxHeight: expandedHeight ? `${expandedHeight}px` : '0px',
+                maxHeight: showMore ? 'auto' : '0px',
                 opacity: showMore ? 1 : 0,
               }}
             >
