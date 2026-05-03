@@ -60,9 +60,21 @@ const Hero = () => {
 
   // Measure actual content height for accurate max-height transition
   useEffect(() => {
-    if (showMore && filtersRef.current) {
-      setExpandedHeight(filtersRef.current.scrollHeight);
+    if (!filtersRef.current) return;
+    const el = filtersRef.current;
+    if (showMore) {
+      // When opening: measure natural height, then animate to it
+      el.style.maxHeight = '0px';
+      el.style.opacity = '0';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const h = el.scrollHeight;
+          setExpandedHeight(h);
+          el.style.opacity = '1';
+        });
+      });
     } else {
+      // When closing: animate to 0
       setExpandedHeight(0);
     }
   }, [showMore]);
@@ -282,18 +294,14 @@ const Hero = () => {
               ref={filtersRef}
               style={{
                 overflow: 'hidden',
-                transition: 'max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-                maxHeight: showMore ? `${expandedHeight}px` : '0px',
+                transition: 'max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
+                maxHeight: expandedHeight ? `${expandedHeight}px` : '0px',
+                opacity: showMore ? 1 : 0,
               }}
             >
               <div
                 className='bg-black w-full'
-                style={{
-                  borderRadius: 12,
-                  marginTop: 7,
-                  transition: 'opacity 0.3s ease',
-                  opacity: showMore ? 1 : 0,
-                }}
+                style={{ borderRadius: 12, marginTop: 7 }}
               >
                 <div className='grid grid-cols-2'>
                   {/* Tipo */}
