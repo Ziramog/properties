@@ -110,6 +110,11 @@ const Navbar = () => {
             />
           </Link>
 
+          {/* Search icon — between logo and hamburger */}
+          <Link href="/properties" className="w-8 h-8 flex items-center justify-center">
+            <img src="/senada/images/icons/ico_search.svg" alt="Buscar" className="w-6 h-6" style={{ filter: 'brightness(0) invert(1)' }} />
+          </Link>
+
           {/* Hamburger / Close — senada style */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
