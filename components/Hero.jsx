@@ -122,7 +122,7 @@ const Hero = () => {
   const heroIconCls = 'w-4 h-4 text-white/50 flex-shrink-0';
 
   return (
-    <section className='relative overflow-hidden' style={{ height: 'calc(100vh + 200px)', minHeight: 'calc(100vh + 100px)' }}>
+    <section className='relative' style={{ height: 'calc(100vh + 200px)', minHeight: 'calc(100vh + 100px)' }}>
 
       {/* Dark overlay — fades in when filters expand on mobile, stays behind the search bar */}
       <div
