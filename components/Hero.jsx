@@ -331,7 +331,7 @@ const Hero = () => {
                 transition: 'max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
                 maxHeight: maxH,
                 opacity: showMore ? 1 : 0,
-                zIndex: 10,
+                zIndex: 20,
               }}
             >
               <div
@@ -351,7 +351,7 @@ const Hero = () => {
                       <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'type' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                     </span>
                     {openDropdown === 'type' && (
-                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
+                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-50' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
                         {['Todos', 'Casas', 'Departamentos', 'Terrenos', 'Campos', 'Inmuebles Comerciales', 'Grandes Inversiones'].map(v => (
                           <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, type: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer${filters.type === v ? ' bg-[var(--color-brand)]' : ''}`}>
                             <span className={`text-sm ${filters.type === v ? 'text-white font-semibold' : 'text-white/70'}`}>{v}</span>
