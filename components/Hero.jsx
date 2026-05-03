@@ -48,6 +48,9 @@ const Hero = () => {
   const [showMore, setShowMore] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [maxH, setMaxH] = useState('0px');
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const overlayRef = useRef(null);
   const filtersRef = useRef(null);
   const measuredRef = useRef(false);
 
@@ -59,7 +62,6 @@ const Hero = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Measure content height ONCE on mount
   useEffect(() => {
     if (measuredRef.current) return;
     measuredRef.current = true;
@@ -68,16 +70,35 @@ const Hero = () => {
     }
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!openDropdown) return;
+    const handleClick = (e) => {
+      if (!e.target.closest('[data-dropdown]')) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, [openDropdown]);
+
+  const cycleFilter = (key, values) => {
+    const current = filters[key];
+    const idx = values.indexOf(current);
+    const next = values[(idx + 1) % values.length];
+    setFilters(prev => ({ ...prev, [key]: next }));
+  };
+
   const handleShowMoreToggle = () => {
     if (showMore) {
-      // Closing: animate to 0
       setMaxH('0px');
+      setOverlayVisible(false);
       setShowMore(false);
     } else {
-      // Opening: animate to measured height
       if (filtersRef.current) {
         setMaxH(`${filtersRef.current.scrollHeight}px`);
       }
+      setOverlayVisible(true);
       setShowMore(true);
     }
   };
@@ -103,9 +124,26 @@ const Hero = () => {
   return (
     <section className='relative overflow-hidden' style={{ height: 'calc(100vh + 200px)', minHeight: 'calc(100vh + 100px)' }}>
 
+      {/* Dark overlay — fades in when filters expand on mobile, stays behind the search bar */}
+      <div
+        ref={overlayRef}
+        style={{
+          display: overlayVisible ? 'block' : 'none',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, .8)',
+          zIndex: 10,
+          transition: 'opacity 0.4s ease',
+          opacity: overlayVisible ? 1 : 0,
+          pointerEvents: 'none',
+        }}
+      />
+
       {/* Background Video */}
       <div className='absolute inset-0 z-0'>
-        {/* Mobile video */}
         <video
           src='/images/Modern_residential_building_Córd…_202604301151.mp4'
           autoPlay
@@ -114,7 +152,6 @@ const Hero = () => {
           playsInline
           className='w-full h-full object-cover md:hidden'
         />
-        {/* Desktop video */}
         <video
           src='/images/Modern_residential_building_Córd…_202604301151.mp4'
           autoPlay
@@ -132,7 +169,6 @@ const Hero = () => {
         <div className='absolute inset-0 z-10 pointer-events-none' style={{ backgroundImage: 'url(/senada/images/overlay-pattern.png)', backgroundRepeat: 'repeat', backgroundSize: '4px' }} />
       </div>
 
-      {/* Scroll indicator — mobile only, shows before scroll */}
       {!scrolled && (
         <div className='md:hidden absolute bottom-[180px] left-1/2 -translate-x-1/2 z-20 scroll-indicator-container'>
           <img
@@ -143,8 +179,6 @@ const Hero = () => {
         </div>
       )}
 
-      {/* Content Block — desktop centered, mobile upper 1/3 */}
-      {/* Desktop: centered vertically and horizontally */}
       <div className='hidden md:flex absolute inset-0 flex-col items-center justify-center w-full text-center px-6 z-10' style={{ paddingBottom: '200px' }}>
         <motion.div
           className='flex items-center justify-center gap-3 mb-4'
@@ -164,7 +198,6 @@ const Hero = () => {
         </h2>
       </div>
 
-      {/* Mobile: content at top: 42%, vertically centered */}
       <div className='md:hidden absolute top-[42%] left-0 right-0 flex flex-col items-center w-full text-center px-6 z-10' style={{ transform: 'translateY(calc(-50% - 100px))' }}>
         <motion.div
           className='flex items-center justify-center gap-3 mb-4'
@@ -250,11 +283,10 @@ const Hero = () => {
             </button>
           </form>
 
-          {/* Mobile: text input + Show More toggle (senada style) */}
+          {/* Mobile: input + button + toggle all fixed; filters expand via position absolute below */}
           <div className='md:hidden w-full relative'>
-            {/* Single black container like senada's .top-part */}
+            {/* Search input — stays fixed at top */}
             <div className='bg-black border border-white/10 flex items-center gap-2 px-3 py-2.5' style={{ borderRadius: 12 }}>
-              {/* Black search icon */}
               <svg className='w-5 h-5 text-black flex-shrink-0' viewBox='0 0 24 24' fill='currentColor'>
                 <path d='M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z'/>
               </svg>
@@ -265,7 +297,7 @@ const Hero = () => {
               />
             </div>
 
-            {/* Full-width CTA Button - below container */}
+            {/* Button — stays fixed below input */}
             <button
               type='button'
               onClick={() => router.push('/properties')}
@@ -275,27 +307,31 @@ const Hero = () => {
               BUSCAR
             </button>
 
-            {/* Show More / Show Less Toggle — only visible after scroll */}
+            {/* Toggle — stays fixed below button */}
             {scrolled && (
               <button
                 type='button'
                 onClick={() => handleShowMoreToggle()}
                 className='flex items-center gap-1.5 w-full py-3 text-white/60 text-xs font-normal uppercase tracking-wide hover:text-white/80 transition-all'
               >
-                {/* Plus/Minus icon like senada */}
-                <span className={`w-2.5 h-2.5 flex-shrink-0 bg-no-repeat bg-center bg-contain`} style={{ backgroundImage: showMore ? "url('data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'%23919191\\'><path d=\\'M19 13H5v-2h14v2z\'/></svg>')" : "url('data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'%23919191\\'><path d=\\'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\'/></svg>')" }} />
+                <span className={`w-2.5 h-2.5 flex-shrink-0 bg-no-repeat bg-center bg-contain`} style={{ backgroundImage: showMore ? "url('data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'%23919191\\'><path d=\\'M19 13H5v-2h14v2z\\'/></svg>')" : "url('data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'%23919191\\'><path d=\\'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\\'/></svg>')" }} />
                 <span>{showMore ? 'Mostrar menos' : 'Mostrar más'}</span>
               </button>
             )}
 
-            {/* Expanded Filters — slideDown via max-height transition */}
+            {/* Expanded Filters — position absolute below toggle, slides DOWN and covers content below */}
             <div
               ref={filtersRef}
               style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: 0,
                 overflow: 'hidden',
                 transition: 'max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
                 maxHeight: maxH,
                 opacity: showMore ? 1 : 0,
+                zIndex: 10,
               }}
             >
               <div
@@ -304,53 +340,88 @@ const Hero = () => {
               >
                 <div className='grid grid-cols-2'>
                   {/* Tipo */}
-                  <div className='h-14 px-4 flex flex-col justify-center border-b border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
+                  <div
+                    data-dropdown='type'
+                    className='h-14 px-4 flex flex-col justify-center border-b border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all relative'
+                    onClick={() => setOpenDropdown(openDropdown === 'type' ? null : 'type')}
+                  >
                     <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Tipo</span>
                     <span className='text-white text-sm font-medium flex items-center justify-between'>
                       {filters.type}
-                      <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                      <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'type' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                     </span>
+                    {openDropdown === 'type' && (
+                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-20' style={{ borderRadius: '0 0 12px 12px' }}>
+                        {['Todos', 'Casas', 'Departamentos', 'Terrenos', 'Campos', 'Inmuebles Comerciales', 'Grandes Inversiones'].map(v => (
+                          <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, type: v })); setOpenDropdown(null); }} className='h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer'>
+                            <span className='text-white text-sm'>{v}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  {/* Operacion */}
-                  <div className='h-14 px-4 flex flex-col justify-center border-b border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
+                  {/* Operación */}
+                  <div
+                    data-dropdown='op'
+                    className='h-14 px-4 flex flex-col justify-center border-b border-white/15 cursor-pointer hover:bg-white/5 transition-all relative'
+                    onClick={() => setOpenDropdown(openDropdown === 'op' ? null : 'op')}
+                  >
                     <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Operación</span>
                     <span className='text-white text-sm font-medium flex items-center justify-between'>
                       {filters.operation}
-                      <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                      <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'op' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                     </span>
+                    {openDropdown === 'op' && (
+                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-20' style={{ borderRadius: '0 0 12px 12px' }}>
+                        {['Venta', 'Alquiler', 'Todos'].map(v => (
+                          <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, operation: v })); setOpenDropdown(null); }} className='h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer'>
+                            <span className='text-white text-sm'>{v}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   {/* Zona */}
-                  <div className='h-14 px-4 flex flex-col justify-center border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
+                  <div
+                    data-dropdown='zone'
+                    className='h-14 px-4 flex flex-col justify-center border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all relative'
+                    onClick={() => setOpenDropdown(openDropdown === 'zone' ? null : 'zone')}
+                  >
                     <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Zona</span>
                     <span className='text-white text-sm font-medium flex items-center justify-between'>
                       {filters.zone}
-                      <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                      <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'zone' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                     </span>
+                    {openDropdown === 'zone' && (
+                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-20' style={{ borderRadius: '0 0 12px 12px' }}>
+                        {['Córdoba', 'Alta Gracia', 'Villa Allende', 'Mina Clavero', 'Centro'].map(v => (
+                          <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, zone: v })); setOpenDropdown(null); }} className='h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer'>
+                            <span className='text-white text-sm'>{v}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   {/* Precio */}
-                  <div className='h-14 px-4 flex flex-col justify-center cursor-pointer hover:bg-white/5 transition-all'>
+                  <div
+                    data-dropdown='price'
+                    className='h-14 px-4 flex flex-col justify-center cursor-pointer hover:bg-white/5 transition-all relative'
+                    onClick={() => setOpenDropdown(openDropdown === 'price' ? null : 'price')}
+                  >
                     <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Precio</span>
                     <span className='text-white text-sm font-medium flex items-center justify-between'>
                       {filters.price}
-                      <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                      <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'price' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                     </span>
-                  </div>
-                </div>
-                {/* Expanded: Dormitorios y Baños */}
-                <div className='grid grid-cols-2 border-t border-white/10'>
-                  <div className='h-14 px-4 flex flex-col justify-center border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
-                    <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Dormitorios</span>
-                    <span className='text-white text-sm font-medium flex items-center justify-between'>
-                      Cualquiera
-                      <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
-                    </span>
-                  </div>
-                  <div className='h-14 px-4 flex flex-col justify-center cursor-pointer hover:bg-white/5 transition-all'>
-                    <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Baños</span>
-                    <span className='text-white text-sm font-medium flex items-center justify-between'>
-                      Cualquiera
-                      <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
-                    </span>
+                    {openDropdown === 'price' && (
+                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-20' style={{ borderRadius: '0 0 12px 12px' }}>
+                        {['Cualquiera', 'Hasta 150k', '150k-300k', '+300k'].map(v => (
+                          <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, price: v })); setOpenDropdown(null); }} className='h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer'>
+                            <span className='text-white text-sm'>{v}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
