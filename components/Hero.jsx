@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaSearch } from 'react-icons/fa';
@@ -47,6 +47,8 @@ const Hero = () => {
   });
   const [showMore, setShowMore] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [expandedHeight, setExpandedHeight] = useState(0);
+  const filtersRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,14 +58,17 @@ const Hero = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Measure actual content height for accurate max-height transition
+  useEffect(() => {
+    if (showMore && filtersRef.current) {
+      setExpandedHeight(filtersRef.current.scrollHeight);
+    } else {
+      setExpandedHeight(0);
+    }
+  }, [showMore]);
+
   const handleShowMoreToggle = () => {
-    const newShowMore = !showMore;
-    setShowMore(newShowMore);
-    // Force reflow to ensure CSS transition fires
-    requestAnimationFrame(() => {
-      const el = document.getElementById('expanded-filters');
-      if (el) el.getBoundingClientRect();
-    });
+    setShowMore(!showMore);
   };
 
   const handleChange = (e) => {
@@ -272,21 +277,23 @@ const Hero = () => {
               </button>
             )}
 
-            {/* Expanded Filters (shown when Show More is clicked) — slideDown animation */}
+            {/* Expanded Filters — slideDown via max-height transition */}
             <div
-              id='expanded-filters'
-              className='w-full'
+              ref={filtersRef}
               style={{
                 overflow: 'hidden',
-                transition: 'max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease',
-                maxHeight: showMore ? '600px' : '0',
-                height: showMore ? 'auto' : '0',
-                opacity: showMore ? 1 : 0,
+                transition: 'max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                maxHeight: showMore ? `${expandedHeight}px` : '0px',
               }}
             >
               <div
                 className='bg-black w-full'
-                style={{ borderRadius: 12, marginTop: 7 }}
+                style={{
+                  borderRadius: 12,
+                  marginTop: 7,
+                  transition: 'opacity 0.3s ease',
+                  opacity: showMore ? 1 : 0,
+                }}
               >
                 <div className='grid grid-cols-2'>
                   {/* Tipo */}
