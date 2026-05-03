@@ -47,7 +47,9 @@ const Hero = () => {
   });
   const [showMore, setShowMore] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [maxH, setMaxH] = useState('0px');
   const filtersRef = useRef(null);
+  const measuredRef = useRef(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,15 +59,27 @@ const Hero = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Pre-measure content height once when component mounts
+  // Measure content height ONCE on mount
   useEffect(() => {
+    if (measuredRef.current) return;
+    measuredRef.current = true;
     if (filtersRef.current) {
-      filtersRef.current.dataset.maxH = filtersRef.current.scrollHeight;
+      setMaxH(`${filtersRef.current.scrollHeight}px`);
     }
   }, []);
 
   const handleShowMoreToggle = () => {
-    setShowMore(!showMore);
+    if (showMore) {
+      // Closing: animate to 0
+      setMaxH('0px');
+      setShowMore(false);
+    } else {
+      // Opening: animate to measured height
+      if (filtersRef.current) {
+        setMaxH(`${filtersRef.current.scrollHeight}px`);
+      }
+      setShowMore(true);
+    }
   };
 
   const handleChange = (e) => {
@@ -280,7 +294,7 @@ const Hero = () => {
               style={{
                 overflow: 'hidden',
                 transition: 'max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
-                maxHeight: showMore ? 'auto' : '0px',
+                maxHeight: maxH,
                 opacity: showMore ? 1 : 0,
               }}
             >
