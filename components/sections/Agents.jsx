@@ -9,20 +9,17 @@ const Agents = () => {
         {/* Section Header */}
         <div className="text-center mb-10 md:mb-14">
           <ScrollReveal>
-            <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--color-brand)] block mb-3">
-              NUESTRA HISTORIA
-            </span>
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--color-brand)] flex items-center justify-center gap-4">
+              <span className="block w-[53px] h-px bg-[var(--color-brand)]" />
+              Nuestra Historia
+              <span className="block w-[53px] h-px bg-[var(--color-brand)]" />
+            </h3>
           </ScrollReveal>
           <ScrollReveal delay={50}>
-            <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mt-4 mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
               Roggero & Roma
             </h2>
           </ScrollReveal>
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
-            <span className="w-2 h-2 rounded-full bg-[var(--color-brand)] flex-shrink-0" />
-            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
-          </div>
         </div>
 
         {/* Body text */}
