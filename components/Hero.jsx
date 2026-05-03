@@ -353,8 +353,8 @@ const Hero = () => {
                     {openDropdown === 'type' && (
                       <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
                         {['Todos', 'Casas', 'Departamentos', 'Terrenos', 'Campos', 'Inmuebles Comerciales', 'Grandes Inversiones'].map(v => (
-                          <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, type: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer${filters.type === v ? ' bg-white/10' : ''}`}>
-                            <span className={`text-sm ${filters.type === v ? 'text-white font-medium' : 'text-white/70'}`}>{v}</span>
+                          <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, type: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer${filters.type === v ? ' bg-[var(--color-brand)]' : ''}`}>
+                            <span className={`text-sm ${filters.type === v ? 'text-white font-semibold' : 'text-white/70'}`}>{v}</span>
                           </div>
                         ))}
                       </div>
@@ -374,8 +374,8 @@ const Hero = () => {
                     {openDropdown === 'op' && (
                       <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
                         {['Venta', 'Alquiler', 'Todos'].map(v => (
-                          <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, operation: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer${filters.operation === v ? ' bg-white/10' : ''}`}>
-                            <span className={`text-sm ${filters.operation === v ? 'text-white font-medium' : 'text-white/70'}`}>{v}</span>
+                          <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, operation: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer${filters.operation === v ? ' bg-[var(--color-brand)]' : ''}`}>
+                            <span className={`text-sm ${filters.operation === v ? 'text-white font-semibold' : 'text-white/70'}`}>{v}</span>
                           </div>
                         ))}
                       </div>
@@ -395,8 +395,8 @@ const Hero = () => {
                     {openDropdown === 'zone' && (
                       <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
                         {['Córdoba', 'Alta Gracia', 'Villa Allende', 'Mina Clavero', 'Centro'].map(v => (
-                          <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, zone: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer${filters.zone === v ? ' bg-white/10' : ''}`}>
-                            <span className={`text-sm ${filters.zone === v ? 'text-white font-medium' : 'text-white/70'}`}>{v}</span>
+                          <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, zone: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer${filters.zone === v ? ' bg-[var(--color-brand)]' : ''}`}>
+                            <span className={`text-sm ${filters.zone === v ? 'text-white font-semibold' : 'text-white/70'}`}>{v}</span>
                           </div>
                         ))}
                       </div>
@@ -416,8 +416,8 @@ const Hero = () => {
                     {openDropdown === 'price' && (
                       <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
                         {['Cualquiera', 'Hasta 150k', '150k-300k', '+300k'].map(v => (
-                          <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, price: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer${filters.price === v ? ' bg-white/10' : ''}`}>
-                            <span className={`text-sm ${filters.price === v ? 'text-white font-medium' : 'text-white/70'}`}>{v}</span>
+                          <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, price: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer${filters.price === v ? ' bg-[var(--color-brand)]' : ''}`}>
+                            <span className={`text-sm ${filters.price === v ? 'text-white font-semibold' : 'text-white/70'}`}>{v}</span>
                           </div>
                         ))}
                       </div>
