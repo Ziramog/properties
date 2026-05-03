@@ -322,12 +322,12 @@ const Hero = () => {
             {/* Expanded Filters — position absolute below toggle, slides DOWN and covers content below */}
             <div
               ref={filtersRef}
+              className='overflow-visible'
               style={{
                 position: 'absolute',
                 top: '100%',
                 left: 0,
                 right: 0,
-                overflow: 'hidden',
                 transition: 'max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
                 maxHeight: maxH,
                 opacity: showMore ? 1 : 0,
@@ -335,14 +335,14 @@ const Hero = () => {
               }}
             >
               <div
-                className='bg-black w-full'
+                className='bg-black w-full overflow-visible'
                 style={{ borderRadius: 12, marginTop: 7 }}
               >
                 <div className='grid grid-cols-2'>
                   {/* Tipo */}
                   <div
                     data-dropdown='type'
-                    className='h-14 px-4 flex flex-col justify-center border-b border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all relative'
+                    className='h-14 px-4 flex flex-col justify-center border-b border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all relative overflow-visible'
                     onClick={() => setOpenDropdown(openDropdown === 'type' ? null : 'type')}
                   >
                     <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Tipo</span>
@@ -351,7 +351,7 @@ const Hero = () => {
                       <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'type' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                     </span>
                     {openDropdown === 'type' && (
-                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-20' style={{ borderRadius: '0 0 12px 12px' }}>
+                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
                         {['Todos', 'Casas', 'Departamentos', 'Terrenos', 'Campos', 'Inmuebles Comerciales', 'Grandes Inversiones'].map(v => (
                           <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, type: v })); setOpenDropdown(null); }} className='h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer'>
                             <span className='text-white text-sm'>{v}</span>
@@ -363,7 +363,7 @@ const Hero = () => {
                   {/* Operación */}
                   <div
                     data-dropdown='op'
-                    className='h-14 px-4 flex flex-col justify-center border-b border-white/15 cursor-pointer hover:bg-white/5 transition-all relative'
+                    className='h-14 px-4 flex flex-col justify-center border-b border-white/15 cursor-pointer hover:bg-white/5 transition-all relative overflow-visible'
                     onClick={() => setOpenDropdown(openDropdown === 'op' ? null : 'op')}
                   >
                     <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Operación</span>
@@ -372,7 +372,7 @@ const Hero = () => {
                       <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'op' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                     </span>
                     {openDropdown === 'op' && (
-                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-20' style={{ borderRadius: '0 0 12px 12px' }}>
+                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
                         {['Venta', 'Alquiler', 'Todos'].map(v => (
                           <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, operation: v })); setOpenDropdown(null); }} className='h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer'>
                             <span className='text-white text-sm'>{v}</span>
@@ -384,7 +384,7 @@ const Hero = () => {
                   {/* Zona */}
                   <div
                     data-dropdown='zone'
-                    className='h-14 px-4 flex flex-col justify-center border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all relative'
+                    className='h-14 px-4 flex flex-col justify-center border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all relative overflow-visible'
                     onClick={() => setOpenDropdown(openDropdown === 'zone' ? null : 'zone')}
                   >
                     <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Zona</span>
@@ -393,7 +393,7 @@ const Hero = () => {
                       <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'zone' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                     </span>
                     {openDropdown === 'zone' && (
-                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-20' style={{ borderRadius: '0 0 12px 12px' }}>
+                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
                         {['Córdoba', 'Alta Gracia', 'Villa Allende', 'Mina Clavero', 'Centro'].map(v => (
                           <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, zone: v })); setOpenDropdown(null); }} className='h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer'>
                             <span className='text-white text-sm'>{v}</span>
@@ -405,7 +405,7 @@ const Hero = () => {
                   {/* Precio */}
                   <div
                     data-dropdown='price'
-                    className='h-14 px-4 flex flex-col justify-center cursor-pointer hover:bg-white/5 transition-all relative'
+                    className='h-14 px-4 flex flex-col justify-center cursor-pointer hover:bg-white/5 transition-all relative overflow-visible'
                     onClick={() => setOpenDropdown(openDropdown === 'price' ? null : 'price')}
                   >
                     <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Precio</span>
@@ -414,7 +414,7 @@ const Hero = () => {
                       <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'price' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                     </span>
                     {openDropdown === 'price' && (
-                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-20' style={{ borderRadius: '0 0 12px 12px' }}>
+                      <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
                         {['Cualquiera', 'Hasta 150k', '150k-300k', '+300k'].map(v => (
                           <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, price: v })); setOpenDropdown(null); }} className='h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer'>
                             <span className='text-white text-sm'>{v}</span>
