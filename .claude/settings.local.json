@@ -48,7 +48,9 @@
       "Bash(git checkout *)",
       "Bash(dir *.json)",
       "WebFetch(domain:www.senadaadzem.com)",
-      "mcp__claude_ai_Figma__get_screenshot"
+      "mcp__claude_ai_Figma__get_screenshot",
+      "WebFetch(domain:www.ruattaautomotores.com.ar)",
+      "WebFetch(domain:autocity.com.ar)"
     ]
   },
   "enableAllProjectMcpServers": true,

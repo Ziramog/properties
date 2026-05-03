@@ -1,0 +1,90 @@
+{
+  "_id": {
+    "$oid": "69e7bd97129772444ad44cb2"
+  },
+  "name": "Importante Casona de estilo en Barrio Pellegrini",
+  "type": "Casa",
+  "description": "Se trata de \"Villa Roma\", una icónica e importante casona de estilo en Alta Gracia, ubicada en inmejorable zona estratégica, dentro de B° Pellegrini a pocos metros del Sierras Hotel, a 4 cuadras del Alta Gracia Golf Club, sobre un terreno de casi 2000 metros en una característica esquina de la ciudad. Con 465 m2 cubiertos ofrece 5 dormitorios de buen tamaño con pisos de madera y la mayoría con acceso directo al exterior a través de balcones y galerías en otros casos, 2 amplios baños de época, un living con acceso independiente al final del pasillo en el ala Norte, que conecta con una galería cerrada vidriada o patio de invierno, un comedor de importante tamaño conectado al ingreso principal de la propiedad, adyacente a un comedor diario y posterior cocina con acceso lateral independiente. También cuenta con garaje mas dependencias (dormitorio adjunto, baño y cocina), 2 depósitos en la parte posterior y altillo o entrepiso que ocupa el total de la superficie cubierta. El parque presenta desniveles totalmente aprovechables y amplias posibilidades de desarrollo tanto para vivienda particular como para un desarrollo de tipo comercial gracias a sus 155 metros sobre calles Achával Rodríguez y Avellaneda. Posee hermosos arboles, palmeras y plantas. El inmueble requiere de puesta en valor, sin embargo la mayor parte del mismo esta en buenas condiciones y habitable, se encuentra inventariado como patrimonio histórico de la ciudad lo que otorga una distinción especial. Detalles arquitectónicos, escaleras, arcadas, postigones, pisos de materiales específicos y diseño se conjugan brindar gran belleza y la potencialidad de lograr una de las propiedades más distinguidas de la ciudad con la adecuada inversión. Sin dudas una verdadera joya en bruto para quien desee realizar un proyecto de este tipo.",
+  "location": {
+    "street": "Achával Rodríguez y Avellaneda, Barrio Pellegrini",
+    "city": "Alta Gracia",
+    "state": "Córdoba",
+    "zipcode": ""
+  },
+  "beds": 5,
+  "baths": 2,
+  "square_feet": 465,
+  "amenities": [
+    "Patio",
+    "Jardín",
+    "Cochera",
+    "Parrilla",
+    "Dependencias",
+    "Altillo"
+  ],
+  "rates": {
+    "nightly": null,
+    "weekly": null,
+    "monthly": null,
+    "sale": true,
+    "price": null
+  },
+  "seller_info": {
+    "name": "Roggero & Roma",
+    "email": "info@roggeroyroma.com.ar",
+    "phone": "(03547) 425454"
+  },
+  "images": [
+    "https://roggeroyroma.com.ar/wp-content/uploads/2021/09/CASONA-ACHAVAL-11.jpg",
+    "https://roggeroyroma.com.ar/wp-content/uploads/2021/09/CASONA-ACHAVAL-13.jpg",
+    "https://roggeroyroma.com.ar/wp-content/uploads/2021/09/CASONA-ACHAVAL-29.jpg"
+  ],
+  "is_featured": true,
+  "covered_area": 465,
+  "garage": 1,
+  "services": [
+    "Luz",
+    "Agua de Red",
+    "Gas Natural",
+    "Cloacas"
+  ],
+  "titles_status": "Perfectos",
+  "interior": {
+    "aberturas": "Madera",
+    "pisos": "Pinotea y baldosas originales",
+    "calefaccion": "Calefactor en living y salamandra en pasillo"
+  },
+  "exterior": {
+    "techos": "Madera y Teja"
+  },
+  "price": "USD 320,000",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-04-21T18:10:31.126Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-25T16:30:15.285Z"
+  },
+  "normalizedDescription": {
+    "resumen": "Venta de una icónica casona estilo en Alta Gracia, ubicada en B° Pellegrini a metros del Sierras Hotel y del Golf Club. Con 465 m² cubiertos y un terreno de casi 2000 m², ofrece espacios de época con gran potencial para vivienda particular o desarrollo comercial. Es una propiedad con valor patrimonial que requiere puesta en valor.",
+    "ubicacion": "Alta Gracia es una ciudad con gran atractivo turístico e histórico, y esta propiedad está en una zona estratégica de B° Pellegrini. Cerca del Sierras Hotel, del Alta Gracia Golf Club y con acceso rápido a los principales puntos de la ciudad. La esquina sobre Achával Rodríguez y Avellaneda suma visibilidad y conectividad.",
+    "detalles": [
+      "5 dormitorios con pisos de madera",
+      "2 amplios baños de época",
+      "Living con acceso a galería vidriada",
+      "Comedor principal y comedor diario",
+      "Cocina con acceso lateral independiente",
+      "Garaje con dependencia (dormitorio, baño y cocina)",
+      "2 depósitos y altillo en toda la superficie",
+      "Terreno de 155 m de frente sobre dos calles"
+    ],
+    "highlights": [
+      "Patrimonio histórico de la ciudad",
+      "Terreno de casi 2000 m²",
+      "Esquina estratégica",
+      "Potencial comercial o residencial",
+      "Arquitectura de época única"
+    ],
+    "nota": "Requiere puesta en valor, pero la mayor parte está en buenas condiciones y habitable."
+  }
+}

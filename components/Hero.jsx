@@ -56,6 +56,16 @@ const Hero = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleShowMoreToggle = () => {
+    const newShowMore = !showMore;
+    setShowMore(newShowMore);
+    // Force reflow to ensure CSS transition fires
+    requestAnimationFrame(() => {
+      const el = document.getElementById('expanded-filters');
+      if (el) el.getBoundingClientRect();
+    });
+  };
+
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
@@ -158,7 +168,7 @@ const Hero = () => {
         </h2>
       </div>
 
-      {/* Search Bar — at bottom of hero section, moved up 200px */}
+      {/* Search Bar — always 200px from bottom of viewport */}
       <div className='absolute bottom-[200px] w-full z-20 px-4 pb-6'>
         <div
           className='mx-auto max-w-[880px] bg-black border border-white/10 px-2 py-2 flex items-center'
@@ -253,7 +263,7 @@ const Hero = () => {
             {scrolled && (
               <button
                 type='button'
-                onClick={() => setShowMore(!showMore)}
+                onClick={() => handleShowMoreToggle()}
                 className='flex items-center gap-1.5 w-full py-3 text-white/60 text-xs font-normal uppercase tracking-wide hover:text-white/80 transition-all'
               >
                 {/* Plus/Minus icon like senada */}
@@ -262,60 +272,72 @@ const Hero = () => {
               </button>
             )}
 
-            {/* Expanded Filters (shown when Show More is clicked) - senada style: position absolute */}
+            {/* Expanded Filters (shown when Show More is clicked) — slideDown animation */}
             <div
-              className={`bg-black overflow-hidden w-full ${showMore ? 'block' : 'hidden'}`}
-              style={{ borderRadius: 12, marginTop: 7 }}
+              id='expanded-filters'
+              className='w-full'
+              style={{
+                overflow: 'hidden',
+                transition: 'max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease',
+                maxHeight: showMore ? '600px' : '0',
+                height: showMore ? 'auto' : '0',
+                opacity: showMore ? 1 : 0,
+              }}
             >
-              <div className='grid grid-cols-2'>
-                {/* Tipo */}
-                <div className='h-14 px-4 flex flex-col justify-center border-b border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
-                  <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Tipo</span>
-                  <span className='text-white text-sm font-medium flex items-center justify-between'>
-                    {filters.type}
-                    <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
-                  </span>
+              <div
+                className='bg-black w-full'
+                style={{ borderRadius: 12, marginTop: 7 }}
+              >
+                <div className='grid grid-cols-2'>
+                  {/* Tipo */}
+                  <div className='h-14 px-4 flex flex-col justify-center border-b border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
+                    <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Tipo</span>
+                    <span className='text-white text-sm font-medium flex items-center justify-between'>
+                      {filters.type}
+                      <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                    </span>
+                  </div>
+                  {/* Operacion */}
+                  <div className='h-14 px-4 flex flex-col justify-center border-b border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
+                    <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Operación</span>
+                    <span className='text-white text-sm font-medium flex items-center justify-between'>
+                      {filters.operation}
+                      <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                    </span>
+                  </div>
+                  {/* Zona */}
+                  <div className='h-14 px-4 flex flex-col justify-center border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
+                    <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Zona</span>
+                    <span className='text-white text-sm font-medium flex items-center justify-between'>
+                      {filters.zone}
+                      <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                    </span>
+                  </div>
+                  {/* Precio */}
+                  <div className='h-14 px-4 flex flex-col justify-center cursor-pointer hover:bg-white/5 transition-all'>
+                    <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Precio</span>
+                    <span className='text-white text-sm font-medium flex items-center justify-between'>
+                      {filters.price}
+                      <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                    </span>
+                  </div>
                 </div>
-                {/* Operacion */}
-                <div className='h-14 px-4 flex flex-col justify-center border-b border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
-                  <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Operación</span>
-                  <span className='text-white text-sm font-medium flex items-center justify-between'>
-                    {filters.operation}
-                    <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
-                  </span>
-                </div>
-                {/* Zona */}
-                <div className='h-14 px-4 flex flex-col justify-center border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
-                  <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Zona</span>
-                  <span className='text-white text-sm font-medium flex items-center justify-between'>
-                    {filters.zone}
-                    <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
-                  </span>
-                </div>
-                {/* Precio */}
-                <div className='h-14 px-4 flex flex-col justify-center cursor-pointer hover:bg-white/5 transition-all'>
-                  <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Precio</span>
-                  <span className='text-white text-sm font-medium flex items-center justify-between'>
-                    {filters.price}
-                    <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
-                  </span>
-                </div>
-              </div>
-              {/* Expanded: Dormitorios y Baños */}
-              <div className='grid grid-cols-2 border-t border-white/10'>
-                <div className='h-14 px-4 flex flex-col justify-center border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
-                  <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Dormitorios</span>
-                  <span className='text-white text-sm font-medium flex items-center justify-between'>
-                    Cualquiera
-                    <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
-                  </span>
-                </div>
-                <div className='h-14 px-4 flex flex-col justify-center cursor-pointer hover:bg-white/5 transition-all'>
-                  <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Baños</span>
-                  <span className='text-white text-sm font-medium flex items-center justify-between'>
-                    Cualquiera
-                    <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
-                  </span>
+                {/* Expanded: Dormitorios y Baños */}
+                <div className='grid grid-cols-2 border-t border-white/10'>
+                  <div className='h-14 px-4 flex flex-col justify-center border-r border-white/15 cursor-pointer hover:bg-white/5 transition-all'>
+                    <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Dormitorios</span>
+                    <span className='text-white text-sm font-medium flex items-center justify-between'>
+                      Cualquiera
+                      <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                    </span>
+                  </div>
+                  <div className='h-14 px-4 flex flex-col justify-center cursor-pointer hover:bg-white/5 transition-all'>
+                    <span className='text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1'>Baños</span>
+                    <span className='text-white text-sm font-medium flex items-center justify-between'>
+                      Cualquiera
+                      <svg className='w-4 h-4 text-white/50' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
