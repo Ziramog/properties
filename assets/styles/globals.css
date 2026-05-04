@@ -137,6 +137,14 @@
   }
 }
 
+@media(max-width: 768px) {
+  .homepage-search-form.search-form h1,
+  .search-form.search-form h1 {
+    font-size: 28px;
+    line-height: 34px;
+  }
+}
+
 @layer utilities {
   .line-clamp-1 {
     overflow: hidden;

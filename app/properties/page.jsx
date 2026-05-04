@@ -5,18 +5,18 @@ import Pagination from '@/components/Pagination';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import User from '@/models/User';
-import PropertiesFiltersInline from '@/components/PropertiesFiltersInline';
+import PropertiesSearch from '@/components/PropertiesSearch';
 import { getSessionUser } from '@/utils/getSessionUser';
 
 const PropertiesPage = async ({ searchParams }) => {
   await connectDB();
 
-  const { pageSize = 9, page = 1, type, city, minPrice, maxPrice, bedrooms, granInversion, favoritos } = searchParams;
+  const { pageSize = 9, page = 1, type, city, minPrice, maxPrice, bedrooms, baths, operation, area, propertyType, status, sort, favoritos, granInversion } = searchParams;
 
   const filter = {};
-  if (granInversion === 'true') {
-    // handled client-side below
-  } else {
+
+  // Gran Inversion — handled client-side
+  if (granInversion !== 'true') {
     if (type && type !== 'Todos') filter.type = type;
   }
   if (city && city !== 'Todas las ciudades' && city !== 'Ciudad') filter['location.city'] = city;
@@ -25,6 +25,33 @@ const PropertiesPage = async ({ searchParams }) => {
   if (bedrooms) {
     const num = parseInt(bedrooms.replace('+', ''));
     filter.beds = { $gte: num };
+  }
+  if (baths) {
+    const num = parseInt(baths.replace('+', ''));
+    filter.baths = { $gte: num };
+  }
+  if (operation) filter.operation = operation;
+  if (area) {
+    const [minArea, maxArea] = area.split('-');
+    filter.square_feet = {};
+    if (minArea && minArea !== '0') filter.square_feet.$gte = Number(minArea);
+    if (maxArea && maxArea !== '0') filter.square_feet.$lte = Number(maxArea);
+  }
+  if (propertyType) {
+    const types = propertyType.split('|');
+    if (types.length === 1) {
+      filter.property_type = types[0];
+    } else {
+      filter.property_type = { $in: types };
+    }
+  }
+  if (status) {
+    const statuses = status.split('|');
+    if (statuses.length === 1) {
+      filter.status = statuses[0];
+    } else {
+      filter.status = { $in: statuses };
+    }
   }
 
   // Favoritos filter: only show properties in user's bookmarks
@@ -40,9 +67,15 @@ const PropertiesPage = async ({ searchParams }) => {
     }
   }
 
+  // Build sort object
+  let sortObj = {};
+  if (sort === 'price-asc') sortObj = { 'rates.monthly': 1 };
+  else if (sort === 'price-desc') sortObj = { 'rates.monthly': -1 };
+  else if (sort === 'newest') sortObj = { createdAt: -1 };
+
   const skip = (Number(page) - 1) * Number(pageSize);
   const total = await Property.countDocuments(filter);
-  const properties = await Property.find(filter).skip(skip).limit(Number(pageSize));
+  const properties = await Property.find(filter).sort(sortObj).skip(skip).limit(Number(pageSize));
 
   const showPagination = total > Number(pageSize);
 
@@ -64,60 +97,53 @@ const PropertiesPage = async ({ searchParams }) => {
     : total > 0 ? `${total} propiedades encontradas` : 'Nuestras Propiedades';
 
   const currentFilters = {
-    type: type || 'Todos',
-    city: city || 'Ciudad',
+    term: searchParams.term || '',
+    address: searchParams.address || '',
+    operation: operation || 'venta',
+    area: area || '',
+    price: searchParams.price || '',
     minPrice: minPrice || '',
     maxPrice: maxPrice || '',
     bedrooms: bedrooms || '',
+    baths: baths || '',
+    'property-type': propertyType ? propertyType.split('|') : [],
+    status: status ? status.split('|') : [],
+    sort: sort || 'price-desc',
     favoritos: favoritos || '',
   };
 
   return (
-    <div className="min-h-screen bg-[#E8E6E0]">
-      {/* Header + Filters */}
-      <section className="px-4 pt-24 md:pt-28 pb-6">
+    <div className="min-h-screen bg-white">
+      {/* Header + Filters — full dark band */}
+      <section className="bg-[#111] px-4 pt-24 md:pt-28 pb-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="flex items-end justify-between mb-5">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] mb-1">
-                {granInversion === 'true' ? 'GRAN INVERSIÓN' : 'PROPIEDADES'}
-              </p>
-              <h1 className="text-2xl md:text-3xl font-bold text-[var(--color-ink)]">
-                {title}
-              </h1>
-            </div>
-            <span className="text-sm text-[var(--color-ink-tertiary)] font-medium hidden md:block pb-1">
-              {total > 0 ? `${total} resultados` : ''}
-            </span>
-          </div>
-
-          {/* Inline Expandable Filters */}
-          <PropertiesFiltersInline currentFilters={currentFilters} />
+          {/* Search */}
+          <PropertiesSearch currentFilters={currentFilters} />
         </div>
       </section>
 
       {/* Results */}
       <section className="px-4 pb-12">
         <div className="max-w-7xl mx-auto">
+          <div className="bg-white rounded-2xl border border-[#eee] shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
           {filteredProperties.length === 0 ? (
             <div className="text-center py-20">
-              <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mx-auto mb-4 shadow-sm">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 text-[var(--color-ink-tertiary)]">
+              <div className="w-16 h-16 rounded-full bg-[#f5f5f5] flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 text-[#999]">
                   <circle cx="11" cy="11" r="8"/>
                   <path d="m21 21-4.35-4.35"/>
                 </svg>
               </div>
-              <p className="text-[15px] font-semibold text-[var(--color-ink)] mb-2">
+              <p className="text-[15px] font-semibold text-[#333] mb-2">
                 No se encontraron propiedades
               </p>
-              <p className="text-[13px] text-[var(--color-ink-tertiary)]">
+              <p className="text-[13px] text-[#999]">
                 Probá cambiando los filtros o{' '}
-                <a href="/properties" className="text-[var(--color-brand)] hover:underline font-medium">ver todas</a>
+                <a href="/properties" className="text-[#652660] hover:underline font-medium">ver todas</a>
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 p-4 md:p-6">
               {filteredProperties.map((property) => (
                 <PropertyCard property={property} key={property._id} />
               ))}
@@ -125,10 +151,11 @@ const PropertiesPage = async ({ searchParams }) => {
           )}
 
           {showPagination && (
-            <div className="mt-10">
+            <div className="mt-4 px-4 md:px-6 pb-6">
               <Pagination page={parseInt(page)} pageSize={parseInt(pageSize)} totalItems={total} />
             </div>
           )}
+          </div>
         </div>
       </section>
     </div>

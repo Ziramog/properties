@@ -53,6 +53,8 @@ async function addProperty(formData) {
       phone: formData.get('seller_info.phone'),
     },
     owner: userId,
+    operation: formData.get('operation') || 'venta',
+    status: formData.get('status') || 'active',
   };
 
   const imageUrls = [];

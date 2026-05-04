@@ -116,6 +116,19 @@ const PropertySchema = new Schema(
       highlights: [{ type: String }],
       nota: { type: String, default: null },
     },
+    operation: {
+      type: String,
+      enum: ['compra', 'venta', 'alquiler'],
+    },
+    status: {
+      type: String,
+      enum: ['active', 'active_under_contract', 'closed', 'coming_soon', 'pending'],
+      default: 'active',
+    },
+    property_type: {
+      type: String,
+      enum: ['residential', 'multi_family', 'land', 'commercial', 'rental', 'industrial'],
+    },
   },
   {
     timestamps: true,

@@ -65,6 +65,25 @@ const PropertyEditForm = ({ property }) => {
       </div>
 
       <div className='mb-4'>
+        <label htmlFor='operation' className='block text-gray-700 font-bold mb-2'>Operación</label>
+        <select id='operation' name='operation' className='border rounded w-full py-2 px-3' defaultValue={property.operation || 'venta'}>
+          <option value='venta'>Venta</option>
+          <option value='alquiler'>Alquiler</option>
+        </select>
+      </div>
+
+      <div className='mb-4'>
+        <label htmlFor='status' className='block text-gray-700 font-bold mb-2'>Estado</label>
+        <select id='status' name='status' className='border rounded w-full py-2 px-3' defaultValue={property.status || 'active'}>
+          <option value='active'>Active</option>
+          <option value='active_under_contract'>Active Under Contract</option>
+          <option value='pending'>Pending</option>
+          <option value='coming_soon'>Coming Soon</option>
+          <option value='closed'>Closed</option>
+        </select>
+      </div>
+
+      <div className='mb-4'>
         <label className='block text-gray-700 font-bold mb-2'>
           Categorías
         </label>

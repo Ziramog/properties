@@ -47,6 +47,8 @@ async function updateProperty(propertyId, formData) {
       phone: formData.get('seller_info.phone'),
     },
     owner: userId,
+    operation: formData.get('operation'),
+    status: formData.get('status'),
   };
 
   // Handle images: get removed images and new uploads
