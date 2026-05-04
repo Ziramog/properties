@@ -1,10 +1,37 @@
 import CheckIcon from './icons/CheckIcon';
 
+const features = [
+  { label: 'Bedrooms', value: 'beds' },
+  { label: 'Bathrooms', value: 'baths' },
+  { label: 'Sq.Feet', value: 'square_feet' },
+  { label: 'Year Built', value: 'yearBuilt' },
+  { label: 'Property type', value: 'type' },
+];
+
 const PropertyDetails = ({ property }) => {
   const coveredArea = property.covered_area;
 
   return (
     <main className="space-y-4">
+      {/* Features grid — matches Senada style */}
+      <div className="bg-white rounded-2xl p-6 md:p-8">
+        <h2 className="text-lg font-bold text-[#0F172A] mb-6 uppercase tracking-wide">Features</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+          {features.map(({ label, value }) => {
+            const val = property[value];
+            if (val == null) return null;
+            return (
+              <div key={value} className="text-center">
+                <p className="text-2xl font-bold text-[#0F172A] mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
+                  {typeof val === 'number' ? val.toLocaleString('es-AR') : val}
+                </p>
+                <p className="text-sm text-[#666]">{label}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Description */}
       {property.description && (
         <div className="bg-white rounded-2xl p-6 md:p-8">
