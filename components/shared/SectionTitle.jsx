@@ -1,16 +1,16 @@
 const SectionTitle = ({ children }) => (
   <h2
-    className="text-[28px] font-semibold text-[#0F172A] flex items-center"
+    className="text-lg font-semibold text-[#0F172A] flex items-center"
     style={{ fontFamily: 'var(--font-heading)' }}
   >
     {children}
     <span
       aria-hidden="true"
-      className="inline-block ml-5"
+      className="inline-block ml-4"
       style={{
         display: 'inline-block',
-        width: '70px',
-        height: '3px',
+        width: '40px',
+        height: '2px',
         background: '#E94560',
         alignSelf: 'center',
       }}
