@@ -23,7 +23,7 @@ const PropertyDetails = ({ property }) => {
             if (val == null) return null;
             return (
               <div key={value} className="text-center">
-                <p className="text-2xl font-bold text-[#0F172A] mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
+                <p className="text-[18px] md:text-2xl font-bold text-[#0F172A] mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
                   {typeof val === 'number' ? val.toLocaleString('es-AR') : val}
                 </p>
                 <p className="text-sm text-[#666]">{label}</p>
