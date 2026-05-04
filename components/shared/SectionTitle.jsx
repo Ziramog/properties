@@ -1,6 +1,6 @@
 const SectionTitle = ({ children }) => (
   <h2
-    className="text-lg font-semibold text-[#0F172A] flex items-center"
+    className="text-[32px] md:text-lg font-semibold text-[#0F172A] flex items-center"
     style={{ fontFamily: 'var(--font-heading)' }}
   >
     {children}
