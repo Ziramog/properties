@@ -29,7 +29,6 @@ const PropertiesPage = async ({ searchParams }) => {
     const num = parseInt(baths.replace('+', ''));
     filter.baths = { $gte: num };
   }
-  if (operation) filter.operation = operation;
   if (area) {
     const [minArea, maxArea] = area.split('-');
     filter.square_feet = {};
