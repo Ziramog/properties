@@ -8,9 +8,11 @@ const SORT_OPTIONS = [
 
 const SortBar = ({ total, activeSort, searchParams }) => {
   const handleSortChange = (e) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams();
+    Object.entries(searchParams || {}).forEach(([key, val]) => {
+      if (key !== 'sort' && key !== 'page') params.set(key, val);
+    });
     params.set('sort', e.target.value);
-    params.delete('page');
     window.location.href = `/properties?${params.toString()}`;
   };
 

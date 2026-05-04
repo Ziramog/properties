@@ -147,7 +147,7 @@ const PropertiesPage = async ({ searchParams }) => {
       <SortBar
         total={total}
         activeSort={sort}
-        searchParams={Object.fromEntries(searchParams.entries())}
+        searchParams={searchParams}
       />
 
       {/* Results */}
