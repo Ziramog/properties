@@ -16,7 +16,7 @@ const PropertyDetails = ({ property }) => {
     <main className="space-y-4">
       {/* Features grid — matches Senada style */}
       <div className="bg-white rounded-2xl p-6 md:p-8">
-        <SectionTitle>Features</SectionTitle>
+        <SectionTitle size="large">Features</SectionTitle>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
           {features.map(({ label, value }) => {
             const val = property[value];
