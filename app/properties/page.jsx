@@ -11,7 +11,7 @@ import { getSessionUser } from '@/utils/getSessionUser';
 const PropertiesPage = async ({ searchParams }) => {
   await connectDB();
 
-  const { pageSize = 9, page = 1, type, city, minPrice, maxPrice, bedrooms, baths, operation, area, propertyType, status, sort, favoritos, granInversion } = searchParams;
+  const { pageSize = 9, page = 1, type, term, minPrice, maxPrice, bedrooms, baths, operation, area, propertyType, status, sort, favoritos, granInversion } = searchParams;
 
   const filter = {};
 
@@ -19,9 +19,8 @@ const PropertiesPage = async ({ searchParams }) => {
   if (granInversion !== 'true') {
     if (type && type !== 'Todos') filter.type = type;
   }
-  if (city && city !== 'Todas las ciudades' && city !== 'Ciudad') filter['location.city'] = city;
-  if (minPrice) filter['rates.monthly'] = { ...filter['rates.monthly'], $gte: Number(minPrice) };
-  if (maxPrice) filter['rates.monthly'] = { ...filter['rates.monthly'], $lte: Number(maxPrice) };
+  // term = city search from PropertiesSearch
+  if (term && term !== 'Ciudad') filter['location.city'] = { $regex: term, $options: 'i' };
   if (bedrooms) {
     const num = parseInt(bedrooms.replace('+', ''));
     filter.beds = { $gte: num };
@@ -67,11 +66,10 @@ const PropertiesPage = async ({ searchParams }) => {
     }
   }
 
-  // Build sort object
+  // Build sort object — use createdAt since rates.monthly is null for venta properties
   let sortObj = {};
-  if (sort === 'price-asc') sortObj = { 'rates.monthly': 1 };
-  else if (sort === 'price-desc') sortObj = { 'rates.monthly': -1 };
-  else if (sort === 'newest') sortObj = { createdAt: -1 };
+  if (sort === 'newest') sortObj = { createdAt: -1 };
+  else sortObj = { createdAt: -1 }; // default newest
 
   const skip = (Number(page) - 1) * Number(pageSize);
   const total = await Property.countDocuments(filter);
@@ -79,11 +77,34 @@ const PropertiesPage = async ({ searchParams }) => {
 
   const showPagination = total > Number(pageSize);
 
+  // Parse price string "USD 320,000" to number for filtering
+  const parsePrice = (priceStr) => {
+    if (!priceStr) return null;
+    const cleaned = priceStr.replace(/[^0-9]/g, '');
+    if (!cleaned) return null;
+    return parseInt(cleaned, 10);
+  };
+
+  // Apply price filter client-side (price is stored as string "USD XXX,XXX" in DB)
+  const priceMin = minPrice ? Number(minPrice) : null;
+  const priceMax = maxPrice ? Number(maxPrice) : null;
+
   let filteredProperties = properties.map((p) => ({
     ...p.toObject(),
     _id: p._id.toString(),
     owner: p.owner?.toString(),
   }));
+
+  // Price filter (client-side since price is a formatted string in DB)
+  if (priceMin || priceMax) {
+    filteredProperties = filteredProperties.filter((p) => {
+      const numericPrice = parsePrice(p.price);
+      if (numericPrice === null) return true; // keep "Consultar" properties
+      if (priceMin && numericPrice < priceMin) return false;
+      if (priceMax && numericPrice > priceMax) return false;
+      return true;
+    });
+  }
 
   if (granInversion === 'true') {
     const { isGranInversion } = await import('@/utils/filterProperties');
