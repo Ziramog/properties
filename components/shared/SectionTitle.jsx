@@ -9,8 +9,8 @@ const SectionTitle = ({ children }) => (
       className="inline-block ml-4"
       style={{
         display: 'inline-block',
-        width: '40px',
-        height: '2px',
+        width: '55px',
+        height: '3px',
         background: '#E94560',
         alignSelf: 'center',
       }}
