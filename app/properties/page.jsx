@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 
-import PropertyCard from '@/components/PropertyCard';
+import FeaturedPropertyCard from '@/components/FeaturedPropertyCard';
 import Pagination from '@/components/Pagination';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
@@ -166,7 +166,7 @@ const PropertiesPage = async ({ searchParams }) => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 p-4 md:p-6">
               {filteredProperties.map((property) => (
-                <PropertyCard property={property} key={property._id} />
+                <FeaturedPropertyCard property={property} key={property._id} />
               ))}
             </div>
           )}
