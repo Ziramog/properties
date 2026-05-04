@@ -139,7 +139,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
     if (filters.status?.length) params.set('status', filters.status.join('|'));
     if (filters.sort) params.set('sort', filters.sort);
     const query = params.toString();
-    router.push(`/properties${query ? `?${query}` : ''}`);
+    window.location.href = `/properties${query ? `?${query}` : ''}`;
   };
 
   const handleReset = () => {
