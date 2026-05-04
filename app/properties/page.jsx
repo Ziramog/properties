@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import FeaturedPropertyCard from '@/components/FeaturedPropertyCard';
 import Pagination from '@/components/Pagination';
+import SortBar from '@/components/shared/SortBar';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import User from '@/models/User';
@@ -141,6 +142,13 @@ const PropertiesPage = async ({ searchParams }) => {
           <PropertiesSearch currentFilters={currentFilters} />
         </div>
       </section>
+
+      {/* Sort Bar */}
+      <SortBar
+        total={total}
+        activeSort={sort}
+        searchParams={Object.fromEntries(searchParams.entries())}
+      />
 
       {/* Results */}
       <section className="px-4 pb-12">
