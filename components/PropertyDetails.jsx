@@ -1,5 +1,4 @@
 import CheckIcon from './icons/CheckIcon';
-import PropertyNormalizedDescription from './PropertyNormalizedDescription';
 
 const PropertyDetails = ({ property }) => {
   const coveredArea = property.covered_area;
@@ -13,9 +12,6 @@ const PropertyDetails = ({ property }) => {
           <p className="text-[#555] leading-relaxed whitespace-pre-line">{property.description}</p>
         </div>
       )}
-
-      {/* Normalized Description (highlights, details) */}
-      <PropertyNormalizedDescription property={property} />
 
       {/* Interior */}
       {property.interior && (property.interior.aberturas || property.interior.pisos || property.interior.calefaccion) && (
