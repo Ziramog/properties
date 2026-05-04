@@ -28,7 +28,7 @@ const PropertyPage = async ({ params }) => {
   return (
     <div className="min-h-screen" style={{ background: '#F5F4F0' }}>
       {/* Gallery — full width */}
-      <PropertyGallery images={property.images} />
+      <PropertyGallery images={property.images} property={property} />
 
       {/* Content */}
       <section className="px-4 md:px-8 lg:px-12 pb-16">
@@ -51,7 +51,7 @@ const PropertyPage = async ({ params }) => {
             <PropertyDetails property={property} />
 
             {/* Sidebar */}
-            <aside className='space-y-4 lg:sticky lg:top-24 lg:self-start'>
+            <aside id="contact-form" className='space-y-4 lg:sticky lg:top-24 lg:self-start'>
               <WhatsAppButton property={property} />
               <BookmarkButton property={property} />
               <ShareButtons property={property} />

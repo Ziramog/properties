@@ -1,94 +1,178 @@
 'use client';
-import { useState } from 'react';
 import Image from 'next/image';
 import { Gallery, Item } from 'react-photoswipe-gallery';
 
-const PropertyGallery = ({ images = [] }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
-
+const PropertyGallery = ({ images = [], property }) => {
   if (images.length === 0) return null;
 
-  return (
-    <Gallery>
-      <section className="bg-[#111]">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8 lg:px-12 pt-20 md:pt-24 pb-4">
-          {/* Main image */}
-          <Item
-            original={images[activeIndex]}
-            thumbnail={images[activeIndex]}
-            width="1600"
-            height="900"
-          >
-            {({ ref, open }) => (
-              <div
-                ref={ref}
-                onClick={open}
-                className="relative w-full aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden cursor-pointer group"
-              >
-                <Image
-                  src={images[activeIndex]}
-                  alt=""
-                  fill
-                  className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                  sizes="100vw"
-                  priority={true}
-                />
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                {/* Expand icon */}
-                <div className="absolute top-4 right-4 w-10 h-10 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" className="w-5 h-5">
-                    <polyline points="15 3 21 3 21 9"/>
-                    <polyline points="9 21 3 21 3 15"/>
-                    <line x1="21" y1="3" x2="14" y2="10"/>
-                    <line x1="3" y1="21" x2="10" y2="14"/>
-                  </svg>
-                </div>
-                {/* Image counter */}
-                <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full">
-                  {activeIndex + 1} / {images.length}
-                </div>
-              </div>
-            )}
-          </Item>
+  const beds = property?.beds;
+  const baths = property?.baths;
+  const area = property?.square_feet;
 
-          {/* Thumbnails */}
-          {images.length > 1 && (
-            <div className="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide">
-              {images.map((image, index) => (
+  return (
+    <div id="gallery-section">
+      <Gallery>
+        <section className="bg-[#111]">
+          <div className="w-full">
+
+            {/* Hero image — always 16:9 horizontal, full bleed */}
+            <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/9', maxHeight: '520px' }}>
+              {images[0] && (
                 <Item
-                  key={index}
-                  original={image}
-                  thumbnail={image}
+                  original={images[0]}
+                  thumbnail={images[0]}
                   width="1600"
                   height="900"
                 >
                   {({ ref, open }) => (
-                    <button
+                    <div
                       ref={ref}
-                      onClick={() => { setActiveIndex(index); open(); }}
-                      className={`relative flex-shrink-0 w-20 h-14 md:w-28 md:h-20 rounded-xl overflow-hidden transition-all duration-200 ${
-                        index === activeIndex
-                          ? 'ring-2 ring-[#E94560] ring-offset-2 ring-offset-[#111]'
-                          : 'opacity-50 hover:opacity-100'
-                      }`}
+                      onClick={open}
+                      className="relative w-full h-full cursor-pointer"
+                      style={{ aspectRatio: '16/9', maxHeight: '520px' }}
                     >
                       <Image
-                        src={image}
+                        src={images[0]}
                         alt=""
                         fill
                         className="object-cover"
-                        sizes="112px"
+                        sizes="100vw"
+                        priority={true}
                       />
-                    </button>
+                    </div>
                   )}
                 </Item>
-              ))}
+              )}
+
+              {/* See all photos button — top RIGHT */}
+              {images.length > 1 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    document.getElementById('gallery-section')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="absolute top-5 right-5 bg-black/70 hover:bg-black/80 backdrop-blur-sm text-white text-sm font-bold px-5 py-2.5 rounded-md transition-colors cursor-pointer z-10"
+                >
+                  Ver todas las {images.length} fotos
+                </button>
+              )}
             </div>
-          )}
-        </div>
-      </section>
-    </Gallery>
+
+            {/* Thumbnails row */}
+            {images.length > 1 && (
+              <div
+                className="flex gap-2.5 mt-5 px-4 md:px-8 lg:px-12"
+                style={{ maxWidth: '100%', overflowX: 'auto' }}
+              >
+                {images.slice(1).map((image, index) => (
+                  <Item
+                    key={index}
+                    original={image}
+                    thumbnail={image}
+                    width="800"
+                    height="600"
+                  >
+                    {({ ref, open }) => (
+                      <div
+                        ref={ref}
+                        onClick={open}
+                        className="relative flex-shrink-0 cursor-pointer overflow-hidden"
+                        style={{ width: '150px', height: '100px' }}
+                      >
+                        <Image
+                          src={image}
+                          alt=""
+                          fill
+                          className="object-cover hover:scale-[1.03] transition-transform duration-300"
+                          sizes="150px"
+                        />
+                      </div>
+                    )}
+                  </Item>
+                ))}
+              </div>
+            )}
+
+            {/* Dark info overlay — full width */}
+            <div
+              className="mt-10 px-6 md:px-8 lg:px-12 py-8 text-white"
+              style={{ background: '#1a1a1a' }}
+            >
+              {/* Title — white */}
+              <h1
+                className="text-3xl md:text-4xl font-bold leading-tight text-white mb-2"
+                style={{ fontFamily: 'var(--font-heading)', margin: '0 0 10px' }}
+              >
+                {property?.name}
+              </h1>
+
+              {/* Address with map pin icon */}
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${property?.location?.street}, ${property?.location?.city}, ${property?.location?.state}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors text-base mb-5"
+                style={{ margin: '0 0 20px' }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" className="flex-shrink-0">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                </svg>
+                {property?.location?.street}{property?.location?.street && property?.location?.city ? ', ' : ''}{property?.location?.city}{property?.location?.city && property?.location?.state ? ', ' : ''}{property?.location?.state}
+              </a>
+
+              {/* Stats row with icons */}
+              <div className="flex gap-8 mb-5" style={{ margin: '0 0 20px' }}>
+                {beds != null && (
+                  <span className="flex items-center gap-2 text-lg font-semibold text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 12h18M3 12v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6M3 12V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v7" />
+                    </svg>
+                    {beds} {beds === 1 ? 'Dorm.' : 'Dorms.'}
+                  </span>
+                )}
+                {baths != null && (
+                  <span className="flex items-center gap-2 text-lg font-semibold text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 12h16v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4Z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 12V4a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1" />
+                      <circle cx="8" cy="8" r="1" fill="currentColor" />
+                    </svg>
+                    {baths} {baths === 1 ? 'Baño' : 'Baños'}
+                  </span>
+                )}
+                {area && (
+                  <span className="flex items-center gap-2 text-lg font-semibold text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v18h16.5V3.75M3.75 3.75L12 21l8.25-17.25M3.75 3.75h16.5M12 3.75v17.25" />
+                    </svg>
+                    {area.toLocaleString('es-AR')} m²
+                  </span>
+                )}
+              </div>
+
+              {/* Price + Contact */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-5">
+                <p
+                  className="text-white font-bold"
+                  style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', margin: 0 }}
+                >
+                  {property?.price || 'Consultar'}
+                </p>
+                <button
+                  onClick={() => {
+                    document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="bg-[#E94560] hover:bg-[#d13a54] text-white font-bold py-3 px-8 rounded-md transition-all duration-200 text-base cursor-pointer self-start"
+                >
+                  Contactar
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </Gallery>
+    </div>
   );
 };
 
