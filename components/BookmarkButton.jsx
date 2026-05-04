@@ -49,21 +49,23 @@ const BookmarkButton = ({ property }) => {
     }
   };
 
-  if (loading) return <p className='text-center py-3 text-sm text-gray-500'>Cargando...</p>;
+  if (loading) return null;
 
   return isBookmarked ? (
     <button
       onClick={handleClick}
-      className='bg-red-500 hover:bg-red-600 text-white font-bold w-full py-2 px-4 rounded-md flex items-center justify-center'
+      className='flex items-center justify-center gap-2 w-full py-3 px-4 bg-[#E94560] hover:bg-[#d13a54] text-white font-semibold text-sm rounded-xl transition-all duration-200'
     >
-      <FaBookmark className='mr-2' /> Quitar de Favoritos
+      <FaBookmark className='w-4 h-4' />
+      Guardada
     </button>
   ) : (
     <button
       onClick={handleClick}
-      className='bg-primary hover:bg-primary-hover text-white font-bold w-full py-2 px-4 rounded-md flex items-center justify-center'
+      className='flex items-center justify-center gap-2 w-full py-3 px-4 bg-white hover:bg-gray-50 text-[#0F172A] font-semibold text-sm rounded-xl border border-gray-200 transition-all duration-200'
     >
-      <FaBookmark className='mr-2' /> Guardar Propiedad
+      <FaBookmark className='w-4 h-4' />
+      Guardar Propiedad
     </button>
   );
 };

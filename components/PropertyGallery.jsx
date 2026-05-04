@@ -10,7 +10,7 @@ const PropertyGallery = ({ images = [] }) => {
 
   return (
     <Gallery>
-      <section className="bg-[#1C1C1A]">
+      <section className="bg-[#111]">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8 lg:px-12 pt-20 md:pt-24 pb-4">
           {/* Main image */}
           <Item
@@ -33,6 +33,8 @@ const PropertyGallery = ({ images = [] }) => {
                   sizes="100vw"
                   priority={true}
                 />
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 {/* Expand icon */}
                 <div className="absolute top-4 right-4 w-10 h-10 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" className="w-5 h-5">
@@ -50,7 +52,7 @@ const PropertyGallery = ({ images = [] }) => {
             )}
           </Item>
 
-          {/* Thumbnails — only show if more than 1 image */}
+          {/* Thumbnails */}
           {images.length > 1 && (
             <div className="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide">
               {images.map((image, index) => (
@@ -67,8 +69,8 @@ const PropertyGallery = ({ images = [] }) => {
                       onClick={() => { setActiveIndex(index); open(); }}
                       className={`relative flex-shrink-0 w-20 h-14 md:w-28 md:h-20 rounded-xl overflow-hidden transition-all duration-200 ${
                         index === activeIndex
-                          ? 'ring-2 ring-[var(--color-brand)] ring-offset-2 ring-offset-[#1C1C1A]'
-                          : 'opacity-60 hover:opacity-100'
+                          ? 'ring-2 ring-[#E94560] ring-offset-2 ring-offset-[#111]'
+                          : 'opacity-50 hover:opacity-100'
                       }`}
                     >
                       <Image

@@ -26,18 +26,18 @@ const PropertyPage = async ({ params }) => {
   const property = convertToSerializeableObject(propertyDoc);
 
   return (
-    <div className="bg-[#E8E6E0] min-h-screen">
-      {/* Gallery — full width, no gap */}
+    <div className="min-h-screen" style={{ background: '#F5F4F0' }}>
+      {/* Gallery — full width */}
       <PropertyGallery images={property.images} />
 
-      {/* Back button + content */}
-      <section className="px-4 md:px-8 lg:px-12">
+      {/* Content */}
+      <section className="px-4 md:px-8 lg:px-12 pb-16">
         <div className="max-w-[1400px] mx-auto">
           {/* Back button */}
           <div className="py-4">
             <Link
               href='/properties'
-              className='text-[var(--color-brand)] hover:text-[var(--color-ink)] flex items-center font-medium transition-colors text-sm'
+              className='text-[#E94560] hover:text-[#0F172A] flex items-center font-medium transition-colors text-sm'
             >
               <svg className='mr-1.5 w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 16 16'>
                 <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M10 3 6 8l4 5' />
@@ -47,7 +47,7 @@ const PropertyPage = async ({ params }) => {
           </div>
 
           {/* Main grid */}
-          <div className='grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 pb-12'>
+          <div className='grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8'>
             <PropertyDetails property={property} />
 
             {/* Sidebar */}
