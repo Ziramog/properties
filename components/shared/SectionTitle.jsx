@@ -1,17 +1,21 @@
 const SectionTitle = ({ children }) => (
-  <div className="mb-6">
-    <h2
-      className="text-[28px] font-semibold text-[#0F172A] leading-tight mb-3"
-      style={{ fontFamily: 'var(--font-heading)' }}
-    >
-      {children}
-    </h2>
-    <div className="flex items-center gap-3">
-      <span className="w-7 h-px bg-[#E94560] flex-shrink-0" />
-      <span className="w-2 h-2 bg-[#E94560] rounded-full flex-shrink-0" />
-      <span className="w-7 h-px bg-[#E94560] flex-shrink-0" />
-    </div>
-  </div>
+  <h2
+    className="text-[28px] font-semibold text-[#0F172A] flex items-center"
+    style={{ fontFamily: 'var(--font-heading)' }}
+  >
+    {children}
+    <span
+      aria-hidden="true"
+      className="inline-block ml-5"
+      style={{
+        display: 'inline-block',
+        width: '70px',
+        height: '3px',
+        background: '#E94560',
+        alignSelf: 'center',
+      }}
+    />
+  </h2>
 );
 
 export default SectionTitle;
