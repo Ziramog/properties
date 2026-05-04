@@ -111,6 +111,13 @@ const PropertiesPage = async ({ searchParams }) => {
     filteredProperties = filteredProperties.filter(isGranInversion);
   }
 
+  // Apply sorting client-side (price is stored as formatted string in DB)
+  if (sort === 'price-asc') {
+    filteredProperties.sort((a, b) => (parsePrice(a.price) || 0) - (parsePrice(b.price) || 0));
+  } else if (sort === 'price-desc') {
+    filteredProperties.sort((a, b) => (parsePrice(b.price) || 0) - (parsePrice(a.price) || 0));
+  }
+
   const title = favoritos === 'true'
     ? 'Mis Favoritos'
     : granInversion === 'true'
