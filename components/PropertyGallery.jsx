@@ -163,8 +163,8 @@ const PropertyGallery = ({ images = [], property }) => {
                   onClick={() => {
                     document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="text-white font-bold cursor-pointer"
-                  style={{ display: 'inline-block', background: '#E94560', padding: '15px 30px', borderRadius: '5px', fontSize: '16px', fontWeight: 'bold' }}
+                  className="bg-primary hover:bg-primary-hover text-white font-bold rounded-[5px] cursor-pointer transition-all duration-200"
+                  style={{ display: 'inline-block', padding: '15px 30px', fontSize: '16px' }}
                 >
                   Contact Us
                 </button>
