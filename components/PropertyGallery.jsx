@@ -34,11 +34,11 @@ const PropertyGallery = ({ images = [], property }) => {
     <Gallery>
       <section className="bg-[#0a0a0a]">
 
-          {/* Gallery row — side-by-side on desktop, stacked on mobile */}
-          <div className="flex flex-col md:flex-row">
+          {/* Gallery row — grid on desktop, stacked on mobile */}
+          <div className="flex flex-col md:grid md:grid-cols-[60%_40%] md:h-[520px]">
 
-            {/* Big image — 60% width on desktop */}
-            <div className="relative w-full md:w-[60%] md:min-w-0 md:h-[520px] cursor-pointer overflow-hidden bg-[#111]"
+            {/* Big image — first column on desktop */}
+            <div className="relative cursor-pointer overflow-hidden bg-[#111]"
                  style={{ minHeight: '300px' }}>
               {images[0] && (
                 <Item original={images[0]} thumbnail={images[0]} width="1600" height="900">
@@ -70,7 +70,7 @@ const PropertyGallery = ({ images = [], property }) => {
 
             {/* Thumbnail grid — 3 cols x 2 rows on desktop, horizontal scroll on mobile */}
             {subThumbs.length > 0 && (
-              <div className="w-full md:w-[40%] md:min-w-0 md:h-[520px]">
+              <div>
                 {/* Mobile: horizontal scroll strip */}
                 <div className="md:hidden flex overflow-x-auto gap-[4px] py-2 px-3 scrollbar-hide">
                   {subThumbs.map((image, index) => (
