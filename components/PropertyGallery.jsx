@@ -36,10 +36,10 @@ const PropertyGallery = ({ images = [], property }) => {
     <Gallery>
       <section className="bg-[#000] pt-[150px] pb-[30px] pl-[50px] md:pl-[50px]">
         {/* Gallery row — grid on desktop, stacked on mobile */}
-        <div className="flex flex-col md:grid md:grid-cols-[2fr_3fr] md:gap-[5px] md:h-[720px] md:rounded-[30px] md:overflow-hidden">
+          <div className="flex flex-col md:grid md:grid-cols-[2fr_3fr] md:gap-[5px] md:rounded-[30px] md:overflow-hidden">
 
             {/* Big image — 40% width on desktop */}
-            <div className="relative group cursor-pointer overflow-hidden bg-[#111]"
+            <div className="relative group cursor-pointer overflow-hidden bg-[#111] md:aspect-[16/9]"
                  style={{ minHeight: '300px' }}>
               {images[0] && (
                 <Item original={images[0]} thumbnail={images[0]} width="1600" height="900">
