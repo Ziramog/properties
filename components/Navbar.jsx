@@ -139,7 +139,7 @@ const Navbar = () => {
         </div>
 
         {/* Fullscreen Overlay — senada style: rOptions */}
-        <div className={`rOptions fixed md:absolute left-0 right-0 bg-black flex flex-col ${isMobileMenuOpen ? 'menu-open' : ''}`}
+        <div className={`rOptions absolute left-0 right-0 bg-black flex flex-col ${isMobileMenuOpen ? 'menu-open' : ''}`}
           style={{ top: 0, height: 'calc((var(--vh, 1vh) * 100))' }}>
           {/* Top row: isotipo + close */}
           <div className="flex items-center justify-between px-4 h-[60px] flex-shrink-0">
