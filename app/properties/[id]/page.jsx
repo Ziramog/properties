@@ -32,7 +32,7 @@ const PropertyPage = async ({ params }) => {
       <PropertyGallery images={property.images} property={property} />
 
       {/* Content */}
-      <section className="px-0 md:px-8 lg:px-12 pb-16">
+      <section className="px-[15px] pb-16">
         {/* Back button */}
           <div className="py-4 px-4 md:px-0">
             <Link

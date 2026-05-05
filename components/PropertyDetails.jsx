@@ -21,6 +21,22 @@ const ReadMoreText = ({ text, maxChars = 400 }) => {
   );
 };
 
+const SectionTitle = ({ children }) => (
+  <div className="pb-[30px] flex items-center justify-between">
+    <h2
+      className="text-[28px] font-semibold text-[#0F172A] flex items-center"
+      style={{ fontFamily: 'var(--font-heading)' }}
+    >
+      {children}
+      <span
+        aria-hidden="true"
+        className="inline-block ml-5"
+        style={{ width: '70px', height: '3px', background: '#E94560' }}
+      />
+    </h2>
+  </div>
+);
+
 const PropertyDetails = ({ property }) => {
   const coveredArea = property.covered_area;
   const operationLabel =
@@ -31,7 +47,6 @@ const PropertyDetails = ({ property }) => {
   const rawPrice = property.price;
   const numericPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.-]/g, '')) : null;
 
-  // Features items matching reference pattern: large value + small label
   const featureItems = [
     { label: 'Price', value: numericPrice ? `$${numericPrice.toLocaleString('es-AR')}` : 'Consultar' },
     { label: 'Área Total', value: coveredArea ? `${coveredArea.toLocaleString('es-AR')} m²` : null },
@@ -45,28 +60,27 @@ const PropertyDetails = ({ property }) => {
 
   return (
     <main className="space-y-0">
-      {/* Features grid — Senada-style white card */}
+      {/* Features — Senada .listing-feature */}
       {featureItems.length > 0 && (
-        <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
-          <div className="px-6 py-6 md:p-8">
-            <div className="pb-6">
-              <h2
-                className="text-[22px] md:text-[26px] font-semibold text-[#0F172A]"
-                style={{ fontFamily: 'var(--font-heading)' }}
-              >
-                Features
-              </h2>
+        <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5 md:mb-5">
+          <div className="py-[30px] md:py-[30px]">
+            <div className="pb-[30px] px-6 md:px-10">
+              <SectionTitle>Features</SectionTitle>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 md:gap-8">
-              {featureItems.map(({ label, value }) => (
-                <div key={label} className="text-center">
-                  <p
-                    className="text-[18px] md:text-[22px] font-bold text-[#0F172A] mb-0.5"
-                    style={{ fontFamily: 'var(--font-heading)' }}
-                  >
-                    {typeof value === 'number' ? value.toLocaleString('es-AR') : value}
-                  </p>
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#999]">{label}</p>
+            <div className="flex flex-wrap">
+              {featureItems.map(({ label, value }, i) => (
+                <div
+                  key={label}
+                  className="flex-1 min-w-[50%] md:min-w-0 flex justify-center py-0 px-[20px] md:px-[40px] border-r border-[#e9e9e9] border-b md:border-b-0 border-[#e9e9e9] pb-[25px] md:pb-0 mb-[25px] md:mb-0"
+                  style={{ borderRight: i === featureItems.length - 1 ? 'none' : undefined }}
+                >
+                  <div>
+                    <h5 className="text-[22px] font-semibold text-[#0F172A] mb-[5px] whitespace-nowrap"
+                        style={{ fontFamily: 'var(--font-heading)' }}>
+                      {typeof value === 'number' ? value.toLocaleString('es-AR') : value}
+                    </h5>
+                    <p className="text-[16px] leading-[24px] text-[#666]">{label}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -74,35 +88,24 @@ const PropertyDetails = ({ property }) => {
         </div>
       )}
 
-      {/* 2-col layout: Description (left) + side cards (right) */}
-      <div className="flex flex-col md:flex-row gap-0 md:gap-8 mt-0 md:mt-8">
-        {/* Left: Description */}
-        <div className="flex-1">
+      {/* 2-col: Description (70%) + Sidebar (30%) — Senada .info-section */}
+      <div className="flex flex-col md:flex-row gap-[20px] mb-5">
+        {/* Left: Description — 70% */}
+        <div className="w-full md:w-[70%]">
           {property.description && (
-            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
-              <div className="px-6 py-6 md:p-8">
-                <div className="pb-6">
-                  <h2
-                    className="text-[22px] md:text-[26px] font-semibold text-[#0F172A]"
-                    style={{ fontFamily: 'var(--font-heading)' }}
-                  >
-                    Description
-                  </h2>
-                </div>
-
+            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden h-full flex flex-col">
+              <div className="px-6 md:px-[25px] lg:px-[100px] xl:px-[190px] pt-10 md:pt-[40px] pb-0">
+                <SectionTitle>Description</SectionTitle>
                 <ReadMoreText text={property.description} maxChars={450} />
-
-                {/* Disclaimer */}
                 {property.seller_info?.name && (
                   <p className="mt-6 text-[12px] italic text-[#999]">
                     Publicado por {property.seller_info.name}
                   </p>
                 )}
-
-                {/* Share — inline inside description card */}
-                <div className="mt-7 pt-5 border-t border-[#eee]">
-                  <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-0">
-                    <span className="text-[12px] font-bold uppercase tracking-wider text-[#999] md:mr-5">Share</span>
+                {/* Share */}
+                <div className="mt-auto pt-8 pb-6">
+                  <div className="flex justify-center items-center gap-0 md:gap-5">
+                    <span className="text-[16px] uppercase text-[#999] pr-[30px]">Share</span>
                     <ShareButtons property={property} inline />
                   </div>
                 </div>
@@ -111,49 +114,42 @@ const PropertyDetails = ({ property }) => {
           )}
         </div>
 
-        {/* Right: Additional Info + Community Info */}
-        <div className="w-full md:w-[380px] flex-shrink-0">
-          {/* Additional Info card */}
+        {/* Right: Sidebar — 30% */}
+        <div className="w-full md:w-[30%]">
+          {/* Additional Info */}
           {(property.square_feet || property.operation || coveredArea || property.garage != null || property.titles_status) && (
-            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
-              <div className="px-6 py-6 md:p-8">
-                <div className="pb-6">
-                  <h2
-                    className="text-[22px] md:text-[26px] font-semibold text-[#0F172A]"
-                    style={{ fontFamily: 'var(--font-heading)' }}
-                  >
-                    Additional Info
-                  </h2>
-                </div>
-                <ul className="divide-y divide-[#eee]">
+            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5">
+              <div className="px-6 md:px-[25px] lg:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+                <SectionTitle>Additional Info</SectionTitle>
+                <ul>
                   {property.square_feet && (
-                    <li className="flex justify-between py-3 text-[14px]">
-                      <span className="text-[#888] font-medium">Sup. Cubierta</span>
-                      <span className="text-[#0F172A] font-medium">{property.square_feet.toLocaleString('es-AR')} m²</span>
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Sup. Cubierta</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.square_feet.toLocaleString('es-AR')} m²</span>
                     </li>
                   )}
                   {coveredArea && (
-                    <li className="flex justify-between py-3 text-[14px]">
-                      <span className="text-[#888] font-medium">Sup. Total</span>
-                      <span className="text-[#0F172A] font-medium">{coveredArea.toLocaleString('es-AR')} m²</span>
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Sup. Total</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{coveredArea.toLocaleString('es-AR')} m²</span>
                     </li>
                   )}
                   {property.garage != null && (
-                    <li className="flex justify-between py-3 text-[14px]">
-                      <span className="text-[#888] font-medium">Cochera</span>
-                      <span className="text-[#0F172A] font-medium">{property.garage} {property.garage === 1 ? 'lugar' : 'lugares'}</span>
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Cochera</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.garage} {property.garage === 1 ? 'lugar' : 'lugares'}</span>
                     </li>
                   )}
                   {property.operation && (
-                    <li className="flex justify-between py-3 text-[14px]">
-                      <span className="text-[#888] font-medium">Operación</span>
-                      <span className="text-[#0F172A] font-medium">{operationLabel}</span>
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Operación</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{operationLabel}</span>
                     </li>
                   )}
                   {property.titles_status && (
-                    <li className="flex justify-between py-3 text-[14px]">
-                      <span className="text-[#888] font-medium">Estado de Títulos</span>
-                      <span className="text-[#0F172A] font-medium">{property.titles_status}</span>
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Estado de Títulos</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.titles_status}</span>
                     </li>
                   )}
                 </ul>
@@ -161,56 +157,40 @@ const PropertyDetails = ({ property }) => {
             </div>
           )}
 
-          {/* Community Info card (Location) */}
+          {/* Community Info */}
           {(property.location?.city || property.location?.state) && (
-            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-8">
-              <div className="px-6 py-6 md:p-8">
-                <div className="pb-6">
-                  <h2
-                    className="text-[22px] md:text-[26px] font-semibold text-[#0F172A]"
-                    style={{ fontFamily: 'var(--font-heading)' }}
-                  >
-                    Community Info
-                  </h2>
-                </div>
-                <div itemScope itemType="https://schema.org/PostalAddress">
-                  <ol className="divide-y divide-[#eee] list-none">
-                    {property.location?.state && (
-                      <li className="flex justify-between py-3 text-[14px]">
-                        <span className="text-[#888] font-medium">Provincia</span>
-                        <span className="text-[#0F172A] font-medium" itemProp="addressRegion">{property.location.state}</span>
-                      </li>
-                    )}
-                    {property.location?.city && (
-                      <li className="flex justify-between py-3 text-[14px]">
-                        <span className="text-[#888] font-medium">Ciudad</span>
-                        <span className="text-[#0F172A] font-medium" itemProp="addressLocality">{property.location.city}</span>
-                      </li>
-                    )}
-                    {property.location?.street && (
-                      <li className="flex justify-between py-3 text-[14px]">
-                        <span className="text-[#888] font-medium">Dirección</span>
-                        <span className="text-[#0F172A] font-medium text-right max-w-[180px]" itemProp="streetAddress">{property.location.street}</span>
-                      </li>
-                    )}
-                  </ol>
-                </div>
+            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5">
+              <div className="px-6 md:px-[25px] lg:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+                <SectionTitle>Community Info</SectionTitle>
+                <ol className="list-none">
+                  {property.location?.state && (
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Provincia</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.location.state}</span>
+                    </li>
+                  )}
+                  {property.location?.city && (
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Ciudad</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.location.city}</span>
+                    </li>
+                  )}
+                  {property.location?.street && (
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Dirección</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A] text-right max-w-[180px]">{property.location.street}</span>
+                    </li>
+                  )}
+                </ol>
               </div>
             </div>
           )}
 
           {/* Interior card */}
           {property.interior && (property.interior.aberturas || property.interior.pisos || property.interior.calefaccion) && (
-            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-8">
-              <div className="px-6 py-6 md:p-8">
-                <div className="pb-6">
-                  <h2
-                    className="text-[22px] md:text-[26px] font-semibold text-[#0F172A]"
-                    style={{ fontFamily: 'var(--font-heading)' }}
-                  >
-                    Interior
-                  </h2>
-                </div>
+            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5">
+              <div className="px-6 md:px-[25px] lg:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+                <SectionTitle>Interior</SectionTitle>
                 <ul className="space-y-2.5">
                   {property.interior.aberturas && (
                     <li className="flex items-center gap-2.5">
@@ -245,16 +225,9 @@ const PropertyDetails = ({ property }) => {
 
       {/* Exterior card */}
       {property.exterior && property.exterior.techos && (
-        <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-8">
-          <div className="px-6 py-6 md:p-8">
-            <div className="pb-6">
-              <h2
-                className="text-[22px] md:text-[26px] font-semibold text-[#0F172A]"
-                style={{ fontFamily: 'var(--font-heading)' }}
-              >
-                Exterior
-              </h2>
-            </div>
+        <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-0 mb-5">
+          <div className="px-6 md:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+            <SectionTitle>Exterior</SectionTitle>
             <ul className="space-y-2.5">
               {property.exterior.techos && (
                 <li className="flex items-center gap-2.5">
@@ -271,16 +244,9 @@ const PropertyDetails = ({ property }) => {
 
       {/* Amenities card */}
       {property.amenities && property.amenities.length > 0 && (
-        <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-8">
-          <div className="px-6 py-6 md:p-8">
-            <div className="pb-6">
-              <h2
-                className="text-[22px] md:text-[26px] font-semibold text-[#0F172A]"
-                style={{ fontFamily: 'var(--font-heading)' }}
-              >
-                Comodidades
-              </h2>
-            </div>
+        <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-0 mb-5">
+          <div className="px-6 md:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+            <SectionTitle>Comodidades</SectionTitle>
             <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-2.5">
               {property.amenities.map((amenity, index) => (
                 <li key={index} className="flex items-center gap-2.5">
@@ -295,16 +261,9 @@ const PropertyDetails = ({ property }) => {
 
       {/* Services card */}
       {property.services && property.services.length > 0 && (
-        <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-8">
-          <div className="px-6 py-6 md:p-8">
-            <div className="pb-6">
-              <h2
-                className="text-[22px] md:text-[26px] font-semibold text-[#0F172A]"
-                style={{ fontFamily: 'var(--font-heading)' }}
-              >
-                Servicios
-              </h2>
-            </div>
+        <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-0 mb-5">
+          <div className="px-6 md:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+            <SectionTitle>Servicios</SectionTitle>
             <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-2.5">
               {property.services.map((service, index) => (
                 <li key={index} className="flex items-center gap-2.5">
