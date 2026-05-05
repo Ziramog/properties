@@ -152,20 +152,6 @@ const Navbar = () => {
             transition: 'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease',
             pointerEvents: isMobileMenuOpen ? 'auto' : 'none',
           }}>
-          {/* Top row: isotipo + close */}
-          <div className="flex items-center justify-between px-4 h-[60px] flex-shrink-0">
-            <Link className="flex items-center flex-shrink-0" href="/">
-              <Image src="/images/ISOTIPO R&R-Photoroom.png" alt="Roggero & Roma" width={120} height={40} style={{ height: '40px', width: 'auto' }} className="brightness-0 invert" />
-            </Link>
-            <button
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="w-8 h-8 flex items-center justify-center text-white"
-              aria-label="Cerrar menú"
-            >
-              <img src="/senada/images/icons/ico_close.svg" alt="cerrar" className="w-6 h-6" style={{ filter: 'brightness(0) invert(1)' }} />
-            </button>
-          </div>
-
           {/* Nav links */}
           <nav className="flex-1 flex flex-col justify-center px-8">
             <Link href="/" className="flex items-center justify-between text-white text-[28px] font-normal py-4 border-b border-white/10" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
