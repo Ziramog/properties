@@ -91,8 +91,7 @@ const PropertyGallery = ({ images = [], property }) => {
                 ))}
               </div>
               {/* Desktop: 3-col x 2-row grid */}
-                <div className="hidden md:grid grid-cols-3 gap-[5px] md:h-full"
-                     style={{ gridTemplateRows: '1fr 1fr' }}>
+                <div className="hidden md:grid grid-cols-3 gap-[5px] content-start">
                 {subThumbs.map((image, index) => (
                     <Item key={index} original={image} thumbnail={image} width="800" height="600">
                       {({ ref, open }) => (
@@ -105,9 +104,6 @@ const PropertyGallery = ({ images = [], property }) => {
                         </div>
                       )}
                     </Item>
-                ))}
-                {Array.from({ length: 6 - subThumbs.length }).map((_, i) => (
-                  <div key={`empty-${i}`} className="bg-[#000]" />
                 ))}
               </div>
             </div>
