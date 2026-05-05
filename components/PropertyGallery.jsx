@@ -64,7 +64,7 @@ const PropertyGallery = ({ images = [], property }) => {
               {images.length > 1 && (
                 <button
                   onClick={scrollToFullGallery}
-                  className="absolute md:left-[30px] md:top-[30px] md:bottom-auto md:right-auto bottom-4 right-4 bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[13px] font-light px-5 py-2 rounded-[16px] transition-all duration-300 ease-in-out z-10"
+                  className="absolute left-4 top-4 md:left-[30px] md:top-[30px] bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[13px] font-light px-5 py-2 rounded-none transition-all duration-300 ease-in-out z-10"
                 >
                   Ver todas las {images.length} fotos
                 </button>
