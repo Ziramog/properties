@@ -33,20 +33,20 @@ const PropertyGallery = ({ images = [], property }) => {
   return (
     <Gallery>
       <section className="bg-[#0a0a0a]">
-        <div className="max-w-[1400px] mx-auto">
+        <div className="max-w-[1280px] mx-auto">
 
           {/* Gallery row — side-by-side on desktop, stacked on mobile */}
           <div className="flex flex-col md:flex-row">
 
             {/* Big image — 65% width on desktop */}
-            <div className="relative w-full md:w-[65%] cursor-pointer overflow-hidden bg-[#111]"
-                 style={{ minHeight: '300px', maxHeight: '440px' }}>
+            <div className="relative w-full md:w-[65%] md:h-[520px] cursor-pointer overflow-hidden bg-[#111]"
+                 style={{ minHeight: '300px' }}>
               {images[0] && (
                 <Item original={images[0]} thumbnail={images[0]} width="1600" height="900">
                   {({ ref, open }) => (
                     <div ref={ref} onClick={open}
-                         className="relative w-full"
-                         style={{ height: '300px', minHeight: '300px' }}>
+                         className="relative w-full md:h-full"
+                         style={{ minHeight: '300px' }}>
                       <Image
                         src={images[0]}
                         alt={property?.name || ''}
@@ -71,9 +71,9 @@ const PropertyGallery = ({ images = [], property }) => {
 
             {/* Thumbnail grid — 3 cols x 2 rows on desktop, horizontal scroll on mobile */}
             {subThumbs.length > 0 && (
-              <div className="w-full md:w-[35%]">
+              <div className="w-full md:w-[35%] md:h-[520px]">
                 {/* Mobile: horizontal scroll strip */}
-                <div className="md:hidden flex overflow-x-auto gap-[3px] py-2 px-3 scrollbar-hide">
+                <div className="md:hidden flex overflow-x-auto gap-[4px] py-2 px-3 scrollbar-hide">
                   {subThumbs.map((image, index) => (
                     <Item key={index} original={image} thumbnail={image} width="800" height="600">
                       {({ ref, open }) => (
@@ -86,7 +86,7 @@ const PropertyGallery = ({ images = [], property }) => {
                   ))}
                 </div>
                 {/* Desktop: 3-col grid filling the height of big image */}
-                <div className="hidden md:grid grid-cols-3 gap-[3px] h-full"
+                <div className="hidden md:grid grid-cols-3 gap-[4px] md:h-full"
                      style={{ gridTemplateRows: '1fr 1fr' }}>
                   {subThumbs.map((image, index) => (
                     <Item key={index} original={image} thumbnail={image} width="800" height="600">
