@@ -140,9 +140,10 @@ const Navbar = () => {
 
         {/* Fullscreen Overlay — senada style: rOptions */}
         <div
-          className="rOptions absolute inset-x-0 top-0 z-[999] flex flex-col bg-black"
+          className="rOptions absolute inset-x-0 z-[999] flex flex-col bg-black"
           style={{
-            height: 'calc(var(--vh, 1vh) * 100)',
+            top: 'calc(env(safe-area-inset-top, 8px) + 60px)',
+            height: 'calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top, 8px) - 60px)',
             padding: '80px 12px 20px',
             overflowY: 'auto',
             transformOrigin: 'top',
