@@ -33,7 +33,6 @@ const PropertyGallery = ({ images = [], property }) => {
   return (
     <Gallery>
       <section className="bg-[#0a0a0a]">
-        <div className="max-w-[1280px] mx-auto">
 
           {/* Gallery row — side-by-side on desktop, stacked on mobile */}
           <div className="flex flex-col md:flex-row">
@@ -196,7 +195,6 @@ const PropertyGallery = ({ images = [], property }) => {
               </button>
             </div>
           </div>
-        </div>
       </section>
     </Gallery>
   );
