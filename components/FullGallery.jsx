@@ -25,16 +25,17 @@ const FullGallery = ({ images = [], propertyName }) => {
                   <div
                     ref={ref}
                     onClick={open}
-                    className="relative cursor-pointer overflow-hidden bg-[#f0f0f0] aspect-[4/3]"
+                    className="relative group cursor-pointer overflow-hidden bg-[#f0f0f0] aspect-[4/3]"
                   >
                     <Image
                       src={image}
                       alt={`${propertyName || 'Property'} photo ${index + 1}`}
                       fill
-                      className="object-cover hover:scale-[1.03] transition-transform duration-300"
+                      className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
                       sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       loading="lazy"
                     />
+                    <div className="absolute inset-0 bg-white/0 group-hover:bg-white/60 transition-all duration-300 ease-in-out pointer-events-none" />
                   </div>
                 )}
               </Item>

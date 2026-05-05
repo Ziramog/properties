@@ -38,65 +38,73 @@ const PropertyGallery = ({ images = [], property }) => {
         {/* Gallery row — grid on desktop, stacked on mobile */}
         <div className="flex flex-col md:grid md:grid-cols-[2fr_3fr] md:gap-[5px] md:h-[720px] md:rounded-[30px] md:overflow-hidden">
 
-          {/* Big image — 40% width on desktop */}
-          <div className="relative cursor-pointer overflow-hidden bg-[#111]"
-               style={{ minHeight: '300px' }}>
-            {images[0] && (
-              <Item original={images[0]} thumbnail={images[0]} width="1600" height="900">
-                {({ ref, open }) => (
-                  <div ref={ref} onClick={open}
-                       className="relative w-full md:h-full"
-                       style={{ minHeight: '300px' }}>
-                    <Image
-                      src={images[0]}
-                      alt={property?.name || ''}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 40vw"
-                      priority={true}
-                    />
-                  </div>
-                )}
-              </Item>
-            )}
-            {images.length > 1 && (
-              <button
-                onClick={scrollToFullGallery}
-                className="absolute md:left-[30px] md:top-[30px] md:bottom-auto md:right-auto bottom-4 right-4 bg-[#652660] hover:opacity-90 text-white text-[13px] font-light px-5 py-2 rounded-[16px] transition-opacity z-10"
-              >
-                See all {images.length} photos
-              </button>
-            )}
+            {/* Big image — 40% width on desktop */}
+            <div className="relative group cursor-pointer overflow-hidden bg-[#111]"
+                 style={{ minHeight: '300px' }}>
+              {images[0] && (
+                <Item original={images[0]} thumbnail={images[0]} width="1600" height="900">
+                  {({ ref, open }) => (
+                    <div ref={ref} onClick={open}
+                         className="relative w-full md:h-full"
+                         style={{ minHeight: '300px' }}>
+                      <Image
+                        src={images[0]}
+                        alt={property?.name || ''}
+                        fill
+                        className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
+                        sizes="(max-width: 768px) 100vw, 40vw"
+                        priority={true}
+                      />
+                    </div>
+                  )}
+                </Item>
+              )}
+              {/* White overlay on hover */}
+              <div className="absolute inset-0 bg-white/0 group-hover:bg-white/60 transition-all duration-300 ease-in-out pointer-events-none z-[5]" />
+              {images.length > 1 && (
+                <button
+                  onClick={scrollToFullGallery}
+                  className="absolute md:left-[30px] md:top-[30px] md:bottom-auto md:right-auto bottom-4 right-4 bg-[#652660] hover:bg-[#491a46] text-white text-[13px] font-light px-5 py-2 rounded-[16px] transition-all duration-300 ease-in-out z-10"
+                >
+                  See all {images.length} photos
+                </button>
+              )}
           </div>
 
           {/* Thumbnail grid — 60% width on desktop */}
           {subThumbs.length > 0 && (
             <div>
               {/* Mobile: horizontal scroll */}
-              <div className="md:hidden flex overflow-x-auto gap-[5px] py-2 px-3 scrollbar-hide">
-                {subThumbs.map((image, index) => (
-                  <Item key={index} original={image} thumbnail={image} width="800" height="600">
-                    {({ ref, open }) => (
-                      <div ref={ref} onClick={open}
-                           className="relative flex-shrink-0 w-[130px] h-[86px] cursor-pointer overflow-hidden">
-                        <Image src={image} alt="" fill className="object-cover" sizes="130px" loading="lazy" />
-                      </div>
-                    )}
-                  </Item>
+                <div className="md:hidden flex overflow-x-auto gap-[5px] py-2 px-3 scrollbar-hide">
+                  {subThumbs.map((image, index) => (
+                    <Item key={index} original={image} thumbnail={image} width="800" height="600">
+                      {({ ref, open }) => (
+                        <div ref={ref} onClick={open}
+                             className="relative group flex-shrink-0 w-[130px] h-[86px] cursor-pointer overflow-hidden">
+                          <Image src={image} alt="" fill
+                                 className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
+                                 sizes="130px" loading="lazy" />
+                          <div className="absolute inset-0 bg-white/0 group-hover:bg-white/60 transition-all duration-300 ease-in-out pointer-events-none" />
+                        </div>
+                      )}
+                    </Item>
                 ))}
               </div>
               {/* Desktop: 3-col x 2-row grid */}
-              <div className="hidden md:grid grid-cols-3 gap-[5px] md:h-full"
-                   style={{ gridTemplateRows: '1fr 1fr' }}>
+                <div className="hidden md:grid grid-cols-3 gap-[5px] md:h-full"
+                     style={{ gridTemplateRows: '1fr 1fr' }}>
                 {subThumbs.map((image, index) => (
-                  <Item key={index} original={image} thumbnail={image} width="800" height="600">
-                    {({ ref, open }) => (
-                      <div ref={ref} onClick={open}
-                           className="relative cursor-pointer overflow-hidden bg-[#111] aspect-[16/9]">
-                        <Image src={image} alt="" fill className="object-cover" sizes="20vw" loading="lazy" />
-                      </div>
-                    )}
-                  </Item>
+                    <Item key={index} original={image} thumbnail={image} width="800" height="600">
+                      {({ ref, open }) => (
+                        <div ref={ref} onClick={open}
+                             className="relative group cursor-pointer overflow-hidden bg-[#111] aspect-[16/9]">
+                          <Image src={image} alt="" fill
+                                 className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
+                                 sizes="20vw" loading="lazy" />
+                          <div className="absolute inset-0 bg-white/0 group-hover:bg-white/60 transition-all duration-300 ease-in-out pointer-events-none" />
+                        </div>
+                      )}
+                    </Item>
                 ))}
                 {Array.from({ length: 6 - subThumbs.length }).map((_, i) => (
                   <div key={`empty-${i}`} className="bg-[#000]" />
