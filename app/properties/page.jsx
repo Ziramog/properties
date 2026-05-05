@@ -71,11 +71,8 @@ const PropertiesPage = async ({ searchParams }) => {
   if (sort === 'newest') sortObj = { createdAt: -1 };
   else sortObj = { createdAt: -1 }; // default newest
 
-  const skip = (Number(page) - 1) * Number(pageSize);
   const total = await Property.countDocuments(filter);
-  const properties = await Property.find(filter).sort(sortObj).skip(skip).limit(Number(pageSize));
-
-  const showPagination = total > Number(pageSize);
+  const properties = await Property.find(filter).sort(sortObj);
 
   // Parse price string "USD 320,000" to number for filtering
   const parsePrice = (priceStr) => {
@@ -182,12 +179,6 @@ const PropertiesPage = async ({ searchParams }) => {
               {filteredProperties.map((property) => (
                 <FeaturedPropertyCard property={property} key={property._id} />
               ))}
-            </div>
-          )}
-
-          {showPagination && (
-            <div className="mt-4 px-4 md:px-6 pb-6">
-              <Pagination page={parseInt(page)} pageSize={parseInt(pageSize)} totalItems={total} />
             </div>
           )}
           </div>
