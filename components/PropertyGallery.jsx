@@ -34,7 +34,7 @@ const PropertyGallery = ({ images = [], property }) => {
 
   return (
     <Gallery>
-      <section className="bg-[#000] pt-[150px] pb-[30px] pl-[50px] md:pl-[50px]">
+      <section className="bg-[#000] pt-[150px] pb-[30px] px-[50px]">
         {/* Gallery row — grid on desktop, stacked on mobile */}
           <div className="flex flex-col md:grid md:grid-cols-[2fr_3fr] md:gap-[5px] md:rounded-[30px] md:overflow-hidden">
 
