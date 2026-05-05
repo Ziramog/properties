@@ -140,8 +140,13 @@ const Navbar = () => {
 
         {/* Fullscreen Overlay — senada style: rOptions */}
         <div
-          className={`rOptions absolute inset-x-0 top-0 z-[999] flex flex-col bg-black transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}
-          style={{ height: 'calc(var(--vh, 1vh) * 100)', padding: '80px 12px 20px', overflowY: 'auto' }}>
+          className={`rOptions absolute inset-x-0 top-0 z-[999] flex flex-col bg-black origin-top ${isMobileMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'}`}
+          style={{
+            height: 'calc(var(--vh, 1vh) * 100)',
+            padding: '80px 12px 20px',
+            overflowY: 'auto',
+            transition: 'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease',
+          }}>
           {/* Top row: isotipo + close */}
           <div className="flex items-center justify-between px-4 h-[60px] flex-shrink-0">
             <Link className="flex items-center flex-shrink-0" href="/">
