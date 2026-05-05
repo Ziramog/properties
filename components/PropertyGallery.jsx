@@ -106,8 +106,8 @@ const PropertyGallery = ({ images = [], property }) => {
           )}
         </div>
 
-        {/* Dark info bar */}
-        <div className="flex flex-col md:flex-row md:items-start gap-[25px] md:gap-[50px] px-4 md:px-[170px] pt-[30px] pb-0 text-white">
+          {/* Dark info bar */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-[25px] md:gap-[50px] px-4 md:px-[170px] pt-[30px] pb-0 text-white">
           {/* Left */}
           <div itemScope itemType="https://schema.org/Place">
             <h1 className="text-[32px] md:text-[36px] leading-[36px] md:leading-[42px] font-normal text-white mb-[10px]"
@@ -120,9 +120,9 @@ const PropertyGallery = ({ images = [], property }) => {
               `${property?.location?.street || ''}, ${property?.location?.city || ''}, ${property?.location?.state || ''}`
             )}`}
                target="_blank" rel="noopener noreferrer"
-               className="inline-flex items-center gap-[10px] text-[#b8b8b8] hover:text-white transition-colors text-[16px] mb-4"
+               className="inline-flex items-center gap-2 text-[#b8b8b8] hover:text-white transition-colors text-[16px] mb-4"
                itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" className="flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
               </svg>
@@ -134,29 +134,29 @@ const PropertyGallery = ({ images = [], property }) => {
             </a>
 
             {/* Features row */}
-            <div className="flex gap-[40px] flex-wrap">
+            <div className="flex gap-[40px] flex-wrap items-center">
               {beds != null && (
                 <span className="flex items-center gap-[10px] text-white font-bold text-[22px]">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 12h18M3 12v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6M3 12V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v7" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="25" fill="none" viewBox="0 0 30 25" stroke="currentColor" strokeWidth="1.5" className="brightness-0 invert">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2 12h26M2 12v8a1.5 1.5 0 0 0 1.5 1.5h23a1.5 1.5 0 0 0 1.5-1.5v-8M2 12V3.5A1.5 1.5 0 0 1 3.5 2h5A1.5 1.5 0 0 1 10 3.5v8.5" />
                   </svg>
                   {beds}
                 </span>
               )}
               {baths != null && (
                 <span className="flex items-center gap-[10px] text-white font-bold text-[22px]">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 12h16v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4Z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 12V4a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1" />
-                    <circle cx="8" cy="8" r="1" fill="currentColor" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="25" fill="none" viewBox="0 0 30 25" stroke="currentColor" strokeWidth="1.5" className="brightness-0 invert">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 14h20v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5Z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 14V5a2.5 2.5 0 0 1 2.5-2.5h1A2.5 2.5 0 0 1 13 5v1" />
+                    <circle cx="10" cy="9" r="1.5" fill="currentColor" />
                   </svg>
                   {baths}
                 </span>
               )}
               {area && (
                 <span className="flex items-center gap-[10px] text-white font-bold text-[22px]">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v18h16.5V3.75M3.75 3.75L12 21l8.25-17.25M3.75 3.75h16.5M12 3.75v17.25" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="25" fill="none" viewBox="0 0 30 25" stroke="currentColor" strokeWidth="1.5" className="brightness-0 invert">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v18h22V4M4 4l11 19L26 4M4 4h22M15 4v18" />
                   </svg>
                   {area.toLocaleString('es-AR')} m²
                 </span>
@@ -166,30 +166,35 @@ const PropertyGallery = ({ images = [], property }) => {
 
           {/* Right — Status + Price + CTA */}
           <div className="flex flex-col items-start md:items-end gap-0 flex-shrink-0">
-            {(statusLabel || operationLabel) && (
-              <p className="text-[#b8b8b8] text-[16px] leading-[19px] mt-[15px]">
-                {operationLabel && <span className="text-white">{operationLabel}</span>}
-                {operationLabel && statusLabel && <span className="text-[#b8b8b8]"> &middot; </span>}
-                {statusLabel && <span className="text-white">{statusLabel}</span>}
-              </p>
-            )}
+            <div className="text-right">
+              {operationLabel && (
+                <p className="text-[#b8b8b8] text-[16px] leading-[19px] mt-[15px]">
+                  Operación <span className="text-white">{operationLabel}</span>
+                </p>
+              )}
+              {statusLabel && (
+                <p className="text-[#b8b8b8] text-[16px] leading-[19px]">
+                  Estado <span className="text-white">{statusLabel}</span>
+                </p>
+              )}
+            </div>
 
-            <p className="text-white font-normal leading-none mb-[20px]"
-               style={{ fontFamily: 'var(--font-heading)', fontSize: '40px' }}
-               itemProp="offers" itemScope itemType="https://schema.org/Offer">
+            <h2 className="text-white font-normal mb-[20px]"
+                style={{ fontFamily: 'var(--font-heading)', fontSize: '40px' }}
+                itemProp="offers" itemScope itemType="https://schema.org/Offer">
               <meta itemProp="priceCurrency" content="USD" />
               <span itemProp="price" content={numericPrice}>
                 {numericPrice
                   ? `$${numericPrice.toLocaleString('es-AR')}`
                   : 'Consultar'}
               </span>
-            </p>
+            </h2>
 
             <button
               onClick={() => {
                 document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="w-full bg-[#652660] hover:bg-[#652660] text-white text-[14px] font-normal uppercase tracking-wider px-7 py-4 rounded-[4px] transition-colors"
+              className="w-full text-white text-[16px] font-normal uppercase tracking-wider py-5 px-[30px] rounded-[6px] transition-colors text-center"
               style={{
                 backgroundImage: 'linear-gradient(135deg, #652660, #652660, #3c313e, #3c313e)',
                 backgroundSize: '400% 100%',
