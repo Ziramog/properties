@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import Property from '@/models/Property';
 import connectDB from '@/config/database';
@@ -30,7 +31,6 @@ export async function GET(request) {
     ).map((city) => ({ label: city, value: city }));
 
     // Also search in property cities from DB
-    await connectDB();
     const dbCities = await Property.distinct('location.city', {
       'location.city': { $regex: search, $options: 'i' },
     });
