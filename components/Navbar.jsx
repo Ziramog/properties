@@ -64,7 +64,14 @@ const Navbar = () => {
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 h-full">
           <Link className="flex items-center flex-shrink-0" href="/">
-            <Image className="brightness-0 invert" src="/images/LOGO R&R 2023.png" alt="Roggero & Roma" style={{ height: '48px', width: 'auto' }} />
+            <Image
+              className="brightness-0 invert"
+              src="/images/ISOTIPO R&R-Photoroom.png"
+              alt="Roggero & Roma"
+              width={120}
+              height={40}
+              style={{ height: '40px', width: 'auto' }}
+            />
           </Link>
 
           <nav className="flex gap-10 lg:gap-14">
@@ -102,11 +109,11 @@ const Navbar = () => {
           <Link className="flex items-center flex-shrink-0" href="/">
             <Image
               className="brightness-0 invert"
-              src="/images/LOGO R&R 2023.png"
+              src="/images/ISOTIPO R&R-Photoroom.png"
               alt="Roggero & Roma"
-              width={200}
-              height={48}
-              style={{ height: '48px', width: 'auto' }}
+              width={120}
+              height={40}
+              style={{ height: '40px', width: 'auto' }}
             />
           </Link>
 
