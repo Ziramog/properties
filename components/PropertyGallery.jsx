@@ -64,9 +64,9 @@ const PropertyGallery = ({ images = [], property }) => {
               {images.length > 1 && (
                 <button
                   onClick={scrollToFullGallery}
-                  className="absolute md:left-[30px] md:top-[30px] md:bottom-auto md:right-auto bottom-4 right-4 bg-[#652660] hover:bg-[#491a46] text-white text-[13px] font-light px-5 py-2 rounded-[16px] transition-all duration-300 ease-in-out z-10"
+                  className="absolute md:left-[30px] md:top-[30px] md:bottom-auto md:right-auto bottom-4 right-4 bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[13px] font-light px-5 py-2 rounded-[16px] transition-all duration-300 ease-in-out z-10"
                 >
-                  See all {images.length} photos
+                  Ver todas las {images.length} fotos
                 </button>
               )}
           </div>
@@ -200,11 +200,11 @@ const PropertyGallery = ({ images = [], property }) => {
               }}
               className="w-full text-white text-[16px] font-normal uppercase tracking-wider py-5 px-[30px] rounded-[6px] transition-colors text-center"
               style={{
-                backgroundImage: 'linear-gradient(135deg, #652660, #652660, #3c313e, #3c313e)',
+                backgroundImage: 'linear-gradient(135deg, var(--color-brand), var(--color-brand), var(--color-brand-dark), var(--color-brand-dark))',
                 backgroundSize: '400% 100%',
               }}
             >
-              Contact Us
+              Contactanos
             </button>
           </div>
         </div>

@@ -20,7 +20,7 @@ const PropertyContactForm = ({ property }) => {
     return (
       <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden px-6 py-6 md:p-8 text-center">
         <p className="text-sm text-[#666]">
-          <a href="/api/auth/signin" className="text-[#E94560] font-medium hover:underline">
+          <a href="/api/auth/signin" className="text-[var(--color-brand)] font-medium hover:underline">
             Iniciá sesión
           </a>{' '}
           para contactar al vendedor.
@@ -45,14 +45,14 @@ const PropertyContactForm = ({ property }) => {
             className="text-[22px] md:text-[28px] font-semibold text-[#0F172A] flex items-center"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
-            Contact Us
+            Contactanos
             <span
               aria-hidden="true"
               className="inline-block ml-5"
               style={{
                 width: '50px',
                 height: '3px',
-                background: '#E94560',
+                background: 'var(--color-brand)',
                 alignSelf: 'center',
               }}
             />
@@ -64,7 +64,7 @@ const PropertyContactForm = ({ property }) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div>
               <input
-                className="w-full border border-[#ddd] rounded-[6px] py-3 px-4 text-sm text-[#0F172A] bg-white focus:outline-none focus:ring-2 focus:ring-[#E94560]/20 focus:border-[#E94560] transition-all placeholder:text-[#999]"
+                className="w-full border border-[#ddd] rounded-[6px] py-3 px-4 text-sm text-[#0F172A] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)] transition-all placeholder:text-[#999]"
                 id="name"
                 name="name"
                 type="text"
@@ -74,7 +74,7 @@ const PropertyContactForm = ({ property }) => {
             </div>
             <div>
               <input
-                className="w-full border border-[#ddd] rounded-[6px] py-3 px-4 text-sm text-[#0F172A] bg-white focus:outline-none focus:ring-2 focus:ring-[#E94560]/20 focus:border-[#E94560] transition-all placeholder:text-[#999]"
+                className="w-full border border-[#ddd] rounded-[6px] py-3 px-4 text-sm text-[#0F172A] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)] transition-all placeholder:text-[#999]"
                 id="email"
                 name="email"
                 type="email"
@@ -84,7 +84,7 @@ const PropertyContactForm = ({ property }) => {
             </div>
             <div>
               <input
-                className="w-full border border-[#ddd] rounded-[6px] py-3 px-4 text-sm text-[#0F172A] bg-white focus:outline-none focus:ring-2 focus:ring-[#E94560]/20 focus:border-[#E94560] transition-all placeholder:text-[#999]"
+                className="w-full border border-[#ddd] rounded-[6px] py-3 px-4 text-sm text-[#0F172A] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)] transition-all placeholder:text-[#999]"
                 id="phone"
                 name="phone"
                 type="text"
@@ -94,7 +94,7 @@ const PropertyContactForm = ({ property }) => {
           </div>
           <div className="mb-5">
             <textarea
-              className="w-full border border-[#ddd] rounded-[6px] py-3 px-4 text-sm text-[#0F172A] bg-white h-32 resize-none focus:outline-none focus:ring-2 focus:ring-[#E94560]/20 focus:border-[#E94560] transition-all placeholder:text-[#999]"
+              className="w-full border border-[#ddd] rounded-[6px] py-3 px-4 text-sm text-[#0F172A] bg-white h-32 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)] transition-all placeholder:text-[#999]"
               id="message"
               name="message"
               placeholder="Tu mensaje..."

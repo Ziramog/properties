@@ -13,9 +13,9 @@ const ReadMoreText = ({ text, maxChars = 400 }) => {
       {expanded ? text : text.slice(0, maxChars).trimEnd() + '…'}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="block mt-3 text-[13px] font-bold uppercase tracking-wider text-[#E94560] hover:text-[#d13a54] transition-colors"
+        className="block mt-3 text-[13px] font-bold uppercase tracking-wider text-[var(--color-brand)] hover:text-[var(--color-brand-dark)] transition-colors"
       >
-        {expanded ? 'Read less' : 'Read more'}
+        {expanded ? 'Leer menos' : 'Leer más'}
       </button>
     </div>
   );
@@ -31,7 +31,7 @@ const SectionTitle = ({ children }) => (
       <span
         aria-hidden="true"
         className="inline-block ml-5"
-        style={{ width: '70px', height: '3px', background: '#E94560' }}
+        style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }}
       />
     </h2>
   </div>
@@ -48,7 +48,7 @@ const PropertyDetails = ({ property }) => {
   const numericPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.-]/g, '')) : null;
 
   const featureItems = [
-    { label: 'Price', value: numericPrice ? `$${numericPrice.toLocaleString('es-AR')}` : 'Consultar' },
+    { label: 'Precio', value: numericPrice ? `$${numericPrice.toLocaleString('es-AR')}` : 'Consultar' },
     { label: 'Área Total', value: coveredArea ? `${coveredArea.toLocaleString('es-AR')} m²` : null },
     { label: 'Dormitorios', value: property.beds },
     { label: 'Baños', value: property.baths },
@@ -65,7 +65,7 @@ const PropertyDetails = ({ property }) => {
         <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5 md:mb-5">
           <div className="py-[30px] md:py-[30px]">
             <div className="pb-[30px] px-6 md:px-10">
-              <SectionTitle>Features</SectionTitle>
+              <SectionTitle>Características</SectionTitle>
             </div>
             <div className="flex flex-wrap">
               {featureItems.map(({ label, value }, i) => (
@@ -95,7 +95,7 @@ const PropertyDetails = ({ property }) => {
           {property.description && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden h-full flex flex-col">
               <div className="px-6 md:px-[25px] lg:px-[100px] xl:px-[190px] pt-10 md:pt-[40px] pb-0">
-                <SectionTitle>Description</SectionTitle>
+                <SectionTitle>Descripción</SectionTitle>
                 <ReadMoreText text={property.description} maxChars={450} />
                 {property.seller_info?.name && (
                   <p className="mt-6 text-[12px] italic text-[#999]">
@@ -105,7 +105,7 @@ const PropertyDetails = ({ property }) => {
                 {/* Share */}
                 <div className="mt-auto pt-8 pb-6">
                   <div className="flex justify-center items-center gap-0 md:gap-5">
-                    <span className="text-[16px] uppercase text-[#999] pr-[30px]">Share</span>
+                    <span className="text-[16px] uppercase text-[#999] pr-[30px]">Compartir</span>
                     <ShareButtons property={property} inline />
                   </div>
                 </div>
@@ -120,7 +120,7 @@ const PropertyDetails = ({ property }) => {
           {(property.square_feet || property.operation || coveredArea || property.garage != null || property.titles_status) && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5">
               <div className="px-6 md:px-[25px] lg:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
-                <SectionTitle>Additional Info</SectionTitle>
+                <SectionTitle>Información Adicional</SectionTitle>
                 <ul>
                   {property.square_feet && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
@@ -161,7 +161,7 @@ const PropertyDetails = ({ property }) => {
           {(property.location?.city || property.location?.state) && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5">
               <div className="px-6 md:px-[25px] lg:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
-                <SectionTitle>Community Info</SectionTitle>
+                <SectionTitle>Información de la Zona</SectionTitle>
                 <ol className="list-none">
                   {property.location?.state && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">

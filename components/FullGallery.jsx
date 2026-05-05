@@ -14,7 +14,7 @@ const FullGallery = ({ images = [], propertyName }) => {
               className="text-[22px] md:text-[26px] font-semibold text-[#0F172A]"
               style={{ fontFamily: 'var(--font-heading)' }}
             >
-              {propertyName ? `${propertyName} Photos` : 'Photos'}
+              {propertyName ? `${propertyName} Fotos` : 'Fotos'}
             </h2>
           </div>
 
@@ -29,7 +29,7 @@ const FullGallery = ({ images = [], propertyName }) => {
                   >
                     <Image
                       src={image}
-                      alt={`${propertyName || 'Property'} photo ${index + 1}`}
+                      alt={`${propertyName || 'Propiedad'} foto ${index + 1}`}
                       fill
                       className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
                       sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

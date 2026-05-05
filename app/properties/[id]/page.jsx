@@ -37,7 +37,7 @@ const PropertyPage = async ({ params }) => {
           <div className="py-4 px-4 md:px-0">
             <Link
               href='/properties'
-              className='text-[#E94560] hover:text-[#0F172A] inline-flex items-center font-medium transition-colors text-[13px]'
+              className='text-[var(--color-brand)] hover:text-[#0F172A] inline-flex items-center font-medium transition-colors text-[13px]'
             >
               <svg className='mr-1.5 w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 16 16'>
                 <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M10 3 6 8l4 5' />
