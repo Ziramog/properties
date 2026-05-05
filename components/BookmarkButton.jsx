@@ -54,7 +54,7 @@ const BookmarkButton = ({ property }) => {
   return isBookmarked ? (
     <button
       onClick={handleClick}
-      className='flex items-center justify-center gap-2 w-full py-3 px-4 bg-[#E94560] hover:bg-[#d13a54] text-white font-semibold text-sm rounded-xl transition-all duration-200'
+      className='flex items-center justify-center gap-2 w-full py-3 px-4 bg-[#E94560] hover:bg-[#d13a54] text-white font-semibold text-sm rounded-none md:rounded-[18px] transition-all duration-200'
     >
       <FaBookmark className='w-4 h-4' />
       Guardada
@@ -62,7 +62,7 @@ const BookmarkButton = ({ property }) => {
   ) : (
     <button
       onClick={handleClick}
-      className='flex items-center justify-center gap-2 w-full py-3 px-4 bg-white hover:bg-gray-50 text-[#0F172A] font-semibold text-sm rounded-xl border border-gray-200 transition-all duration-200'
+      className='flex items-center justify-center gap-2 w-full py-3 px-4 bg-white hover:bg-gray-50 text-[#0F172A] font-semibold text-sm rounded-none md:rounded-[18px] border border-[#ddd] transition-all duration-200'
     >
       <FaBookmark className='w-4 h-4' />
       Guardar Propiedad
