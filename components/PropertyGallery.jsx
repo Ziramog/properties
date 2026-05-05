@@ -35,7 +35,7 @@ const PropertyGallery = ({ images = [], property }) => {
       <section className="bg-[#0a0a0a]">
 
           {/* Gallery row — grid on desktop, stacked on mobile */}
-          <div className="flex flex-col md:grid md:grid-cols-[3fr_2fr] md:gap-2 md:h-[520px]">
+          <div className="flex flex-col md:grid md:grid-cols-[2fr_3fr] md:gap-2 md:h-[520px]">
 
             {/* Big image — first column on desktop */}
             <div className="relative cursor-pointer overflow-hidden bg-[#111]"
@@ -51,7 +51,7 @@ const PropertyGallery = ({ images = [], property }) => {
                         alt={property?.name || ''}
                         fill
                         className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 60vw"
+                        sizes="(max-width: 768px) 100vw, 40vw"
                         priority={true}
                       />
                     </div>
@@ -92,7 +92,7 @@ const PropertyGallery = ({ images = [], property }) => {
                       {({ ref, open }) => (
                         <div ref={ref} onClick={open}
                              className="relative cursor-pointer overflow-hidden bg-[#111]">
-                          <Image src={image} alt="" fill className="object-cover" sizes="13vw" loading="lazy" />
+                          <Image src={image} alt="" fill className="object-cover" sizes="20vw" loading="lazy" />
                         </div>
                       )}
                     </Item>
