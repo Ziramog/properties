@@ -33,13 +33,12 @@ const PropertyGallery = ({ images = [], property }) => {
   return (
     <Gallery>
       <section className="bg-[#0a0a0a]">
-        <div className="max-w-[1440px] mx-auto">
 
           {/* Gallery row — side-by-side on desktop, stacked on mobile */}
           <div className="flex flex-col md:flex-row">
 
-            {/* Big image — 65% width on desktop */}
-            <div className="relative w-full md:w-[65%] md:h-[520px] cursor-pointer overflow-hidden bg-[#111]"
+            {/* Big image — 60% width on desktop */}
+            <div className="relative w-full md:w-[60%] md:h-[520px] cursor-pointer overflow-hidden bg-[#111]"
                  style={{ minHeight: '300px' }}>
               {images[0] && (
                 <Item original={images[0]} thumbnail={images[0]} width="1600" height="900">
@@ -52,7 +51,7 @@ const PropertyGallery = ({ images = [], property }) => {
                         alt={property?.name || ''}
                         fill
                         className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 65vw"
+                        sizes="(max-width: 768px) 100vw, 60vw"
                         priority={true}
                       />
                     </div>
@@ -71,7 +70,7 @@ const PropertyGallery = ({ images = [], property }) => {
 
             {/* Thumbnail grid — 3 cols x 2 rows on desktop, horizontal scroll on mobile */}
             {subThumbs.length > 0 && (
-              <div className="w-full md:w-[35%] md:h-[520px]">
+              <div className="w-full md:w-[40%] md:h-[520px]">
                 {/* Mobile: horizontal scroll strip */}
                 <div className="md:hidden flex overflow-x-auto gap-[4px] py-2 px-3 scrollbar-hide">
                   {subThumbs.map((image, index) => (
@@ -93,7 +92,7 @@ const PropertyGallery = ({ images = [], property }) => {
                       {({ ref, open }) => (
                         <div ref={ref} onClick={open}
                              className="relative cursor-pointer overflow-hidden bg-[#111]">
-                          <Image src={image} alt="" fill className="object-cover" sizes="12vw" loading="lazy" />
+                          <Image src={image} alt="" fill className="object-cover" sizes="13vw" loading="lazy" />
                         </div>
                       )}
                     </Item>
@@ -196,7 +195,6 @@ const PropertyGallery = ({ images = [], property }) => {
               </button>
             </div>
           </div>
-        </div>
       </section>
     </Gallery>
   );
