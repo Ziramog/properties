@@ -16,7 +16,7 @@ const PropertyGallery = ({ images = [], property }) => {
           <div className="w-full">
 
             {/* Hero image — always 16:9 horizontal, full bleed */}
-            <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/9', maxHeight: '520px' }}>
+            <div className="relative w-full" style={{ height: '520px', maxHeight: '520px' }}>
               {images[0] && (
                 <Item
                   original={images[0]}
@@ -29,7 +29,7 @@ const PropertyGallery = ({ images = [], property }) => {
                       ref={ref}
                       onClick={open}
                       className="relative w-full h-full cursor-pointer"
-                      style={{ aspectRatio: '16/9', maxHeight: '520px' }}
+                      style={{ height: '520px', maxHeight: '520px' }}
                     >
                       <Image
                         src={images[0]}
