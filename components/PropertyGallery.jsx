@@ -32,7 +32,7 @@ const PropertyGallery = ({ images = [], property }) => {
 
   return (
     <Gallery>
-      <section className="bg-[#0a0a0a]">
+      <section className="bg-[#0a0a0a] pt-[118px]">
 
           {/* Gallery row — grid on desktop, stacked on mobile */}
           <div className="flex flex-col md:grid md:grid-cols-[2fr_3fr] md:gap-2 md:h-[520px]">

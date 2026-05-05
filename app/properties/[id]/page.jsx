@@ -27,7 +27,7 @@ const PropertyPage = async ({ params }) => {
   const property = convertToSerializeableObject(propertyDoc);
 
   return (
-    <div className="min-h-screen pt-[68px]" style={{ background: '#F6F6F6' }}>
+    <div className="min-h-screen" style={{ background: '#F6F6F6' }}>
       {/* Gallery subheader — full width */}
       <PropertyGallery images={property.images} property={property} />
 
