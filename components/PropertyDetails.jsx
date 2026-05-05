@@ -28,9 +28,12 @@ const PropertyDetails = ({ property }) => {
     property.operation === 'alquiler' ? 'Alquiler' :
     property.operation === 'compra' ? 'Compra' : '';
 
+  const rawPrice = property.price;
+  const numericPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.-]/g, '')) : null;
+
   // Features items matching reference pattern: large value + small label
   const featureItems = [
-    { label: 'Price', value: property.price ? `$${Number(property.price).toLocaleString('es-AR')}` : 'Consultar' },
+    { label: 'Price', value: numericPrice ? `$${numericPrice.toLocaleString('es-AR')}` : 'Consultar' },
     { label: 'Área Total', value: coveredArea ? `${coveredArea.toLocaleString('es-AR')} m²` : null },
     { label: 'Dormitorios', value: property.beds },
     { label: 'Baños', value: property.baths },

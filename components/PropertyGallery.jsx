@@ -8,6 +8,8 @@ const PropertyGallery = ({ images = [], property }) => {
   const beds = property?.beds;
   const baths = property?.baths;
   const area = property?.square_feet;
+  const rawPrice = property?.price;
+  const numericPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.-]/g, '')) : null;
 
   const operationLabel =
     property?.operation === 'venta' ? 'Venta' :
@@ -179,8 +181,8 @@ const PropertyGallery = ({ images = [], property }) => {
                  itemProp="offers" itemScope itemType="https://schema.org/Offer">
                 <meta itemProp="priceCurrency" content="USD" />
                 <span itemProp="price" content={property?.price}>
-                  {property?.price
-                    ? `$${Number(property.price).toLocaleString('es-AR')}`
+                  {numericPrice
+                    ? `$${numericPrice.toLocaleString('es-AR')}`
                     : 'Consultar'}
                 </span>
               </p>
