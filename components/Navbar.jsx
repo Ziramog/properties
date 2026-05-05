@@ -140,12 +140,16 @@ const Navbar = () => {
 
         {/* Fullscreen Overlay — senada style: rOptions */}
         <div
-          className={`rOptions absolute inset-x-0 top-0 z-[999] flex flex-col bg-black origin-top ${isMobileMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'}`}
+          className="rOptions absolute inset-x-0 top-0 z-[999] flex flex-col bg-black"
           style={{
             height: 'calc(var(--vh, 1vh) * 100)',
             padding: '80px 12px 20px',
             overflowY: 'auto',
+            transformOrigin: 'top',
+            transform: isMobileMenuOpen ? 'scaleY(1)' : 'scaleY(0)',
+            opacity: isMobileMenuOpen ? 1 : 0,
             transition: 'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease',
+            pointerEvents: isMobileMenuOpen ? 'auto' : 'none',
           }}>
           {/* Top row: isotipo + close */}
           <div className="flex items-center justify-between px-4 h-[60px] flex-shrink-0">
