@@ -139,7 +139,7 @@ const Navbar = () => {
         </div>
 
         {/* Fullscreen Overlay — senada style: rOptions */}
-        <div className={`rOptions fixed left-0 right-0 bg-black flex flex-col ${isMobileMenuOpen ? 'menu-open' : 'menu-closed'}`}
+        <div className={`rOptions fixed md:absolute left-0 right-0 bg-black flex flex-col ${isMobileMenuOpen ? 'menu-open' : ''}`}
           style={{ top: 0, height: 'calc((var(--vh, 1vh) * 100))' }}>
           {/* Top row: isotipo + close */}
           <div className="flex items-center justify-between px-4 h-[60px] flex-shrink-0">
@@ -216,17 +216,33 @@ const Navbar = () => {
         }
         .rButton.active .hamburger span:nth-child(2) {
           opacity: 0;
+          transform: translateX(-30px);
         }
         .rButton.active .hamburger span:nth-child(3) {
+          width: 25px;
+          margin: unset;
           top: -8px;
           transform: rotate(-135deg);
         }
         .rOptions {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 999;
+          background: #000;
+          width: 100%;
+          height: calc(var(--vh, 1vh) * 100);
+          padding: 80px 12px 20px;
+          overflow-y: auto;
           transform: translateY(-100%);
-          transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+          transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+          display: flex;
+          flex-direction: column;
         }
         .rOptions.menu-open {
           transform: translateY(0);
+          display: flex;
         }
       `}</style>
     </>
