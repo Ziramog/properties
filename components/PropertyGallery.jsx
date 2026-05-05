@@ -34,19 +34,19 @@ const PropertyGallery = ({ images = [], property }) => {
 
   return (
     <Gallery>
-      <section className="bg-[#000] pt-[150px] pb-[30px] px-[50px]">
+      <section className="bg-[#000] pt-[90px] md:pt-[150px] pb-[30px] px-4 md:px-[50px]">
         {/* Gallery row — grid on desktop, stacked on mobile */}
           <div className="flex flex-col md:grid md:grid-cols-[2fr_3fr] md:gap-[5px] md:rounded-[30px] md:overflow-hidden">
 
             {/* Big image — 40% width on desktop */}
             <div className="relative group cursor-pointer overflow-hidden bg-[#111] md:aspect-[16/9]"
-                 style={{ minHeight: '300px' }}>
+                 style={{ minHeight: '250px' }}>
               {images[0] && (
                 <Item original={images[0]} thumbnail={images[0]} width="1600" height="900">
                   {({ ref, open }) => (
                     <div ref={ref} onClick={open}
                          className="relative w-full md:h-full"
-                         style={{ minHeight: '300px' }}>
+                         style={{ minHeight: '250px' }}>
                       <Image
                         src={images[0]}
                         alt={property?.name || ''}
@@ -114,7 +114,7 @@ const PropertyGallery = ({ images = [], property }) => {
         <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-[25px] md:gap-[50px] px-4 md:px-[170px] pt-[30px] pb-0 text-white">
           {/* Left */}
           <div itemScope itemType="https://schema.org/Place">
-            <h1 className="text-[32px] md:text-[36px] leading-[36px] md:leading-[42px] font-normal text-white mb-[10px]"
+            <h1 className="text-[24px] leading-[28px] md:text-[36px] md:leading-[42px] font-normal text-white mb-[10px]"
                 style={{ fontFamily: 'var(--font-heading)' }}
                 itemProp="name">
               {property?.name}
@@ -138,18 +138,18 @@ const PropertyGallery = ({ images = [], property }) => {
             </a>
 
             {/* Features row */}
-            <div className="flex gap-[40px] flex-wrap items-center">
+            <div className="flex gap-[20px] md:gap-[40px] flex-wrap items-center">
               {beds != null && (
-                <span className="flex items-center gap-[10px] text-white font-bold text-[22px]">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="25" fill="none" viewBox="0 0 30 25" stroke="currentColor" strokeWidth="1.5" className="brightness-0 invert">
+                <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-bold text-[16px] md:text-[22px]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 30 25" fill="none" stroke="currentColor" strokeWidth="1.5" className="brightness-0 invert md:w-[30px] md:h-[25px]">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2 12h26M2 12v8a1.5 1.5 0 0 0 1.5 1.5h23a1.5 1.5 0 0 0 1.5-1.5v-8M2 12V3.5A1.5 1.5 0 0 1 3.5 2h5A1.5 1.5 0 0 1 10 3.5v8.5" />
                   </svg>
                   {beds}
                 </span>
               )}
               {baths != null && (
-                <span className="flex items-center gap-[10px] text-white font-bold text-[22px]">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="25" fill="none" viewBox="0 0 30 25" stroke="currentColor" strokeWidth="1.5" className="brightness-0 invert">
+                <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-bold text-[16px] md:text-[22px]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 30 25" fill="none" stroke="currentColor" strokeWidth="1.5" className="brightness-0 invert md:w-[30px] md:h-[25px]">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 14h20v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5Z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 14V5a2.5 2.5 0 0 1 2.5-2.5h1A2.5 2.5 0 0 1 13 5v1" />
                     <circle cx="10" cy="9" r="1.5" fill="currentColor" />
@@ -158,8 +158,8 @@ const PropertyGallery = ({ images = [], property }) => {
                 </span>
               )}
               {area && (
-                <span className="flex items-center gap-[10px] text-white font-bold text-[22px]">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="25" fill="none" viewBox="0 0 30 25" stroke="currentColor" strokeWidth="1.5" className="brightness-0 invert">
+                <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-bold text-[16px] md:text-[22px]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 30 25" fill="none" stroke="currentColor" strokeWidth="1.5" className="brightness-0 invert md:w-[30px] md:h-[25px]">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v18h22V4M4 4l11 19L26 4M4 4h22M15 4v18" />
                   </svg>
                   {area.toLocaleString('es-AR')} m²
@@ -170,21 +170,21 @@ const PropertyGallery = ({ images = [], property }) => {
 
           {/* Right — Status + Price + CTA */}
           <div className="flex flex-col items-start md:items-end gap-0 flex-shrink-0">
-            <div className="text-right">
+            <div className="text-left md:text-right">
               {operationLabel && (
-                <p className="text-[#b8b8b8] text-[16px] leading-[19px] mt-[15px]">
+                <p className="text-[#b8b8b8] text-[14px] md:text-[16px] leading-[19px] mt-[15px]">
                   Operación <span className="text-white">{operationLabel}</span>
                 </p>
               )}
               {statusLabel && (
-                <p className="text-[#b8b8b8] text-[16px] leading-[19px]">
+                <p className="text-[#b8b8b8] text-[14px] md:text-[16px] leading-[19px]">
                   Estado <span className="text-white">{statusLabel}</span>
                 </p>
               )}
             </div>
 
-            <h2 className="text-white font-normal mb-[20px]"
-                style={{ fontFamily: 'var(--font-heading)', fontSize: '40px' }}
+            <h2 className="text-[28px] md:text-[40px] text-white font-normal mb-[20px]"
+                style={{ fontFamily: 'var(--font-heading)' }}
                 itemProp="offers" itemScope itemType="https://schema.org/Offer">
               <meta itemProp="priceCurrency" content="USD" />
               <span itemProp="price" content={numericPrice}>
