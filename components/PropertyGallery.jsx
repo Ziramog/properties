@@ -35,7 +35,7 @@ const PropertyGallery = ({ images = [], property }) => {
       <section className="bg-[#0a0a0a]">
 
           {/* Gallery row — grid on desktop, stacked on mobile */}
-          <div className="flex flex-col md:grid md:grid-cols-[60%_40%] md:h-[520px]">
+          <div className="flex flex-col md:grid md:grid-cols-[3fr_2fr] md:gap-2 md:h-[520px]">
 
             {/* Big image — first column on desktop */}
             <div className="relative cursor-pointer overflow-hidden bg-[#111]"
