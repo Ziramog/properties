@@ -19,7 +19,7 @@ const Navbar = () => {
   const pathname = usePathname();
 
   const isHeroPage = pathname === '/';
-  const isGlassMode = !isHeroPage || isScrolled;
+  const isGlassMode = !isHeroPage || isScrolled || isMobileMenuOpen;
 
   useEffect(() => {
     const setAuthProviders = async () => {
