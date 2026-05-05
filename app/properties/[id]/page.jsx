@@ -33,6 +33,7 @@ const PropertyPage = async ({ params }) => {
 
       {/* Content */}
       <section className="px-0 md:px-8 lg:px-12 pb-16">
+        <div className="max-w-[1440px] mx-auto">
         {/* Back button */}
           <div className="py-4 px-4 md:px-0">
             <Link
@@ -85,6 +86,7 @@ const PropertyPage = async ({ params }) => {
               <FullGallery images={property.images} propertyName={property.name} />
             </div>
           )}
+        </div>
       </section>
     </div>
   );
