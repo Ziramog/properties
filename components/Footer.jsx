@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaWhatsapp } from 'react-icons/fa';
-import logo from '@/assets/images/logo.png';
 import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whatsapp';
 
 const EMAIL = 'info@roggeroyroma.com.ar';
@@ -21,7 +20,7 @@ const Footer = () => {
             <div className="flex flex-col gap-1">
               <Link href="/" className="inline-block mb-10">
                 <Image
-                  src={logo}
+                  src="/images/LOGO R&R 2023.png"
                   alt="Roggero & Roma"
                   style={{ height: '100px', width: 'auto' }}
                   className="brightness-0 invert"
@@ -176,7 +175,7 @@ const Footer = () => {
           <div className="flex flex-col gap-2 mb-8">
             <Link href="/" className="inline-block">
               <Image
-                src={logo}
+                src="/images/LOGO R&R 2023.png"
                 alt="Roggero & Roma"
                 style={{ height: '42px', width: 'auto' }}
                 className="brightness-0 invert"
