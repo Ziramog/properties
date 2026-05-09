@@ -108,7 +108,7 @@ const Hero = () => {
   };
 
   return (
-    <section className='relative' style={{ height: 'calc(100vh + 200px)', minHeight: 'calc(100vh + 100px)' }}>
+    <section className='relative h-[calc(100vh+200px)] min-h-[calc(100vh+100px)] md:h-[100dvh] md:min-h-[100dvh]'>
 
       {/* Dark overlay — fades in when filters expand on mobile, stays behind the search bar */}
       <div
@@ -165,7 +165,7 @@ const Hero = () => {
         </div>
       )}
 
-      <div className='hidden md:flex absolute inset-0 flex-col items-center justify-center w-full text-center px-6 z-10' style={{ paddingBottom: '200px' }}>
+      <div className='hidden md:flex absolute inset-0 flex-col items-center justify-center w-full text-center px-6 z-10' style={{ paddingBottom: '140px' }}>
         <motion.div
           className='flex items-center justify-center gap-3 mb-4'
           initial={{ opacity: 0, y: 16 }}
@@ -204,7 +204,7 @@ const Hero = () => {
       </div>
 
       {/* Search Bar — always 200px from bottom of viewport */}
-      <div className='absolute bottom-[200px] w-full z-20 px-4 pb-6'>
+      <div className='absolute bottom-[200px] md:bottom-[80px] w-full z-20 px-4 pb-6'>
         <div
           className='mx-auto max-w-[880px] bg-black border border-white/10 px-2 py-2 flex items-center'
           style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
