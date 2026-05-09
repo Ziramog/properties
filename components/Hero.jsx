@@ -44,6 +44,7 @@ const Hero = () => {
     type: 'Todos',
     zone: 'Córdoba',
     price: 'Cualquiera',
+    term: '',
   });
   const [showMore, setShowMore] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -82,13 +83,6 @@ const Hero = () => {
     return () => document.removeEventListener('click', handleClick);
   }, [openDropdown]);
 
-  const cycleFilter = (key, values) => {
-    const current = filters[key];
-    const idx = values.indexOf(current);
-    const next = values[(idx + 1) % values.length];
-    setFilters(prev => ({ ...prev, [key]: next }));
-  };
-
   const handleShowMoreToggle = () => {
     if (showMore) {
       setMaxH('0px');
@@ -103,23 +97,15 @@ const Hero = () => {
     }
   };
 
-  const handleChange = (e) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const params = new URLSearchParams();
+    if (filters.term && filters.term.trim()) params.set('city', filters.term.trim());
     if (filters.type && filters.type !== 'Todos') params.set('type', filters.type);
-    if (filters.zone && filters.zone !== 'Córdoba') params.set('city', filters.zone);
+    if (filters.zone && filters.zone !== 'Córdoba') params.set('zone', filters.zone);
     if (filters.operation && filters.operation !== 'Todos') params.set('operation', filters.operation);
     router.push(`/properties${params.toString() ? `?${params.toString()}` : ''}`);
   };
-
-  const heroFilterCls = 'flex flex-col justify-center h-[52px] px-5 border-r border-white/15 last:border-r-0 hover:bg-white/8 transition-all cursor-pointer';
-  const heroLabelCls = 'text-white/55 text-[10px] font-medium uppercase tracking-widest leading-none mb-1';
-  const heroValueCls = 'text-white text-sm font-medium flex items-center justify-between gap-2';
-  const heroIconCls = 'w-4 h-4 text-white/50 flex-shrink-0';
 
   return (
     <section className='relative' style={{ height: 'calc(100vh + 200px)', minHeight: 'calc(100vh + 100px)' }}>
@@ -223,65 +209,129 @@ const Hero = () => {
           className='mx-auto max-w-[880px] bg-black border border-white/10 px-2 py-2 flex items-center'
           style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
         >
-          {/* Desktop: full filters */}
-          <form onSubmit={handleSubmit} className='hidden md:flex items-center w-full'>
-            <div className='flex-1 grid grid-cols-4 divide-x divide-white/15'>
-              <div className={heroFilterCls}>
-                <span className={heroLabelCls}>Operación</span>
-                <span className={heroValueCls}>
-                  <select name='operation' value={filters.operation} onChange={handleChange} className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'>
-                    <option value='Venta' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Venta</option>
-                    <option value='Alquiler' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Alquiler</option>
-                    <option value='Todos' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Todos</option>
-                  </select>
-                  <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
-                </span>
+          {/* Desktop: Senada-style — text input + Show More + Search button */}
+          <form onSubmit={handleSubmit} className='hidden md:flex flex-col w-full'>
+            <div className='flex items-center gap-2'>
+              {/* City / area search input */}
+              <div className='flex-1 relative bg-black border border-white/10 rounded-lg overflow-hidden'>
+                <input
+                  type='text'
+                  name='term'
+                  placeholder='Buscar por ciudad, zona o tipo'
+                  className='bg-transparent text-white text-sm placeholder:text-white/35 w-full h-[52px] px-4 outline-none'
+                  value={filters.term || ''}
+                  onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))}
+                />
               </div>
-              <div className={heroFilterCls}>
-                <span className={heroLabelCls}>Tipo</span>
-                <span className={heroValueCls}>
-                  <select name='type' value={filters.type} onChange={handleChange} className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'>
-                    <option value='Todos' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Todos</option>
-                    <option value='Casa' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Casas</option>
-                    <option value='Departamento' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Departamentos</option>
-                    <option value='Terreno' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Terrenos</option>
-                    <option value='Campo' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Campos</option>
-                    <option value='Inmueble Comercial' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Inmuebles Comerciales</option>
-                    <option value='Gran Inversión' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Grandes Inversiones</option>
-                  </select>
-                  <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
-                </span>
-              </div>
-              <div className={heroFilterCls}>
-                <span className={heroLabelCls}>Zona</span>
-                <span className={heroValueCls}>
-                  <select name='zone' value={filters.zone} onChange={handleChange} className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'>
-                    <option value='Córdoba' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Córdoba</option>
-                    <option value='Alta Gracia' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Alta Gracia</option>
-                    <option value='Villa Allende' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Villa Allende</option>
-                    <option value='Mina Clavero' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Mina Clavero</option>
-                    <option value='Centro' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Centro</option>
-                  </select>
-                  <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
-                </span>
-              </div>
-              <div className={heroFilterCls}>
-                <span className={heroLabelCls}>Precio</span>
-                <span className={heroValueCls}>
-                  <select name='price' value={filters.price} onChange={handleChange} className='bg-transparent text-white text-sm font-medium w-full cursor-pointer outline-none appearance-none'>
-                    <option value='Cualquiera' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Cualquiera</option>
-                    <option value='Hasta 150k' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>Hasta U$S 150k</option>
-                    <option value='150k-300k' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>U$S 150k–300k</option>
-                    <option value='+300k' style={{ color: '#d4d4d4', backgroundColor: '#2a2a28' }}>+ U$S 300k</option>
-                  </select>
-                  <svg className={heroIconCls} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
-                </span>
+
+              {/* Mostrar más toggle */}
+              <button
+                type='button'
+                onClick={() => setShowMore(!showMore)}
+                className='h-[52px] px-4 border border-white/10 rounded-lg text-white/60 text-xs font-normal uppercase tracking-wider hover:text-white hover:border-white/30 transition-all flex-shrink-0'
+              >
+                {showMore ? 'Mostrar menos' : 'Mostrar más'}
+              </button>
+
+              {/* Buscar button */}
+              <button
+                type='submit'
+                className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold text-sm uppercase tracking-[0.06em] rounded-lg h-[52px] px-8 transition-all shadow-lg shadow-[var(--color-brand)]/30 flex-shrink-0'
+              >
+                BUSCAR
+              </button>
+            </div>
+
+            {/* Expanded filters row — slides down like Senada .bottom-part */}
+            <div
+              className='overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]'
+              style={{
+                maxHeight: showMore ? '200px' : '0',
+                opacity: showMore ? 1 : 0,
+                marginTop: showMore ? '12px' : '0',
+              }}
+            >
+              <div className='bg-black border border-white/10 rounded-lg p-4'>
+                <div className='grid grid-cols-4 gap-3'>
+                  {/* Tipo */}
+                  <div className='flex flex-col gap-1'>
+                    <label className='text-white/50 text-[10px] font-medium uppercase tracking-widest'>Tipo</label>
+                    <select
+                      name='type'
+                      value={filters.type || 'Todos'}
+                      onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value }))}
+                      className='bg-transparent border border-white/10 rounded-md text-white text-sm h-10 px-3 cursor-pointer outline-none appearance-none'
+                    >
+                      <option value='Todos' style={{ color: '#333', backgroundColor: '#fff' }}>Todos</option>
+                      <option value='Casa' style={{ color: '#333', backgroundColor: '#fff' }}>Casas</option>
+                      <option value='Departamento' style={{ color: '#333', backgroundColor: '#fff' }}>Departamentos</option>
+                      <option value='Terreno' style={{ color: '#333', backgroundColor: '#fff' }}>Terrenos</option>
+                      <option value='Campo' style={{ color: '#333', backgroundColor: '#fff' }}>Campos</option>
+                      <option value='Inmueble Comercial' style={{ color: '#333', backgroundColor: '#fff' }}>Inmuebles Comerciales</option>
+                    </select>
+                  </div>
+                  {/* Operación */}
+                  <div className='flex flex-col gap-1'>
+                    <label className='text-white/50 text-[10px] font-medium uppercase tracking-widest'>Operación</label>
+                    <select
+                      name='operation'
+                      value={filters.operation || 'Todos'}
+                      onChange={(e) => setFilters(prev => ({ ...prev, operation: e.target.value }))}
+                      className='bg-transparent border border-white/10 rounded-md text-white text-sm h-10 px-3 cursor-pointer outline-none appearance-none'
+                    >
+                      <option value='Todos' style={{ color: '#333', backgroundColor: '#fff' }}>Todos</option>
+                      <option value='Venta' style={{ color: '#333', backgroundColor: '#fff' }}>Venta</option>
+                      <option value='Alquiler' style={{ color: '#333', backgroundColor: '#fff' }}>Alquiler</option>
+                    </select>
+                  </div>
+                  {/* Zona */}
+                  <div className='flex flex-col gap-1'>
+                    <label className='text-white/50 text-[10px] font-medium uppercase tracking-widest'>Zona</label>
+                    <select
+                      name='zone'
+                      value={filters.zone || 'Córdoba'}
+                      onChange={(e) => setFilters(prev => ({ ...prev, zone: e.target.value }))}
+                      className='bg-transparent border border-white/10 rounded-md text-white text-sm h-10 px-3 cursor-pointer outline-none appearance-none'
+                    >
+                      <option value='Córdoba' style={{ color: '#333', backgroundColor: '#fff' }}>Córdoba</option>
+                      <option value='Alta Gracia' style={{ color: '#333', backgroundColor: '#fff' }}>Alta Gracia</option>
+                      <option value='Villa Allende' style={{ color: '#333', backgroundColor: '#fff' }}>Villa Allende</option>
+                      <option value='Mina Clavero' style={{ color: '#333', backgroundColor: '#fff' }}>Mina Clavero</option>
+                    </select>
+                  </div>
+                  {/* Precio */}
+                  <div className='flex flex-col gap-1'>
+                    <label className='text-white/50 text-[10px] font-medium uppercase tracking-widest'>Precio</label>
+                    <select
+                      name='price'
+                      value={filters.price || 'Cualquiera'}
+                      onChange={(e) => setFilters(prev => ({ ...prev, price: e.target.value }))}
+                      className='bg-transparent border border-white/10 rounded-md text-white text-sm h-10 px-3 cursor-pointer outline-none appearance-none'
+                    >
+                      <option value='Cualquiera' style={{ color: '#333', backgroundColor: '#fff' }}>Cualquiera</option>
+                      <option value='Hasta 150k' style={{ color: '#333', backgroundColor: '#fff' }}>Hasta U$S 150k</option>
+                      <option value='150k-300k' style={{ color: '#333', backgroundColor: '#fff' }}>U$S 150k–300k</option>
+                      <option value='+300k' style={{ color: '#333', backgroundColor: '#fff' }}>+ U$S 300k</option>
+                    </select>
+                  </div>
+                </div>
               </div>
             </div>
-            <button type='submit' className='bg-primary hover:bg-primary-hover text-white font-bold text-sm uppercase tracking-[0.06em] rounded-[18px] shrink-0 h-[52px] px-8 transition-all shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 flex items-center justify-center'>
-              BUSCAR
-            </button>
           </form>
+
+          {/* Popular locations — Senada-style suggestions */}
+          <div className='hidden md:flex items-center gap-3 mt-4'>
+            <span className='text-white/40 text-xs font-medium uppercase tracking-wider flex-shrink-0'>Zonas populares:</span>
+            {['Alta Gracia', 'Córdoba', 'Villa Allende', 'Mina Clavero'].map(loc => (
+              <a
+                key={loc}
+                href={`/properties?city=${encodeURIComponent(loc)}`}
+                className='text-white/60 hover:text-white text-xs font-medium transition-colors px-3 py-1.5 border border-white/10 rounded-full hover:border-white/30'
+              >
+                {loc}
+              </a>
+            ))}
+          </div>
 
           {/* Mobile: input + button + toggle all fixed; filters expand via position absolute below */}
           <div className='md:hidden w-full relative'>
