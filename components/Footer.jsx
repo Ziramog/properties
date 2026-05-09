@@ -23,13 +23,10 @@ const Footer = () => {
                 <Image
                   src={logo}
                   alt="Roggero & Roma"
-                  style={{ height: '65px', width: 'auto' }}
+                  style={{ height: '100px', width: 'auto' }}
                   className="brightness-0 invert"
                 />
               </Link>
-              <h2 className="text-[15px] text-white uppercase font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                Roggero & Roma
-              </h2>
               <ul>
                 <li className="text-[13px] text-white/70 font-light py-[5px] block">Alta Gracia</li>
                 <li className="text-[13px] text-white/70 font-light py-[5px] block">Córdoba, Argentina</li>
@@ -181,14 +178,11 @@ const Footer = () => {
               <Image
                 src={logo}
                 alt="Roggero & Roma"
-                style={{ height: '28px', width: 'auto' }}
+                style={{ height: '42px', width: 'auto' }}
                 className="brightness-0 invert"
               />
             </Link>
-            <h2 className="text-[15px] text-white uppercase font-bold mt-3" style={{ fontFamily: 'var(--font-heading)' }}>
-              Roggero & Roma
-            </h2>
-            <p className="text-[13px] text-white/60 font-light">Alta Gracia</p>
+            <p className="text-[13px] text-white/60 font-light mt-3">Alta Gracia</p>
             <p className="text-[13px] text-white/60 font-light">Córdoba, Argentina</p>
             <a href={`mailto:${EMAIL}`} className="flex items-center gap-2 text-[13px] text-white font-light">
               <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
