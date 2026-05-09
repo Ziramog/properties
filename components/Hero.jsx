@@ -52,6 +52,7 @@ const Hero = () => {
   const [maxH, setMaxH] = useState('0px');
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [desktopFilterOpen, setDesktopFilterOpen] = useState(null);
   const overlayRef = useRef(null);
   const filtersRef = useRef(null);
   const measuredRef = useRef(false);
@@ -74,15 +75,16 @@ const Hero = () => {
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    if (!openDropdown) return;
+    if (!openDropdown && !desktopFilterOpen) return;
     const handleClick = (e) => {
-      if (!e.target.closest('[data-dropdown]')) {
+      if (!e.target.closest('[data-dropdown]') && !e.target.closest('.desktop-filter-drop')) {
         setOpenDropdown(null);
+        setDesktopFilterOpen(null);
       }
     };
     document.addEventListener('click', handleClick);
     return () => document.removeEventListener('click', handleClick);
-  }, [openDropdown]);
+  }, [openDropdown, desktopFilterOpen]);
 
   const handleShowMoreToggle = () => {
     if (showMore) {
@@ -228,15 +230,43 @@ const Hero = () => {
             </div>
             {/* .bottom-part */}
             <div className='overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]' style={{ maxHeight: showMore ? '200px' : '0', opacity: showMore ? 1 : 0, marginTop: showMore ? '16px' : '0' }}>
-              <div className='flex items-end gap-3 bg-black rounded-xl p-5'>
-                {[{label:'Tipo', name:'type', opts:[{v:'Todos',l:'Todos'},{v:'Casa',l:'Casas'},{v:'Departamento',l:'Departamentos'},{v:'Terreno',l:'Terrenos'},{v:'Campo',l:'Campos'},{v:'Inmueble Comercial',l:'Inmuebles Comerciales'}]},{label:'Operación', name:'operation', opts:[{v:'Todos',l:'Todos'},{v:'Venta',l:'Venta'},{v:'Alquiler',l:'Alquiler'}]},{label:'Dormitorios', name:'bedrooms', opts:[{v:'',l:'Cualquiera'},{v:'1',l:'1'},{v:'2',l:'2'},{v:'3',l:'3'},{v:'4',l:'4'},{v:'5+',l:'5+'}]},{label:'Baños', name:'baths', opts:[{v:'',l:'Cualquiera'},{v:'1',l:'1'},{v:'2',l:'2'},{v:'3',l:'3'},{v:'4',l:'4'},{v:'5+',l:'5+'}]},{label:'Precio', name:'price', opts:[{v:'Cualquiera',l:'Cualquiera'},{v:'Hasta 150k',l:'Hasta U$S 150k'},{v:'150k-300k',l:'U$S 150k–300k'},{v:'+300k',l:'+ U$S 300k'}]}].map(f => (
-                  <div key={f.name} className='flex-1'>
-                    <label className='block text-white/60 text-[11px] font-medium uppercase tracking-wider mb-2'>{f.label}</label>
-                    <select name={f.name} value={filters[f.name] || f.opts[0].v} onChange={(e) => setFilters(prev => ({ ...prev, [f.name]: e.target.value }))} className='w-full h-[54px] px-4 rounded-md bg-white/[0.06] border border-white/10 text-white text-sm outline-none cursor-pointer appearance-none focus:border-white/30 transition-colors'>
-                      {f.opts.map(o => <option key={o.v} value={o.v} style={{color:'#333',backgroundColor:'#fff'}}>{o.l}</option>)}
-                    </select>
-                  </div>
-                ))}
+              <div className='flex items-end gap-3 bg-black rounded-xl p-5' onClick={(e) => e.stopPropagation()}>
+                {[
+                  {label:'Tipo', name:'type', opts:[{v:'Todos',l:'Todos'},{v:'Casa',l:'Casas'},{v:'Departamento',l:'Departamentos'},{v:'Terreno',l:'Terrenos'},{v:'Campo',l:'Campos'},{v:'Inmueble Comercial',l:'Inmuebles Comerciales'},{v:'Gran Inversión',l:'Grandes Inversiones'}]},
+                  {label:'Operación', name:'operation', opts:[{v:'Todos',l:'Todos'},{v:'Venta',l:'Venta'},{v:'Alquiler',l:'Alquiler'}]},
+                  {label:'Dormitorios', name:'bedrooms', opts:[{v:'',l:'Cualquiera'},{v:'1',l:'1'},{v:'2',l:'2'},{v:'3',l:'3'},{v:'4',l:'4'},{v:'5+',l:'5+'}]},
+                  {label:'Baños', name:'baths', opts:[{v:'',l:'Cualquiera'},{v:'1',l:'1'},{v:'2',l:'2'},{v:'3',l:'3'},{v:'4',l:'4'},{v:'5+',l:'5+'}]},
+                  {label:'Precio', name:'price', opts:[{v:'Cualquiera',l:'Cualquiera'},{v:'Hasta 150k',l:'Hasta U$S 150k'},{v:'150k-300k',l:'U$S 150k–300k'},{v:'+300k',l:'+ U$S 300k'}]},
+                ].map(f => {
+                  const currentVal = filters[f.name] || f.opts[0].v;
+                  const currentLabel = f.opts.find(o => o.v === currentVal)?.l || currentVal;
+                  const isOpen = desktopFilterOpen === f.name;
+                  return (
+                    <div key={f.name} className='flex-1 relative desktop-filter-drop'>
+                      <label className='block text-white/60 text-[11px] font-medium uppercase tracking-wider mb-2'>{f.label}</label>
+                      <div
+                        onClick={() => setDesktopFilterOpen(isOpen ? null : f.name)}
+                        className='w-full h-[54px] px-4 rounded-md bg-white/[0.06] border border-white/10 text-white text-sm outline-none cursor-pointer flex items-center justify-between hover:border-white/30 transition-colors'
+                      >
+                        <span className={`${currentVal && currentVal !== 'Todos' && currentVal !== '' && currentVal !== 'Cualquiera' ? 'bg-[var(--color-brand)] text-white font-semibold px-3 py-1.5 rounded-lg' : 'text-white/70'}`}>{currentLabel}</span>
+                        <svg className={`w-4 h-4 text-white/50 transition-transform ${isOpen ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6'/></svg>
+                      </div>
+                      {isOpen && (
+                        <div className='absolute top-full left-0 right-0 mt-1 bg-black border border-white/10 rounded-xl py-2 z-50 shadow-xl max-h-[250px] overflow-y-auto'>
+                          {f.opts.map(o => (
+                            <div
+                              key={o.v}
+                              onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, [f.name]: o.v })); setDesktopFilterOpen(null); }}
+                              className={`h-12 px-4 flex items-center cursor-pointer hover:bg-white/5 transition-colors`}
+                            >
+                              <span className={`text-sm px-3 py-1.5 rounded-lg ${currentVal === o.v ? 'bg-[var(--color-brand)] text-white font-semibold' : 'text-white/70'}`}>{o.l}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </form>
