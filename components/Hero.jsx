@@ -281,10 +281,10 @@ const Hero = () => {
         </div>
 
           {/* Mobile: input + button + toggle all fixed; filters expand via position absolute below */}
-          <div className='md:hidden w-full relative'>
+          <div className='md:hidden w-full relative bg-black rounded-xl p-4'>
             {/* Search input — stays fixed at top */}
-            <div className='bg-black border border-white/10 flex items-center gap-2 px-3 py-2.5' style={{ borderRadius: 12 }}>
-              <svg className='w-5 h-5 text-black flex-shrink-0' viewBox='0 0 24 24' fill='currentColor'>
+            <div className='bg-white/[0.06] border border-white/10 flex items-center gap-2 px-3 py-2.5' style={{ borderRadius: 12 }}>
+              <svg className='w-5 h-5 text-white/30 flex-shrink-0' viewBox='0 0 24 24' fill='currentColor'>
                 <path d='M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z'/>
               </svg>
               <input
