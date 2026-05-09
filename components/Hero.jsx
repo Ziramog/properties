@@ -248,7 +248,7 @@ const Hero = () => {
                         onClick={() => setDesktopFilterOpen(isOpen ? null : f.name)}
                         className='w-full h-[54px] px-4 rounded-md bg-white/[0.06] border border-white/10 text-white text-sm outline-none cursor-pointer flex items-center justify-between hover:border-white/30 transition-colors'
                       >
-                        <span className={`${currentVal && currentVal !== 'Todos' && currentVal !== '' && currentVal !== 'Cualquiera' ? 'bg-[var(--color-brand)] text-white font-semibold px-3 py-1.5 rounded-lg' : 'text-white/70'}`}>{currentLabel}</span>
+                        <span className='text-white/70'>{currentLabel}</span>
                         <svg className={`w-4 h-4 text-white/50 transition-transform ${isOpen ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6'/></svg>
                       </div>
                       {isOpen && (
