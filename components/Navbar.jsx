@@ -81,7 +81,7 @@ const Navbar = () => {
         }`}
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 8px) + 15px)', paddingBottom: '15px' }}
       >
-        <div className="max-w-[1820px] mx-auto flex items-center justify-between px-[15px] h-full">
+        <div className="max-w-[1820px] mx-auto flex items-center px-[15px] h-full">
           {/* Logo */}
           <Link className="flex items-center flex-shrink-0" href="/">
             <Image
@@ -95,7 +95,7 @@ const Navbar = () => {
           </Link>
 
           {/* Main Nav — Senada .mainMenu */}
-          <nav className="desktop-dropdown flex items-center gap-8 lg:gap-10">
+          <nav className="desktop-dropdown flex items-center gap-8 lg:gap-10 ml-auto">
             <Link href="/#propiedades-destacadas" className="text-white hover:text-[var(--color-brand)] transition-colors text-[15px] font-normal tracking-[0.02em] uppercase">
               Listado Premium
             </Link>
