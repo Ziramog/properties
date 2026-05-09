@@ -42,9 +42,11 @@ const Hero = () => {
   const [filters, setFilters] = useState({
     operation: 'Venta',
     type: 'Todos',
-    zone: 'Córdoba',
     price: 'Cualquiera',
     term: '',
+    address: '',
+    bedrooms: '',
+    baths: '',
   });
   const [showMore, setShowMore] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -102,7 +104,9 @@ const Hero = () => {
     const params = new URLSearchParams();
     if (filters.term && filters.term.trim()) params.set('city', filters.term.trim());
     if (filters.type && filters.type !== 'Todos') params.set('type', filters.type);
-    if (filters.zone && filters.zone !== 'Córdoba') params.set('zone', filters.zone);
+    if (filters.bedrooms) params.set('bedrooms', filters.bedrooms);
+    if (filters.baths) params.set('baths', filters.baths);
+    if (filters.price && filters.price !== 'Cualquiera') params.set('price', filters.price);
     if (filters.operation && filters.operation !== 'Todos') params.set('operation', filters.operation);
     router.push(`/properties${params.toString() ? `?${params.toString()}` : ''}`);
   };
@@ -206,121 +210,50 @@ const Hero = () => {
       {/* Search Bar — always 200px from bottom of viewport */}
       <div className='absolute bottom-[200px] md:bottom-[80px] w-full z-20 px-4 pb-6'>
         <div
-          className='mx-auto max-w-[880px] bg-black border border-white/10 px-2 py-2 flex items-center'
+          className='mx-auto max-w-[880px]'
           style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
         >
-          {/* Desktop: Senada-style — text input + Show More + Search button */}
-          <form onSubmit={handleSubmit} className='hidden md:flex flex-col w-full'>
-            <div className='flex items-center gap-2'>
-              {/* City / area search input */}
-              <div className='flex-1 relative bg-black border border-white/10 rounded-lg overflow-hidden'>
-                <svg className='absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 flex-shrink-0' viewBox='0 0 24 24' fill='currentColor'>
-                  <path d='M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z'/>
-                </svg>
-                <input
-                  type='text'
-                  name='term'
-                  placeholder='Buscar por ciudad, zona o tipo'
-                  className='bg-transparent text-white text-sm placeholder:text-white/35 w-full h-[52px] pl-12 pr-4 outline-none'
-                  value={filters.term || ''}
-                  onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))}
-                />
-              </div>
-
-              {/* Mostrar más toggle */}
-              <button
-                type='button'
-                onClick={() => setShowMore(!showMore)}
-                className='h-[52px] px-4 border border-white/10 rounded-lg text-white/60 text-xs font-normal uppercase tracking-wider hover:text-white hover:border-white/30 transition-all flex-shrink-0'
-              >
-                {showMore ? 'Mostrar menos' : 'Mostrar más'}
-              </button>
-
-              {/* Buscar button */}
-              <button
-                type='submit'
-                className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold text-sm uppercase tracking-[0.06em] rounded-lg h-[52px] px-8 transition-all shadow-lg shadow-[var(--color-brand)]/30 flex-shrink-0'
-              >
-                BUSCAR
-              </button>
-            </div>
-
-            {/* Expanded filters row — slides down like Senada .bottom-part */}
-            <div
-              className='overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]'
-              style={{
-                maxHeight: showMore ? '200px' : '0',
-                opacity: showMore ? 1 : 0,
-                marginTop: showMore ? '12px' : '0',
-              }}
-            >
-              <div className='bg-black border border-white/10 rounded-lg p-4'>
-                <div className='grid grid-cols-4 gap-3'>
-                  {/* Tipo */}
-                  <div className='flex flex-col gap-1'>
-                    <label className='text-white/50 text-[10px] font-medium uppercase tracking-widest'>Tipo</label>
-                    <select
-                      name='type'
-                      value={filters.type || 'Todos'}
-                      onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value }))}
-                      className='bg-transparent border border-white/10 rounded-md text-white text-sm h-10 px-3 cursor-pointer outline-none appearance-none'
-                    >
-                      <option value='Todos' style={{ color: '#333', backgroundColor: '#fff' }}>Todos</option>
-                      <option value='Casa' style={{ color: '#333', backgroundColor: '#fff' }}>Casas</option>
-                      <option value='Departamento' style={{ color: '#333', backgroundColor: '#fff' }}>Departamentos</option>
-                      <option value='Terreno' style={{ color: '#333', backgroundColor: '#fff' }}>Terrenos</option>
-                      <option value='Campo' style={{ color: '#333', backgroundColor: '#fff' }}>Campos</option>
-                      <option value='Inmueble Comercial' style={{ color: '#333', backgroundColor: '#fff' }}>Inmuebles Comerciales</option>
-                    </select>
-                  </div>
-                  {/* Operación */}
-                  <div className='flex flex-col gap-1'>
-                    <label className='text-white/50 text-[10px] font-medium uppercase tracking-widest'>Operación</label>
-                    <select
-                      name='operation'
-                      value={filters.operation || 'Todos'}
-                      onChange={(e) => setFilters(prev => ({ ...prev, operation: e.target.value }))}
-                      className='bg-transparent border border-white/10 rounded-md text-white text-sm h-10 px-3 cursor-pointer outline-none appearance-none'
-                    >
-                      <option value='Todos' style={{ color: '#333', backgroundColor: '#fff' }}>Todos</option>
-                      <option value='Venta' style={{ color: '#333', backgroundColor: '#fff' }}>Venta</option>
-                      <option value='Alquiler' style={{ color: '#333', backgroundColor: '#fff' }}>Alquiler</option>
-                    </select>
-                  </div>
-                  {/* Zona */}
-                  <div className='flex flex-col gap-1'>
-                    <label className='text-white/50 text-[10px] font-medium uppercase tracking-widest'>Zona</label>
-                    <select
-                      name='zone'
-                      value={filters.zone || 'Córdoba'}
-                      onChange={(e) => setFilters(prev => ({ ...prev, zone: e.target.value }))}
-                      className='bg-transparent border border-white/10 rounded-md text-white text-sm h-10 px-3 cursor-pointer outline-none appearance-none'
-                    >
-                      <option value='Córdoba' style={{ color: '#333', backgroundColor: '#fff' }}>Córdoba</option>
-                      <option value='Alta Gracia' style={{ color: '#333', backgroundColor: '#fff' }}>Alta Gracia</option>
-                      <option value='Villa Allende' style={{ color: '#333', backgroundColor: '#fff' }}>Villa Allende</option>
-                      <option value='Mina Clavero' style={{ color: '#333', backgroundColor: '#fff' }}>Mina Clavero</option>
-                    </select>
-                  </div>
-                  {/* Precio */}
-                  <div className='flex flex-col gap-1'>
-                    <label className='text-white/50 text-[10px] font-medium uppercase tracking-widest'>Precio</label>
-                    <select
-                      name='price'
-                      value={filters.price || 'Cualquiera'}
-                      onChange={(e) => setFilters(prev => ({ ...prev, price: e.target.value }))}
-                      className='bg-transparent border border-white/10 rounded-md text-white text-sm h-10 px-3 cursor-pointer outline-none appearance-none'
-                    >
-                      <option value='Cualquiera' style={{ color: '#333', backgroundColor: '#fff' }}>Cualquiera</option>
-                      <option value='Hasta 150k' style={{ color: '#333', backgroundColor: '#fff' }}>Hasta U$S 150k</option>
-                      <option value='150k-300k' style={{ color: '#333', backgroundColor: '#fff' }}>U$S 150k–300k</option>
-                      <option value='+300k' style={{ color: '#333', backgroundColor: '#fff' }}>+ U$S 300k</option>
-                    </select>
-                  </div>
+          {/* Desktop: Senada .homepage-search-form */}
+          <form onSubmit={handleSubmit} className='hidden md:flex flex-col'>
+            {/* .top-part */}
+            <div className='flex items-end gap-3'>
+              <div className='flex-1'>
+                <label className='block text-white/60 text-[11px] font-medium uppercase tracking-wider mb-2'>Buscar por ciudad, zona o MLS#</label>
+                <div className='relative'>
+                  <svg className='absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30' viewBox='0 0 24 24' fill='currentColor'><path d='M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z'/></svg>
+                  <input type='text' name='term' placeholder='Ej: Alta Gracia' className='w-full h-[54px] pl-12 pr-4 rounded-md bg-white/[0.06] border border-white/10 text-white text-sm placeholder:text-white/25 outline-none focus:border-white/30 transition-colors' value={filters.term || ''} onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))} required />
                 </div>
+              </div>
+              <div className='flex-1'>
+                <label className='block text-white/60 text-[11px] font-medium uppercase tracking-wider mb-2'>Dirección</label>
+                <input type='text' name='address' placeholder='Ej: Pellegrini 123' className='w-full h-[54px] px-4 rounded-md bg-white/[0.06] border border-white/10 text-white text-sm placeholder:text-white/25 outline-none focus:border-white/30 transition-colors' value={filters.address || ''} onChange={(e) => setFilters(prev => ({ ...prev, address: e.target.value }))} />
+              </div>
+              <button type='button' onClick={() => setShowMore(!showMore)} className='h-[54px] text-white/55 text-xs font-normal uppercase tracking-wider hover:text-white transition-colors flex-shrink-0 self-end pb-0.5'>{showMore ? 'Mostrar menos' : 'Mostrar más'}</button>
+              <button type='submit' className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold text-sm uppercase tracking-[0.06em] rounded-md h-[54px] px-8 transition-all shadow-lg shadow-[var(--color-brand)]/30 flex-shrink-0 self-end'>Buscar</button>
+            </div>
+            {/* .bottom-part */}
+            <div className='overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]' style={{ maxHeight: showMore ? '200px' : '0', opacity: showMore ? 1 : 0, marginTop: showMore ? '16px' : '0' }}>
+              <div className='flex items-end gap-3'>
+                {[{label:'Tipo', name:'type', opts:[{v:'Todos',l:'Todos'},{v:'Casa',l:'Casas'},{v:'Departamento',l:'Departamentos'},{v:'Terreno',l:'Terrenos'},{v:'Campo',l:'Campos'},{v:'Inmueble Comercial',l:'Inmuebles Comerciales'}]},{label:'Operación', name:'operation', opts:[{v:'Todos',l:'Todos'},{v:'Venta',l:'Venta'},{v:'Alquiler',l:'Alquiler'}]},{label:'Dormitorios', name:'bedrooms', opts:[{v:'',l:'Cualquiera'},{v:'1',l:'1'},{v:'2',l:'2'},{v:'3',l:'3'},{v:'4',l:'4'},{v:'5+',l:'5+'}]},{label:'Baños', name:'baths', opts:[{v:'',l:'Cualquiera'},{v:'1',l:'1'},{v:'2',l:'2'},{v:'3',l:'3'},{v:'4',l:'4'},{v:'5+',l:'5+'}]},{label:'Precio', name:'price', opts:[{v:'Cualquiera',l:'Cualquiera'},{v:'Hasta 150k',l:'Hasta U$S 150k'},{v:'150k-300k',l:'U$S 150k–300k'},{v:'+300k',l:'+ U$S 300k'}]}].map(f => (
+                  <div key={f.name} className='flex-1'>
+                    <label className='block text-white/60 text-[11px] font-medium uppercase tracking-wider mb-2'>{f.label}</label>
+                    <select name={f.name} value={filters[f.name] || f.opts[0].v} onChange={(e) => setFilters(prev => ({ ...prev, [f.name]: e.target.value }))} className='w-full h-[54px] px-4 rounded-md bg-white/[0.06] border border-white/10 text-white text-sm outline-none cursor-pointer appearance-none focus:border-white/30 transition-colors'>
+                      {f.opts.map(o => <option key={o.v} value={o.v} style={{color:'#333',backgroundColor:'#fff'}}>{o.l}</option>)}
+                    </select>
+                  </div>
+                ))}
               </div>
             </div>
           </form>
+
+          {/* Popular locations — Senada .search-suggestions */}
+          <div className='hidden md:flex items-center gap-3 mt-4'>
+            <span className='text-white/40 text-xs font-medium uppercase tracking-wider flex-shrink-0'>Zonas populares:</span>
+            {['Alta Gracia','Córdoba','Villa Allende','Mina Clavero'].map(loc => (
+              <a key={loc} href={`/properties?city=${encodeURIComponent(loc)}`} className='text-white/55 hover:text-white text-xs font-medium transition-colors px-3 py-1.5 border border-white/10 rounded-full hover:border-white/25'>{loc}</a>
+            ))}
+          </div>
+        </div>
 
           {/* Mobile: input + button + toggle all fixed; filters expand via position absolute below */}
           <div className='md:hidden w-full relative'>
@@ -466,7 +399,6 @@ const Hero = () => {
               </div>
             </div>
           </div>
-        </div>
       </div>
 
       <style jsx>{`
