@@ -109,7 +109,7 @@ const Footer = () => {
                   Newsletter
                 </h3>
                 <form className="pt-[30px]">
-                  <div className="relative">
+                  <div className="relative mb-3">
                     <img src="/senada/images/icons/ico_newsletter_email.svg" alt="" className="absolute left-[15px] top-1/2 -translate-y-1/2 w-[25px] h-[20px]" style={{ filter: 'brightness(0) invert(1)' }} />
                     <input
                       type="email"
@@ -117,6 +117,12 @@ const Footer = () => {
                       className="w-[285px] h-[40px] bg-white/[0.06] border-none rounded-[5px] text-white font-bold text-[14px] pl-[50px] pr-4 outline-none placeholder:text-white/30"
                     />
                   </div>
+                  <button
+                    type="submit"
+                    className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold text-sm uppercase tracking-wider rounded-[5px] h-[40px] px-6 transition-all"
+                  >
+                    Suscribir
+                  </button>
                 </form>
               </div>
             </div>
@@ -237,7 +243,7 @@ const Footer = () => {
             <div>
               <span className="block text-[15px] text-white uppercase font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>Newsletter</span>
               <form>
-                <div className="relative">
+                <div className="relative mb-3">
                   <img src="/senada/images/icons/ico_newsletter_email.svg" alt="" className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-4" style={{ filter: 'brightness(0) invert(1)' }} />
                   <input
                     type="email"
@@ -245,6 +251,12 @@ const Footer = () => {
                     className="w-full h-10 bg-white/[0.06] border-none rounded-[5px] text-white font-bold text-[14px] pl-[50px] pr-4 outline-none placeholder:text-white/30"
                   />
                 </div>
+                <button
+                  type="submit"
+                  className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold text-sm uppercase tracking-wider rounded-[5px] h-10 px-6 transition-all w-full"
+                >
+                  Suscribir
+                </button>
               </form>
             </div>
           </div>
