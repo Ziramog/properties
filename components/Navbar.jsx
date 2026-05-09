@@ -142,7 +142,7 @@ const Navbar = () => {
               <img src="/senada/images/icons/ico_search.svg" alt="Buscar" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
             </Link>
             {/* Show More / Hamburger */}
-            <div className="relative" onMouseEnter={() => openDropdown('more')} onMouseLeave={closeDropdown}>
+            <div className="relative mr-[70px]" onMouseEnter={() => openDropdown('more')} onMouseLeave={closeDropdown}>
               <button className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors" aria-label="Más">
                 <span className="space-y-1 flex flex-col items-center">
                   <span className="block w-[18px] h-[2px] bg-white rounded-sm"></span>
