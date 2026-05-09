@@ -319,20 +319,6 @@ const Hero = () => {
             </div>
           </form>
 
-          {/* Popular locations — Senada-style suggestions */}
-          <div className='hidden md:flex items-center gap-3 mt-4'>
-            <span className='text-white/40 text-xs font-medium uppercase tracking-wider flex-shrink-0'>Zonas populares:</span>
-            {['Alta Gracia', 'Córdoba', 'Villa Allende', 'Mina Clavero'].map(loc => (
-              <a
-                key={loc}
-                href={`/properties?city=${encodeURIComponent(loc)}`}
-                className='text-white/60 hover:text-white text-xs font-medium transition-colors px-3 py-1.5 border border-white/10 rounded-full hover:border-white/30'
-              >
-                {loc}
-              </a>
-            ))}
-          </div>
-
           {/* Mobile: input + button + toggle all fixed; filters expand via position absolute below */}
           <div className='md:hidden w-full relative'>
             {/* Search input — stays fixed at top */}
