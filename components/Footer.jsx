@@ -179,6 +179,8 @@ const Footer = () => {
               <Image
                 src="/images/LOGO R&R 2023.png"
                 alt="Roggero & Roma"
+                width={200}
+                height={100}
                 style={{ height: '42px', width: 'auto' }}
                 className="brightness-0 invert"
               />
