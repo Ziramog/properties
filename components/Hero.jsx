@@ -215,8 +215,8 @@ const Hero = () => {
         >
           {/* Desktop: Senada .homepage-search-form */}
           <form onSubmit={handleSubmit} className='hidden md:flex flex-col'>
-            {/* .top-part */}
-            <div className='flex items-end gap-3'>
+            {/* .top-part — Senada: bg-black, rounded-12px, padding 20px */}
+            <div className='flex items-end gap-3 bg-black rounded-xl p-5'>
               <div className='flex-1'>
                 <label className='block text-white/60 text-[11px] font-medium uppercase tracking-wider mb-2'>Buscar por ciudad, zona o MLS#</label>
                 <div className='relative'>
@@ -233,7 +233,7 @@ const Hero = () => {
             </div>
             {/* .bottom-part */}
             <div className='overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]' style={{ maxHeight: showMore ? '200px' : '0', opacity: showMore ? 1 : 0, marginTop: showMore ? '16px' : '0' }}>
-              <div className='flex items-end gap-3'>
+              <div className='flex items-end gap-3 bg-black rounded-xl p-5'>
                 {[{label:'Tipo', name:'type', opts:[{v:'Todos',l:'Todos'},{v:'Casa',l:'Casas'},{v:'Departamento',l:'Departamentos'},{v:'Terreno',l:'Terrenos'},{v:'Campo',l:'Campos'},{v:'Inmueble Comercial',l:'Inmuebles Comerciales'}]},{label:'Operación', name:'operation', opts:[{v:'Todos',l:'Todos'},{v:'Venta',l:'Venta'},{v:'Alquiler',l:'Alquiler'}]},{label:'Dormitorios', name:'bedrooms', opts:[{v:'',l:'Cualquiera'},{v:'1',l:'1'},{v:'2',l:'2'},{v:'3',l:'3'},{v:'4',l:'4'},{v:'5+',l:'5+'}]},{label:'Baños', name:'baths', opts:[{v:'',l:'Cualquiera'},{v:'1',l:'1'},{v:'2',l:'2'},{v:'3',l:'3'},{v:'4',l:'4'},{v:'5+',l:'5+'}]},{label:'Precio', name:'price', opts:[{v:'Cualquiera',l:'Cualquiera'},{v:'Hasta 150k',l:'Hasta U$S 150k'},{v:'150k-300k',l:'U$S 150k–300k'},{v:'+300k',l:'+ U$S 300k'}]}].map(f => (
                   <div key={f.name} className='flex-1'>
                     <label className='block text-white/60 text-[11px] font-medium uppercase tracking-wider mb-2'>{f.label}</label>
