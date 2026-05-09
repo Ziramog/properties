@@ -214,11 +214,14 @@ const Hero = () => {
             <div className='flex items-center gap-2'>
               {/* City / area search input */}
               <div className='flex-1 relative bg-black border border-white/10 rounded-lg overflow-hidden'>
+                <svg className='absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 flex-shrink-0' viewBox='0 0 24 24' fill='currentColor'>
+                  <path d='M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z'/>
+                </svg>
                 <input
                   type='text'
                   name='term'
                   placeholder='Buscar por ciudad, zona o tipo'
-                  className='bg-transparent text-white text-sm placeholder:text-white/35 w-full h-[52px] px-4 outline-none'
+                  className='bg-transparent text-white text-sm placeholder:text-white/35 w-full h-[52px] pl-12 pr-4 outline-none'
                   value={filters.term || ''}
                   onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))}
                 />
