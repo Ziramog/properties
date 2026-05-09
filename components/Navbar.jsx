@@ -103,7 +103,7 @@ const Navbar = () => {
                     { label: 'Casas', query: 'type=Casa' },
                     { label: 'Departamentos', query: 'type=Departamento' },
                     { label: 'Campos', query: 'type=Campo' },
-                    { label: 'Inmuebles Comerciales', query: 'type=Inmueble Comercial' },
+                    { label: 'Inmuebles Comerciales', query: 'type=Inmueble+Comercial' },
                     { label: 'Terrenos', query: 'type=Terreno' },
                     { label: 'Todas las propiedades', query: '' },
                   ].map(item => (
@@ -135,7 +135,11 @@ const Navbar = () => {
             {/* Show More / Hamburger */}
             <div className="relative" onMouseEnter={() => setDesktopDropdown('more')} onMouseLeave={() => setDesktopDropdown(null)}>
               <button className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors" aria-label="Más">
-                <img src="/senada/images/icons/ico_plus.svg" alt="Más" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
+                <span className="space-y-1 flex flex-col items-center">
+                  <span className="block w-[18px] h-[2px] bg-white rounded-sm"></span>
+                  <span className="block w-[18px] h-[2px] bg-white rounded-sm"></span>
+                  <span className="block w-[18px] h-[2px] bg-white rounded-sm"></span>
+                </span>
               </button>
               {desktopDropdown === 'more' && (
                 <ul className="absolute top-full right-0 mt-2 bg-[#222] border border-white/10 rounded-md py-2 min-w-[180px] shadow-xl z-50">
