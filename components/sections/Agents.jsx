@@ -1,35 +1,45 @@
 'use client';
+import { useState, useEffect, useRef } from 'react';
 import SectionBox from '@/components/sections/SectionBox';
-import ScrollReveal from '@/components/shared/ScrollReveal';
 
 const Agents = () => {
+  const [visible, setVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      { threshold: 0.1 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="pb-[30px] pt-[30px]" id="equipo">
+    <section className="pb-[30px] pt-[30px]" id="equipo" ref={ref}>
       <SectionBox className="px-4 md:px-8 py-16 md:py-24">
-        {/* Section Header */}
-        <div className="text-center mb-10 md:mb-14">
-          <ScrollReveal>
-            <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--color-brand)] flex items-center justify-center gap-4">
-              <span className="block w-[53px] h-px bg-[var(--color-brand)]" />
+        {/* Section Header — same pattern as Featured Properties */}
+        <div className="text-center mb-10 md:mb-14 js-animate">
+          <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+            Roggero & Roma
+          </h2>
+          <div className="flex items-center justify-center gap-3">
+            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
+            <p className="text-[13px] md:text-[15px] font-medium text-[var(--color-brand)] uppercase tracking-[0.15em]">
               Nuestra Historia
-              <span className="block w-[53px] h-px bg-[var(--color-brand)]" />
-            </h3>
-          </ScrollReveal>
-          <ScrollReveal delay={50}>
-            <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mt-4 mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
-              Roggero & Roma
-            </h2>
-          </ScrollReveal>
+            </p>
+            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
+          </div>
         </div>
 
-        {/* Body text */}
-        <ScrollReveal delay={100}>
-          <div className="max-w-2xl mx-auto text-center">
-            <p className="text-[16px] md:text-[18px] font-light text-[#475569] leading-[1.8]" style={{ fontFamily: 'var(--font-body)' }}>
-              Contamos con 20 años de experiencia propia en el rubro inmobiliario y diversos casos de éxito en importantes negocios inmobiliarios. Trabajamos constantemente con el objetivo de brindar confianza y seriedad en el rubro, dar información real y adecuada sobre el mercado y ofrecer la mayor variedad de alternativas de inversión a nuestros clientes.
-            </p>
-          </div>
-        </ScrollReveal>
+        {/* Body text — animated fade-up like Featured Properties cards */}
+        <div className={`max-w-2xl mx-auto text-center transition-all duration-500 ${
+          visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`} style={{ transitionDelay: '100ms' }}>
+          <p className="text-[16px] md:text-[18px] font-light text-[#475569] leading-[1.8]" style={{ fontFamily: 'var(--font-body)' }}>
+            Contamos con 20 años de experiencia propia en el rubro inmobiliario y diversos casos de éxito en importantes negocios inmobiliarios. Trabajamos constantemente con el objetivo de brindar confianza y seriedad en el rubro, dar información real y adecuada sobre el mercado y ofrecer la mayor variedad de alternativas de inversión a nuestros clientes.
+          </p>
+        </div>
       </SectionBox>
     </section>
   );
