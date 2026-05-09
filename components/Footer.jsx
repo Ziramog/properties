@@ -1,147 +1,218 @@
+'use client';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaWhatsapp } from 'react-icons/fa';
 import logo from '@/assets/images/logo.png';
 import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whatsapp';
-import '@/footer.css';
 
 const EMAIL = 'info@roggeroyroma.com.ar';
+const ADDRESS = 'Alta Gracia, Córdoba, Argentina';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
-  /* All links flattened for the mobile 2-col grid */
-  const mobileLinks = [
-    { href: '/properties?type=Casa', label: 'Casas' },
-    { href: '/properties?type=Departamento', label: 'Departamentos' },
-    { href: '/properties?type=Terreno', label: 'Terrenos' },
-    { href: '/properties?type=Campo', label: 'Campos' },
-    { href: '/properties', label: 'Propiedades' },
-    { href: '/properties?type=Inmueble+Comercial', label: 'Propiedades Comerciales' },
-    { href: '/contact', label: 'Contacto' },
-  ];
-
   return (
     <footer className="text-white" style={{ background: '#110b11' }}>
-      {/* ============================================
-          DESKTOP FOOTER — visible md+ (≥768px)
-          ============================================ */}
+      {/* Desktop */}
       <div className="hidden md:block">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-16">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10">
-            {/* Brand */}
-            <div className="col-span-2 md:col-span-1">
-              <Link href="/" className="inline-block mb-4">
-                <Image src={logo} alt="Roggero & Roma" style={{ height: '40px', width: 'auto' }} className="h-auto brightness-0 invert" />
+        <div className="max-w-[1430px] mx-auto px-4 py-[35px]">
+          {/* Top — 2-column */}
+          <div className="flex justify-between flex-wrap">
+            {/* Left: Logo + Address + Contact */}
+            <div className="flex flex-col gap-1">
+              <Link href="/" className="inline-block mb-10">
+                <Image
+                  src={logo}
+                  alt="Roggero & Roma"
+                  style={{ height: '65px', width: 'auto' }}
+                  className="brightness-0 invert"
+                />
               </Link>
-              <p className="text-white/55 text-sm leading-relaxed max-w-xs">
-                Más de 10 años de experiencia en el mercado inmobiliario de Córdoba.
-              </p>
-            </div>
-
-            {/* Properties */}
-            <div>
-              <h3 className="text-xs font-bold text-white/80 uppercase tracking-wider mb-4">Propiedades</h3>
-              <ul className="space-y-2.5 text-sm">
-                <li><Link href="/properties?type=Casa" className="text-white/55 hover:text-white transition-colors">Casas</Link></li>
-                <li><Link href="/properties?type=Departamento" className="text-white/55 hover:text-white transition-colors">Departamentos</Link></li>
-                <li><Link href="/properties?type=Terreno" className="text-white/55 hover:text-white transition-colors">Terrenos</Link></li>
-                <li><Link href="/properties?type=Campo" className="text-white/55 hover:text-white transition-colors">Campos</Link></li>
+              <h2 className="text-[15px] text-white uppercase font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                Roggero & Roma
+              </h2>
+              <ul>
+                <li className="text-[13px] text-white/70 font-light py-[5px] block">Alta Gracia</li>
+                <li className="text-[13px] text-white/70 font-light py-[5px] block">Córdoba, Argentina</li>
               </ul>
+              <a href={`mailto:${EMAIL}`} className="flex items-center gap-[5px] text-[13px] text-white font-light py-[5px] hover:text-white/70 transition-colors">
+                <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
+                {EMAIL}
+              </a>
+              <a href={`tel:${PHONE_NUMBER}`} className="flex items-center gap-[5px] text-[13px] text-white font-light py-[5px] hover:text-white/70 transition-colors">
+                <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
+                {PHONE_DISPLAY}
+              </a>
             </div>
 
-            {/* Company */}
-            <div>
-              <h3 className="text-xs font-bold text-white/80 uppercase tracking-wider mb-4">Empresa</h3>
-              <ul className="space-y-2.5 text-sm">
-                <li><Link href="/properties" className="text-white/55 hover:text-white transition-colors">Propiedades</Link></li>
-                <li><Link href="/properties?type=Inmueble+Comercial" className="text-white/55 hover:text-white transition-colors">Propiedades Comerciales</Link></li>
-                <li><Link href="/contact" className="text-white/55 hover:text-white transition-colors">Contacto</Link></li>
-              </ul>
-            </div>
+            {/* Right: Nav + Newsletter */}
+            <div className="flex">
+              {/* Footer nav — 3 columns */}
+              <nav className="pr-[35px] md:pr-[75px]">
+                <ul className="flex gap-[50px] md:gap-[100px]">
+                  {/* PROPIEDADES */}
+                  <li>
+                    <span className="block text-[15px] text-white uppercase font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                      Propiedades
+                    </span>
+                    <ul>
+                      {[
+                        { href: '/properties?type=Casa', label: 'Casas' },
+                        { href: '/properties?type=Departamento', label: 'Departamentos' },
+                        { href: '/properties?type=Campo', label: 'Campos' },
+                        { href: '/properties?type=Terreno', label: 'Terrenos' },
+                        { href: '/properties', label: 'Todas las propiedades' },
+                      ].map(l => (
+                        <li key={l.href}>
+                          <Link href={l.href} className="block text-[13px] text-white/70 font-light py-[5px] pr-[10px] hover:text-white transition-colors">
+                            {l.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                  {/* EMPRESA */}
+                  <li>
+                    <span className="block text-[15px] text-white uppercase font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                      Empresa
+                    </span>
+                    <ul>
+                      {[
+                        { href: '/#propiedades-destacadas', label: 'Listado Premium' },
+                        { href: '/#nuestra-historia', label: 'Nuestra Historia' },
+                        { href: '/contact', label: 'Contacto' },
+                      ].map(l => (
+                        <li key={l.href}>
+                          <Link href={l.href} className="block text-[13px] text-white/70 font-light py-[5px] pr-[10px] hover:text-white transition-colors">
+                            {l.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                  {/* CONTACTO */}
+                  <li>
+                    <span className="block text-[15px] text-white uppercase font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                      Contacto
+                    </span>
+                    <ul>
+                      <li className="text-[13px] text-white/70 font-light py-[5px] block">+54 9 3547 563911</li>
+                      <li className="text-[13px] text-white/70 font-light py-[5px] block">{EMAIL}</li>
+                      <li className="text-[13px] text-white/70 font-light py-[5px] block max-w-[190px]">{ADDRESS}</li>
+                    </ul>
+                  </li>
+                </ul>
+              </nav>
 
-            {/* Contact */}
-            <div>
-              <h3 className="text-xs font-bold text-white/80 uppercase tracking-wider mb-4">Contacto</h3>
-              <div className="flex flex-wrap gap-3 mb-4">
-                <a href={`mailto:${EMAIL}`} className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm transition-colors">
-                  <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
-                  {EMAIL}
-                </a>
-                <a href={`tel:${PHONE_NUMBER}`} className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm transition-colors">
-                  <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
-                  {PHONE_DISPLAY}
-                </a>
-              </div>
-              <div className="flex items-center gap-4">
-                <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors" aria-label="WhatsApp">
-                  <FaWhatsapp className="text-xl" />
-                </a>
-                <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors" aria-label="Facebook">
-                  <img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-[20px] h-[20px]" />
-                </a>
-                <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors" aria-label="Instagram">
-                  <img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-[20px] h-[20px]" />
-                </a>
-                <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors" aria-label="LinkedIn">
-                  <img src="/senada/images/icons/ico_linked.svg" alt="linkedin" className="w-[20px] h-[20px]" />
-                </a>
+              {/* Newsletter */}
+              <div className="newsletter">
+                <h3 className="text-[15px] text-white uppercase font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                  Newsletter
+                </h3>
+                <form className="pt-[30px]">
+                  <div className="relative">
+                    <img src="/senada/images/icons/ico_newsletter_email.svg" alt="" className="absolute left-[15px] top-1/2 -translate-y-1/2 w-[25px] h-[20px]" style={{ filter: 'brightness(0) invert(1)' }} />
+                    <input
+                      type="email"
+                      placeholder="Tu email"
+                      className="w-[285px] h-[40px] bg-white/[0.06] border-none rounded-[5px] text-white font-bold text-[14px] pl-[50px] pr-4 outline-none placeholder:text-white/30"
+                    />
+                  </div>
+                </form>
               </div>
             </div>
           </div>
 
-          <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between text-sm text-white/40 gap-2">
-            <p>© {currentYear} Roggero & Roma. Todos los derechos reservados.</p>
+          {/* Bottom — Border top + Copyright + Social */}
+          <div className="flex items-center justify-between mt-[35px] pt-[35px] md:mt-[50px] md:pt-[50px] border-t-2 border-white/[0.1]">
+            <p className="text-white text-[14px] uppercase font-bold">
+              &copy; {currentYear} Roggero & Roma
+            </p>
+            <ul className="flex items-center gap-[25px]">
+              <li>
+                <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Email">
+                  <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[20px] h-[20px]" style={{ filter: 'brightness(0)' }} />
+                </a>
+              </li>
+              <li>
+                <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="WhatsApp">
+                  <FaWhatsapp className="text-xl" />
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Facebook">
+                  <img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-[20px] h-[20px]" style={{ filter: 'brightness(0) invert(1)' }} />
+                </a>
+              </li>
+              <li>
+                <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Instagram">
+                  <img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-[20px] h-[20px]" style={{ filter: 'brightness(0) invert(1)' }} />
+                </a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="LinkedIn">
+                  <img src="/senada/images/icons/ico_linked.svg" alt="linkedin" className="w-[20px] h-[20px]" style={{ filter: 'brightness(0) invert(1)' }} />
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
 
-      {/* ============================================
-          MOBILE FOOTER — visible below md (<768px)
-          ============================================ */}
+      {/* Mobile — simplified Senada layout */}
       <div className="block md:hidden">
-        <div className="footer-m-inner">
-          {/* 2. Logo + tagline */}
-          <div className="footer-m-brand">
-            <Link href="/" className="inline-block">
-              <Image src={logo} alt="Roggero & Roma" style={{ height: '40px', width: 'auto' }} className="footer-m-logo brightness-0 invert" />
-            </Link>
-            <p className="footer-m-tagline">
-              Más de 10 años de experiencia en el mercado inmobiliario de Córdoba.
-            </p>
-          </div>
+        <div className="px-5 py-8">
+          {/* Logo */}
+          <Link href="/" className="inline-block mb-6">
+            <Image
+              src={logo}
+              alt="Roggero & Roma"
+              style={{ height: '28px', width: 'auto' }}
+              className="brightness-0 invert"
+            />
+          </Link>
 
-          {/* 3. Flat 2-column links grid */}
-          <div className="footer-m-links">
-            {mobileLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="footer-m-link">
-                {link.label}
+          {/* Links — 2 columns */}
+          <div className="grid grid-cols-2 gap-y-1 gap-x-6 mb-6">
+            {[
+              { href: '/#propiedades-destacadas', label: 'Listado Premium' },
+              { href: '/properties?type=Casa', label: 'Casas' },
+              { href: '/properties?type=Departamento', label: 'Departamentos' },
+              { href: '/properties?type=Campo', label: 'Campos' },
+              { href: '/properties?type=Terreno', label: 'Terrenos' },
+              { href: '/properties', label: 'Propiedades' },
+              { href: '/#nuestra-historia', label: 'Nuestra Historia' },
+              { href: '/contact', label: 'Contacto' },
+            ].map(l => (
+              <Link key={l.href + l.label} href={l.href} className="text-[13px] text-white/60 font-light py-[3px] leading-[2.2] hover:text-white transition-colors">
+                {l.label}
               </Link>
             ))}
           </div>
 
-          {/* 4. Compact contact row — senada SVG icons */}
-          <div className="footer-m-contact">
+          {/* Contact icons + phone */}
+          <div className="flex items-center gap-[10px] mb-6">
             <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer"
-              className="footer-m-icon-wa" aria-label="WhatsApp">
-              <FaWhatsapp />
+              className="w-[36px] h-[36px] bg-[#25D366] rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110">
+              <FaWhatsapp className="text-white text-[18px]" />
             </a>
-            <a href={`mailto:${EMAIL}`} className="footer-m-icon-circle" aria-label="Email">
+            <a href={`mailto:${EMAIL}`}
+              className="w-[36px] h-[36px] bg-white/[0.10] rounded-full flex items-center justify-center transition-all duration-200 hover:bg-[var(--color-brand)]">
               <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-4 h-4" style={{ filter: 'brightness(0) invert(1)' }} />
             </a>
-            <a href={`tel:${PHONE_NUMBER}`} className="footer-m-icon-circle" aria-label="Llamar">
+            <a href={`tel:${PHONE_NUMBER}`}
+              className="w-[36px] h-[36px] bg-white/[0.10] rounded-full flex items-center justify-center transition-all duration-200 hover:bg-[var(--color-brand)]">
               <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-4 h-4" style={{ filter: 'brightness(0) invert(1)' }} />
             </a>
-            <span className="footer-m-phone">{PHONE_DISPLAY}</span>
+            <span className="text-[13px] text-white/60 ml-1">{PHONE_DISPLAY}</span>
           </div>
 
-          {/* 5. Copyright strip */}
-          <div className="footer-m-copyright">
-            © {currentYear} Roggero & Roma. Todos los derechos reservados.
+          {/* Copyright */}
+          <div className="border-t border-white/[0.08] pt-4 text-[11px] text-white/40 text-center">
+            &copy; {currentYear} Roggero & Roma. Todos los derechos reservados.
           </div>
         </div>
       </div>
-
     </footer>
   );
 };
