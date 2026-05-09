@@ -229,8 +229,8 @@ const Hero = () => {
               <button type='submit' className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold text-sm uppercase tracking-[0.06em] rounded-md h-[54px] px-8 transition-all shadow-lg shadow-[var(--color-brand)]/30 flex-shrink-0 self-end'>Buscar</button>
             </div>
             {/* .bottom-part */}
-            <div className='overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]' style={{ maxHeight: showMore ? '200px' : '0', opacity: showMore ? 1 : 0, marginTop: showMore ? '16px' : '0' }}>
-              <div className='flex items-end gap-3 bg-black rounded-xl p-5' onClick={(e) => e.stopPropagation()}>
+            <div className={`transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${desktopFilterOpen ? 'overflow-visible' : 'overflow-hidden'}`} style={{ maxHeight: showMore ? '200px' : '0', opacity: showMore ? 1 : 0, marginTop: showMore ? '16px' : '0' }}>
+              <div className='flex items-end gap-3 bg-black rounded-xl p-5'>
                 {[
                   {label:'Tipo', name:'type', opts:[{v:'Todos',l:'Todos'},{v:'Casa',l:'Casas'},{v:'Departamento',l:'Departamentos'},{v:'Terreno',l:'Terrenos'},{v:'Campo',l:'Campos'},{v:'Inmueble Comercial',l:'Inmuebles Comerciales'},{v:'Gran Inversión',l:'Grandes Inversiones'}]},
                   {label:'Operación', name:'operation', opts:[{v:'Todos',l:'Todos'},{v:'Venta',l:'Venta'},{v:'Alquiler',l:'Alquiler'}]},
