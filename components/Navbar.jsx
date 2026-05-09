@@ -81,7 +81,7 @@ const Navbar = () => {
         }`}
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 8px) + 15px)', paddingBottom: '15px' }}
       >
-        <div className="max-w-[1820px] mx-auto flex items-center pl-[15px] pr-[70px] h-full">
+        <div className="max-w-[1820px] mx-auto flex items-center px-[70px] h-full">
           {/* Logo */}
           <Link className="flex items-center flex-shrink-0" href="/">
             <Image
