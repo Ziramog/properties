@@ -132,7 +132,7 @@ const Navbar = () => {
           </nav>
 
           {/* Side Nav — Senada .sideMenu: Phone | Search | Show More */}
-          <div className="desktop-dropdown flex items-center gap-4">
+          <div className="desktop-dropdown flex items-center gap-4 ml-8">
             {/* Phone */}
             <a href={`tel:${PHONE_NUMBER}`} className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors" aria-label="Llamar">
               <img src="/senada/images/icons/ico_phone.svg" alt="Teléfono" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
