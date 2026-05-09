@@ -6,7 +6,6 @@ import logo from '@/assets/images/logo.png';
 import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whatsapp';
 
 const EMAIL = 'info@roggeroyroma.com.ar';
-const ADDRESS = 'Alta Gracia, Córdoba, Argentina';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -90,15 +89,17 @@ const Footer = () => {
                       ))}
                     </ul>
                   </li>
-                  {/* CONTACTO */}
+                  {/* LISTADO PREMIUM */}
                   <li>
                     <span className="block text-[15px] text-white uppercase font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                      Contacto
+                      Listado Premium
                     </span>
                     <ul>
-                      <li className="text-[13px] text-white/70 font-light py-[5px] block">+54 9 3547 563911</li>
-                      <li className="text-[13px] text-white/70 font-light py-[5px] block">{EMAIL}</li>
-                      <li className="text-[13px] text-white/70 font-light py-[5px] block max-w-[190px]">{ADDRESS}</li>
+                      <li>
+                        <Link href="/#propiedades-destacadas" className="block text-[13px] text-white/70 font-light py-[5px] pr-[10px] hover:text-white transition-colors">
+                          Propiedades Destacadas
+                        </Link>
+                      </li>
                     </ul>
                   </li>
                 </ul>
