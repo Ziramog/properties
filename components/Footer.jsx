@@ -60,7 +60,6 @@ const Footer = () => {
                         { href: '/properties?type=Departamento', label: 'Departamentos' },
                         { href: '/properties?type=Campo', label: 'Campos' },
                         { href: '/properties?type=Terreno', label: 'Terrenos' },
-                        { href: '/properties', label: 'Todas las propiedades' },
                       ].map(l => (
                         <li key={l.href}>
                           <Link href={l.href} className="block text-[13px] text-white/70 font-light py-[5px] pr-[10px] hover:text-white transition-colors">
@@ -77,7 +76,6 @@ const Footer = () => {
                     </span>
                     <ul>
                       {[
-                        { href: '/#propiedades-destacadas', label: 'Listado Premium' },
                         { href: '/#nuestra-historia', label: 'Nuestra Historia' },
                         { href: '/contact', label: 'Contacto' },
                       ].map(l => (
@@ -124,7 +122,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Bottom — Border top + Copyright + Social */}
+          {/* Bottom — Border top + Copyright + Social + Wolfim */}
           <div className="flex items-center justify-between mt-[35px] pt-[35px] md:mt-[50px] md:pt-[50px] border-t-2 border-white/[0.1]">
             <p className="text-white text-[14px] uppercase font-bold">
               &copy; {currentYear} Roggero & Roma
@@ -156,6 +154,14 @@ const Footer = () => {
                 </a>
               </li>
             </ul>
+            <Image
+              src="/images/wolfim studio white-Photoroom.png"
+              alt="Wolfim Studio"
+              width={80}
+              height={30}
+              style={{ height: '30px', width: 'auto' }}
+              className="opacity-50 hover:opacity-80 transition-opacity"
+            />
           </div>
         </div>
       </div>
