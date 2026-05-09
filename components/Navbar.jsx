@@ -16,6 +16,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [providers, setProviders] = useState(null);
+  const [desktopDropdown, setDesktopDropdown] = useState(null);
   const pathname = usePathname();
 
   const isHeroPage = pathname === '/';
@@ -53,16 +54,26 @@ const Navbar = () => {
     return () => { document.body.style.overflow = ''; };
   }, [isMobileMenuOpen]);
 
+  useEffect(() => {
+    if (!desktopDropdown) return;
+    const close = (e) => {
+      if (!e.target.closest('.desktop-dropdown')) setDesktopDropdown(null);
+    };
+    document.addEventListener('click', close);
+    return () => document.removeEventListener('click', close);
+  }, [desktopDropdown]);
+
   return (
     <>
-      {/* Desktop Nav */}
+      {/* Desktop Nav — Senada-style */}
       <header
         className={`hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isGlassMode ? 'bg-black shadow-lg shadow-black/20' : 'bg-transparent'
         }`}
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 8px) + 15px)', paddingBottom: '15px' }}
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 h-full">
+        <div className="max-w-[1820px] mx-auto flex items-center justify-between px-[15px] h-full">
+          {/* Logo */}
           <Link className="flex items-center flex-shrink-0" href="/">
             <Image
               className="brightness-0 invert"
@@ -74,25 +85,79 @@ const Navbar = () => {
             />
           </Link>
 
-          <nav className="flex gap-10 lg:gap-14">
-            <Link href="/" className={`${pathname === '/' ? 'text-[var(--color-brand)]' : 'text-white'} hover:text-[var(--color-brand)] transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`}>Inicio</Link>
-            <Link href="/properties" className={`${pathname.startsWith('/properties') ? 'text-[var(--color-brand)]' : 'text-white'} hover:text-[var(--color-brand)] transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`}>Propiedades</Link>
-            <Link href="/contact" className={`${pathname === '/contact' ? 'text-[var(--color-brand)]' : 'text-white'} hover:text-[var(--color-brand)] transition-colors text-[13px] font-medium uppercase tracking-[0.08em]`}>Contacto</Link>
+          {/* Main Nav — Senada .mainMenu */}
+          <nav className="desktop-dropdown flex items-center gap-8 lg:gap-10">
+            <Link href="/properties?is_featured=true" className="text-white hover:text-[var(--color-brand)] transition-colors text-[13px] font-normal tracking-[0.02em] uppercase">
+              Listado Premium
+            </Link>
+
+            {/* Propiedades dropdown — Senada .dropdown */}
+            <div className="relative" onMouseEnter={() => setDesktopDropdown('props')} onMouseLeave={() => setDesktopDropdown(null)}>
+              <button className="flex items-center gap-1 text-white hover:text-[var(--color-brand)] transition-colors text-[13px] font-normal tracking-[0.02em] uppercase">
+                Propiedades
+                <svg className={`w-3 h-3 transition-transform ${desktopDropdown === 'props' ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              {desktopDropdown === 'props' && (
+                <ul className="absolute top-full left-0 mt-2 bg-[#222] border border-white/10 rounded-md py-2 min-w-[200px] shadow-xl z-50">
+                  {[
+                    { label: 'Casas', query: 'type=Casa' },
+                    { label: 'Departamentos', query: 'type=Departamento' },
+                    { label: 'Campos', query: 'type=Campo' },
+                    { label: 'Inmuebles Comerciales', query: 'type=Inmueble Comercial' },
+                    { label: 'Terrenos', query: 'type=Terreno' },
+                    { label: 'Todas las propiedades', query: '' },
+                  ].map(item => (
+                    <li key={item.label}>
+                      <Link href={`/properties${item.query ? `?${item.query}` : ''}`} className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <Link href="/about" className="text-white hover:text-[var(--color-brand)] transition-colors text-[13px] font-normal tracking-[0.02em] uppercase">
+              Roggero&Roma Historia
+            </Link>
           </nav>
 
-          <div className="flex items-center gap-5">
-            {!session && providers && Object.values(providers).map((provider) => (
-              <button key={provider.id} onClick={() => signIn(provider.id)} className="text-white hover:text-[var(--color-brand)] px-6 py-2.5 font-bold text-sm uppercase tracking-wider transition-all">Ingresar</button>
-            ))}
-            {session && (
-              <div className="flex items-center gap-3">
-                {session.user?.role === 'admin' && (
-                  <Link href="/properties/add" className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-4 py-2 rounded-full font-bold text-sm uppercase tracking-wider transition-all">Agregar</Link>
-                )}
-                <span className="text-white/80 text-sm hidden lg:block">{session.user?.name?.split(' ')[0]}</span>
-                <button onClick={() => signOut()} className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full font-medium text-sm transition-all">Salir</button>
-              </div>
-            )}
+          {/* Side Nav — Senada .sideMenu: Phone | Search | Show More */}
+          <div className="desktop-dropdown flex items-center gap-4">
+            {/* Phone */}
+            <a href={`tel:${PHONE_NUMBER}`} className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors" aria-label="Llamar">
+              <img src="/senada/images/icons/ico_phone.svg" alt="Teléfono" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
+            </a>
+            {/* Search */}
+            <Link href="/properties" className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors" aria-label="Buscar">
+              <img src="/senada/images/icons/ico_search.svg" alt="Buscar" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
+            </Link>
+            {/* Show More / Hamburger */}
+            <div className="relative" onMouseEnter={() => setDesktopDropdown('more')} onMouseLeave={() => setDesktopDropdown(null)}>
+              <button className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors" aria-label="Más">
+                <img src="/senada/images/icons/ico_plus.svg" alt="Más" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
+              </button>
+              {desktopDropdown === 'more' && (
+                <ul className="absolute top-full right-0 mt-2 bg-[#222] border border-white/10 rounded-md py-2 min-w-[180px] shadow-xl z-50">
+                  <li><Link href="/" className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Inicio</Link></li>
+                  <li><Link href="/contact" className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Contacto</Link></li>
+                  {!session && providers && Object.values(providers).map((provider) => (
+                    <li key={provider.id}>
+                      <button onClick={() => signIn(provider.id)} className="block w-full text-left px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Ingresar</button>
+                    </li>
+                  ))}
+                  {session && (
+                    <>
+                      {session.user?.role === 'admin' && (
+                        <li><Link href="/properties/add" className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Agregar Propiedad</Link></li>
+                      )}
+                      <li><Link href="/profile" className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Perfil</Link></li>
+                      <li><button onClick={() => signOut()} className="block w-full text-left px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Salir</button></li>
+                    </>
+                  )}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -250,6 +315,14 @@ const Navbar = () => {
         .rOptions.menu-open {
           transform: translateY(0);
           display: flex;
+        }
+        /* Desktop dropdown animation — Senada .top_level */
+        .desktop-dropdown ul {
+          animation: dropdownFade 0.2s ease-out;
+        }
+        @keyframes dropdownFade {
+          from { opacity: 0; transform: translateY(-4px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </>
