@@ -32,13 +32,17 @@ const HomePage = async () => {
       </div>
 
       {/* 3. Featured — best inventory showcase */}
-      <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured && (p.images || []).length > 0).slice(0, 6)} />
+      <div id="propiedades-destacadas">
+        <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured && (p.images || []).length > 0).slice(0, 6)} />
+      </div>
 
       {/* 4. CTA — seller + investor */}
       <SellerCTA />
 
-      {/* 5. Agents */}
-      <Agents />
+      {/* 5. Agents — Roggero & Roma Historia */}
+      <div id="nuestra-historia">
+        <Agents />
+      </div>
     </>
   );
 };
