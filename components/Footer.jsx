@@ -166,57 +166,121 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Mobile — simplified Senada layout */}
+      {/* Mobile — matches desktop structure, stacked */}
       <div className="block md:hidden">
         <div className="px-5 py-8">
-          {/* Logo */}
-          <Link href="/" className="inline-block mb-6">
-            <Image
-              src={logo}
-              alt="Roggero & Roma"
-              style={{ height: '28px', width: 'auto' }}
-              className="brightness-0 invert"
-            />
-          </Link>
+          {/* Logo + Company info */}
+          <div className="flex flex-col gap-2 mb-8">
+            <Link href="/" className="inline-block">
+              <Image
+                src={logo}
+                alt="Roggero & Roma"
+                style={{ height: '28px', width: 'auto' }}
+                className="brightness-0 invert"
+              />
+            </Link>
+            <h2 className="text-[15px] text-white uppercase font-bold mt-3" style={{ fontFamily: 'var(--font-heading)' }}>
+              Roggero & Roma
+            </h2>
+            <p className="text-[13px] text-white/60 font-light">Alta Gracia</p>
+            <p className="text-[13px] text-white/60 font-light">Córdoba, Argentina</p>
+            <a href={`mailto:${EMAIL}`} className="flex items-center gap-2 text-[13px] text-white font-light">
+              <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
+              {EMAIL}
+            </a>
+            <a href={`tel:${PHONE_NUMBER}`} className="flex items-center gap-2 text-[13px] text-white font-light">
+              <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
+              {PHONE_DISPLAY}
+            </a>
+          </div>
 
-          {/* Links — 2 columns */}
-          <div className="grid grid-cols-2 gap-y-1 gap-x-6 mb-6">
-            {[
-              { href: '/#propiedades-destacadas', label: 'Listado Premium' },
-              { href: '/properties?type=Casa', label: 'Casas' },
-              { href: '/properties?type=Departamento', label: 'Departamentos' },
-              { href: '/properties?type=Campo', label: 'Campos' },
-              { href: '/properties?type=Terreno', label: 'Terrenos' },
-              { href: '/properties', label: 'Propiedades' },
-              { href: '/#nuestra-historia', label: 'Nuestra Historia' },
-              { href: '/contact', label: 'Contacto' },
-            ].map(l => (
-              <Link key={l.href + l.label} href={l.href} className="text-[13px] text-white/60 font-light py-[3px] leading-[2.2] hover:text-white transition-colors">
-                {l.label}
+          {/* Nav columns — stacked with headings */}
+          <div className="flex flex-col gap-6 mb-8">
+            {/* Propiedades */}
+            <div>
+              <span className="block text-[15px] text-white uppercase font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>Propiedades</span>
+              <div className="grid grid-cols-2 gap-y-1">
+                {[
+                  { href: '/properties?type=Casa', label: 'Casas' },
+                  { href: '/properties?type=Departamento', label: 'Departamentos' },
+                  { href: '/properties?type=Campo', label: 'Campos' },
+                  { href: '/properties?type=Terreno', label: 'Terrenos' },
+                ].map(l => (
+                  <Link key={l.href} href={l.href} className="text-[13px] text-white/60 font-light py-[3px] hover:text-white transition-colors">
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            {/* Empresa */}
+            <div>
+              <span className="block text-[15px] text-white uppercase font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>Empresa</span>
+              <div className="grid grid-cols-2 gap-y-1">
+                {[
+                  { href: '/#nuestra-historia', label: 'Nuestra Historia' },
+                  { href: '/contact', label: 'Contacto' },
+                ].map(l => (
+                  <Link key={l.href} href={l.href} className="text-[13px] text-white/60 font-light py-[3px] hover:text-white transition-colors">
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            {/* Listado Premium */}
+            <div>
+              <span className="block text-[15px] text-white uppercase font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>Listado Premium</span>
+              <Link href="/#propiedades-destacadas" className="text-[13px] text-white/60 font-light py-[3px] hover:text-white transition-colors">
+                Propiedades Destacadas
               </Link>
-            ))}
+            </div>
+            {/* Newsletter */}
+            <div>
+              <span className="block text-[15px] text-white uppercase font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>Newsletter</span>
+              <form>
+                <div className="relative">
+                  <img src="/senada/images/icons/ico_newsletter_email.svg" alt="" className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-4" style={{ filter: 'brightness(0) invert(1)' }} />
+                  <input
+                    type="email"
+                    placeholder="Tu email"
+                    className="w-full h-10 bg-white/[0.06] border-none rounded-[5px] text-white font-bold text-[14px] pl-[50px] pr-4 outline-none placeholder:text-white/30"
+                  />
+                </div>
+              </form>
+            </div>
           </div>
 
-          {/* Contact icons + phone */}
-          <div className="flex items-center gap-[10px] mb-6">
-            <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer"
-              className="w-[36px] h-[36px] bg-[#25D366] rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110">
-              <FaWhatsapp className="text-white text-[18px]" />
+          {/* Social icons — centered row */}
+          <div className="flex items-center justify-center gap-[25px] mb-6">
+            <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Email">
+              <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-5 h-5" style={{ filter: 'brightness(0)' }} />
             </a>
-            <a href={`mailto:${EMAIL}`}
-              className="w-[36px] h-[36px] bg-white/[0.10] rounded-full flex items-center justify-center transition-all duration-200 hover:bg-[var(--color-brand)]">
-              <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-4 h-4" style={{ filter: 'brightness(0) invert(1)' }} />
+            <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="WhatsApp">
+              <FaWhatsapp className="text-xl" />
             </a>
-            <a href={`tel:${PHONE_NUMBER}`}
-              className="w-[36px] h-[36px] bg-white/[0.10] rounded-full flex items-center justify-center transition-all duration-200 hover:bg-[var(--color-brand)]">
-              <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-4 h-4" style={{ filter: 'brightness(0) invert(1)' }} />
+            <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Facebook">
+              <img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
             </a>
-            <span className="text-[13px] text-white/60 ml-1">{PHONE_DISPLAY}</span>
+            <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Instagram">
+              <img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
+            </a>
+            <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="LinkedIn">
+              <img src="/senada/images/icons/ico_linked.svg" alt="linkedin" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
+            </a>
           </div>
 
-          {/* Copyright */}
-          <div className="border-t border-white/[0.08] pt-4 text-[11px] text-white/40 text-center">
-            &copy; {currentYear} Roggero & Roma. Todos los derechos reservados.
+          {/* Copyright + Wolfim */}
+          <div className="border-t border-white/[0.08] pt-4 flex flex-col items-center gap-3">
+            <p className="text-[11px] text-white/40 text-center">
+              &copy; {currentYear} Roggero & Roma. Todos los derechos reservados.
+            </p>
+            <Image
+              src="/images/wolfim studio white-Photoroom.png"
+              alt="Wolfim Studio"
+              width={70}
+              height={25}
+              style={{ height: '25px', width: 'auto' }}
+              className="opacity-40"
+            />
           </div>
         </div>
       </div>
