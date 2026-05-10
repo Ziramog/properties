@@ -17,6 +17,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [providers, setProviders] = useState(null);
   const [desktopDropdown, setDesktopDropdown] = useState(null);
+  const [mobileSubOpen, setMobileSubOpen] = useState(false);
   const dropdownTimeout = useRef(null);
   const pathname = usePathname();
 
@@ -220,9 +221,9 @@ const Navbar = () => {
         <div
           className="rOptions absolute inset-x-0 z-[999] flex flex-col bg-black"
           style={{
-            top: 'calc(env(safe-area-inset-top, 8px) + 60px)',
-            height: 'calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top, 8px) - 60px)',
-            padding: '80px 12px 20px',
+            top: 0,
+            height: 'calc(var(--vh, 1vh) * 100)',
+            padding: '120px 12px 20px',
             overflowY: 'auto',
             transformOrigin: 'top',
             transform: isMobileMenuOpen ? 'scaleY(1)' : 'scaleY(0)',
@@ -230,46 +231,83 @@ const Navbar = () => {
             transition: 'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease',
             pointerEvents: isMobileMenuOpen ? 'auto' : 'none',
           }}>
-          {/* Nav links */}
-          <nav className="flex-1 flex flex-col justify-center px-8">
-            <Link href="/" className="flex items-center justify-between text-white text-[28px] font-normal py-4 border-b border-white/10" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
+          {/* Nav links — Senada .mobileMenu */}
+          <nav className="flex-1 flex flex-col px-0">
+            <Link href="/" className={`flex items-center justify-between text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.2s' }} onClick={() => setIsMobileMenuOpen(false)}>
               Inicio
-              <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-50" style={{ filter: 'brightness(0) invert(1)' }} />
+              <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
             </Link>
-            <Link href="/properties" className="flex items-center justify-between text-white text-[28px] font-normal py-4 border-b border-white/10" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
-              Propiedades
-              <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-50" style={{ filter: 'brightness(0) invert(1)' }} />
-            </Link>
-            <Link href="/contact" className="flex items-center justify-between text-white text-[28px] font-normal py-4 border-b border-white/10" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
+
+            {/* Propiedades — expandable dropdown */}
+            <div className={`border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ animationDelay: '0.4s' }}>
+              <button
+                onClick={() => setMobileSubOpen(!mobileSubOpen)}
+                className="flex items-center justify-between w-full text-white text-[28px] font-normal py-[15px]"
+                style={{ fontFamily: 'var(--font-heading)' }}
+              >
+                Propiedades
+                <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className={`w-5 h-5 opacity-40 transition-transform duration-300 ${mobileSubOpen ? 'rotate-90' : ''}`} style={{ filter: 'brightness(0) invert(1)' }} />
+              </button>
+              <div className={`overflow-hidden transition-all duration-300 ${mobileSubOpen ? 'max-h-[300px] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
+                {[
+                  { href: '/properties?type=Casa', label: 'Casas' },
+                  { href: '/properties?type=Departamento', label: 'Departamentos' },
+                  { href: '/properties?type=Campo', label: 'Campos' },
+                  { href: '/properties?type=Terreno', label: 'Terrenos' },
+                ].map(l => (
+                  <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] font-light py-2 pl-4 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <Link href="/contact" className={`flex items-center justify-between text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.6s' }} onClick={() => setIsMobileMenuOpen(false)}>
               Contacto
-              <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-50" style={{ filter: 'brightness(0) invert(1)' }} />
+              <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
             </Link>
             {session && (
-              <Link href="/profile" className="flex items-center justify-between text-white text-[28px] font-normal py-4 border-b border-white/10" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
+              <Link href="/profile" className={`flex items-center justify-between text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
                 Perfil
-                <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-50" style={{ filter: 'brightness(0) invert(1)' }} />
+                <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
               </Link>
             )}
           </nav>
 
-          {/* Bottom: phone, email, icons — using senada SVG icons */}
-          <div className="flex-shrink-0 px-8 pt-6 pb-10 border-t border-white/10" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 16px)' }}>
-            <div className="flex flex-col gap-4 mb-6">
-              <a href={`tel:${PHONE_NUMBER}`} className="flex items-center gap-4 text-white text-[16px]">
-                <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-6 h-6" style={{ filter: 'brightness(0) invert(1)' }} />
-                {PHONE_DISPLAY}
-              </a>
-              <a href={`mailto:${EMAIL}`} className="flex items-center gap-4 text-white text-[16px]">
-                <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-6 h-6" style={{ filter: 'brightness(0) invert(1)' }} />
-                {EMAIL}
-              </a>
-            </div>
-            <div className="flex items-center gap-5">
-              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="text-white"><FaWhatsapp size={24} /></a>
-              <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-6 h-6" /></a>
-              <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-6 h-6" /></a>
-              <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="text-white"><img src="/senada/images/icons/ico_linked.svg" alt="linkedin" className="w-6 h-6" /></a>
-            </div>
+          {/* Bottom — social icons, senada style: .mobileMenuFooter */}
+          <div className="flex-shrink-0 pt-[30px] border-t border-white/[0.1]" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 16px)' }}>
+            <ul className="flex items-center gap-[25px]" style={{ filter: 'brightness(0) invert(1)' }}>
+              <li>
+                <a href={`tel:${PHONE_NUMBER}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Llamar" style={{ filter: 'none' }}>
+                  <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-5 h-5" />
+                </a>
+              </li>
+              <li>
+                <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Email" style={{ filter: 'none' }}>
+                  <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-5 h-5" />
+                </a>
+              </li>
+              <li>
+                <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="WhatsApp" style={{ filter: 'none' }}>
+                  <FaWhatsapp className="text-xl" />
+                </a>
+              </li>
+              <li>
+                <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Instagram" style={{ filter: 'none' }}>
+                  <img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-5 h-5" />
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Facebook" style={{ filter: 'none' }}>
+                  <img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-5 h-5" />
+                </a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="LinkedIn" style={{ filter: 'none' }}>
+                  <img src="/senada/images/icons/ico_linked.svg" alt="linkedin" className="w-5 h-5" />
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -328,6 +366,14 @@ const Navbar = () => {
         .rOptions.menu-open {
           transform: translateY(0);
           display: flex;
+        }
+        .mobile-item {
+          opacity: 0;
+          transform: translateY(10px);
+          animation: mobileFadeIn 0.5s ease-out forwards;
+        }
+        @keyframes mobileFadeIn {
+          to { opacity: 1; transform: translateY(0); }
         }
         /* Desktop dropdown animation — Senada .top_level */
         .desktop-dropdown ul {
