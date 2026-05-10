@@ -129,7 +129,7 @@ const Footer = () => {
           {/* Bottom — Border top + Copyright + Social + Wolfim */}
           <div className="flex items-center justify-between mt-[35px] pt-[35px] md:mt-[50px] md:pt-[50px] border-t-2 border-white/[0.1]">
             <p className="text-white text-[14px] uppercase font-bold">
-              &copy; {currentYear} Roggero & Roma
+              &copy; {currentYear} Roggero & Roma <sup>TM</sup>
             </p>
             <ul className="flex items-center gap-[25px]">
               <li>
@@ -158,14 +158,19 @@ const Footer = () => {
                 </a>
               </li>
             </ul>
-            <Image
-              src="/images/wolfim studio white-Photoroom.png"
-              alt="Wolfim Studio"
-              width={80}
-              height={30}
-              style={{ height: '30px', width: 'auto' }}
-              className="opacity-50 hover:opacity-80 transition-opacity"
-            />
+            <p className="text-white/50 text-[14px] uppercase font-bold">
+              Powered by{' '}
+              <a href="https://wolfimstudio.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-white transition-colors">
+                <Image
+                  src="/images/wolfim studio white-Photoroom.png"
+                  alt="Wolfim Studio"
+                  width={80}
+                  height={30}
+                  style={{ height: '22px', width: 'auto' }}
+                  className="opacity-50 hover:opacity-80 transition-opacity"
+                />
+              </a>
+            </p>
           </div>
         </div>
       </div>
@@ -277,19 +282,24 @@ const Footer = () => {
             </a>
           </div>
 
-          {/* Copyright + Wolfim */}
+          {/* Copyright + Powered by */}
           <div className="border-t border-white/[0.08] pt-4 flex flex-col items-center gap-3">
-            <p className="text-[11px] text-white/40 text-center">
-              &copy; {currentYear} Roggero & Roma. Todos los derechos reservados.
+            <p className="text-[11px] text-white font-bold uppercase">
+              &copy; {currentYear} Roggero & Roma <sup>TM</sup>
             </p>
-            <Image
-              src="/images/wolfim studio white-Photoroom.png"
-              alt="Wolfim Studio"
-              width={70}
-              height={25}
-              style={{ height: '25px', width: 'auto' }}
-              className="opacity-40"
-            />
+            <p className="text-[11px] text-white/40">
+              Powered by{' '}
+              <a href="https://wolfimstudio.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-white/70 transition-colors">
+                <Image
+                  src="/images/wolfim studio white-Photoroom.png"
+                  alt="Wolfim Studio"
+                  width={70}
+                  height={25}
+                  style={{ height: '18px', width: 'auto' }}
+                  className="opacity-40"
+                />
+              </a>
+            </p>
           </div>
         </div>
       </div>
