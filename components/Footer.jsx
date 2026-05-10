@@ -181,7 +181,7 @@ const Footer = () => {
                 alt="Roggero & Roma"
                 width={200}
                 height={100}
-                style={{ height: '42px', width: 'auto' }}
+                style={{ height: '55px', width: 'auto' }}
                 className="brightness-0 invert"
               />
             </Link>
