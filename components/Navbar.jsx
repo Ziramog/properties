@@ -83,14 +83,14 @@ const Navbar = () => {
       >
         <div className="max-w-[1820px] mx-auto flex items-center px-[70px] h-full">
           {/* Logo */}
-          <Link className="flex items-center flex-shrink-0" href="/">
+          <Link className="flex items-center flex-shrink-0 group" href="/">
             <Image
-              className="brightness-0 invert"
-              src="/images/ISOTIPO R&R-Photoroom.png"
+              className="brightness-0 invert transition-all duration-300 group-hover:opacity-70"
+              src={isHeroPage && !isScrolled ? '/images/LOGO R&R 2023.png' : '/images/ISOTIPO R&R-Photoroom.png'}
               alt="Roggero & Roma"
-              width={120}
-              height={40}
-              style={{ height: '40px', width: 'auto' }}
+              width={isHeroPage && !isScrolled ? 180 : 120}
+              height={isHeroPage && !isScrolled ? 60 : 40}
+              style={{ height: isHeroPage && !isScrolled ? '60px' : '40px', width: 'auto' }}
             />
           </Link>
 
