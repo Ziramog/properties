@@ -89,9 +89,9 @@ const Navbar = () => {
               className="brightness-0 invert transition-all duration-300 group-hover:opacity-70"
               src={isHeroPage && !isScrolled ? '/images/LOGO R&R 2023.png' : '/images/ISOTIPO R&R-Photoroom.png'}
               alt="Roggero & Roma"
-              width={isHeroPage && !isScrolled ? 180 : 120}
-              height={isHeroPage && !isScrolled ? 60 : 40}
-              style={{ height: isHeroPage && !isScrolled ? '60px' : '40px', width: 'auto' }}
+              width={isHeroPage && !isScrolled ? 360 : 120}
+              height={isHeroPage && !isScrolled ? 120 : 40}
+              style={{ height: isHeroPage && !isScrolled ? '120px' : '40px', width: 'auto' }}
             />
           </Link>
 
