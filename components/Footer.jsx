@@ -263,40 +263,48 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Social icons — centered row */}
-          <div className="flex items-center justify-center gap-[25px] mb-6">
-            <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Email">
-              <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-5 h-5" style={{ filter: 'brightness(0)' }} />
-            </a>
-            <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="WhatsApp">
-              <FaWhatsapp className="text-xl" />
-            </a>
-            <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Facebook">
-              <img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
-            </a>
-            <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Instagram">
-              <img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
-            </a>
-            <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="LinkedIn">
-              <img src="/senada/images/icons/ico_linked.svg" alt="linkedin" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
-            </a>
-          </div>
-
-          {/* Copyright + Powered by */}
-          <div className="border-t border-white/[0.08] pt-4 flex flex-col items-center gap-3">
-            <p className="text-[11px] text-white font-bold uppercase">
+          {/* Copyright + Social + Powered by */}
+          <div className="border-t border-white/[0.08] pt-6 flex flex-col items-center gap-4">
+            <p className="text-[14px] text-white uppercase font-bold mb-2">
               &copy; {currentYear} Roggero & Roma <sup>TM</sup>
             </p>
-            <p className="text-[11px] text-white/40">
+            <ul className="flex items-center gap-[25px]">
+              <li>
+                <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Email">
+                  <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-5 h-5" style={{ filter: 'brightness(0)' }} />
+                </a>
+              </li>
+              <li>
+                <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="WhatsApp">
+                  <FaWhatsapp className="text-xl" />
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Facebook">
+                  <img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
+                </a>
+              </li>
+              <li>
+                <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Instagram">
+                  <img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
+                </a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="LinkedIn">
+                  <img src="/senada/images/icons/ico_linked.svg" alt="linkedin" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
+                </a>
+              </li>
+            </ul>
+            <p className="text-[14px] text-white/40">
               Powered by{' '}
-              <a href="https://wolfimstudio.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-white/70 transition-colors">
+              <a href="https://wolfimstudio.com" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition-colors">
                 <Image
                   src="/images/wolfim studio white-Photoroom.png"
                   alt="Wolfim Studio"
-                  width={70}
-                  height={25}
+                  width={80}
+                  height={22}
                   style={{ height: '18px', width: 'auto' }}
-                  className="opacity-40"
+                  className="opacity-60 inline-block align-middle"
                 />
               </a>
             </p>
