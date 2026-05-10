@@ -52,7 +52,7 @@ const SellerCTA = () => {
                   href={generateWhatsAppLink({ context: 'seller' })}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-full h-[52px] bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white rounded-full text-sm font-bold uppercase tracking-[0.06em] transition-all duration-200 shadow-lg shadow-[var(--color-brand)]/30 hover:shadow-xl hover:shadow-[var(--color-brand)]/40 hover:-translate-y-px"
+                  className="inline-flex items-center justify-center w-full h-[52px] bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white rounded-[6px] text-sm font-bold uppercase tracking-[0.06em] transition-all duration-200 shadow-lg shadow-[var(--color-brand)]/30 hover:shadow-xl hover:shadow-[var(--color-brand)]/40 hover:-translate-y-px"
                 >
                   Solicitar tasación gratuita
                 </a>
@@ -102,7 +102,7 @@ const SellerCTA = () => {
                 {/* Ghost Button */}
                 <a
                   href="/properties"
-                  className="inline-flex items-center justify-center w-full h-[52px] bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white rounded-full text-sm font-bold uppercase tracking-[0.06em] transition-all duration-200 hover:-translate-y-px"
+                  className="inline-flex items-center justify-center w-full h-[52px] bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white rounded-[6px] text-sm font-bold uppercase tracking-[0.06em] transition-all duration-200 hover:-translate-y-px"
                 >
                   Buscar inversión
                 </a>
