@@ -38,9 +38,9 @@ async function addProperty(formData) {
       state: formData.get('location.state'),
       zipcode: formData.get('location.zipcode'),
     },
-    beds: formData.get('beds'),
-    baths: formData.get('baths'),
-    square_feet: formData.get('square_feet'),
+    beds: formData.get('beds') || undefined,
+    baths: formData.get('baths') || undefined,
+    square_feet: formData.get('square_feet') || undefined,
     amenities,
     rates: {
       weekly: formData.get('rates.weekly'),

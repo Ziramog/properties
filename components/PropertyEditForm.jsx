@@ -125,17 +125,17 @@ const PropertyEditForm = ({ property }) => {
       <div className='mb-4 flex flex-wrap'>
         <div className='w-full sm:w-1/3 pr-2'>
           <label className='block text-gray-700 font-bold mb-2'>Dormitorios</label>
-          <input type='number' id='beds' name='beds' className='border rounded w-full py-2 px-3' required
+          <input type='number' id='beds' name='beds' className='border rounded w-full py-2 px-3'
             defaultValue={property.beds} />
         </div>
         <div className='w-full sm:w-1/3 px-2'>
           <label className='block text-gray-700 font-bold mb-2'>Baños</label>
-          <input type='number' id='baths' name='baths' className='border rounded w-full py-2 px-3' required
+          <input type='number' id='baths' name='baths' className='border rounded w-full py-2 px-3'
             defaultValue={property.baths} />
         </div>
         <div className='w-full sm:w-1/3 pl-2'>
           <label className='block text-gray-700 font-bold mb-2'>Metros²</label>
-          <input type='number' id='square_feet' name='square_feet' className='border rounded w-full py-2 px-3' required
+          <input type='number' id='square_feet' name='square_feet' className='border rounded w-full py-2 px-3'
             defaultValue={property.square_feet} />
         </div>
       </div>
