@@ -11,7 +11,7 @@ export default withAuth(
     }
 
     // Admin-only routes
-    if (path.startsWith('/properties/add') || path.match(/\/properties\/[^/]+\/edit/)) {
+    if (path.startsWith('/properties/add') || path.startsWith('/admin') || path.match(/\/properties\/[^/]+\/edit/)) {
       if (token?.role !== 'admin') {
         return NextResponse.redirect(new URL('/properties', req.url));
       }
@@ -27,5 +27,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ['/properties/add', '/properties/:id/edit'],
+  matcher: ['/properties/add', '/properties/:id/edit', '/admin'],
 };

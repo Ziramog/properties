@@ -21,8 +21,8 @@ async function deleteProperty(propertyId) {
 
   if (!property) throw new Error('Property Not Found');
 
-  // Verify ownership
-  if (property.owner.toString() !== userId) {
+  // Verify ownership or admin
+  if (property.owner.toString() !== userId && sessionUser.role !== 'admin') {
     throw new Error('Unauthorized');
   }
 
