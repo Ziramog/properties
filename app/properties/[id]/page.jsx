@@ -13,27 +13,24 @@ import { convertToSerializeableObject } from '@/utils/convertToObject';
 import Link from 'next/link';
 
 const PropertyPage = async ({ params }) => {
-  await connectDB();
-  const propertyDoc = await Property.findById(params.id).lean();
+  try {
+    await connectDB();
+    const propertyDoc = await Property.findById(params.id).lean();
 
-  if (!propertyDoc) {
+    if (!propertyDoc) {
+      return (
+        <h1 className='text-center text-2xl font-bold mt-10'>
+          Propiedad No Encontrada
+        </h1>
+      );
+    }
+
+    const property = convertToSerializeableObject(propertyDoc);
+
     return (
-      <h1 className='text-center text-2xl font-bold mt-10'>
-        Propiedad No Encontrada
-      </h1>
-    );
-  }
-
-  const property = convertToSerializeableObject(propertyDoc);
-
-  return (
-    <div className="min-h-screen" style={{ background: '#F6F6F6' }}>
-      {/* Gallery subheader — full width */}
-      <PropertyGallery images={property.images} property={property} />
-
-      {/* Content */}
-      <section className="px-[15px] pb-16">
-        {/* Back button */}
+      <div className="min-h-screen" style={{ background: '#F6F6F6' }}>
+        <PropertyGallery images={property.images} property={property} />
+        <section className="px-[15px] pb-16">
           <div className="py-4 px-4 md:px-0">
             <Link
               href='/properties'
@@ -45,19 +42,12 @@ const PropertyPage = async ({ params }) => {
               Volver a Propiedades
             </Link>
           </div>
-
-          {/* Property details + contact */}
           <div>
             <PropertyDetails property={property} />
-
-            {/* Contact & Actions */}
             <div className="mt-0 md:mt-8 space-y-0 md:space-y-4">
-              {/* Contact form — full card */}
               <div id="contact-form">
                 <PropertyContactForm property={property} />
               </div>
-
-              {/* Desktop: WhatsApp + Bookmark + Share row */}
               <div className="hidden md:flex md:flex-wrap md:gap-4 mt-4">
                 <div className="flex-1 min-w-[200px]">
                   <WhatsAppButton property={property} />
@@ -69,8 +59,6 @@ const PropertyPage = async ({ params }) => {
                   <ShareButtons property={property} />
                 </div>
               </div>
-
-              {/* Mobile: WhatsApp + Bookmark + Share */}
               <div className="md:hidden px-4 space-y-3 mb-0">
                 <WhatsAppButton property={property} />
                 <BookmarkButton property={property} />
@@ -78,15 +66,34 @@ const PropertyPage = async ({ params }) => {
               </div>
             </div>
           </div>
-
-          {/* Full gallery at bottom */}
           {property.images && property.images.length > 0 && (
             <div className="mt-8" id="full-gallery">
               <FullGallery images={property.images} propertyName={property.name} />
             </div>
           )}
-      </section>
-    </div>
-  );
+        </section>
+      </div>
+    );
+  } catch (err) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6" style={{ background: '#F6F6F6' }}>
+        <div className="max-w-md text-center">
+          <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E94560" strokeWidth="2" className="w-8 h-8">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <h2 className="text-xl font-semibold text-[#0F172A] mb-2">Error al cargar la propiedad</h2>
+          <p className="text-sm text-[#666] mb-2">{err.message}</p>
+          <p className="text-[11px] text-[#bbb] mb-6 font-mono">Digest: {err.digest}</p>
+          <Link href="/admin" className="text-[var(--color-brand)] font-medium text-sm hover:underline">
+            Volver al panel admin
+          </Link>
+        </div>
+      </div>
+    );
+  }
 };
 export default PropertyPage;
