@@ -3,6 +3,7 @@
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import { getSessionUser } from '@/utils/getSessionUser';
+import { redirect } from 'next/navigation';
 import cloudinary from '@/config/cloudinary';
 
 async function updateProperty(propertyId, formData) {
@@ -85,6 +86,8 @@ async function updateProperty(propertyId, formData) {
   propertyData.images = currentImages;
 
   await Property.findByIdAndUpdate(propertyId, propertyData);
+
+  redirect(`/properties/${propertyId}`);
 }
 
 export default updateProperty;
