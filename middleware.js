@@ -6,6 +6,11 @@ export default withAuth(
     const token = req.nextauth.token;
     const path = req.nextUrl.pathname;
 
+    // Allow POST requests (server actions) to pass through — server actions handle auth internally
+    if (req.method === 'POST') {
+      return NextResponse.next();
+    }
+
     if (!token) {
       return NextResponse.redirect(new URL('/', req.url));
     }
@@ -21,7 +26,11 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token }) => !!token,
+      authorized: ({ req, token }) => {
+        // Allow POST requests (server actions) to pass through
+        if (req.method === 'POST') return true;
+        return !!token;
+      },
     },
   }
 );
