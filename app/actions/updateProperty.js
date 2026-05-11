@@ -16,8 +16,8 @@ async function updateProperty(propertyId, formData) {
 
   const existingProperty = await Property.findById(propertyId);
 
-  // Verify ownership
-  if (existingProperty.owner.toString() !== userId) {
+  // Verify ownership or admin
+  if (existingProperty.owner.toString() !== userId && sessionUser.role !== 'admin') {
     throw new Error('Current user does not own this property.');
   }
 
