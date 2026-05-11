@@ -14,9 +14,14 @@ export default function Error({ error, reset }) {
         <h2 className="text-xl font-semibold text-[#0F172A] mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
           Algo salió mal
         </h2>
-        <p className="text-sm text-[#666] mb-6">
-          {error?.message || 'Ocurrió un error inesperado. Por favor intentá de nuevo.'}
+        <p className="text-sm text-[#666] mb-2">
+          Ocurrió un error inesperado. Por favor intentá de nuevo.
         </p>
+        {error?.digest && (
+          <p className="text-[11px] text-[#bbb] mb-6 font-mono">
+            ID: {error.digest}
+          </p>
+        )}
         <button
           onClick={() => reset()}
           className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold text-sm uppercase tracking-wider px-6 py-3 rounded-[6px] transition-colors"

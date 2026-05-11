@@ -1,13 +1,16 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import updateProperty from '@/app/actions/updateProperty';
 
 const PropertyEditForm = ({ property }) => {
-  const updatePropertyById = updateProperty.bind(null, property._id);
-
+  const router = useRouter();
   const [removedImages, setRemovedImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
+  const [saving, setSaving] = useState(false);
+  const [done, setDone] = useState(false);
+  const formRef = useRef(null);
 
   const existingImages = (property.images || []).filter(
     (img) => !removedImages.includes(img)
@@ -36,9 +39,45 @@ const PropertyEditForm = ({ property }) => {
     setPreviewImages(updated);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const formData = new FormData(formRef.current);
+      await updateProperty(property._id, formData);
+      setDone(true);
+      setTimeout(() => router.push(`/properties/${property._id}`), 1200);
+    } catch (err) {
+      alert('Error: ' + (err.message || 'Error al guardar'));
+      setSaving(false);
+    }
+  };
+
+  if (done) {
+    return (
+      <div className="text-center py-12">
+        <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#25D366" strokeWidth="2.5" className="w-8 h-8">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <h2 className="text-xl font-semibold text-[#0F172A] mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+          ¡Guardado correctamente!
+        </h2>
+        <p className="text-sm text-[#666]">Redirigiendo a la propiedad...</p>
+      </div>
+    );
+  }
+
   return (
-    <form action={updatePropertyById}>
+    <form ref={formRef} onSubmit={handleSubmit}>
       <h2 className='text-3xl text-center font-semibold mb-6'>Editar Propiedad</h2>
+
+      {saving && (
+        <div className="bg-blue-50 text-blue-700 text-sm rounded-md px-4 py-3 mb-4">
+          Guardando cambios...
+        </div>
+      )}
 
       {/* Hidden removed images */}
       {removedImages.map((url) => (
@@ -270,10 +309,11 @@ const PropertyEditForm = ({ property }) => {
       </div>
 
       <button
-        className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold py-3 px-4 rounded-md w-full transition-colors'
+        className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold py-3 px-4 rounded-md w-full transition-colors disabled:opacity-60'
         type='submit'
+        disabled={saving}
       >
-        Guardar Cambios
+        {saving ? 'Guardando...' : 'Guardar Cambios'}
       </button>
     </form>
   );
