@@ -1,7 +1,21 @@
 'use client';
 import { useState } from 'react';
+import { useFormStatus } from 'react-dom';
 import Image from 'next/image';
 import updateProperty from '@/app/actions/updateProperty';
+
+const SubmitButton = () => {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold py-3 px-4 rounded-md w-full transition-colors disabled:opacity-60 disabled:cursor-not-allowed'
+      type='submit'
+      disabled={pending}
+    >
+      {pending ? 'Guardando...' : 'Guardar Cambios'}
+    </button>
+  );
+};
 
 const PropertyEditForm = ({ property }) => {
   const updatePropertyById = updateProperty.bind(null, property._id);
@@ -274,12 +288,7 @@ const PropertyEditForm = ({ property }) => {
         )}
       </div>
 
-      <button
-        className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold py-3 px-4 rounded-md w-full transition-colors'
-        type='submit'
-      >
-        Guardar Cambios
-      </button>
+      <SubmitButton />
     </form>
   );
 };
