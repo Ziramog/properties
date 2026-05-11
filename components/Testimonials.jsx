@@ -181,7 +181,7 @@ const Testimonials = () => {
           {/* Google Reviews CTA */}
           <div className="text-center mt-10">
             <a
-              href="https://www.google.com/maps/search/Roggero+%26+Roma+inmobiliaria+Alta+Gracia/@-31.653,-64.428,14z"
+              href="https://www.google.com/maps/place/?q=place_id:ChIJo00-jbBQLZQRpkMte_gAehk"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-8 py-3 border-2 border-[var(--color-brand)] text-[var(--color-brand)] text-[13px] font-bold uppercase tracking-wider rounded-[6px] transition-all duration-200 hover:bg-[var(--color-brand)] hover:text-white"
