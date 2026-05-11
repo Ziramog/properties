@@ -118,8 +118,9 @@ const AdminPropertyTable = ({ properties = [] }) => {
                   <div className="flex items-center justify-end gap-2">
                     <Link
                       href={`/properties/${prop._id}/edit`}
-                      className="text-[12px] font-medium text-[#555] hover:text-[var(--color-brand)] transition-colors px-3 py-1.5 border border-[#ddd] rounded-[6px] hover:border-[var(--color-brand)]"
+                      className="inline-flex items-center gap-1.5 bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[13px] font-semibold px-4 py-2 rounded-[6px] transition-colors"
                     >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5m-1.414-9.414a2 2 0 1 1 2.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                       Editar
                     </Link>
                     <button
