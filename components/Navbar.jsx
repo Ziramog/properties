@@ -276,7 +276,7 @@ const Navbar = () => {
 
           {/* Bottom — social icons, senada style: .mobileMenuFooter */}
           <div className="flex-shrink-0 pt-[30px] border-t border-white/[0.1]" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 16px)' }}>
-            <ul className="flex items-center gap-[25px]" style={{ filter: 'brightness(0) invert(1)' }}>
+            <ul className="flex items-center justify-center gap-[25px]">
               <li>
                 <a href={`tel:${PHONE_NUMBER}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Llamar" style={{ filter: 'none' }}>
                   <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-5 h-5" />
