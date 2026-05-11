@@ -163,7 +163,10 @@ const Navbar = () => {
                   {session && (
                     <>
                       {session.user?.role === 'admin' && (
-                        <li><Link href="/properties/add" className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Agregar Propiedad</Link></li>
+                        <>
+                          <li><Link href="/admin" className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Panel Admin</Link></li>
+                          <li><Link href="/properties/add" className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Agregar Propiedad</Link></li>
+                        </>
                       )}
                       <li><Link href="/profile" className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Perfil</Link></li>
                       <li><button onClick={() => signOut()} className="block w-full text-left px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Salir</button></li>
