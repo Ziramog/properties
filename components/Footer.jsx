@@ -140,7 +140,7 @@ const Footer = () => {
               &copy; {currentYear} Roggero & Roma <sup>TM</sup>
             </p>
             {!session && providers && Object.values(providers).map((provider) => (
-              <button key={provider.id} onClick={() => signIn(provider.id)} className="text-white/30 text-[13px] uppercase font-bold hover:text-white/60 transition-colors">
+              <button key={provider.id} onClick={() => signIn(provider.id, { callbackUrl: '/admin' })} className="text-white/30 text-[13px] uppercase font-bold hover:text-white/60 transition-colors">
                 Ingresar
               </button>
             ))}
@@ -287,7 +287,7 @@ const Footer = () => {
               &copy; {currentYear} Roggero & Roma <sup>TM</sup>
             </p>
             {!session && providers && Object.values(providers).map((provider) => (
-              <button key={provider.id} onClick={() => signIn(provider.id)} className="text-white/30 text-[13px] uppercase font-bold hover:text-white/60 transition-colors">
+              <button key={provider.id} onClick={() => signIn(provider.id, { callbackUrl: '/admin' })} className="text-white/30 text-[13px] uppercase font-bold hover:text-white/60 transition-colors">
                 Ingresar
               </button>
             ))}
