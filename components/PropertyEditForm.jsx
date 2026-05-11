@@ -46,11 +46,15 @@ const PropertyEditForm = ({ property }) => {
       const formData = new FormData(formRef.current);
       await updateProperty(property._id, formData);
       setDone(true);
-      setTimeout(() => router.push(`/properties/${property._id}`), 1200);
     } catch (err) {
       alert('Error: ' + (err.message || 'Error al guardar'));
       setSaving(false);
     }
+  };
+
+  const handleViewProperty = (e) => {
+    e.preventDefault();
+    router.push(`/properties/${property._id}`);
   };
 
   if (done) {
@@ -64,7 +68,15 @@ const PropertyEditForm = ({ property }) => {
         <h2 className="text-xl font-semibold text-[#0F172A] mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
           ¡Guardado correctamente!
         </h2>
-        <p className="text-sm text-[#666]">Redirigiendo a la propiedad...</p>
+        <p className="text-sm text-[#666] mb-6">Los cambios fueron guardados exitosamente.</p>
+        <div className="flex gap-3 justify-center">
+          <button onClick={handleViewProperty} className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold text-sm uppercase tracking-wider px-6 py-3 rounded-[6px] transition-colors">
+            Ver propiedad
+          </button>
+          <a href="/admin" className="bg-white border border-[#ddd] text-[#555] font-bold text-sm uppercase tracking-wider px-6 py-3 rounded-[6px] hover:border-[#999] transition-colors">
+            Volver al admin
+          </a>
+        </div>
       </div>
     );
   }
