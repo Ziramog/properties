@@ -87,7 +87,7 @@ async function updateProperty(propertyId, formData) {
 
   await Property.findByIdAndUpdate(propertyId, propertyData);
 
-  redirect(`/properties/${propertyId}`);
+  redirect(`/properties`);
 }
 
 export default updateProperty;
