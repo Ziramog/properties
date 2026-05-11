@@ -266,11 +266,24 @@ const Navbar = () => {
               Contacto
               <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
             </Link>
-            {session && (
-              <Link href="/profile" className={`flex items-center justify-between text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
-                Perfil
-                <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
-              </Link>
+            {session ? (
+              <>
+                <Link href="/profile" className={`flex items-center justify-between text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
+                  Perfil
+                  <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
+                </Link>
+                <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className={`flex items-center justify-between w-full text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '1.0s' }}>
+                  Salir
+                  <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
+                </button>
+              </>
+            ) : (
+              providers && Object.values(providers).map((provider) => (
+                <button key={provider.id} onClick={() => { signIn(provider.id); }} className={`flex items-center justify-between w-full text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }}>
+                  Ingresar
+                  <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
+                </button>
+              ))
             )}
           </nav>
 

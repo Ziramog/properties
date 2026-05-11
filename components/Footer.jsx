@@ -1,13 +1,21 @@
 'use client';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaWhatsapp } from 'react-icons/fa';
 import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whatsapp';
+import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
 
 const EMAIL = 'info@roggeroyroma.com.ar';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { data: session } = useSession();
+  const [providers, setProviders] = useState(null);
+
+  useEffect(() => {
+    getProviders().then(setProviders);
+  }, []);
 
   return (
     <footer className="text-white" style={{ background: '#110b11' }}>
@@ -131,6 +139,16 @@ const Footer = () => {
             <p className="text-white text-[14px] uppercase font-bold">
               &copy; {currentYear} Roggero & Roma <sup>TM</sup>
             </p>
+            {!session && providers && Object.values(providers).map((provider) => (
+              <button key={provider.id} onClick={() => signIn(provider.id)} className="text-white/30 text-[13px] uppercase font-bold hover:text-white/60 transition-colors">
+                Ingresar
+              </button>
+            ))}
+            {session && (
+              <button onClick={() => signOut()} className="text-white/30 text-[13px] uppercase font-bold hover:text-white/60 transition-colors">
+                Salir
+              </button>
+            )}
             <ul className="flex items-center gap-[25px]">
               <li>
                 <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Email">
@@ -268,6 +286,16 @@ const Footer = () => {
             <p className="text-[14px] text-white uppercase font-bold mb-2">
               &copy; {currentYear} Roggero & Roma <sup>TM</sup>
             </p>
+            {!session && providers && Object.values(providers).map((provider) => (
+              <button key={provider.id} onClick={() => signIn(provider.id)} className="text-white/30 text-[13px] uppercase font-bold hover:text-white/60 transition-colors">
+                Ingresar
+              </button>
+            ))}
+            {session && (
+              <button onClick={() => signOut()} className="text-white/30 text-[13px] uppercase font-bold hover:text-white/60 transition-colors">
+                Salir
+              </button>
+            )}
             <ul className="flex items-center gap-[25px]">
               <li>
                 <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Email">
