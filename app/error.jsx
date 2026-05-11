@@ -1,6 +1,7 @@
 'use client';
 
 export default function Error({ error, reset }) {
+  console.error('[Error boundary]', error);
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: '#F6F6F6' }}>
       <div className="text-center max-w-md px-6">
