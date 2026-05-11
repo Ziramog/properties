@@ -1,11 +1,9 @@
 'use client';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import updateProperty from '@/app/actions/updateProperty';
 
 const PropertyEditForm = ({ property }) => {
-  const router = useRouter();
   const [removedImages, setRemovedImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -54,7 +52,7 @@ const PropertyEditForm = ({ property }) => {
 
   const handleViewProperty = (e) => {
     e.preventDefault();
-    router.push(`/properties/${property._id}`);
+    window.location.href = `/properties/${property._id}`;
   };
 
   if (done) {
