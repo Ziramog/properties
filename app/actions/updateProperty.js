@@ -12,13 +12,21 @@ async function updateProperty(propertyId, formData) {
 
   const sessionUser = await getSessionUser();
 
+  if (!sessionUser || !sessionUser.userId) {
+    throw new Error('Debes iniciar sesión para editar una propiedad.');
+  }
+
   const { userId } = sessionUser;
 
   const existingProperty = await Property.findById(propertyId);
 
+  if (!existingProperty) {
+    throw new Error('Propiedad no encontrada.');
+  }
+
   // Verify ownership or admin
-  if (existingProperty.owner.toString() !== userId && sessionUser.role !== 'admin') {
-    throw new Error('Current user does not own this property.');
+  if (existingProperty.owner && existingProperty.owner.toString() !== userId && sessionUser.role !== 'admin') {
+    throw new Error('No tienes permiso para editar esta propiedad.');
   }
 
   const propertyData = {
@@ -51,15 +59,15 @@ async function updateProperty(propertyId, formData) {
     status: formData.get('status'),
   };
 
-  // Handle images: get removed images and new uploads
+  // Handle images
   const removedImages = formData.getAll('removedImages').filter(Boolean);
   let currentImages = (existingProperty.images || []).filter(
     (img) => !removedImages.includes(img)
   );
 
-  const newImages = formData.getAll('images').filter((img) => img.name !== '');
+  const newImageFiles = formData.getAll('images').filter((img) => img && img.name && img.name !== '');
 
-  for (const imageFile of newImages) {
+  for (const imageFile of newImageFiles) {
     const imageBuffer = await imageFile.arrayBuffer();
     const imageArray = Array.from(new Uint8Array(imageBuffer));
     const imageData = Buffer.from(imageArray);
