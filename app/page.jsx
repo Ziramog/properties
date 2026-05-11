@@ -3,6 +3,7 @@ import FeaturedPropertiesCarousel from '@/components/FeaturedPropertiesCarousel'
 import SellerCTA from '@/components/sections/SellerCTA';
 import StatsBar from '@/components/sections/StatsBar';
 import Agents from '@/components/sections/Agents';
+import Testimonials from '@/components/Testimonials';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 
@@ -43,6 +44,9 @@ const HomePage = async () => {
       <div id="nuestra-historia">
         <Agents />
       </div>
+
+      {/* 6. Testimonials — Nuestros Clientes */}
+      <Testimonials />
     </>
   );
 };
