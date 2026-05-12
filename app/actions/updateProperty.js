@@ -52,10 +52,15 @@ async function updateProperty(propertyId, formData) {
     for (let i = 0; i < newImageFiles.length; i++) {
       console.log('[updateProperty] STEP 4: uploading image', i + 1);
       const imageFile = newImageFiles[i];
+      console.log('[updateProperty] STEP 4: imageFile type:', imageFile.constructor.name, 'size:', imageFile.size, 'name:', imageFile.name);
       const imageBuffer = await imageFile.arrayBuffer();
+      console.log('[updateProperty] STEP 4: imageBuffer byteLength:', imageBuffer.byteLength);
       const imageArray = Array.from(new Uint8Array(imageBuffer));
+      console.log('[updateProperty] STEP 4: imageArray length:', imageArray.length);
       const imageData = Buffer.from(imageArray);
+      console.log('[updateProperty] STEP 4: imageData length:', imageData.length);
       const imageBase64 = imageData.toString('base64');
+      console.log('[updateProperty] STEP 4: imageBase64 length:', imageBase64.length, 'first 50 chars:', imageBase64.substring(0, 50));
 
       const result = await cloudinary.uploader.upload(
         `data:image/png;base64,${imageBase64}`,
