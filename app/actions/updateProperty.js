@@ -116,8 +116,12 @@ async function updateProperty(propertyId, formData) {
     console.error('[updateProperty] Unexpected error:', err);
     console.error('[updateProperty] Error type:', err.constructor.name);
     console.error('[updateProperty] Error stack:', err.stack);
-    const message = err.message || 'Ocurrió un error inesperado al guardar.';
-    return { error: `[${err.constructor.name}] ${message}` };
+    // err.constructor.name === 'Object' means a plain object was thrown (not an Error instance)
+    // Log all own properties to identify what it is
+    const ownProps = err && typeof err === 'object' ? Object.keys(err) : [];
+    console.error('[updateProperty] Error own properties:', ownProps);
+    const message = (err && typeof err.message === 'string') ? err.message : JSON.stringify(err);
+    return { error: `[${err.constructor.name}] ${message}`, errorKeys: ownProps };
   }
 }
 
