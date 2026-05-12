@@ -49,6 +49,7 @@ const PropertyEditForm = ({ property }) => {
     const previews = files.map((file) => ({
       url: URL.createObjectURL(file),
       name: file.name,
+      file, // store the actual File reference
     }));
     setPreviewImages([...previewImages, ...previews]);
   };
@@ -278,7 +279,7 @@ const PropertyEditForm = ({ property }) => {
           <div className='grid grid-cols-3 sm:grid-cols-4 gap-3 mt-3'>
             {previewImages.map((preview, i) => (
               <div key={i} className='relative'>
-                <Image src={preview.url} alt={`Nuevo ${i + 1}`} width={200} height={150}
+                <img src={preview.url} alt={`Nuevo ${i + 1}`} width={200} height={150}
                   className='w-full h-32 object-cover rounded-lg border' />
                 <button
                   type='button'
