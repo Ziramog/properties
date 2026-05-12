@@ -11,7 +11,7 @@ const SellerCTA = () => {
           <div className="flex flex-col md:flex-row justify-center gap-5 items-stretch">
           {/* Sell CTA */}
           <ScrollReveal delay={100}>
-            <div className="relative rounded-3xl overflow-hidden flex flex-col transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] h-full group">
+            <div className="relative rounded-3xl overflow-hidden flex flex-col transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] h-full group backface-hidden" style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}>
               {/* Background image */}
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
@@ -62,7 +62,7 @@ const SellerCTA = () => {
 
           {/* Invest CTA */}
           <ScrollReveal delay={200}>
-            <div className="relative rounded-3xl overflow-hidden flex flex-col transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] h-full group">
+            <div className="relative rounded-3xl overflow-hidden flex flex-col transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] h-full group backface-hidden" style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}>
               {/* Background image */}
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
