@@ -69,16 +69,16 @@ async function updateProperty(propertyId, formData) {
       const imageBase64 = imageData.toString('base64');
       console.log('[updateProperty] STEP 4: imageBase64 length:', imageBase64.length, 'first 50 chars:', imageBase64.substring(0, 50));
 
-      // upload_stream with callback → promise
+      // upload_stream(callback, options) — callback FIRST
       const result = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-          { folder: 'propertypulse' },
           (error, result) => {
             console.log('[updateProperty] STEP 4: cloudinary callback error:', error);
             console.log('[updateProperty] STEP 4: cloudinary callback result:', result ? 'success' : 'null');
             if (error) reject(error);
             else resolve(result);
-          }
+          },
+          { folder: 'propertypulse' }
         );
         stream.on('error', (err) => console.log('[updateProperty] STEP 4: stream error event:', err));
         stream.write(imageData);
