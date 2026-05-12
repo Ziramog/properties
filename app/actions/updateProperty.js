@@ -69,10 +69,17 @@ async function updateProperty(propertyId, formData) {
       const imageBase64 = imageData.toString('base64');
       console.log('[updateProperty] STEP 4: imageBase64 length:', imageBase64.length, 'first 50 chars:', imageBase64.substring(0, 50));
 
-      const result = await cloudinary.uploader.upload(
-        `data:image/png;base64,${imageBase64}`,
-        { folder: 'propertypulse' }
-      );
+      const result = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder: 'propertypulse' },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        uploadStream.write(imageData);
+        uploadStream.end();
+      });
       currentImages.push(result.secure_url);
       console.log('[updateProperty] STEP 4: uploaded', i + 1, result.secure_url);
     }
