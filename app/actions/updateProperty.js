@@ -58,7 +58,8 @@ async function updateProperty(propertyId, formData) {
     throw new Error('No tienes permiso para editar esta propiedad.');
   }
 
-  const propertyData = {
+  const propertyData = { ...existingProperty.toObject() };
+  Object.assign(propertyData, {
     type: formData.get('type'),
     categories: formData.getAll('categories'),
     name: formData.get('name'),
@@ -86,7 +87,7 @@ async function updateProperty(propertyId, formData) {
     owner: userId,
     operation: formData.get('operation'),
     status: formData.get('status'),
-  };
+  });
 
   console.log('[updateProperty] Built propertyData — name:', propertyData.name, 'categories:', propertyData.categories.length, 'images count TBD');
 
