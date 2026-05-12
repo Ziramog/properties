@@ -12,6 +12,16 @@ const cleanNumber = (val) => {
 };
 
 async function updateProperty(propertyId, formData) {
+  // useFormState calls: action(previousState, formData)
+  // When bound with .bind(null, propertyId), arguments become: (propertyId, previousState, formData)
+  // So formData is actually arguments[2]
+  const actualFormData = (formData instanceof FormData) ? formData : arguments[2];
+
+  if (!actualFormData || !(actualFormData instanceof FormData)) {
+    console.error('[updateProperty] No FormData received. propertyId:', propertyId, 'formData type:', typeof formData);
+    return { error: 'No se recibió información del formulario.' };
+  }
+
   try {
     console.log('[updateProperty] START — propertyId:', propertyId);
 
@@ -41,10 +51,10 @@ async function updateProperty(propertyId, formData) {
       return { error: 'No tienes permiso para editar esta propiedad.' };
     }
 
-    const removedImages = formData.getAll('removedImages').filter(Boolean);
+    const removedImages = actualFormData.getAll('removedImages').filter(Boolean);
     let currentImages = (prop.images || []).filter((img) => !removedImages.includes(img));
 
-    const newImageFiles = formData.getAll('images').filter((img) => img && img.name && img.name !== '');
+    const newImageFiles = actualFormData.getAll('images').filter((img) => img && img.name && img.name !== '');
     console.log('[updateProperty] New image files to upload:', newImageFiles.length);
 
     for (const imageFile of newImageFiles) {
@@ -67,33 +77,33 @@ async function updateProperty(propertyId, formData) {
     }
 
     prop.set({
-      type: formData.get('type'),
-      categories: formData.getAll('categories'),
-      name: formData.get('name'),
-      description: formData.get('description'),
+      type: actualFormData.get('type'),
+      categories: actualFormData.getAll('categories'),
+      name: actualFormData.get('name'),
+      description: actualFormData.get('description'),
       location: {
-        street: formData.get('location.street'),
-        city: formData.get('location.city'),
-        state: formData.get('location.state'),
-        zipcode: formData.get('location.zipcode'),
+        street: actualFormData.get('location.street'),
+        city: actualFormData.get('location.city'),
+        state: actualFormData.get('location.state'),
+        zipcode: actualFormData.get('location.zipcode'),
       },
-      beds: cleanNumber(formData.get('beds')),
-      baths: cleanNumber(formData.get('baths')),
-      square_feet: cleanNumber(formData.get('square_feet')),
-      amenities: formData.getAll('amenities'),
+      beds: cleanNumber(actualFormData.get('beds')),
+      baths: cleanNumber(actualFormData.get('baths')),
+      square_feet: cleanNumber(actualFormData.get('square_feet')),
+      amenities: actualFormData.getAll('amenities'),
       rates: {
-        weekly: cleanNumber(formData.get('rates.weekly')),
-        monthly: cleanNumber(formData.get('rates.monthly')),
-        nightly: cleanNumber(formData.get('rates.nightly')),
+        weekly: cleanNumber(actualFormData.get('rates.weekly')),
+        monthly: cleanNumber(actualFormData.get('rates.monthly')),
+        nightly: cleanNumber(actualFormData.get('rates.nightly')),
       },
       seller_info: {
-        name: formData.get('seller_info.name'),
-        email: formData.get('seller_info.email'),
-        phone: formData.get('seller_info.phone'),
+        name: actualFormData.get('seller_info.name'),
+        email: actualFormData.get('seller_info.email'),
+        phone: actualFormData.get('seller_info.phone'),
       },
       owner: userId,
-      operation: formData.get('operation'),
-      status: formData.get('status'),
+      operation: actualFormData.get('operation'),
+      status: actualFormData.get('status'),
       images: currentImages,
     });
 
