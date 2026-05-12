@@ -1,6 +1,8 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useFormState } from 'react-dom';
 import { useFormStatus } from 'react-dom';
+import { toast } from 'react-toastify';
 import Image from 'next/image';
 import updateProperty from '@/app/actions/updateProperty';
 
@@ -19,9 +21,16 @@ const SubmitButton = () => {
 
 const PropertyEditForm = ({ property }) => {
   const updatePropertyById = updateProperty.bind(null, property._id);
-
+  const [state, formAction] = useFormState(updatePropertyById, {});
   const [removedImages, setRemovedImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
+
+  useEffect(() => {
+    if (state?.error) toast.error(state.error);
+    if (state?.success && state.redirected) {
+      window.location.href = state.redirected;
+    }
+  }, [state]);
 
   const existingImages = (property.images || []).filter(
     (img) => !removedImages.includes(img)
@@ -51,7 +60,7 @@ const PropertyEditForm = ({ property }) => {
   };
 
   return (
-    <form action={updatePropertyById}>
+    <form action={formAction}>
       <h2 className='text-3xl text-center font-semibold mb-6'>Editar Propiedad</h2>
 
       {/* Hidden removed images */}
