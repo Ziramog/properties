@@ -114,10 +114,10 @@ async function updateProperty(propertyId, formData) {
 
   } catch (err) {
     console.error('[updateProperty] Unexpected error:', err);
-    const message = err.message || 'Ocurrió un error inesperado al guardar.';
     console.error('[updateProperty] Error type:', err.constructor.name);
     console.error('[updateProperty] Error stack:', err.stack);
-    return { error: message, errorType: err.constructor.name };
+    const message = err.message || 'Ocurrió un error inesperado al guardar.';
+    return { error: `[${err.constructor.name}] ${message}` };
   }
 }
 
