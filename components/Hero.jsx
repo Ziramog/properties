@@ -144,7 +144,7 @@ const Hero = () => {
           className='w-full h-full object-cover md:hidden'
         />
         <video
-          src='/images/Timeline%203.mp4'
+          src='/images/hero-desktop.mp4'
           autoPlay
           muted
           loop
