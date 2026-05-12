@@ -15,22 +15,11 @@ const cleanNumber = (val) => {
 async function updateProperty(propertyId, formData) {
   console.log('[updateProperty] START — propertyId:', propertyId);
 
-  try {
-    await connectDB();
-    console.log('[updateProperty] DB connected');
-  } catch (dbConnErr) {
-    console.error('[updateProperty] DB connection FAILED:', dbConnErr);
-    throw dbConnErr;
-  }
+  await connectDB();
+  console.log('[updateProperty] DB connected');
 
-  let sessionUser;
-  try {
-    sessionUser = await getSessionUser();
-    console.log('[updateProperty] Session user:', sessionUser ? { userId: sessionUser.userId, role: sessionUser.role } : null);
-  } catch (sessionErr) {
-    console.error('[updateProperty] getSessionUser FAILED:', sessionErr);
-    throw sessionErr;
-  }
+  const sessionUser = await getSessionUser();
+  console.log('[updateProperty] Session user:', sessionUser ? { userId: sessionUser.userId, role: sessionUser.role } : null);
 
   if (!sessionUser || !sessionUser.userId) {
     console.error('[updateProperty] No session user — rejecting');
@@ -39,27 +28,45 @@ async function updateProperty(propertyId, formData) {
 
   const { userId } = sessionUser;
 
-  let existingProperty;
-  try {
-    existingProperty = await Property.findById(propertyId);
-    console.log('[updateProperty] Found property:', existingProperty ? existingProperty._id.toString() : null);
-  } catch (findErr) {
-    console.error('[updateProperty] Property.findById FAILED:', findErr);
-    throw findErr;
-  }
+  const prop = await Property.findById(propertyId);
+  console.log('[updateProperty] Found property:', prop ? prop._id.toString() : null);
 
-  if (!existingProperty) {
+  if (!prop) {
     console.error('[updateProperty] Property not found for id:', propertyId);
     throw new Error('Propiedad no encontrada.');
   }
 
-  if (existingProperty.owner && existingProperty.owner.toString() !== userId && sessionUser.role !== 'admin') {
-    console.error('[updateProperty] Permission denied — owner:', existingProperty.owner.toString(), 'userId:', userId);
+  if (prop.owner && prop.owner.toString() !== userId && sessionUser.role !== 'admin') {
+    console.error('[updateProperty] Permission denied — owner:', prop.owner.toString(), 'userId:', userId);
     throw new Error('No tienes permiso para editar esta propiedad.');
   }
 
-  const propertyData = { ...existingProperty.toObject() };
-  Object.assign(propertyData, {
+  const removedImages = formData.getAll('removedImages').filter(Boolean);
+  let currentImages = (prop.images || []).filter((img) => !removedImages.includes(img));
+
+  const newImageFiles = formData.getAll('images').filter((img) => img && img.name && img.name !== '');
+  console.log('[updateProperty] New image files to upload:', newImageFiles.length);
+
+  for (const imageFile of newImageFiles) {
+    const imageBuffer = await imageFile.arrayBuffer();
+    const imageArray = Array.from(new Uint8Array(imageBuffer));
+    const imageData = Buffer.from(imageArray);
+    const imageBase64 = imageData.toString('base64');
+
+    const result = await cloudinary.uploader.upload(
+      `data:image/png;base64,${imageBase64}`,
+      { folder: 'propertypulse' }
+    );
+    currentImages.push(result.secure_url);
+    console.log('[updateProperty] Uploaded image:', result.secure_url);
+  }
+
+  if (currentImages.length === 0) {
+    console.error('[updateProperty] No images left after removal');
+    throw new Error('Es necesario mantener al menos una foto de la propiedad.');
+  }
+
+  prop.set({
     type: formData.get('type'),
     categories: formData.getAll('categories'),
     name: formData.get('name'),
@@ -87,54 +94,12 @@ async function updateProperty(propertyId, formData) {
     owner: userId,
     operation: formData.get('operation'),
     status: formData.get('status'),
+    images: currentImages,
   });
 
-  console.log('[updateProperty] Built propertyData — name:', propertyData.name, 'categories:', propertyData.categories.length, 'images count TBD');
+  await prop.save();
+  console.log('[updateProperty] DB update SUCCESS for property:', propertyId);
 
-  const removedImages = formData.getAll('removedImages').filter(Boolean);
-  let currentImages = (existingProperty.images || []).filter(
-    (img) => !removedImages.includes(img)
-  );
-
-  const newImageFiles = formData.getAll('images').filter((img) => img && img.name && img.name !== '');
-  console.log('[updateProperty] New image files to upload:', newImageFiles.length);
-
-  for (const imageFile of newImageFiles) {
-    try {
-      const imageBuffer = await imageFile.arrayBuffer();
-      const imageArray = Array.from(new Uint8Array(imageBuffer));
-      const imageData = Buffer.from(imageArray);
-      const imageBase64 = imageData.toString('base64');
-
-      const result = await cloudinary.uploader.upload(
-        `data:image/png;base64,${imageBase64}`,
-        { folder: 'propertypulse' }
-      );
-      currentImages.push(result.secure_url);
-      console.log('[updateProperty] Uploaded image:', result.secure_url);
-    } catch (cloudErr) {
-      console.error('[updateProperty] Cloudinary upload FAILED:', cloudErr);
-      throw cloudErr;
-    }
-  }
-
-  if (currentImages.length === 0) {
-    console.error('[updateProperty] No images left after removal');
-    throw new Error('Es necesario mantener al menos una foto de la propiedad.');
-  }
-
-  propertyData.images = currentImages;
-  console.log('[updateProperty] Final image count:', currentImages.length);
-
-  try {
-    await Property.findByIdAndUpdate(propertyId, propertyData);
-    console.log('[updateProperty] DB update SUCCESS for property:', propertyId);
-  } catch (dbUpdateErr) {
-    console.error('[updateProperty] DB update FAILED:', dbUpdateErr);
-    throw dbUpdateErr;
-  }
-
-  console.log('[updateProperty] Redirecting to /properties');
   redirect(`/properties`);
 }
 
