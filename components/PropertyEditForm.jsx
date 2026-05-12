@@ -20,8 +20,7 @@ const SubmitButton = () => {
 };
 
 const PropertyEditForm = ({ property }) => {
-  const updatePropertyById = updateProperty.bind(null, property._id);
-  const [state, formAction] = useFormState(updatePropertyById, {});
+  const [state, formAction] = useFormState(updateProperty, {});
   const [removedImages, setRemovedImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
 
@@ -62,6 +61,7 @@ const PropertyEditForm = ({ property }) => {
 
   return (
     <form action={formAction}>
+      <input type='hidden' name='propertyId' value={property._id} />
       <h2 className='text-3xl text-center font-semibold mb-6'>Editar Propiedad</h2>
 
       {/* Hidden removed images */}
