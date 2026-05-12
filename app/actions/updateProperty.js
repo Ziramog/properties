@@ -6,6 +6,12 @@ import { getSessionUser } from '@/utils/getSessionUser';
 import { redirect } from 'next/navigation';
 import cloudinary from '@/config/cloudinary';
 
+const cleanNumber = (val) => {
+  if (val === '' || val === null || val === undefined) return undefined;
+  const num = parseFloat(val);
+  return isNaN(num) ? undefined : num;
+};
+
 async function updateProperty(propertyId, formData) {
   console.log('[updateProperty] START — propertyId:', propertyId);
 
@@ -63,14 +69,14 @@ async function updateProperty(propertyId, formData) {
       state: formData.get('location.state'),
       zipcode: formData.get('location.zipcode'),
     },
-    beds: formData.get('beds') || undefined,
-    baths: formData.get('baths') || undefined,
-    square_feet: formData.get('square_feet') || undefined,
+    beds: cleanNumber(formData.get('beds')),
+    baths: cleanNumber(formData.get('baths')),
+    square_feet: cleanNumber(formData.get('square_feet')),
     amenities: formData.getAll('amenities'),
     rates: {
-      weekly: formData.get('rates.weekly') || undefined,
-      monthly: formData.get('rates.monthly') || undefined,
-      nightly: formData.get('rates.nightly') || undefined,
+      weekly: cleanNumber(formData.get('rates.weekly')),
+      monthly: cleanNumber(formData.get('rates.monthly')),
+      nightly: cleanNumber(formData.get('rates.nightly')),
     },
     seller_info: {
       name: formData.get('seller_info.name'),
