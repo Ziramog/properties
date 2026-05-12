@@ -12,7 +12,9 @@ const cleanNumber = (val) => {
 };
 
 async function updateProperty(propertyId, formData) {
+  console.log('[updateProperty] CALLED with propertyId:', propertyId, 'formData type:', typeof formData, 'instanceof FormData:', formData instanceof FormData);
   const actualFormData = (formData instanceof FormData) ? formData : arguments[2];
+  console.log('[updateProperty] actualFormData instanceof FormData:', actualFormData instanceof FormData);
 
   if (!actualFormData || !(actualFormData instanceof FormData)) {
     console.error('[updateProperty] No FormData received. propertyId:', propertyId, 'formData type:', typeof formData);
@@ -47,6 +49,11 @@ async function updateProperty(propertyId, formData) {
     let currentImages = (prop.images || []).filter((img) => !removedImages.includes(img));
 
     const newImageFiles = actualFormData.getAll('images').filter((img) => img && img.name && img.name !== '');
+    console.log('[updateProperty] STEP 4: images entries from FormData, total:', actualFormData.getAll('images').length, 'filtered:', newImageFiles.length);
+    for (let j = 0; j < actualFormData.getAll('images').length; j++) {
+      const img = actualFormData.getAll('images')[j];
+      console.log('[updateProperty] STEP 4: images entry', j, 'type:', typeof img, 'constructor:', img?.constructor?.name, 'size:', img?.size, 'name:', img?.name);
+    }
     console.log('[updateProperty] STEP 4: removed:', removedImages.length, 'current kept:', currentImages.length, 'new files:', newImageFiles.length);
 
     for (let i = 0; i < newImageFiles.length; i++) {
