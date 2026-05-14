@@ -89,7 +89,7 @@ const PropertyDetails = ({ property }) => {
       )}
 
       {/* 2-col: Description (70%) + Sidebar (30%) — Senada .info-section */}
-      <div className="flex flex-col md:flex-row gap-[20px] mb-5">
+      <div className="flex flex-col md:flex-row gap-[20px] mb-8">
         {/* Left: Description — 70% */}
         <div className="w-full md:w-[70%]">
           {property.description && (
