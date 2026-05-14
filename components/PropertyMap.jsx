@@ -97,6 +97,7 @@ const PropertyMap = ({ property }) => {
       style={{ width: '100%', height: 500 }}
       mapStyle='mapbox://styles/mapbox/light-v11'
       scrollZoom={{ onlyWhenModifierKeys: true }}
+      touchZoomRotate={true}
       dragRotate={false}
     >
       <Marker longitude={lng} latitude={lat} anchor='bottom'>

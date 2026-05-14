@@ -56,18 +56,21 @@ const PropertyPage = async ({ params }) => {
                   Ver en el Mapa
                   <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
                 </h2>
-                <a
-                  href="/properties"
-                  className="inline-flex items-center gap-2 text-[var(--color-brand)] hover:text-[var(--color-brand-dark)] text-[13px] font-bold uppercase tracking-wider transition-colors"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                    <circle cx="12" cy="10" r="3"/>
-                  </svg>
-                  Ver todos los listados
-                </a>
               </div>
               <PropertyMap property={property} />
+              <div className="text-center mt-6">
+                <a
+                  href="/properties"
+                  className="inline-flex items-center gap-2 px-8 py-3 border-2 border-[var(--color-brand)] text-[var(--color-brand)] text-[13px] font-bold uppercase tracking-wider rounded-[6px] transition-all duration-200 hover:bg-[var(--color-brand)] hover:text-white"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+                    <line x1="8" y1="2" x2="8" y2="18"/>
+                    <line x1="16" y1="6" x2="16" y2="22"/>
+                  </svg>
+                  Ver todas las propiedades en el mapa
+                </a>
+              </div>
             </div>
           </div>
         </section>
