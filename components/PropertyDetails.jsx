@@ -226,7 +226,7 @@ const PropertyDetails = ({ property }) => {
       {/* Exterior card */}
       {property.exterior && property.exterior.techos && (
         <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-0 mb-5">
-          <div className="px-6 md:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+          <div className="px-6 md:px-[25px] lg:px-[100px] xl:px-[190px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
             <SectionTitle>Exterior</SectionTitle>
             <ul className="space-y-2.5">
               {property.exterior.techos && (
