@@ -64,7 +64,7 @@ const PropertyDetails = ({ property }) => {
       {featureItems.length > 0 && (
         <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5 md:mb-5">
           <div className="py-[30px] md:py-[30px]">
-            <div className="pb-[30px] px-6 md:px-10">
+            <div className="pb-[30px] px-6 md:px-[25px] lg:px-[100px] xl:px-[190px]">
               <SectionTitle>Características</SectionTitle>
             </div>
             <div className="flex flex-wrap">
@@ -245,7 +245,7 @@ const PropertyDetails = ({ property }) => {
       {/* Amenities card */}
       {property.amenities && property.amenities.length > 0 && (
         <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-0 mb-5">
-          <div className="px-6 md:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+          <div className="px-6 md:px-[25px] lg:px-[100px] xl:px-[190px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
             <SectionTitle>Comodidades</SectionTitle>
             <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-2.5">
               {property.amenities.map((amenity, index) => (
@@ -262,7 +262,7 @@ const PropertyDetails = ({ property }) => {
       {/* Services card */}
       {property.services && property.services.length > 0 && (
         <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-0 mb-5">
-          <div className="px-6 md:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+          <div className="px-6 md:px-[25px] lg:px-[100px] xl:px-[190px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
             <SectionTitle>Servicios</SectionTitle>
             <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-2.5">
               {property.services.map((service, index) => (
