@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Map, { Marker } from 'react-map-gl';
 import Image from 'next/image';
@@ -36,6 +36,41 @@ const PropertyMap = ({ property }) => {
   const [lng, setLng] = useState(null);
   const [loading, setLoading] = useState(true);
   const [geocodeError, setGeocodeError] = useState(false);
+  const mapRef = useRef();
+
+  const onMapLoad = useCallback(() => {
+    const map = mapRef.current?.getMap();
+    if (!map) return;
+
+    // Desktop: Ctrl+scroll zooms, drag pans normally
+    map.scrollZoom.disable();
+    map.dragRotate.disable();
+
+    map.getContainer().addEventListener('wheel', (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        map.scrollZoom.enable();
+        requestAnimationFrame(() => map.scrollZoom.disable());
+      }
+    });
+
+    // Mobile: two fingers for zoom + pan
+    if ('ontouchstart' in window) {
+      map.dragPan.disable();
+      const c = map.getContainer();
+      c.addEventListener('touchstart', (e) => {
+        if (e.touches.length >= 2) {
+          map.dragPan.enable();
+          map.scrollZoom.enable();
+        }
+      });
+      c.addEventListener('touchend', (e) => {
+        if (e.touches.length < 2) {
+          map.dragPan.disable();
+          map.scrollZoom.disable();
+        }
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const fetchCoords = async () => {
@@ -85,6 +120,8 @@ const PropertyMap = ({ property }) => {
   return (
     <div className="relative">
       <Map
+        ref={mapRef}
+        onLoad={onMapLoad}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
         mapLib={import('mapbox-gl')}
         initialViewState={{
@@ -95,10 +132,9 @@ const PropertyMap = ({ property }) => {
         style={{ width: '100%', height: 500 }}
         mapStyle='mapbox://styles/mapbox/light-v11'
         scrollZoom={false}
-        dragPan={false}
+        dragPan={true}
         dragRotate={false}
         doubleClickZoom={false}
-        touchZoomRotate={true}
         keyboard={false}
       >
         <Marker longitude={lng} latitude={lat} anchor='bottom'>
@@ -106,9 +142,9 @@ const PropertyMap = ({ property }) => {
         </Marker>
       </Map>
 
-      {/* Mobile hint — two-finger zoom */}
-      <div className="md:hidden absolute bottom-6 left-1/2 -translate-x-1/2 z-10 bg-black/70 backdrop-blur-sm text-white text-xs px-4 py-2 rounded-full whitespace-nowrap pointer-events-none select-none">
-        Usa dos dedos para hacer zoom
+      {/* Mobile hint — Google Maps-style flat bar */}
+      <div className="md:hidden absolute bottom-0 left-0 right-0 z-10 bg-black/60 text-white/80 text-[11px] text-center py-1.5 px-3 pointer-events-none select-none">
+        Usa dos dedos para mover y hacer zoom
       </div>
     </div>
   );
