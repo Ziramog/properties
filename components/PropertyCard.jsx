@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { FaRegHeart, FaHeart, FaWhatsapp } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import PropertyCardInfo from '@/components/PropertyCardInfo';
-import { getPriceDisplay, getPropertyImage, isNewListing } from '@/utils/propertyDisplay';
+import { getPriceDisplay, getPropertyImage, getStatusBadge } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
 import bookmarkProperty from '@/app/actions/bookmarkProperty';
 import { useSession } from 'next-auth/react';
@@ -19,7 +19,7 @@ const PropertyCard = ({ property, isSelected = false, onMouseEnter, onMouseLeave
 
   const image = getPropertyImage(property);
   const price = getPriceDisplay(property);
-  const isNew = isNewListing(property);
+  const badge = getStatusBadge(property);
 
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [toggling, setToggling] = useState(false);
@@ -63,10 +63,10 @@ const PropertyCard = ({ property, isSelected = false, onMouseEnter, onMouseLeave
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
 
-          {/* Price overlay */}
+          {/* Status badge — top left */}
           <div className="absolute top-3 left-3 z-10">
-            <span className="bg-navy/80 backdrop-blur-sm text-white text-sm font-bold px-3 py-1.5 rounded-lg shadow-md">
-              {price}
+            <span className={`${badge?.bg || 'bg-navy/80'} backdrop-blur-sm text-white text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-md uppercase tracking-wider`}>
+              {badge?.label || price}
             </span>
           </div>
 
@@ -85,14 +85,6 @@ const PropertyCard = ({ property, isSelected = false, onMouseEnter, onMouseLeave
               : <FaRegHeart className="w-3.5 h-3.5" />
             }
           </button>
-
-          {isNew && (
-            <div className="absolute top-12 left-3 z-10">
-              <span className="bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
-                Nuevo
-              </span>
-            </div>
-          )}
 
           <a
             href={generateWhatsAppLink({ property })}

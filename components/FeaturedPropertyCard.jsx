@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { FaRegHeart, FaHeart } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import PropertyCardInfo from '@/components/PropertyCardInfo';
-import { getAreaDisplay, getPriceDisplay, getPropertyImage, isNewListing } from '@/utils/propertyDisplay';
+import { getAreaDisplay, getPriceDisplay, getPropertyImage, getStatusBadge } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
 import bookmarkProperty from '@/app/actions/bookmarkProperty';
 import { useSession } from 'next-auth/react';
@@ -41,7 +41,7 @@ const FeaturedPropertyCard = ({ property }) => {
   const image = getPropertyImage(property);
   const area = getAreaDisplay(property);
   const price = getPriceDisplay(property);
-  const isNew = isNewListing(property);
+  const badge = getStatusBadge(property);
 
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [toggling, setToggling] = useState(false);
@@ -84,10 +84,10 @@ const FeaturedPropertyCard = ({ property }) => {
           <div className="absolute inset-0 z-10 group-hover:opacity-0 transition-opacity duration-300" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 20%, transparent 100%)' }} />
           <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(180deg, transparent 60%, var(--color-brand))' }} />
 
-          {/* Tag — top left */}
-          {isNew && (
-            <span className="absolute top-3 left-3 z-10 bg-[var(--color-brand)] text-white text-[11px] font-bold px-2 py-1 rounded uppercase tracking-wider">
-              Nuevo
+          {/* Status badge — top left */}
+          {badge && (
+            <span className={`absolute top-3 left-3 z-10 ${badge.bg} text-white text-[11px] font-bold px-2.5 py-1 rounded uppercase tracking-wider`}>
+              {badge.label}
             </span>
           )}
 

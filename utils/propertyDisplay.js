@@ -57,6 +57,27 @@ export function isNewListing(property, days = 7) {
   return new Date(property.createdAt).getTime() > cutoff;
 }
 
+const STATUS_BADGE_MAP = {
+  closed:              { label: 'Vendido',      letter: 'V', bg: 'bg-[var(--color-brand)]' },
+  pending:             { label: 'Pendiente',    letter: 'P', bg: 'bg-amber-500' },
+  active_under_contract: { label: 'Bajo Contrato', letter: 'B', bg: 'bg-blue-500' },
+  coming_soon:         { label: 'Próximamente', letter: 'C', bg: 'bg-purple-500' },
+};
+
+/**
+ * Return a status badge config for a property card, or null if no badge.
+ * Priority: closed > pending > coming_soon > active_under_contract > active+new
+ */
+export function getStatusBadge(property) {
+  if (property.status && STATUS_BADGE_MAP[property.status]) {
+    return STATUS_BADGE_MAP[property.status];
+  }
+  if (isNewListing(property)) {
+    return { label: 'Nuevo', letter: 'N', bg: 'bg-emerald-500' };
+  }
+  return null;
+}
+
 /**
  * Fallback image when a property has none or uses a placeholder domain.
  */
