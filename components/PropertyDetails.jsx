@@ -75,7 +75,7 @@ const PropertyDetails = ({ property }) => {
                   style={{ borderRight: i === featureItems.length - 1 ? 'none' : undefined }}
                 >
                   <div>
-                    <h5 className="text-[22px] font-semibold text-[#0F172A] mb-[5px] whitespace-nowrap"
+                    <h5 className="text-[22px] font-semibold text-[#0F172A] mb-[5px]"
                         style={{ fontFamily: 'var(--font-heading)' }}>
                       {typeof value === 'number' ? value.toLocaleString('es-AR') : value}
                     </h5>
