@@ -5,11 +5,9 @@
 export function filterProperties(properties, filters) {
   return properties
     .filter((p) => {
-      const cats = p.categories || [];
-
-      // Type filter — matches both type field AND categories array
+      // Type filter
       if (filters.type && filters.type !== 'Todos') {
-        if (p.type !== filters.type && !cats.includes(filters.type)) return false;
+        if (p.type !== filters.type) return false;
       }
 
       // City filter

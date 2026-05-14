@@ -108,21 +108,6 @@ const PropertyEditForm = ({ property }) => {
       </div>
 
       <div className='mb-4'>
-        <label className='block text-gray-700 font-bold mb-2'>
-          Categorías
-        </label>
-        <div className='grid grid-cols-2 md:grid-cols-3 gap-2 bg-[#f5f0e8] p-4 rounded'>
-          {['Casa', 'Departamento', 'Terreno', 'Campo', 'Inmueble Comercial', 'Gran Inversión'].map((cat) => (
-            <div key={cat}>
-              <input type='checkbox' id={`cat_${cat}`} name='categories' value={cat} className='mr-2'
-                defaultChecked={property.categories?.includes(cat)} />
-              <label htmlFor={`cat_${cat}`}>{cat}</label>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className='mb-4'>
         <label className='block text-gray-700 font-bold mb-2'>Nombre</label>
         <input type='text' id='name' name='name' className='border rounded w-full py-2 px-3 mb-2'
           required defaultValue={property.name} />

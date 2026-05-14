@@ -68,7 +68,6 @@ async function updateProperty(prevState, formData) {
 
     prop.set({
       type: formData.get('type'),
-      categories: formData.getAll('categories'),
       name: formData.get('name'),
       description: formData.get('description'),
       location: {
