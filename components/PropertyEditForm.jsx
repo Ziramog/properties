@@ -85,6 +85,7 @@ const PropertyEditForm = ({ property }) => {
           <option value='Campo'>Campo</option>
           <option value='Terreno'>Terreno</option>
           <option value='Inmueble Comercial'>Inmueble Comercial</option>
+          <option value='Gran Inversión'>Gran Inversión</option>
         </select>
       </div>
 
