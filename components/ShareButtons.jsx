@@ -1,99 +1,58 @@
 'use client';
-import {
-  FacebookShareButton,
-  TwitterShareButton,
-  LinkedinShareButton,
-  EmailShareButton,
-  FacebookIcon,
-  TwitterIcon,
-  LinkedinIcon,
-  EmailIcon,
-} from 'react-share';
+import { FaWhatsapp } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 const ShareButtons = ({ property, inline }) => {
   const shareUrl = `${process.env.NEXT_PUBLIC_DOMAIN || 'https://properties.roggeroyroma.com'}/properties/${property._id}`;
+  const shareText = `Mirá esta propiedad: ${property.name}`;
 
-  if (inline) {
-    // Senada-style inline share: simple icon row
-    return (
-      <div className="flex gap-3">
-        <FacebookShareButton
-          url={shareUrl}
-          quote={property.name}
-          hashtag="#inmobiliaria"
-          className="flex items-center justify-center w-[35px] h-[35px] rounded-full bg-[#1877f2] hover:bg-[#166fe5] transition-colors"
-        >
-          <FacebookIcon size={18} round={false} iconFillColor="white" />
-        </FacebookShareButton>
+  const handleInstagramShare = () => {
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      toast.success('Enlace copiado al portapapeles');
+    }).catch(() => {
+      toast.error('No se pudo copiar el enlace');
+    });
+  };
 
-        <TwitterShareButton
-          url={shareUrl}
-          title={property.name}
-          className="flex items-center justify-center w-[35px] h-[35px] rounded-full bg-[#1DA1F2] hover:bg-[#1a91da] transition-colors"
-        >
-          <TwitterIcon size={18} round={false} iconFillColor="white" />
-        </TwitterShareButton>
+  const iconSize = inline ? 'w-[35px] h-[35px]' : 'w-10 h-10';
+  const svgSize = inline ? 'w-4 h-4' : 'w-5 h-5';
 
-        <LinkedinShareButton
-          url={shareUrl}
-          title={property.name}
-          className="flex items-center justify-center w-[35px] h-[35px] rounded-full bg-[#0A66C2] hover:bg-[#0958a8] transition-colors"
-        >
-          <LinkedinIcon size={18} round={false} iconFillColor="white" />
-        </LinkedinShareButton>
-
-        <EmailShareButton
-          url={shareUrl}
-          subject={property.name}
-          body={`Mira esta propiedad: ${property.name}\n${shareUrl}`}
-          className="flex items-center justify-center w-[35px] h-[35px] rounded-full bg-[#333] hover:bg-[#1a1a1a] transition-colors"
-        >
-          <EmailIcon size={18} round={false} iconFillColor="white" />
-        </EmailShareButton>
-      </div>
-    );
-  }
-
-  // Standalone card mode (used in sidebar/standalone)
   return (
-    <div className="bg-white rounded-none md:rounded-[18px] p-5 md:border md:border-gray-100">
-      <p className="text-xs font-bold uppercase tracking-wider text-[#999] mb-4">Compartir</p>
-      <div className="flex gap-3">
-        <FacebookShareButton
-          url={shareUrl}
-          quote={property.name}
-          hashtag="#inmobiliaria"
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-[#1877f2] hover:bg-[#166fe5] transition-colors"
+    <div>
+      {!inline && (
+        <p className="text-xs font-bold uppercase tracking-wider text-[#999] mb-4">Compartir</p>
+      )}
+      <div className={`flex ${inline ? 'gap-3' : 'gap-3'}`}>
+        <a
+          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`flex items-center justify-center ${iconSize} rounded-full bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300`}
+          aria-label="Compartir en Facebook"
         >
-          <FacebookIcon size={20} round={false} iconFillColor="white" />
-        </FacebookShareButton>
+          <img src="/senada/images/icons/ico_facebook.svg" alt="" className={`${svgSize} brightness-0 invert`} />
+        </a>
 
-        <TwitterShareButton
-          url={shareUrl}
-          title={property.name}
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-[#1DA1F2] hover:bg-[#1a91da] transition-colors"
+        <button
+          onClick={handleInstagramShare}
+          className={`flex items-center justify-center ${iconSize} rounded-full bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300`}
+          aria-label="Compartir en Instagram"
         >
-          <TwitterIcon size={20} round={false} iconFillColor="white" />
-        </TwitterShareButton>
+          <img src="/senada/images/icons/ico_instagram.svg" alt="" className={`${svgSize} brightness-0 invert`} />
+        </button>
 
-        <LinkedinShareButton
-          url={shareUrl}
-          title={property.name}
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-[#0A66C2] hover:bg-[#0958a8] transition-colors"
+        <a
+          href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`flex items-center justify-center ${iconSize} rounded-full bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300`}
+          aria-label="Compartir en WhatsApp"
         >
-          <LinkedinIcon size={20} round={false} iconFillColor="white" />
-        </LinkedinShareButton>
-
-        <EmailShareButton
-          url={shareUrl}
-          subject={property.name}
-          body={`Mira esta propiedad: ${property.name}\n${shareUrl}`}
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-[#333] hover:bg-[#1a1a1a] transition-colors"
-        >
-          <EmailIcon size={20} round={false} iconFillColor="white" />
-        </EmailShareButton>
+          <FaWhatsapp className={`text-white ${inline ? 'text-lg' : 'text-xl'}`} />
+        </a>
       </div>
     </div>
   );
 };
+
 export default ShareButtons;
