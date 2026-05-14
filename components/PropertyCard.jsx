@@ -66,8 +66,8 @@ const PropertyCard = ({ property, isSelected = false, onMouseEnter, onMouseLeave
           {/* Status badge — top left */}
           <div className="absolute top-3 left-3 z-10">
             {badge ? (
-              <span className="bg-[var(--color-brand)] text-white text-[13px] font-bold w-7 h-7 flex items-center justify-center rounded shadow-md">
-                {badge.letter}
+              <span className="bg-[var(--color-brand)] backdrop-blur-sm text-white text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-md uppercase tracking-wider">
+                {badge.label}
               </span>
             ) : (
               <span className="bg-navy/80 backdrop-blur-sm text-white text-sm font-bold px-3 py-1.5 rounded-lg shadow-md">

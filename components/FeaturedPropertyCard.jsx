@@ -86,8 +86,8 @@ const FeaturedPropertyCard = ({ property }) => {
 
           {/* Status badge — top left */}
           {badge && (
-            <span className="absolute top-3 left-3 z-10 bg-[var(--color-brand)] text-white text-[13px] font-bold w-7 h-7 flex items-center justify-center rounded shadow-md">
-              {badge.letter}
+            <span className="absolute top-3 left-3 z-10 bg-[var(--color-brand)] text-white text-[11px] font-bold px-2.5 py-1 rounded uppercase tracking-wider shadow-md">
+              {badge.label}
             </span>
           )}
 
