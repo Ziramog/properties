@@ -4,6 +4,7 @@ import PropertyDetails from '@/components/PropertyDetails';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import PropertyGallery from '@/components/PropertyGallery';
+import PropertyMap from '@/components/PropertyMap';
 import FullGallery from '@/components/FullGallery';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 import Link from 'next/link';
@@ -46,6 +47,28 @@ const PropertyPage = async ({ params }) => {
               <FullGallery images={property.images} propertyName={property.name} />
             </div>
           )}
+
+          {/* View on Map */}
+          <div className="mt-8">
+            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden p-6 md:p-10">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-[28px] font-semibold text-[#0F172A]" style={{ fontFamily: 'var(--font-heading)' }}>
+                  Ver en el Mapa
+                </h2>
+                <a
+                  href="/properties"
+                  className="inline-flex items-center gap-2 text-[var(--color-brand)] hover:text-[var(--color-brand-dark)] text-[13px] font-bold uppercase tracking-wider transition-colors"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  Ver todos los listados
+                </a>
+              </div>
+              <PropertyMap property={property} />
+            </div>
+          </div>
         </section>
       </div>
     );

@@ -96,6 +96,8 @@ const PropertyMap = ({ property }) => {
       }}
       style={{ width: '100%', height: 500 }}
       mapStyle='mapbox://styles/mapbox/streets-v9'
+      scrollZoom={{ onlyWhenModifierKeys: true }}
+      dragRotate={false}
     >
       <Marker longitude={lng} latitude={lat} anchor='bottom'>
         <Image src={pin} alt='location' width={40} height={40} />
