@@ -186,95 +186,9 @@ const PropertyDetails = ({ property }) => {
             </div>
           )}
 
-          {/* Interior card */}
-          {property.interior && (property.interior.aberturas || property.interior.pisos || property.interior.calefaccion) && (
-            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5">
-              <div className="px-6 md:px-[25px] lg:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
-                <SectionTitle>Interior</SectionTitle>
-                <ul className="space-y-2.5">
-                  {property.interior.aberturas && (
-                    <li className="flex items-center gap-2.5">
-                      <CheckIcon />
-                      <span className="text-[#555] text-[14px]">
-                        <strong className="text-[#0F172A]">Aberturas:</strong> {property.interior.aberturas}
-                      </span>
-                    </li>
-                  )}
-                  {property.interior.pisos && (
-                    <li className="flex items-center gap-2.5">
-                      <CheckIcon />
-                      <span className="text-[#555] text-[14px]">
-                        <strong className="text-[#0F172A]">Pisos:</strong> {property.interior.pisos}
-                      </span>
-                    </li>
-                  )}
-                  {property.interior.calefaccion && (
-                    <li className="flex items-center gap-2.5">
-                      <CheckIcon />
-                      <span className="text-[#555] text-[14px]">
-                        <strong className="text-[#0F172A]">Calefacción:</strong> {property.interior.calefaccion}
-                      </span>
-                    </li>
-                  )}
-                </ul>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Exterior card */}
-      {property.exterior && property.exterior.techos && (
-        <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-0 mb-8">
-          <div className="px-6 md:px-[25px] lg:px-[100px] xl:px-[190px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
-            <SectionTitle>Exterior</SectionTitle>
-            <ul className="space-y-2.5">
-              {property.exterior.techos && (
-                <li className="flex items-center gap-2.5">
-                  <CheckIcon />
-                  <span className="text-[#555] text-[14px]">
-                    <strong className="text-[#0F172A]">Techos:</strong> {property.exterior.techos}
-                  </span>
-                </li>
-              )}
-            </ul>
-          </div>
-        </div>
-      )}
-
-      {/* Amenities card */}
-      {property.amenities && property.amenities.length > 0 && (
-        <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-0 mb-8">
-          <div className="px-6 md:px-[25px] lg:px-[100px] xl:px-[190px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
-            <SectionTitle>Comodidades</SectionTitle>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-2.5">
-              {property.amenities.map((amenity, index) => (
-                <li key={index} className="flex items-center gap-2.5">
-                  <CheckIcon />
-                  <span className="text-[#555] text-[14px]">{amenity}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
-
-      {/* Services card */}
-      {property.services && property.services.length > 0 && (
-        <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mt-0 md:mt-0 mb-8">
-          <div className="px-6 md:px-[25px] lg:px-[100px] xl:px-[190px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
-            <SectionTitle>Servicios</SectionTitle>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-2.5">
-              {property.services.map((service, index) => (
-                <li key={index} className="flex items-center gap-2.5">
-                  <CheckIcon />
-                  <span className="text-[#555] text-[14px]">{service}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
     </main>
   );
 };
