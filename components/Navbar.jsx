@@ -236,9 +236,8 @@ const Navbar = () => {
           }}>
           {/* Nav links — Senada .mobileMenu */}
           <nav className="flex-1 flex flex-col px-0">
-            <Link href="/" className={`flex items-center justify-between text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.2s' }} onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.2s' }} onClick={() => setIsMobileMenuOpen(false)}>
               Inicio
-              <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
             </Link>
 
             {/* Propiedades — expandable dropdown */}
@@ -265,32 +264,27 @@ const Navbar = () => {
               </div>
             </div>
 
-            <Link href="/contact" className={`flex items-center justify-between text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.6s' }} onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/contact" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.6s' }} onClick={() => setIsMobileMenuOpen(false)}>
               Contacto
-              <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
             </Link>
             {session ? (
               <>
-                <Link href="/profile" className={`flex items-center justify-between text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/profile" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
                   Perfil
-                  <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
                 </Link>
                 {session.user?.role === 'admin' && (
-                  <Link href="/admin" className={`flex items-center justify-between text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.9s' }} onClick={() => setIsMobileMenuOpen(false)}>
-                    Admin
-                    <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
+                  <Link href="/admin" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.9s' }} onClick={() => setIsMobileMenuOpen(false)}>
+                      Admin
                   </Link>
                 )}
-                <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className={`flex items-center justify-between w-full text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '1.0s' }}>
+                <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '1.0s' }}>
                   Salir
-                  <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
                 </button>
               </>
             ) : (
               providers && Object.values(providers).map((provider) => (
-                <button key={provider.id} onClick={() => { signIn(provider.id, { callbackUrl: '/admin' }); }} className={`flex items-center justify-between w-full text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }}>
+                <button key={provider.id} onClick={() => { signIn(provider.id, { callbackUrl: '/admin' }); }} className={`block w-full text-left text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }}>
                   Ingresar
-                  <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className="w-5 h-5 opacity-40" style={{ filter: 'brightness(0) invert(1)' }} />
                 </button>
               ))
             )}
