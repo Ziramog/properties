@@ -11,27 +11,6 @@ import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const BedIcon = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className} fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="9" width="20" height="11" rx="2"/>
-    <path d="M0 18h24v2H0z"/>
-    <path d="M7 9V6a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v3"/>
-  </svg>
-);
-
-const BathIcon = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
-    <path d="M2 12h20v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3v-6z" fill="#fff"/>
-    <path d="M6 12V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
-  </svg>
-);
-
-const SqftIcon = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24.739" height="24.739" viewBox="0 0 24.739 24.739" fill="none" className={className}>
-    <path d="M18.2-16.364h7.624V7.356H2.1v-23.72H8.877l5.083,3.389M12.266,7.356V-4.5M8.03-4.5H16.5m5.083,0h4.236" transform="translate(-1.591 16.873)" stroke="#fff" strokeWidth="1.019"/>
-  </svg>
-);
-
 const FeaturedPropertyCard = ({ property }) => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
@@ -96,19 +75,19 @@ const FeaturedPropertyCard = ({ property }) => {
             <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
               {property.beds != null && (
                 <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
-                  <BedIcon className="w-5 h-5" />
+                  <img src="/senada/images/icons/ico_bed.svg" alt="" className="w-5 h-5" />
                   {property.beds}
                 </span>
               )}
               {property.baths != null && (
                 <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
-                  <BathIcon className="w-5 h-5" />
+                  <img src="/senada/images/icons/ico_bath.svg" alt="" className="w-5 h-5" />
                   {property.baths}
                 </span>
               )}
               {area && (
                 <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
-                  <SqftIcon className="w-5 h-5" />
+                  <img src="/senada/images/icons/ico_sqfoot.svg" alt="" className="w-5 h-5" />
                   {area}
                 </span>
               )}
