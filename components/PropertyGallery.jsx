@@ -141,27 +141,19 @@ const PropertyGallery = ({ images = [], property }) => {
             <div className="flex gap-[20px] md:gap-[40px] flex-wrap items-center">
               {beds != null && (
                 <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-bold text-[16px] md:text-[22px]">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 30 25" fill="none" stroke="currentColor" strokeWidth="1.5" className="brightness-0 invert md:w-[30px] md:h-[25px]">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M2 12h26M2 12v8a1.5 1.5 0 0 0 1.5 1.5h23a1.5 1.5 0 0 0 1.5-1.5v-8M2 12V3.5A1.5 1.5 0 0 1 3.5 2h5A1.5 1.5 0 0 1 10 3.5v8.5" />
-                  </svg>
+                  <img src="/senada/images/icons/ico_bed.svg" alt="" className="w-5 h-5 md:w-[30px] md:h-[25px]" />
                   {beds}
                 </span>
               )}
               {baths != null && (
                 <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-bold text-[16px] md:text-[22px]">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 30 25" fill="none" stroke="currentColor" strokeWidth="1.5" className="brightness-0 invert md:w-[30px] md:h-[25px]">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 14h20v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5Z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 14V5a2.5 2.5 0 0 1 2.5-2.5h1A2.5 2.5 0 0 1 13 5v1" />
-                    <circle cx="10" cy="9" r="1.5" fill="currentColor" />
-                  </svg>
+                  <img src="/senada/images/icons/ico_bath.svg" alt="" className="w-5 h-5 md:w-[30px] md:h-[25px]" />
                   {baths}
                 </span>
               )}
               {area && (
                 <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-bold text-[16px] md:text-[22px]">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 30 25" fill="none" stroke="currentColor" strokeWidth="1.5" className="brightness-0 invert md:w-[30px] md:h-[25px]">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v18h22V4M4 4l11 19L26 4M4 4h22M15 4v18" />
-                  </svg>
+                  <img src="/senada/images/icons/ico_sqfoot.svg" alt="" className="w-5 h-5 md:w-[30px] md:h-[25px]" />
                   {area.toLocaleString('es-AR')} m²
                 </span>
               )}
