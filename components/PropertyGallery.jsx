@@ -188,7 +188,7 @@ const PropertyGallery = ({ images = [], property }) => {
 
             <button
               onClick={() => {
-                document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('full-gallery')?.scrollIntoView({ behavior: 'smooth' });
               }}
               className="w-full text-white text-[16px] font-normal uppercase tracking-wider py-5 px-[30px] rounded-[6px] transition-colors text-center"
               style={{
@@ -196,7 +196,7 @@ const PropertyGallery = ({ images = [], property }) => {
                 backgroundSize: '400% 100%',
               }}
             >
-              Contactanos
+              Ver todas las fotos
             </button>
           </div>
         </div>

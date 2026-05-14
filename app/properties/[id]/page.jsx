@@ -5,10 +5,6 @@ import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import PropertyGallery from '@/components/PropertyGallery';
 import FullGallery from '@/components/FullGallery';
-import BookmarkButton from '@/components/BookmarkButton';
-import ShareButtons from '@/components/ShareButtons';
-import PropertyContactForm from '@/components/PropertyContactForm';
-import WhatsAppButton from '@/components/WhatsAppButton';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 import Link from 'next/link';
 
@@ -44,27 +40,6 @@ const PropertyPage = async ({ params }) => {
           </div>
           <div>
             <PropertyDetails property={property} />
-            <div className="mt-0 md:mt-8 space-y-0 md:space-y-4">
-              <div id="contact-form">
-                <PropertyContactForm property={property} />
-              </div>
-              <div className="hidden md:flex md:flex-wrap md:gap-4 mt-4">
-                <div className="flex-1 min-w-[200px]">
-                  <WhatsAppButton property={property} />
-                </div>
-                <div className="flex-1 min-w-[200px]">
-                  <BookmarkButton property={property} />
-                </div>
-                <div className="hidden md:block w-full mt-4">
-                  <ShareButtons property={property} />
-                </div>
-              </div>
-              <div className="md:hidden px-4 space-y-3 mb-0">
-                <WhatsAppButton property={property} />
-                <BookmarkButton property={property} />
-                <ShareButtons property={property} />
-              </div>
-            </div>
           </div>
           {property.images && property.images.length > 0 && (
             <div className="mt-8" id="full-gallery">
