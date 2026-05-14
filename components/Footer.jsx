@@ -178,7 +178,7 @@ const Footer = () => {
             </ul>
             <p className="text-white/50 text-[14px] uppercase font-bold">
               Powered by{' '}
-              <a href="https://wolfimstudio.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-white transition-colors">
+              <a href="https://www.wolfim.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-white transition-colors">
                 <Image
                   src="/images/wolfim studio white-Photoroom.png"
                   alt="Wolfim Studio"
@@ -325,7 +325,7 @@ const Footer = () => {
             </ul>
             <p className="text-[14px] text-white/40">
               Powered by{' '}
-              <a href="https://wolfimstudio.com" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition-colors">
+              <a href="https://www.wolfim.com" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition-colors">
                 <Image
                   src="/images/wolfim studio white-Photoroom.png"
                   alt="Wolfim Studio"
