@@ -294,17 +294,17 @@ const Navbar = () => {
           <div className="flex-shrink-0 pt-[30px] border-t border-white/[0.1]" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 16px)' }}>
             <ul className="flex items-center justify-center gap-[25px]">
               <li>
-                <a href={`tel:${PHONE_NUMBER}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Llamar" style={{ filter: 'none' }}>
+                <a href={`tel:${PHONE_NUMBER}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Llamar" style={{ filter: 'none' }}>
                   <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-5 h-5" />
                 </a>
               </li>
               <li>
-                <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Email" style={{ filter: 'none' }}>
+                <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Email" style={{ filter: 'none' }}>
                   <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-5 h-5" />
                 </a>
               </li>
               <li>
-                <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="WhatsApp" style={{ filter: 'none' }}>
+                <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="WhatsApp" style={{ filter: 'none' }}>
                   <FaWhatsapp className="text-xl" />
                 </a>
               </li>
@@ -316,11 +316,6 @@ const Navbar = () => {
               <li>
                 <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Facebook" style={{ filter: 'none' }}>
                   <img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-5 h-5" />
-                </a>
-              </li>
-              <li>
-                <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="LinkedIn" style={{ filter: 'none' }}>
-                  <img src="/senada/images/icons/ico_linked.svg" alt="linkedin" className="w-5 h-5" />
                 </a>
               </li>
             </ul>
