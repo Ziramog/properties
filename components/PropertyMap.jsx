@@ -95,7 +95,7 @@ const PropertyMap = ({ property }) => {
         zoom: 15,
       }}
       style={{ width: '100%', height: 500 }}
-      mapStyle='mapbox://styles/mapbox/streets-v9'
+      mapStyle='mapbox://styles/mapbox/light-v11'
       scrollZoom={{ onlyWhenModifierKeys: true }}
       dragRotate={false}
     >
