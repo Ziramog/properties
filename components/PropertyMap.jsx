@@ -1,12 +1,11 @@
 'use client';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Map, { Marker } from 'react-map-gl';
 import Image from 'next/image';
 import pin from '@/assets/images/pin.svg';
 import Spinner from './Spinner';
 
-// Known city coordinates fallback
 const knownCities = {
   'Alta Gracia': [-31.6525, -64.4397],
   'Córdoba': [-31.4201, -64.1888],
@@ -40,7 +39,6 @@ const PropertyMap = ({ property }) => {
 
   useEffect(() => {
     const fetchCoords = async () => {
-      // Try known cities first
       const cityCoords = geocodeCity(property.location?.city);
       if (cityCoords) {
         setLat(cityCoords.lat);
@@ -49,7 +47,6 @@ const PropertyMap = ({ property }) => {
         return;
       }
 
-      // Fallback to Nominatim
       const query = [property.location?.street, property.location?.city, property.location?.state, 'Argentina']
         .filter(Boolean)
         .join(', ');
@@ -79,43 +76,6 @@ const PropertyMap = ({ property }) => {
     fetchCoords();
   }, [property.location]);
 
-  const mapRef = useRef();
-
-  const onMapLoad = useCallback(() => {
-    const map = mapRef.current?.getMap();
-    if (!map) return;
-
-    // Desktop: only Ctrl+scroll zooms
-    map.scrollZoom.disable();
-    map.dragRotate.disable();
-
-    map.getContainer().addEventListener('wheel', (e) => {
-      if (e.ctrlKey || e.metaKey) {
-        map.scrollZoom.enable();
-        requestAnimationFrame(() => map.scrollZoom.disable());
-      }
-    });
-
-    // Mobile: two fingers to move/zoom the map
-    if ('ontouchstart' in window) {
-      map.dragPan.disable();
-
-      const c = map.getContainer();
-      c.addEventListener('touchstart', (e) => {
-        if (e.touches.length >= 2) {
-          map.dragPan.enable();
-          map.scrollZoom.enable();
-        }
-      });
-      c.addEventListener('touchend', (e) => {
-        if (e.touches.length < 2) {
-          map.dragPan.disable();
-          map.scrollZoom.disable();
-        }
-      });
-    }
-  }, []);
-
   if (loading) return <Spinner loading={loading} />;
 
   if (geocodeError) {
@@ -123,26 +83,34 @@ const PropertyMap = ({ property }) => {
   }
 
   return (
-    <Map
-      ref={mapRef}
-      onLoad={onMapLoad}
-      mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-      mapLib={import('mapbox-gl')}
-      initialViewState={{
-        longitude: lng,
-        latitude: lat,
-        zoom: 15,
-      }}
-      style={{ width: '100%', height: 500 }}
-      mapStyle='mapbox://styles/mapbox/light-v11'
-      scrollZoom={false}
-      dragPan={true}
-      dragRotate={false}
-    >
-      <Marker longitude={lng} latitude={lat} anchor='bottom'>
-        <Image src={pin} alt='location' width={40} height={40} />
-      </Marker>
-    </Map>
+    <div className="relative">
+      <Map
+        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+        mapLib={import('mapbox-gl')}
+        initialViewState={{
+          longitude: lng,
+          latitude: lat,
+          zoom: 15,
+        }}
+        style={{ width: '100%', height: 500 }}
+        mapStyle='mapbox://styles/mapbox/light-v11'
+        scrollZoom={false}
+        dragPan={false}
+        dragRotate={false}
+        doubleClickZoom={false}
+        touchZoomRotate={true}
+        keyboard={false}
+      >
+        <Marker longitude={lng} latitude={lat} anchor='bottom'>
+          <Image src={pin} alt='location' width={40} height={40} />
+        </Marker>
+      </Map>
+
+      {/* Mobile hint — two-finger zoom */}
+      <div className="md:hidden absolute bottom-6 left-1/2 -translate-x-1/2 z-10 bg-black/70 backdrop-blur-sm text-white text-xs px-4 py-2 rounded-full whitespace-nowrap pointer-events-none select-none">
+        Usa dos dedos para hacer zoom
+      </div>
+    </div>
   );
 };
 
