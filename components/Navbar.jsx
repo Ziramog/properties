@@ -309,17 +309,17 @@ const Navbar = () => {
                 </a>
               </li>
               <li>
-                <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] opacity-50 hover:opacity-100 hover:bg-white/10 transition-all duration-300" aria-label="Instagram" style={{ filter: 'none' }}>
+                <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Instagram" style={{ filter: 'none' }}>
                   <img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-5 h-5" />
                 </a>
               </li>
               <li>
-                <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] opacity-50 hover:opacity-100 hover:bg-white/10 transition-all duration-300" aria-label="Facebook" style={{ filter: 'none' }}>
+                <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Facebook" style={{ filter: 'none' }}>
                   <img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-5 h-5" />
                 </a>
               </li>
               <li>
-                <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] opacity-50 hover:opacity-100 hover:bg-white/10 transition-all duration-300" aria-label="LinkedIn" style={{ filter: 'none' }}>
+                <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="LinkedIn" style={{ filter: 'none' }}>
                   <img src="/senada/images/icons/ico_linked.svg" alt="linkedin" className="w-5 h-5" />
                 </a>
               </li>
