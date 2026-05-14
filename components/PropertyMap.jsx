@@ -31,12 +31,44 @@ function geocodeCity(city) {
   return coords ? { lat: coords[0], lng: coords[1] } : null;
 }
 
+function GlassZoomControl({ mapRef: mapboxRef }) {
+  const handleZoomIn = () => {
+    const map = mapboxRef.current?.getMap();
+    map?.zoomIn({ duration: 300 });
+  };
+  const handleZoomOut = () => {
+    const map = mapboxRef.current?.getMap();
+    map?.zoomOut({ duration: 300 });
+  };
+
+  return (
+    <div className="absolute bottom-4 right-4 z-20 flex flex-col gap-[1px] overflow-hidden rounded-xl shadow-xl backdrop-blur-xl bg-white/10 border border-white/20">
+      <button
+        onClick={handleZoomIn}
+        className="w-10 h-10 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 text-lg font-light"
+        aria-label="Zoom in"
+      >
+        +
+      </button>
+      <div className="h-[1px] bg-white/10" />
+      <button
+        onClick={handleZoomOut}
+        className="w-10 h-10 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 text-lg font-light"
+        aria-label="Zoom out"
+      >
+        −
+      </button>
+    </div>
+  );
+}
+
 const PropertyMap = ({ property }) => {
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
   const [loading, setLoading] = useState(true);
   const [geocodeError, setGeocodeError] = useState(false);
   const mapRef = useRef();
+  const disposed = useRef(false);
 
   const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap();
@@ -46,30 +78,56 @@ const PropertyMap = ({ property }) => {
     map.scrollZoom.disable();
     map.dragRotate.disable();
 
-    map.getContainer().addEventListener('wheel', (e) => {
+    const container = map.getContainer();
+
+    const wheelHandler = (e) => {
       if (e.ctrlKey || e.metaKey) {
         map.scrollZoom.enable();
         requestAnimationFrame(() => map.scrollZoom.disable());
       }
-    });
+    };
+
+    container.addEventListener('wheel', wheelHandler, { passive: true });
 
     // Mobile: two fingers for zoom + pan
+    let touchCleanup = null;
     if ('ontouchstart' in window) {
       map.dragPan.disable();
-      const c = map.getContainer();
-      c.addEventListener('touchstart', (e) => {
+
+      const touchStartHandler = (e) => {
         if (e.touches.length >= 2) {
           map.dragPan.enable();
           map.scrollZoom.enable();
         }
-      });
-      c.addEventListener('touchend', (e) => {
+      };
+
+      const touchEndHandler = (e) => {
         if (e.touches.length < 2) {
           map.dragPan.disable();
           map.scrollZoom.disable();
         }
-      });
+      };
+
+      container.addEventListener('touchstart', touchStartHandler, { passive: true });
+      container.addEventListener('touchend', touchEndHandler, { passive: true });
+
+      touchCleanup = () => {
+        container.removeEventListener('touchstart', touchStartHandler);
+        container.removeEventListener('touchend', touchEndHandler);
+      };
     }
+
+    // Cleanup
+    disposed.current = () => {
+      container.removeEventListener('wheel', wheelHandler);
+      if (touchCleanup) touchCleanup();
+    };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (disposed.current) disposed.current();
+    };
   }, []);
 
   useEffect(() => {
@@ -142,8 +200,16 @@ const PropertyMap = ({ property }) => {
         </Marker>
       </Map>
 
-      {/* Mobile hint — Google Maps-style flat bar */}
-      <div className="md:hidden absolute bottom-0 left-0 right-0 z-10 bg-black/60 text-white/80 text-[11px] text-center py-1.5 px-3 pointer-events-none select-none">
+      {/* Glassmorphism zoom controls */}
+      <GlassZoomControl mapRef={mapRef} />
+
+      {/* Desktop hint */}
+      <div className="hidden md:block absolute bottom-0 left-0 right-0 z-10 bg-black/60 text-white/70 text-[11px] text-center py-1.5 px-3 pointer-events-none select-none backdrop-blur-sm">
+        Ctrl + scroll para hacer zoom
+      </div>
+
+      {/* Mobile hint */}
+      <div className="md:hidden absolute bottom-0 left-0 right-0 z-10 bg-black/60 text-white/70 text-[11px] text-center py-1.5 px-3 pointer-events-none select-none backdrop-blur-sm">
         Usa dos dedos para mover y hacer zoom
       </div>
     </div>
