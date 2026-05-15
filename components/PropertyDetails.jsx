@@ -64,7 +64,7 @@ const PropertyDetails = ({ property }) => {
       {featureItems.length > 0 && (
         <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-8 md:mb-8">
           <div className="px-[15px] py-[30px] md:py-[30px]">
-            <div className="pb-[30px] px-[15px]">
+            <div className="pb-[30px]">
               <SectionTitle>Características</SectionTitle>
             </div>
             <div className="flex flex-wrap">
