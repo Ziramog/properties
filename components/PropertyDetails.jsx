@@ -71,8 +71,7 @@ const PropertyDetails = ({ property }) => {
               {featureItems.map(({ label, value }, i) => (
                 <div
                   key={label}
-                  className="flex-1 min-w-[50%] md:min-w-0 flex justify-center py-0 px-[20px] md:px-[40px] border-r border-[#e9e9e9] border-b md:border-b-0 border-[#e9e9e9] pb-[25px] md:pb-0 mb-[25px] md:mb-0"
-                  style={{ borderRight: i === featureItems.length - 1 ? 'none' : undefined }}
+                  className={`flex-1 min-w-[50%] md:min-w-0 flex justify-center py-[30px] px-[20px] md:px-[40px] border-r border-b md:border-b-0 border-[#e9e9e9] ${i === featureItems.length - 1 ? 'border-r-0' : ''} md:[&:nth-last-child(-n+2)]:border-b-0`}
                 >
                   <div>
                     <h5 className="text-[22px] font-semibold text-[#0F172A] mb-[5px]"
@@ -94,7 +93,7 @@ const PropertyDetails = ({ property }) => {
         <div className="w-full md:w-[70%]">
           {property.description && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden h-full flex flex-col">
-              <div className="px-6 md:px-[25px] lg:px-[100px] xl:px-[190px] pt-10 md:pt-[40px] pb-0">
+              <div className="px-6 md:px-[25px] lg:px-[80px] xl:px-[130px] xl:pl-[190px] pt-10 md:pt-[40px] pb-0 flex flex-col flex-1">
                 <SectionTitle>Descripción</SectionTitle>
                 <ReadMoreText text={property.description} maxChars={450} />
                 {property.seller_info?.name && (
@@ -103,7 +102,7 @@ const PropertyDetails = ({ property }) => {
                   </p>
                 )}
                 {/* Share */}
-                <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6">
+                <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6 mt-auto">
                   <span className="text-[16px] uppercase text-[#999] block text-center mb-4">Compartir</span>
                   <ShareButtons property={property} />
                 </div>
@@ -117,7 +116,7 @@ const PropertyDetails = ({ property }) => {
           {/* Additional Info */}
           {(property.square_feet || property.operation || coveredArea || property.garage != null || property.titles_status) && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5">
-              <div className="px-6 md:px-[25px] lg:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+              <div className="px-6 md:px-[25px] lg:px-[50px] xl:pr-[100px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
                 <SectionTitle>Información Adicional</SectionTitle>
                 <ul>
                   {property.square_feet && (
@@ -158,7 +157,7 @@ const PropertyDetails = ({ property }) => {
           {/* Community Info */}
           {(property.location?.city || property.location?.state) && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5">
-              <div className="px-6 md:px-[25px] lg:px-[50px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+              <div className="px-6 md:px-[25px] lg:px-[50px] xl:pr-[100px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
                 <SectionTitle>Información de la Zona</SectionTitle>
                 <ol className="list-none">
                   {property.location?.state && (

@@ -27,49 +27,55 @@ const PropertyPage = async ({ params }) => {
     return (
       <div className="min-h-screen" style={{ background: '#F6F6F6' }}>
         <PropertyGallery images={property.images} property={property} />
-        <section className="px-[15px] pb-16">
-          <div className="py-4 px-4 md:px-0">
-            <Link
-              href='/properties'
-              className='text-[var(--color-brand)] hover:text-[#0F172A] inline-flex items-center font-medium transition-colors text-[13px]'
-            >
-              <svg className='mr-1.5 w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 16 16'>
-                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M10 3 6 8l4 5' />
-              </svg>
-              Volver a Propiedades
-            </Link>
-          </div>
-          <div>
-            <PropertyDetails property={property} />
-          </div>
-          {property.images && property.images.length > 0 && (
-            <div className="mt-8" id="full-gallery">
-              <FullGallery images={property.images} propertyName={property.name} />
+        <section className="pb-16">
+          <div className="max-w-[1820px] mx-auto px-[15px]">
+            <div className="py-4 px-4 md:px-0">
+              <Link
+                href='/properties'
+                className='text-[var(--color-brand)] hover:text-[#0F172A] inline-flex items-center font-medium transition-colors text-[13px]'
+              >
+                <svg className='mr-1.5 w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 16 16'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M10 3 6 8l4 5' />
+                </svg>
+                Volver a Propiedades
+              </Link>
             </div>
-          )}
-
-          {/* View on Map */}
-          <div className="mt-8">
-            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden p-6 md:p-10">
-              <div className="pb-[30px] flex items-center justify-between">
-                <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Ver en el Mapa
-                  <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
-                </h2>
+            <div className="max-w-[1430px] mx-auto">
+              <PropertyDetails property={property} />
+            </div>
+            {property.images && property.images.length > 0 && (
+              <div className="mt-8" id="full-gallery">
+                <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
+                  <div className="max-w-[1430px] mx-auto py-[30px] md:py-[80px] px-[15px] md:pb-[35px]">
+                    <FullGallery images={property.images} propertyName={property.name} />
+                  </div>
+                </div>
               </div>
-              <PropertyMap property={property} />
-              <div className="text-center mt-6">
-                <a
-                  href="/properties"
-                  className="inline-flex items-center gap-2 px-8 py-3 border-2 border-[var(--color-brand)] text-[var(--color-brand)] text-[13px] font-bold uppercase tracking-wider rounded-[6px] transition-all duration-200 hover:bg-[var(--color-brand)] hover:text-white"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
-                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
-                    <line x1="8" y1="2" x2="8" y2="18"/>
-                    <line x1="16" y1="6" x2="16" y2="22"/>
-                  </svg>
-                  Ver todas las propiedades en el mapa
-                </a>
+            )}
+
+            {/* View on Map */}
+            <div className="mt-8">
+              <div className="max-w-[1430px] mx-auto py-[30px] md:py-[80px] px-[15px] md:pb-[70px]">
+                <div className="pb-[30px] flex items-center justify-between">
+                  <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
+                    Ver en el Mapa
+                    <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
+                  </h2>
+                  <Link
+                    href="/properties"
+                    className="hidden md:inline-flex items-center gap-2 text-[var(--color-brand)] text-[13px] font-bold uppercase tracking-wider transition-colors hover:text-[#0F172A]"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                      <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+                      <line x1="8" y1="2" x2="8" y2="18"/>
+                      <line x1="16" y1="6" x2="16" y2="22"/>
+                    </svg>
+                    Ver todas las propiedades en el mapa
+                  </Link>
+                </div>
+                <div className="rounded-none md:rounded-[30px] overflow-hidden">
+                  <PropertyMap property={property} />
+                </div>
               </div>
             </div>
           </div>

@@ -7,18 +7,8 @@ const FullGallery = ({ images = [], propertyName }) => {
 
   return (
     <Gallery>
-      <section className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
-        <div className="px-6 py-6 md:p-8">
-          <div className="pb-6">
-            <h2
-              className="text-[22px] md:text-[26px] font-semibold text-[#0F172A]"
-              style={{ fontFamily: 'var(--font-heading)' }}
-            >
-              {propertyName ? `${propertyName} Fotos` : 'Fotos'}
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[6px]">
+      <section>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[5px]">
             {images.map((image, index) => (
               <Item key={index} original={image} thumbnail={image} width="1200" height="800">
                 {({ ref, open }) => (
@@ -40,7 +30,6 @@ const FullGallery = ({ images = [], propertyName }) => {
                 )}
               </Item>
             ))}
-          </div>
         </div>
       </section>
     </Gallery>
