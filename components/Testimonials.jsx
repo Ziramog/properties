@@ -54,7 +54,8 @@ const Testimonials = () => {
   }, []);
 
   return (
-    <section className="bg-white py-16 md:py-24 px-4 md:px-6 relative z-[2] isolate">
+    <section className="pt-[30px] pb-[30px] px-4 md:px-6 relative z-[2] isolate">
+      <div className="bg-white w-full">
       <div className="max-w-7xl mx-auto">
         {/* Section Header — match homepage standard */}
         <div className="text-center mb-10 md:mb-14">
@@ -191,6 +192,7 @@ const Testimonials = () => {
             </a>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );
