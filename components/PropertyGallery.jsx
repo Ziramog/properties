@@ -161,10 +161,11 @@ const PropertyGallery = ({ images = [], property }) => {
           </div>
 
           {/* Right — Status + Price + CTA */}
-          <div className="flex flex-col items-start md:items-end gap-0 flex-shrink-0">
-            <div className="text-left md:text-right">
+          <div className="flex flex-col md:flex-row md:items-end gap-[30px] flex-shrink-0">
+            {/* Status — left within right column */}
+            <div className="text-left">
               {operationLabel && (
-                <p className="text-[#b8b8b8] text-[14px] md:text-[16px] leading-[19px] mt-[15px]">
+                <p className="text-[#b8b8b8] text-[14px] md:text-[16px] leading-[19px]">
                   Operación <span className="text-white">{operationLabel}</span>
                 </p>
               )}
@@ -175,29 +176,32 @@ const PropertyGallery = ({ images = [], property }) => {
               )}
             </div>
 
-            <h2 className="text-[28px] md:text-[40px] text-white font-normal mb-[20px]"
-                style={{ fontFamily: 'var(--font-heading)' }}
-                itemProp="offers" itemScope itemType="https://schema.org/Offer">
-              <meta itemProp="priceCurrency" content="USD" />
-              <span itemProp="price" content={numericPrice}>
-                {numericPrice
-                  ? `$${numericPrice.toLocaleString('es-AR')}`
-                  : 'Consultar'}
-              </span>
-            </h2>
+            {/* Price + CTA — right within right column */}
+            <div className="text-left md:text-right">
+              <h2 className="text-[28px] md:text-[40px] text-white font-normal mb-[20px]"
+                  style={{ fontFamily: 'var(--font-heading)' }}
+                  itemProp="offers" itemScope itemType="https://schema.org/Offer">
+                <meta itemProp="priceCurrency" content="USD" />
+                <span itemProp="price" content={numericPrice}>
+                  {numericPrice
+                    ? `$${numericPrice.toLocaleString('es-AR')}`
+                    : 'Consultar'}
+                </span>
+              </h2>
 
-            <button
-              onClick={() => {
-                document.getElementById('full-gallery')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="w-full text-white text-[16px] font-normal uppercase tracking-wider py-5 px-[30px] rounded-[6px] transition-colors text-center"
-              style={{
-                backgroundImage: 'linear-gradient(135deg, var(--color-brand), var(--color-brand), var(--color-brand-dark), var(--color-brand-dark))',
-                backgroundSize: '400% 100%',
-              }}
-            >
-              Ver todas las fotos
-            </button>
+              <button
+                onClick={() => {
+                  document.getElementById('full-gallery')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="w-full text-white text-[16px] font-normal uppercase tracking-wider py-5 px-[30px] rounded-[6px] transition-colors text-center"
+                style={{
+                  backgroundImage: 'linear-gradient(135deg, var(--color-brand), var(--color-brand), var(--color-brand-dark), var(--color-brand-dark))',
+                  backgroundSize: '400% 100%',
+                }}
+              >
+                Ver todas las fotos
+              </button>
+            </div>
           </div>
         </div>
       </section>
