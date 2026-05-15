@@ -29,7 +29,7 @@ const Clients = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="bg-[#F6F6F6] pt-[30px] pb-[30px]">
+    <section ref={sectionRef} className="bg-[#F6F6F6] pt-[15px] pb-[15px]">
       <div className="max-w-[1430px] mx-auto px-[15px]">
         {/* Section Header — match homepage standard */}
         <div className="text-center mb-10 md:mb-14">

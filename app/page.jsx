@@ -24,7 +24,7 @@ const HomePage = async () => {
   }));
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       {/* 1. Hero — emotional hook + search + trust strip */}
       <Hero />
 

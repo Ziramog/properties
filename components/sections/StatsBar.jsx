@@ -55,8 +55,8 @@ const StatItem = ({ stat, isLast }) => {
 
 const StatsBar = () => {
   return (
-    <section className="pt-[30px] pb-[30px]">
-      <div className="bg-white w-full">
+    <section className="pt-[15px] pb-[15px]">
+      <div className="bg-white w-full py-[10px]">
       <div className="max-w-[60vw] mx-auto px-4 md:px-8">
         <div className="flex justify-center">
           {STATS.map((stat, i) => (

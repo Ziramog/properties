@@ -5,7 +5,7 @@ import { generateWhatsAppLink } from '@/utils/whatsapp';
 
 const SellerCTA = () => {
   return (
-    <section className="pt-[30px] pb-[30px]">
+    <section className="pt-[15px] pb-[15px]">
       <div className="bg-white w-full">
         <div className="px-6 md:px-12 py-12 md:py-20">
           <div className="flex flex-col md:flex-row justify-center gap-5 items-stretch">
