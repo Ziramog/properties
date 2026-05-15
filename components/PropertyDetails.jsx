@@ -116,7 +116,7 @@ const PropertyDetails = ({ property }) => {
           {/* Additional Info */}
           {(property.square_feet || property.operation || coveredArea || property.garage != null || property.titles_status) && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5">
-              <div className="px-6 md:px-[25px] lg:px-[50px] xl:pr-[100px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+              <div className="px-6 md:px-[25px] lg:px-[50px] xl:pr-[170px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
                 <SectionTitle>Información Adicional</SectionTitle>
                 <ul>
                   {property.square_feet && (
@@ -157,7 +157,7 @@ const PropertyDetails = ({ property }) => {
           {/* Community Info */}
           {(property.location?.city || property.location?.state) && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5">
-              <div className="px-6 md:px-[25px] lg:px-[50px] xl:pr-[100px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+              <div className="px-6 md:px-[25px] lg:px-[50px] xl:pr-[170px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
                 <SectionTitle>Información de la Zona</SectionTitle>
                 <ol className="list-none">
                   {property.location?.state && (
