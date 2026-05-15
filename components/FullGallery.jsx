@@ -7,7 +7,7 @@ const FullGallery = ({ images = [], propertyName }) => {
 
   return (
     <Gallery>
-      <section>
+      <section className="rounded-none md:rounded-[30px] overflow-hidden">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[5px]">
             {images.map((image, index) => (
               <Item key={index} original={image} thumbnail={image} width="1200" height="800">
