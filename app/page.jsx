@@ -24,14 +24,12 @@ const HomePage = async () => {
   }));
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       {/* 1. Hero — emotional hook + search + trust strip */}
       <Hero />
 
       {/* 2. Stats Bar — social proof metrics */}
-      <div style={{ paddingTop: '16px' }}>
-        <StatsBar />
-      </div>
+      <StatsBar />
 
       {/* 3. Featured — best inventory showcase */}
       <div id="propiedades-destacadas">
@@ -51,7 +49,7 @@ const HomePage = async () => {
 
       {/* 7. Clients — Empresas y Proyectos */}
       <Clients />
-    </>
+    </div>
   );
 };
 

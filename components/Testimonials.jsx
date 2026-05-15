@@ -56,23 +56,18 @@ const Testimonials = () => {
   return (
     <section className="bg-white py-16 md:py-24 px-4 md:px-6 relative z-[2] isolate">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <ScrollReveal>
-            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] block mb-3">
-              LO QUE DICEN NUESTROS CLIENTES
-            </span>
-          </ScrollReveal>
-          <ScrollReveal delay={50}>
-            <h2 className="text-[32px] font-semibold text-[var(--color-ink)] leading-tight tracking-[-0.01em] mb-3">
+        {/* Section Header — match homepage standard */}
+        <div className="text-center mb-10 md:mb-14">
+          <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+            Lo que dicen nuestros clientes
+          </h2>
+          <div className="flex items-center justify-center gap-3">
+            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
+            <p className="text-[13px] md:text-[15px] font-medium text-[var(--color-brand)] uppercase tracking-[0.15em]">
               Experiencias reales
-            </h2>
-          </ScrollReveal>
-          <ScrollReveal delay={100}>
-            <p className="text-[17px] font-normal text-[var(--color-ink-secondary)] leading-[1.7]">
-              Personas que encontraron su hogar con nosotros
             </p>
-          </ScrollReveal>
+            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
+          </div>
         </div>
 
         {/* Desktop — 3 columns */}

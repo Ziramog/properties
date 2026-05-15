@@ -31,15 +31,18 @@ const Clients = () => {
   return (
     <section ref={sectionRef} className="bg-[#F6F6F6] py-16 md:py-24">
       <div className="max-w-[1430px] mx-auto px-[15px]">
-        {/* Title with orange line */}
-        <div className="pb-[50px]">
-          <h2
-            className="text-[28px] font-semibold text-[#0F172A] flex items-center"
-            style={{ fontFamily: 'var(--font-heading)' }}
-          >
+        {/* Section Header — match homepage standard */}
+        <div className="text-center mb-10 md:mb-14">
+          <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
             Empresas y Proyectos que han operado con nosotros
-            <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
           </h2>
+          <div className="flex items-center justify-center gap-3">
+            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
+            <p className="text-[13px] md:text-[15px] font-medium text-[var(--color-brand)] uppercase tracking-[0.15em]">
+              Confían en nosotros
+            </p>
+            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
+          </div>
         </div>
 
         {/* Client logo cards — match Senada stagger animation */}
