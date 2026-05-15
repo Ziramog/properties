@@ -3,11 +3,11 @@ import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 
 const CLIENTS = [
-  { id: 1, name: 'DINO-GRIS', logo: '/images/clients/DINO-GRIS-169x169.png' },
-  { id: 2, name: 'SANTANDER', logo: '/images/clients/SANTANDER-169x169.png' },
-  { id: 3, name: 'DRACMA-SA', logo: '/images/clients/DRACMA-SA-169x169.png' },
-  { id: 4, name: 'DALINGER', logo: '/images/clients/DALINGER-169x169.png' },
-  { id: 5, name: 'VILLAGE', logo: '/images/clients/VILLAGE-169x169.png' },
+  { id: 1, name: 'DINO', logo: '/images/images roggero clients/dino.png' },
+  { id: 2, name: 'SANTANDER', logo: '/images/images roggero clients/santander.png' },
+  { id: 3, name: 'DRACMA', logo: '/images/images roggero clients/dracma.png' },
+  { id: 4, name: 'DALLINGER', logo: '/images/images roggero clients/dallinger.png' },
+  { id: 5, name: 'PELLEGRINI', logo: '/images/images roggero clients/pellegrini.png' },
 ];
 
 const Clients = () => {
