@@ -63,8 +63,8 @@ const PropertyDetails = ({ property }) => {
       {/* Features — Senada .listing-feature */}
       {featureItems.length > 0 && (
         <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-8 md:mb-8">
-          <div className="py-[30px] md:py-[30px]">
-            <div className="pb-[30px] px-6 md:px-[25px] lg:px-[100px] xl:px-[190px]">
+          <div className="px-[15px] py-[30px] md:py-[30px]">
+            <div className="pb-[30px] px-[15px]">
               <SectionTitle>Características</SectionTitle>
             </div>
             <div className="flex flex-wrap">
@@ -93,7 +93,7 @@ const PropertyDetails = ({ property }) => {
         <div className="w-full md:w-[70%]">
           {property.description && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden h-full flex flex-col">
-              <div className="px-6 md:px-[25px] lg:px-[80px] xl:px-[130px] xl:pl-[190px] pt-10 md:pt-[40px] pb-0 flex flex-col flex-1">
+              <div className="px-[15px] pt-10 md:pt-[40px] pb-0 flex flex-col flex-1">
                 <SectionTitle>Descripción</SectionTitle>
                 <ReadMoreText text={property.description} maxChars={450} />
                 {property.seller_info?.name && (
@@ -116,7 +116,7 @@ const PropertyDetails = ({ property }) => {
           {/* Additional Info */}
           {(property.square_feet || property.operation || coveredArea || property.garage != null || property.titles_status) && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5">
-              <div className="px-6 md:px-[25px] lg:px-[50px] xl:pr-[170px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+              <div className="px-[15px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
                 <SectionTitle>Información Adicional</SectionTitle>
                 <ul>
                   {property.square_feet && (
@@ -157,7 +157,7 @@ const PropertyDetails = ({ property }) => {
           {/* Community Info */}
           {(property.location?.city || property.location?.state) && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-5">
-              <div className="px-6 md:px-[25px] lg:px-[50px] xl:pr-[170px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
+              <div className="px-[15px] pt-10 md:pt-[40px] pb-10 md:pb-[40px]">
                 <SectionTitle>Información de la Zona</SectionTitle>
                 <ol className="list-none">
                   {property.location?.state && (
