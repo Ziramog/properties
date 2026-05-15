@@ -103,11 +103,9 @@ const PropertyDetails = ({ property }) => {
                   </p>
                 )}
                 {/* Share */}
-                <div className="mt-auto pt-8 pb-6">
-                  <div className="flex justify-center items-center gap-0 md:gap-5">
-                    <span className="text-[16px] uppercase text-[#999] pr-[30px]">Compartir</span>
-                    <ShareButtons property={property} inline />
-                  </div>
+                <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6">
+                  <span className="text-[16px] uppercase text-[#999] block text-center mb-4">Compartir</span>
+                  <ShareButtons property={property} />
                 </div>
               </div>
             </div>
