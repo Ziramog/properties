@@ -40,9 +40,7 @@ const PropertyPage = async ({ params }) => {
                 Volver a Propiedades
               </Link>
             </div>
-            <div className="max-w-[1430px] mx-auto">
-              <PropertyDetails property={property} />
-            </div>
+            <PropertyDetails property={property} />
             {property.images && property.images.length > 0 && (
               <div className="mt-8" id="full-gallery">
                 <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
