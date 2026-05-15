@@ -45,12 +45,12 @@ const Clients = () => {
           </div>
         </div>
 
-        {/* Client logo cards — match Senada stagger animation */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-[15px] md:gap-[20px]">
+        {/* Client logo cards — horizontal scroll on mobile, grid on desktop */}
+        <div className="flex md:grid overflow-x-auto md:overflow-visible gap-[15px] md:gap-[20px] scrollbar-hide md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {CLIENTS.map((client, i) => (
             <div
               key={client.id}
-              className={`transition-all duration-500 ease-in-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'}`}
+              className={`flex-shrink-0 w-[160px] md:w-auto transition-all duration-500 ease-in-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'}`}
               style={{ transitionDelay: `${i * 150}ms` }}
             >
               <div className="bg-white rounded-[20px] p-5 md:p-6 flex items-center justify-center min-h-[100px] md:min-h-[120px]">
