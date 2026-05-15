@@ -45,6 +45,15 @@ const PropertyPage = async ({ params }) => {
               <div className="mt-8" id="full-gallery">
                 <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
                   <div className="max-w-[1430px] mx-auto py-[30px] md:py-[80px] px-[15px] md:pb-[35px]">
+                    <div className="pb-[30px]">
+                      <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center"
+                          style={{ fontFamily: 'var(--font-heading)' }}>
+                        {property.name
+                          ? property.name.split(' ').slice(0, 4).join(' ') + (property.name.split(' ').length > 4 ? '...' : '')
+                          : 'Fotos'}
+                        <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
+                      </h2>
+                    </div>
                     <FullGallery images={property.images} propertyName={property.name} />
                   </div>
                 </div>
