@@ -88,98 +88,100 @@ const PropertyDetails = ({ property }) => {
       )}
 
       {/* 2-col: Description (70%) + Sidebar (30%) — Senada .info-section */}
-      <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-8">
-        <div className="max-w-[1430px] mx-auto px-[15px] py-[30px] md:py-[40px]">
-          <div className="flex flex-col md:flex-row gap-[20px]">
-            {/* Left: Description — 70% */}
-            <div className="w-full md:w-[70%]">
-              {property.description && (
-                <div className="flex flex-col h-full">
-                  <SectionTitle>Descripción</SectionTitle>
-                  <ReadMoreText text={property.description} maxChars={450} />
-                  {property.seller_info?.name && (
-                    <p className="mt-6 text-[12px] italic text-[#999]">
-                      Publicado por {property.seller_info.name}
-                    </p>
+      <div className="flex flex-col md:flex-row gap-[20px] mb-8">
+        {/* Left: Description — 70% */}
+        <div className="w-full md:w-[70%]">
+          {property.description && (
+            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden h-full">
+              <div className="px-[15px] md:pr-[130px] md:pl-[190px] pt-[40px] pb-0 flex flex-col h-full">
+                <SectionTitle>Descripción</SectionTitle>
+                <ReadMoreText text={property.description} maxChars={450} />
+                {property.seller_info?.name && (
+                  <p className="mt-6 text-[12px] italic text-[#999]">
+                    Publicado por {property.seller_info.name}
+                  </p>
+                )}
+                {/* Share */}
+                <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6 mt-auto">
+                  <span className="text-[16px] uppercase text-[#999] block text-center mb-4">Compartir</span>
+                  <ShareButtons property={property} />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Right: Sidebar — 30% */}
+        <div className="w-full md:w-[30%] flex flex-col gap-[20px]">
+          {/* Additional Info */}
+          {(property.square_feet || property.operation || coveredArea || property.garage != null || property.titles_status) && (
+            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
+              <div className="px-[15px] md:pr-[170px] md:pl-[50px] pt-[40px] pb-[40px]">
+                <SectionTitle>Información Adicional</SectionTitle>
+                <ul>
+                  {property.square_feet && (
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Sup. Cubierta</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.square_feet.toLocaleString('es-AR')} m²</span>
+                    </li>
                   )}
-                  {/* Share */}
-                  <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6 mt-auto">
-                    <span className="text-[16px] uppercase text-[#999] block text-center mb-4">Compartir</span>
-                    <ShareButtons property={property} />
-                  </div>
-                </div>
-              )}
+                  {coveredArea && (
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Sup. Total</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{coveredArea.toLocaleString('es-AR')} m²</span>
+                    </li>
+                  )}
+                  {property.garage != null && (
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Cochera</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.garage} {property.garage === 1 ? 'lugar' : 'lugares'}</span>
+                    </li>
+                  )}
+                  {property.operation && (
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Operación</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{operationLabel}</span>
+                    </li>
+                  )}
+                  {property.titles_status && (
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Estado de Títulos</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.titles_status}</span>
+                    </li>
+                  )}
+                </ul>
+              </div>
             </div>
+          )}
 
-            {/* Right: Sidebar — 30% */}
-            <div className="w-full md:w-[30%] space-y-5">
-              {/* Additional Info */}
-              {(property.square_feet || property.operation || coveredArea || property.garage != null || property.titles_status) && (
-                <div>
-                  <SectionTitle>Información Adicional</SectionTitle>
-                  <ul>
-                    {property.square_feet && (
-                      <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
-                        <span className="text-[14px] text-[#888]">Sup. Cubierta</span>
-                        <span className="text-[14px] font-semibold text-[#0F172A]">{property.square_feet.toLocaleString('es-AR')} m²</span>
-                      </li>
-                    )}
-                    {coveredArea && (
-                      <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
-                        <span className="text-[14px] text-[#888]">Sup. Total</span>
-                        <span className="text-[14px] font-semibold text-[#0F172A]">{coveredArea.toLocaleString('es-AR')} m²</span>
-                      </li>
-                    )}
-                    {property.garage != null && (
-                      <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
-                        <span className="text-[14px] text-[#888]">Cochera</span>
-                        <span className="text-[14px] font-semibold text-[#0F172A]">{property.garage} {property.garage === 1 ? 'lugar' : 'lugares'}</span>
-                      </li>
-                    )}
-                    {property.operation && (
-                      <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
-                        <span className="text-[14px] text-[#888]">Operación</span>
-                        <span className="text-[14px] font-semibold text-[#0F172A]">{operationLabel}</span>
-                      </li>
-                    )}
-                    {property.titles_status && (
-                      <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
-                        <span className="text-[14px] text-[#888]">Estado de Títulos</span>
-                        <span className="text-[14px] font-semibold text-[#0F172A]">{property.titles_status}</span>
-                      </li>
-                    )}
-                  </ul>
-                </div>
-              )}
-
-              {/* Community Info */}
-              {(property.location?.city || property.location?.state) && (
-                <div>
-                  <SectionTitle>Información de la Zona</SectionTitle>
-                  <ol className="list-none">
-                    {property.location?.state && (
-                      <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
-                        <span className="text-[14px] text-[#888]">Provincia</span>
-                        <span className="text-[14px] font-semibold text-[#0F172A]">{property.location.state}</span>
-                      </li>
-                    )}
-                    {property.location?.city && (
-                      <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
-                        <span className="text-[14px] text-[#888]">Ciudad</span>
-                        <span className="text-[14px] font-semibold text-[#0F172A]">{property.location.city}</span>
-                      </li>
-                    )}
-                    {property.location?.street && (
-                      <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
-                        <span className="text-[14px] text-[#888]">Dirección</span>
-                        <span className="text-[14px] font-semibold text-[#0F172A] text-right max-w-[180px]">{property.location.street}</span>
-                      </li>
-                    )}
-                  </ol>
-                </div>
-              )}
+          {/* Community Info */}
+          {(property.location?.city || property.location?.state) && (
+            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
+              <div className="px-[15px] md:pr-[170px] md:pl-[50px] pt-[40px] pb-[40px]">
+                <SectionTitle>Información de la Zona</SectionTitle>
+                <ol className="list-none">
+                  {property.location?.state && (
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Provincia</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.location.state}</span>
+                    </li>
+                  )}
+                  {property.location?.city && (
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Ciudad</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.location.city}</span>
+                    </li>
+                  )}
+                  {property.location?.street && (
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Dirección</span>
+                      <span className="text-[14px] font-semibold text-[#0F172A] text-right max-w-[180px]">{property.location.street}</span>
+                    </li>
+                  )}
+                </ol>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
