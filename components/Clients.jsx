@@ -1,8 +1,6 @@
-'use client'
-
-import { useState } from 'react'
-import Image from 'next/image'
-import ScrollReveal from '@/components/shared/ScrollReveal'
+'use client';
+import { useRef, useEffect, useState } from 'react';
+import Image from 'next/image';
 
 const CLIENTS = [
   { id: 1, name: 'DINO-GRIS', logo: '/images/clients/DINO-GRIS-169x169.png' },
@@ -10,97 +8,63 @@ const CLIENTS = [
   { id: 3, name: 'DRACMA-SA', logo: '/images/clients/DRACMA-SA-169x169.png' },
   { id: 4, name: 'DALINGER', logo: '/images/clients/DALINGER-169x169.png' },
   { id: 5, name: 'VILLAGE', logo: '/images/clients/VILLAGE-169x169.png' },
-]
+];
 
 const Clients = () => {
-  const [current, setCurrent] = useState(0)
+  const sectionRef = useRef(null);
+  const [visible, setVisible] = useState(false);
 
-  const prev = () => setCurrent(c => (c - 1 + CLIENTS.length) % CLIENTS.length)
-  const next = () => setCurrent(c => (c + 1) % CLIENTS.length)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section className='bg-white py-16 md:py-24 px-4'>
-      <div className='max-w-6xl mx-auto'>
-        <ScrollReveal>
-          <div className='text-center mb-12'>
-            <p className='text-primary font-bold text-sm uppercase tracking-widest mb-3'>Partners</p>
-            <h2 className='font-heading text-3xl md:text-4xl font-extrabold text-heading mb-3 tracking-tight'>
-              Empresas que confían en nosotros
-            </h2>
-            <p className='text-body text-lg'>
-              Operaciones concretadas con clientes corporativos y estudios profesionales
-            </p>
-          </div>
-        </ScrollReveal>
-
-        {/* Carousel */}
-        <div className='relative flex items-center justify-center gap-6'>
-          <button
-            onClick={prev}
-            className='w-11 h-11 rounded-xl bg-gray-100 hover:bg-primary hover:text-white transition-all duration-200 flex items-center justify-center text-heading shrink-0 shadow-subtle'
-            aria-label='Cliente anterior'
+    <section ref={sectionRef} className="bg-[#F6F6F6] py-16 md:py-24">
+      <div className="max-w-[1430px] mx-auto px-[15px]">
+        {/* Title with orange line */}
+        <div className="pb-[50px]">
+          <h2
+            className="text-[28px] font-semibold text-[#0F172A] flex items-center"
+            style={{ fontFamily: 'var(--font-heading)' }}
           >
-            <svg width='16' height='16' fill='none' stroke='currentColor' viewBox='0 0 16 16'>
-              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M10 3 6 8l4 5' />
-            </svg>
-          </button>
-
-          <div className='flex gap-8 overflow-hidden items-center'>
-            {[0, 1, 2].map(offset => {
-              const index = (current + offset) % CLIENTS.length
-              const client = CLIENTS[index]
-              const isCenter = offset === 1
-              return (
-                <div
-                  key={client.id}
-                  className={`flex flex-col items-center gap-3 transition-all duration-500 ${
-                    isCenter ? 'scale-100 opacity-100' : 'scale-75 opacity-30'
-                  }`}
-                >
-                  <div className='w-28 h-28 relative grayscale hover:grayscale-0 transition-all duration-300'>
-                    <Image
-                      src={client.logo}
-                      alt={client.name}
-                      fill
-                      className='object-contain'
-                      sizes='112px'
-                    />
-                  </div>
-                  <span className='text-xs text-muted font-semibold tracking-wider uppercase'>
-                    {client.name}
-                  </span>
-                </div>
-              )
-            })}
-          </div>
-
-          <button
-            onClick={next}
-            className='w-11 h-11 rounded-xl bg-gray-100 hover:bg-primary hover:text-white transition-all duration-200 flex items-center justify-center text-heading shrink-0 shadow-subtle'
-            aria-label='Siguiente cliente'
-          >
-            <svg width='16' height='16' fill='none' stroke='currentColor' viewBox='0 0 16 16'>
-              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M6 3l4 5-4 5' />
-            </svg>
-          </button>
+            Empresas y Proyectos que han operado con nosotros
+            <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
+          </h2>
         </div>
 
-        {/* Dots */}
-        <div className='flex justify-center gap-2 mt-8'>
-          {CLIENTS.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrent(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === current ? 'bg-primary w-8' : 'bg-gray-200 w-2.5 hover:bg-gray-300'
-              }`}
-              aria-label={`Ir al cliente ${i + 1}`}
-            />
+        {/* Client logo cards — match Senada stagger animation */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-[15px] md:gap-[20px]">
+          {CLIENTS.map((client, i) => (
+            <div
+              key={client.id}
+              className={`transition-all duration-500 ease-in-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'}`}
+              style={{ transitionDelay: `${i * 150}ms` }}
+            >
+              <div className="bg-white rounded-[20px] p-5 md:p-6 flex items-center justify-center min-h-[100px] md:min-h-[120px]">
+                <Image
+                  src={client.logo}
+                  alt={client.name}
+                  width={120}
+                  height={120}
+                  className="object-contain max-w-full max-h-full"
+                />
+              </div>
+            </div>
           ))}
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Clients
+export default Clients;

@@ -4,6 +4,7 @@ import SellerCTA from '@/components/sections/SellerCTA';
 import StatsBar from '@/components/sections/StatsBar';
 import Agents from '@/components/sections/Agents';
 import Testimonials from '@/components/Testimonials';
+import Clients from '@/components/Clients';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 
@@ -47,6 +48,9 @@ const HomePage = async () => {
 
       {/* 6. Testimonials — Nuestros Clientes */}
       <Testimonials />
+
+      {/* 7. Clients — Empresas y Proyectos */}
+      <Clients />
     </>
   );
 };
