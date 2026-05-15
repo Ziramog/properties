@@ -53,8 +53,9 @@ const PropertyPage = async ({ params }) => {
 
             {/* View on Map */}
             <div className="mt-8">
-              <div className="max-w-[1430px] mx-auto py-[30px] md:py-[80px] px-[15px] md:pb-[70px]">
-                <div className="pb-[30px] flex items-center justify-between">
+              <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
+                <div className="max-w-[1430px] mx-auto px-[15px] py-[30px] md:py-[40px]">
+                  <div className="pb-[30px] flex items-center justify-between">
                   <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
                     Ver en el Mapa
                     <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
@@ -76,6 +77,7 @@ const PropertyPage = async ({ params }) => {
                 </div>
               </div>
             </div>
+          </div>
           </div>
         </section>
       </div>
