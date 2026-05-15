@@ -57,6 +57,7 @@ const Clients = () => {
                   width={120}
                   height={120}
                   className="object-contain max-w-full max-h-full"
+                  style={{ filter: 'grayscale(1)' }}
                 />
               </div>
             </div>
