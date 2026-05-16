@@ -98,7 +98,7 @@ const Navbar = () => {
           {/* Main Nav — Senada .mainMenu */}
           <nav className="desktop-dropdown flex items-center gap-8 lg:gap-10 ml-auto">
             <Link href="/#propiedades-destacadas" className="text-white hover:text-[var(--color-brand)] transition-colors text-[15px] font-normal tracking-[0.02em] uppercase">
-              Listado Premium
+              Propiedades Destacadas
             </Link>
 
             {/* Propiedades dropdown — Senada .dropdown */}
@@ -128,7 +128,7 @@ const Navbar = () => {
             </div>
 
             <Link href="/#nuestra-historia" className="text-white hover:text-[var(--color-brand)] transition-colors text-[15px] font-normal tracking-[0.02em] uppercase">
-              Roggero&Roma Historia
+              Sobre Nosotros
             </Link>
           </nav>
 

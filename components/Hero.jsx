@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaSearch } from 'react-icons/fa';
 
-const HERO_LINE1 = 'Tu próximo hogar';
-const HERO_LINE2 = 'te está esperando';
+const HERO_LINE1 = 'Alta Gracia, Córdoba, Argentina';
+const HERO_LINE2 = 'Vendemos Inmuebles, Construimos Confianza';
 
 const charVariant = {
   hidden: { opacity: 0, y: 20 },
@@ -211,10 +211,9 @@ const Hero = () => {
             {/* .top-part — Senada: bg-black, rounded-12px, padding 20px */}
             <div className='flex items-end gap-3 bg-black rounded-xl p-5'>
               <div className='flex-1'>
-                <label className='block text-white/60 text-[11px] font-medium uppercase tracking-wider mb-2'>Buscar por ciudad, zona, dirección o palabra clave</label>
                 <div className='relative'>
                   <svg className='absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30' viewBox='0 0 24 24' fill='currentColor'><path d='M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z'/></svg>
-                  <input type='text' name='term' placeholder='Ej: Alta Gracia, Pellegrini 123, casa...' className='w-full h-[54px] pl-12 pr-4 rounded-md bg-white/[0.06] border border-white/10 text-white text-sm placeholder:text-white/25 outline-none focus:border-white/30 transition-colors' value={filters.term || ''} onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))} required />
+                  <input type='text' name='term' placeholder='Buscar por ciudad, zona, dirección o palabra clave' className='w-full h-[54px] pl-12 pr-4 rounded-md bg-white/[0.06] border border-white/10 text-white text-sm placeholder:text-white/40 outline-none focus:border-white/30 transition-colors' value={filters.term || ''} onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))} required />
                 </div>
               </div>
               <button type='button' onClick={() => setShowMore(!showMore)} className='h-[54px] text-white/55 text-xs font-normal uppercase tracking-wider hover:text-white transition-colors flex-shrink-0 self-end pb-0.5'>{showMore ? 'Mostrar menos' : 'Mostrar más'}</button>
@@ -281,7 +280,7 @@ const Hero = () => {
               </svg>
               <input
                 type='text'
-                placeholder='Buscar por ciudad, zona o tipo'
+                placeholder='Buscar por ciudad, zona, dirección o palabra clave'
                 className='bg-transparent text-white text-sm placeholder:text-white/40 w-full outline-none'
               />
             </div>
