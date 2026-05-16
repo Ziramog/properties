@@ -124,7 +124,7 @@ const Hero = () => {
       {/* Content */}
       <div className='relative z-10 h-full md:flex md:flex-col'>
         {/* Title Area */}
-        <div className='absolute left-0 w-full px-6 text-center bottom-[250px] md:static md:flex-1 md:flex md:flex-col md:items-center md:justify-center'>
+        <div className='absolute left-0 w-full px-6 text-center bottom-[150px] md:static md:flex-1 md:flex md:flex-col md:items-center md:justify-center'>
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
@@ -155,7 +155,7 @@ const Hero = () => {
         )}
 
         {/* Search Bar */}
-        <div className='absolute left-0 w-full px-4 bottom-[120px] md:static md:w-full md:px-4 md:pb-8'>
+        <div className='absolute left-0 w-full px-4 bottom-[90px] md:static md:w-full md:px-4 md:pb-8'>
           <div
             className='mx-auto max-w-[880px]'
             style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
@@ -249,8 +249,7 @@ const Hero = () => {
               </button>
 
               {/* Toggle */}
-              {scrolled && (
-                <button
+              <button
                   type='button'
                   onClick={() => handleShowMoreToggle()}
                   className='flex items-center gap-1.5 w-full py-3 text-white/60 text-xs font-normal uppercase tracking-wide hover:text-white/80 transition-all'
@@ -258,7 +257,6 @@ const Hero = () => {
                   <span className={`w-2.5 h-2.5 flex-shrink-0 bg-no-repeat bg-center bg-contain`} style={{ backgroundImage: showMore ? "url('data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'%23919191\\'><path d=\\'M19 13H5v-2h14v2z\\'/></svg>')" : "url('data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'%23919191\\'><path d=\\'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\\'/></svg>')" }} />
                   <span>{showMore ? 'Mostrar menos' : 'Mostrar más'}</span>
                 </button>
-              )}
 
               {/* Expanded Filters */}
               <div
