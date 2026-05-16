@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaSearch } from 'react-icons/fa';
 
-const HERO_LINE1 = 'Alta Gracia, Córdoba, Argentina';
-const HERO_LINE2 = 'Vendemos Inmuebles, Construimos Confianza';
+const HERO_LINE1 = 'Vendemos Inmuebles';
+const HERO_LINE2 = 'Construimos Confianza';
 
 const charVariant = {
   hidden: { opacity: 0, y: 20 },
@@ -170,7 +170,7 @@ const Hero = () => {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
         >
           <span className='w-7 h-px bg-white/40 flex-shrink-0' />
-          <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Córdoba, Argentina</span>
+          <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Alta Gracia, Córdoba, Argentina</span>
           <span className='w-7 h-px bg-white/40 flex-shrink-0' />
         </motion.div>
         <h1 className='font-display font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
@@ -189,7 +189,7 @@ const Hero = () => {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
         >
           <span className='w-7 h-px bg-white/40 flex-shrink-0' />
-          <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Córdoba, Argentina</span>
+          <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Alta Gracia, Córdoba, Argentina</span>
           <span className='w-7 h-px bg-white/40 flex-shrink-0' />
         </motion.div>
         <h1 className='font-display font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(40px, 5vw, 76px)', lineHeight: 1.0 }}>
