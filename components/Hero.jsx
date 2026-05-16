@@ -83,7 +83,7 @@ const Hero = () => {
   };
 
   return (
-    <section className='relative h-[100dvh] min-h-[100dvh] flex flex-col'>
+    <section className='relative h-[100dvh] min-h-[100dvh]'>
       {/* Dark overlay */}
       <div
         ref={overlayRef}
@@ -122,9 +122,9 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className='relative z-10 flex flex-col h-full'>
+      <div className='relative z-10 h-full md:flex md:flex-col'>
         {/* Title Area */}
-        <div className='flex-1 flex flex-col items-center justify-center px-6 text-center pt-16 md:pt-0'>
+        <div className='absolute left-0 w-full px-6 text-center bottom-[250px] md:static md:flex-1 md:flex md:flex-col md:items-center md:justify-center'>
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
@@ -142,20 +142,20 @@ const Hero = () => {
               {HERO_LINE2}
             </h2>
           </motion.div>
-
-          {!scrolled && (
-            <div className='md:hidden mt-auto mb-4 scroll-indicator-container'>
-              <img
-                src='/senada/images/icons/ico_arrow-down.svg'
-                alt='scroll'
-                className='w-[25px] h-[23px]'
-              />
-            </div>
-          )}
         </div>
 
+        {!scrolled && (
+          <div className='absolute left-1/2 -translate-x-1/2 z-10 bottom-[15px] md:hidden scroll-indicator-container'>
+            <img
+              src='/senada/images/icons/ico_arrow-down.svg'
+              alt='scroll'
+              className='w-[25px] h-[23px]'
+            />
+          </div>
+        )}
+
         {/* Search Bar */}
-        <div className='w-full px-4 pb-6 md:pb-8'>
+        <div className='absolute left-0 w-full px-4 bottom-[120px] md:static md:w-full md:px-4 md:pb-8'>
           <div
             className='mx-auto max-w-[880px]'
             style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
