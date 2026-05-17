@@ -177,7 +177,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
           display: 'flex', flexWrap: 'wrap', gap: 0, marginTop: '16px', marginLeft: '20px', marginRight: '20px',
         }}>
           {/* City / term — elatus-autocomplete */}
-          <div className="form-group elatus-autocomplete w-full min-[651px]:w-full min-[992px]:w-1/2 xl:w-1/4" style={{
+          <div className="form-group elatus-autocomplete w-full min-[651px]:w-full min-[992px]:w-1/2 xl:w-[22%]" style={{
             position: 'relative', borderRight: '1px solid #2a2626',
           }} onFocus={() => setFocused((p) => ({ ...p, term: true }))} onBlur={() => setFocused((p) => ({ ...p, term: false }))}>
             <svg style={{
@@ -233,7 +233,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
 
           {/* Area — sqfeet-group */}
           <FormGroup name="area" label="Sq.Feet" active={labelActive('area')}
-            className="w-full min-[651px]:w-1/2 min-[992px]:w-1/6"
+            className="w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[14%]"
             onFocus={() => setFocused((p) => ({ ...p, area: true }))}
             onBlur={() => setFocused((p) => ({ ...p, area: false }))}>
             <select name="area" value={filters.area} onChange={handleChange} style={{ width: '100%', maxWidth: '100%', background: '#000', border: 'none', color: '#a29696', fontSize: '16px', fontWeight: 400, outline: 'none', paddingRight: '20px' }}>
@@ -244,7 +244,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
 
           {/* Price — price-group */}
           <FormGroup name="price" label="Price" active={labelActive('price')}
-            className="w-full min-[651px]:w-1/2 min-[992px]:w-1/6"
+            className="w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[15%]"
             onFocus={() => setFocused((p) => ({ ...p, price: true }))}
             onBlur={() => setFocused((p) => ({ ...p, price: false }))}>
             <select name="price" value={filters.price} onChange={handleChange} style={{ width: '100%', maxWidth: '100%', background: '#000', border: 'none', color: '#a29696', fontSize: '16px', fontWeight: 400, outline: 'none', paddingRight: '20px' }}>
@@ -255,7 +255,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
 
           {/* Bedrooms — bedrooms-group */}
           <FormGroup name="bedrooms" label="Bedrooms" active={labelActive('bedrooms')}
-            className="w-full min-[651px]:w-1/2 min-[992px]:w-1/6"
+            className="w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[11%]"
             onFocus={() => setFocused((p) => ({ ...p, bedrooms: true }))}
             onBlur={() => setFocused((p) => ({ ...p, bedrooms: false }))}>
             <select name="bedrooms" value={filters.bedrooms} onChange={handleChange} style={{ width: '100%', maxWidth: '100%', background: '#000', border: 'none', color: '#a29696', fontSize: '16px', fontWeight: 400, outline: 'none', paddingRight: '20px' }}>
@@ -266,7 +266,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
 
           {/* Baths — baths-group */}
           <FormGroup name="baths" label="Baths" active={labelActive('baths')}
-            className="w-full min-[651px]:w-1/2 min-[992px]:w-1/6"
+            className="w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[11%]"
             onFocus={() => setFocused((p) => ({ ...p, baths: true }))}
             onBlur={() => setFocused((p) => ({ ...p, baths: false }))}>
             <select name="baths" value={filters.baths} onChange={handleChange} style={{ width: '100%', maxWidth: '100%', background: '#000', border: 'none', color: '#a29696', fontSize: '16px', fontWeight: 400, outline: 'none', paddingRight: '20px' }}>
