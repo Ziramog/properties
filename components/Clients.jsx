@@ -31,20 +31,6 @@ const Clients = () => {
   return (
     <section ref={sectionRef} className="bg-[#F6F6F6] pt-[15px] pb-[15px]">
       <div className="max-w-[1430px] mx-auto px-[15px]">
-        {/* Section Header — match homepage standard */}
-        <div className="text-center mb-10 md:mb-14">
-          <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-            Empresas y Proyectos que han operado con nosotros
-          </h2>
-          <div className="flex items-center justify-center gap-3">
-            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
-            <p className="text-[13px] md:text-[15px] font-medium text-[var(--color-brand)] uppercase tracking-[0.15em]">
-              Confían en nosotros
-            </p>
-            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
-          </div>
-        </div>
-
         {/* Client logo cards — horizontal scroll on mobile, grid on desktop */}
         <div className="flex md:grid overflow-x-auto md:overflow-visible gap-[15px] md:gap-[20px] scrollbar-hide md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {CLIENTS.map((client, i) => (
