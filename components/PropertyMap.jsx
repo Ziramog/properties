@@ -71,6 +71,9 @@ const PropertyMap = ({ property }) => {
   const disposed = useRef(false);
 
   const onMapLoad = useCallback(() => {
+    console.log('[PropertyMap] Map loaded successfully');
+    console.log('[PropertyMap] Style:', 'mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7');
+    console.log('[PropertyMap] Token present:', !!process.env.NEXT_PUBLIC_MAPBOX_TOKEN);
     const map = mapRef.current?.getMap();
     if (!map) return;
 
@@ -189,6 +192,7 @@ const PropertyMap = ({ property }) => {
         }}
         style={{ width: '100%', height: 500 }}
         mapStyle='mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7'
+        onError={(e) => console.error('[PropertyMap] Map load ERROR:', e?.error?.message || e)}
         scrollZoom={false}
         dragPan={true}
         dragRotate={false}
