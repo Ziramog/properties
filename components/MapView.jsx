@@ -119,7 +119,7 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
         zoom: 13,
       }}
       style={{ width: '100%', height: '100%' }}
-      mapStyle="mapbox://styles/mapbox/streets-v12"
+      mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
       scrollZoom={true}
       attributionControl={false}
     >
