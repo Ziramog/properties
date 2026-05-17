@@ -167,7 +167,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
   };
 
   return (
-    <div className="search-form" style={{ border: '1px solid #2a2626', borderRadius: '8px', background: 'transparent' }}>
+    <div className="search-form" style={{ border: '1px solid #2a2626', borderRadius: '8px', background: '#000' }}>
       <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', lineHeight: '1.2', color: '#fff', padding: '20px 20px 0', margin: 0, fontWeight: 400 }}>
         Búsqueda de Propiedades
       </h1>
