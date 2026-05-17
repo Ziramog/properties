@@ -10,7 +10,7 @@ const FullGallery = ({ images = [], propertyName }) => {
       <section className="rounded-none md:rounded-[30px] overflow-hidden">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[5px]">
             {images.map((image, index) => (
-              <Item key={index} original={image} thumbnail={image} width="1200" height="800">
+              <Item key={index} original={image?.url} thumbnail={image?.url} width="1200" height="800">
                 {({ ref, open }) => (
                   <div
                     ref={ref}
@@ -18,7 +18,7 @@ const FullGallery = ({ images = [], propertyName }) => {
                     className="relative group cursor-pointer overflow-hidden bg-[#f0f0f0] aspect-[4/3]"
                   >
                     <Image
-                      src={image}
+                      src={image?.url}
                       alt={`${propertyName || 'Propiedad'} foto ${index + 1}`}
                       fill
                       className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
