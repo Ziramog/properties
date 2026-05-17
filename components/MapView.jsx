@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, useRef, forwardRef, useImperativeHandle, useCallback } from 'react';
-import Map, { Marker, Popup, useMap } from 'react-map-gl';
+import { Map, Marker, Popup, useMap } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { getPropertyImage } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
