@@ -96,11 +96,13 @@ const PropertyMap = ({ property }) => {
     let touchCleanup = null;
     if ('ontouchstart' in window) {
       map.dragPan.disable();
+      map.touchZoomRotate?.disable();
 
       const touchStartHandler = (e) => {
         if (e.touches.length >= 2) {
           map.dragPan.enable();
           map.scrollZoom.enable();
+          map.touchZoomRotate?.enable();
         }
       };
 
@@ -108,15 +110,18 @@ const PropertyMap = ({ property }) => {
         if (e.touches.length < 2) {
           map.dragPan.disable();
           map.scrollZoom.disable();
+          map.touchZoomRotate?.disable();
         }
       };
 
       container.addEventListener('touchstart', touchStartHandler, { passive: true });
       container.addEventListener('touchend', touchEndHandler, { passive: true });
+      container.addEventListener('touchcancel', touchEndHandler, { passive: true });
 
       touchCleanup = () => {
         container.removeEventListener('touchstart', touchStartHandler);
         container.removeEventListener('touchend', touchEndHandler);
+        container.removeEventListener('touchcancel', touchEndHandler);
       };
     }
 
