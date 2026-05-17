@@ -172,13 +172,13 @@ export default function PropertiesSearch({ currentFilters = {} }) {
         Búsqueda de Propiedades
       </h1>
       <form onSubmit={handleSubmit} className="searchForm" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="top-part" style={{
-          padding: '20px', borderRadius: '12px', background: '#000',
+        <div className="top-part p-3 min-[651px]:p-5" style={{
+          borderRadius: '12px', background: '#000',
           display: 'flex', flexWrap: 'wrap', gap: 0, marginTop: '16px', marginLeft: '20px', marginRight: '20px',
         }}>
           {/* City / term — elatus-autocomplete */}
-          <div className="form-group elatus-autocomplete w-full min-[651px]:w-full min-[992px]:w-1/2 xl:w-[22%]" style={{
-            position: 'relative', borderRight: '1px solid #2a2626',
+          <div className="form-group elatus-autocomplete w-full min-[651px]:w-full min-[992px]:w-1/2 xl:w-[22%] border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626]" style={{
+            position: 'relative',
           }} onFocus={() => setFocused((p) => ({ ...p, term: true }))} onBlur={() => setFocused((p) => ({ ...p, term: false }))}>
             <svg style={{
               position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)',
@@ -294,9 +294,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
           background: '#000', borderRadius: '12px', padding: '20px',
           marginTop: '1px', marginLeft: '20px', marginRight: '20px',
         }}>
-          <div className="inner" style={{
-            display: 'grid', gridTemplateColumns: '2fr 3fr', gap: '20px',
-          }}>
+          <div className="inner grid-cols-1 min-[601px]:grid-cols-[2fr_3fr]" style={{ gap: '20px', display: 'grid' }}>
             <div className="left">
               <p style={{ color: '#a29696', fontSize: '14px', textTransform: 'uppercase', margin: '0 0 15px' }}>Property type</p>
               <div className="filter-wrapper" style={{ display: 'grid', columnGap: '20px', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))' }}>
@@ -390,8 +388,8 @@ export default function PropertiesSearch({ currentFilters = {} }) {
 
 function FormGroup({ name, label, active, onFocus, onBlur, children, className = '' }) {
   return (
-    <div className={`form-group notranslate ${name}-group ${className}`} style={{
-      position: 'relative', borderRight: '1px solid #2a2626', marginBottom: 0, padding: 0, outline: 'none',
+    <div className={`form-group notranslate ${name}-group ${className} border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626]`} style={{
+      position: 'relative', marginBottom: 0, padding: 0, outline: 'none',
     }} tabIndex={-1} onFocus={onFocus} onBlur={onBlur}>
       <label className={`animated-label ${active ? 'active' : ''}`} style={{
         position: 'absolute', color: active ? '#fff' : '#a29696', fontSize: active ? '12px' : '16px',

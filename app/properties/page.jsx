@@ -140,7 +140,7 @@ const PropertiesPage = async ({ searchParams }) => {
   return (
     <div className="min-h-screen bg-white">
       {/* Header + Filters — full dark band */}
-      <section className="bg-[#111] px-4 pt-24 md:pt-28 pb-6">
+      <section className="bg-black px-4 pt-24 md:pt-28 pb-6">
         <div className="max-w-7xl mx-auto">
           {/* Search */}
           <PropertiesSearch currentFilters={currentFilters} />
