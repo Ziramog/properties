@@ -173,7 +173,7 @@ const Hero = () => {
                     <label className={`absolute left-12 pointer-events-none transition-all duration-300 ${desktopFocus || filters.term ? '-top-2 text-[12px] text-white font-medium' : 'top-1/2 -translate-y-1/2 text-sm text-white/40'}`}>
                       Buscar por ciudad, zona, dirección o palabra clave
                     </label>
-                    <input type='text' name='term' className='w-full h-[54px] pl-12 pr-4 rounded-md bg-white/[0.06] border border-white/10 text-white text-sm outline-none focus:border-white/30 transition-colors pt-4' value={filters.term || ''} onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))} onFocus={() => setDesktopFocus(true)} onBlur={() => setDesktopFocus(false)} required />
+                    <input type='text' name='term' className='w-full h-[54px] pl-12 pr-4 rounded-md bg-transparent text-white text-sm outline-none pt-4' value={filters.term || ''} onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))} onFocus={() => setDesktopFocus(true)} onBlur={() => setDesktopFocus(false)} required />
                   </div>
                 </div>
                 <button type='button' onClick={() => setShowMore(!showMore)} className='h-[54px] text-white/55 text-xs font-normal uppercase tracking-wider hover:text-white transition-colors flex-shrink-0 self-end pb-0.5'>{showMore ? 'Mostrar menos' : 'Mostrar más'}</button>
@@ -233,7 +233,7 @@ const Hero = () => {
             {/* Mobile: input + button + toggle all fixed; filters expand via position absolute below */}
             <div className='md:hidden w-full relative bg-black rounded-xl p-4'>
               {/* Search input */}
-              <div className='bg-white/[0.06] border border-white/10 flex items-center gap-2 px-3 py-2.5' style={{ borderRadius: 12 }}>
+              <div className='flex items-center gap-2 px-3 py-2.5'>
                 <svg className='w-5 h-5 text-white flex-shrink-0' viewBox='0 0 24 24' fill='currentColor'>
                   <path d='M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z'/>
                 </svg>
