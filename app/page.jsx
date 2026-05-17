@@ -24,31 +24,33 @@ const HomePage = async () => {
   }));
 
   return (
-    <div className="flex flex-col gap-2">
+    <div>
       {/* 1. Hero — emotional hook + search + trust strip */}
       <Hero />
 
-      {/* 2. Stats Bar — social proof metrics */}
+      {/* 2. Stats Bar — social proof metrics (flush with hero) */}
       <StatsBar />
 
-      {/* 3. Featured — best inventory showcase */}
-      <div id="propiedades-destacadas">
-        <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured && (p.images || []).length > 0).slice(0, 6)} />
+      <div className="flex flex-col gap-2">
+        {/* 3. Featured — best inventory showcase */}
+        <div id="propiedades-destacadas">
+          <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured && (p.images || []).length > 0).slice(0, 6)} />
+        </div>
+
+        {/* 4. CTA — seller + investor */}
+        <SellerCTA />
+
+        {/* 5. Agents — Roggero & Roma Historia */}
+        <div id="nuestra-historia">
+          <Agents />
+        </div>
+
+        {/* 6. Testimonials — Nuestros Clientes */}
+        <Testimonials />
+
+        {/* 7. Clients — Empresas y Proyectos */}
+        <Clients />
       </div>
-
-      {/* 4. CTA — seller + investor */}
-      <SellerCTA />
-
-      {/* 5. Agents — Roggero & Roma Historia */}
-      <div id="nuestra-historia">
-        <Agents />
-      </div>
-
-      {/* 6. Testimonials — Nuestros Clientes */}
-      <Testimonials />
-
-      {/* 7. Clients — Empresas y Proyectos */}
-      <Clients />
     </div>
   );
 };
