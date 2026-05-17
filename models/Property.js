@@ -69,7 +69,8 @@ const PropertySchema = new Schema(
     },
     images: [
       {
-        type: String,
+        url: { type: String, required: true },
+        public_id: { type: String, required: true },
       },
     ],
     is_featured: {

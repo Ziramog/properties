@@ -8,8 +8,8 @@ export default withAuth(
 
     console.log('[auth:middleware] path:', path, 'method:', req.method, 'has token:', !!token, 'has id:', token?.id || 'N/A', 'role:', token?.role || 'N/A');
 
-    // Allow POST requests (server actions) to pass through — server actions handle auth internally
-    if (req.method === 'POST') {
+    // Allow POST with server action header only
+    if (req.method === 'POST' && req.headers.get('next-action')) {
       return NextResponse.next();
     }
 
@@ -31,7 +31,7 @@ export default withAuth(
   {
     callbacks: {
       authorized: ({ req, token }) => {
-        if (req.method === 'POST') return true;
+        if (req.method === 'POST' && req.headers.get('next-action')) return true;
         console.log('[auth:middleware] authorized check, token:', !!token, 'path:', req.nextUrl.pathname);
         return !!token;
       },

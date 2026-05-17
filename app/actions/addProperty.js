@@ -24,6 +24,9 @@ async function addProperty(formData) {
   if (images.length === 0) {
     throw new Error('Es necesario agregar al menos una foto de la propiedad.');
   }
+  if (images.length > 10) {
+    throw new Error('Máximo 10 imágenes por propiedad.');
+  }
 
   // Create the propertyData object with embedded seller_info
   const propertyData = {
@@ -59,8 +62,7 @@ async function addProperty(formData) {
 
   for (const imageFile of images) {
     const imageBuffer = await imageFile.arrayBuffer();
-    const imageArray = Array.from(new Uint8Array(imageBuffer));
-    const imageData = Buffer.from(imageArray);
+    const imageData = Buffer.from(imageBuffer);
 
     // Convert the image data to base64
     const imageBase64 = imageData.toString('base64');
@@ -69,11 +71,15 @@ async function addProperty(formData) {
     const result = await cloudinary.uploader.upload(
       `data:image/png;base64,${imageBase64}`,
       {
-        folder: 'propertypulse',
+        folder: 'roggero-roma/properties',
+        fetch_format: 'auto',
+        quality: 'auto',
+        width: 1200,
+        crop: 'limit',
       }
     );
 
-    imageUrls.push(result.secure_url);
+    imageUrls.push({ url: result.secure_url, public_id: result.public_id });
   }
 
   propertyData.images = imageUrls;

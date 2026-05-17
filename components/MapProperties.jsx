@@ -47,7 +47,7 @@ const PropertyDetail = ({ property, onClose }) => {
   if (!property) return <EmptyState />;
 
   const price = getPriceDisplay(property);
-  const image = property.images?.[0] || '/images/property-placeholder.jpg';
+  const image = property.images?.[0]?.url || '/images/property-placeholder.jpg';
 
   return (
     <div className="flex flex-col h-full overflow-y-auto scrollbar-hide">

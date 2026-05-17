@@ -88,6 +88,7 @@ export const FALLBACK_IMAGE = '/images/property-placeholder.jpg';
 
 export function getPropertyImage(property, index = 0) {
   const src = property.images?.[index];
-  if (!src || src.includes('via.placeholder.com')) return FALLBACK_IMAGE;
-  return src;
+  const url = typeof src === 'string' ? src : src?.url;
+  if (!url || url.includes('via.placeholder.com')) return FALLBACK_IMAGE;
+  return url;
 }

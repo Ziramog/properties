@@ -26,16 +26,15 @@ async function deleteProperty(propertyId) {
     throw new Error('Unauthorized');
   }
 
-  // extract public id's from image url in DB
-  const publicIds = property.images.map((imageUrl) => {
-    const parts = imageUrl.split('/');
-    return parts.at(-1).split('.').at(0);
-  });
+  // extract public ids from image objects in DB
+  const publicIds = property.images
+    .filter((img) => typeof img === 'object' && img?.public_id)
+    .map((img) => img.public_id);
 
   // Delete images from Cloudinary
   if (publicIds.length > 0) {
     for (let publicId of publicIds) {
-      await cloudinary.uploader.destroy('propertypulse/' + publicId);
+      await cloudinary.uploader.destroy(publicId);
     }
   }
 

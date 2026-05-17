@@ -9,8 +9,8 @@ const PropertyImages = ({ images }) => {
         <div className='container mx-auto'>
           {images.length === 1 ? (
             <Item
-              original={images[0]}
-              thumbnail={images[0]}
+              original={images[0]?.url}
+              thumbnail={images[0]?.url}
               width='1000'
               height='600'
             >
@@ -18,7 +18,7 @@ const PropertyImages = ({ images }) => {
                 <Image
                   ref={ref}
                   onClick={open}
-                  src={images[0]}
+                  src={images[0]?.url}
                   alt=''
                   className='object-cover h-[400px] mx-auto rounded-xl'
                   width={1800}
@@ -41,8 +41,8 @@ const PropertyImages = ({ images }) => {
                 `}
                 >
                   <Item
-                    original={image}
-                    thumbnail={image}
+                    original={image?.url}
+                    thumbnail={image?.url}
                     width='1000'
                     height='600'
                   >
@@ -50,7 +50,7 @@ const PropertyImages = ({ images }) => {
                       <Image
                         ref={ref}
                         onClick={open}
-                        src={image}
+                        src={image?.url}
                         alt=''
                         className='object-cover h-[400px] w-full rounded-xl cursor-pointer'
                         width={0}

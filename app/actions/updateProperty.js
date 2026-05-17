@@ -4,6 +4,7 @@ import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import { getSessionUser } from '@/utils/getSessionUser';
 import cloudinary from '@/config/cloudinary';
+import { revalidatePath } from 'next/cache';
 
 const cleanNumber = (val) => {
   if (val === '' || val === null || val === undefined) return undefined;
@@ -36,7 +37,24 @@ async function updateProperty(prevState, formData) {
     }
 
     const removedImages = formData.getAll('removedImages').filter(Boolean);
-    let currentImages = (prop.images || []).filter((img) => !removedImages.includes(img));
+    const getImageUrl = (img) => (typeof img === 'string' ? img : img?.url);
+
+    // Destroy removed images from Cloudinary
+    for (const removedUrl of removedImages) {
+      const entry = (prop.images || []).find((img) => getImageUrl(img) === removedUrl);
+      const pid = typeof entry === 'object' ? entry?.public_id : null;
+      if (pid) {
+        try {
+          await cloudinary.uploader.destroy(pid);
+        } catch (e) {
+          console.error('Cloudinary destroy failed:', e.message);
+        }
+      }
+    }
+
+    let currentImages = (prop.images || []).filter(
+      (img) => !removedImages.includes(getImageUrl(img))
+    );
 
     const newImageFiles = formData.getAll('images').filter(
       (img) => img && img.name && img.name !== '' && img.size > 0
@@ -44,22 +62,17 @@ async function updateProperty(prevState, formData) {
 
     for (const imageFile of newImageFiles) {
       const imageBuffer = await imageFile.arrayBuffer();
-      const imageArray = Array.from(new Uint8Array(imageBuffer));
-      const imageData = Buffer.from(imageArray);
+      const imageData = Buffer.from(imageBuffer);
       const imageBase64 = imageData.toString('base64');
 
       const result = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result);
-          },
-          { folder: 'propertypulse' }
+          { folder: 'roggero-roma/properties', fetch_format: 'auto', quality: 'auto', width: 1200, crop: 'limit' },
+          (error, result) => (error ? reject(error) : resolve(result))
         );
-        stream.write(imageData);
-        stream.end();
+        stream.end(imageData);
       });
-      currentImages.push(result.secure_url);
+      currentImages.push({ url: result.secure_url, public_id: result.public_id });
     }
 
     if (currentImages.length === 0) {
@@ -97,6 +110,11 @@ async function updateProperty(prevState, formData) {
     });
 
     await prop.save();
+
+    revalidatePath('/');
+    revalidatePath('/properties');
+    revalidatePath(`/properties/${propertyId}`);
+    revalidatePath('/profile');
 
     return { success: true, redirected: '/properties' };
   } catch (err) {

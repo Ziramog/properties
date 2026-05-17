@@ -32,7 +32,7 @@ const PropertyEditForm = ({ property }) => {
   }, [state]);
 
   const existingImages = (property.images || []).filter(
-    (img) => !removedImages.includes(img)
+    (img) => !removedImages.includes(typeof img === 'string' ? img : img?.url)
   );
 
   const handleRemoveImage = (imgUrl) => {
@@ -216,20 +216,23 @@ const PropertyEditForm = ({ property }) => {
 
         {existingImages.length > 0 && (
           <div className='grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4'>
-            {existingImages.map((img, i) => (
-              <div key={img} className='relative group'>
-                <Image src={img} alt={`Imagen ${i + 1}`} width={200} height={150}
+            {existingImages.map((img, i) => {
+              const imgUrl = typeof img === 'string' ? img : img?.url;
+              return (
+              <div key={imgUrl || i} className='relative group'>
+                <Image src={imgUrl} alt={`Imagen ${i + 1}`} width={200} height={150}
                   className='w-full h-32 object-cover rounded-lg border' />
                 <button
                   type='button'
-                  onClick={() => handleRemoveImage(img)}
+                  onClick={() => handleRemoveImage(imgUrl)}
                   className='absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow'
                   title='Eliminar imagen'
                 >
                   ×
                 </button>
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

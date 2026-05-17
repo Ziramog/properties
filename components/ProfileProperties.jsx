@@ -33,7 +33,7 @@ const ProfileProperties = ({ properties: initialProperties }) => {
       <Link href={`/properties/${property._id}`}>
         <Image
           className='h-32 w-full rounded-md object-cover'
-          src={property.images[0]}
+          src={property.images[0]?.url ?? '/images/property-placeholder.jpg'}
           alt=''
           width={500}
           height={100}
