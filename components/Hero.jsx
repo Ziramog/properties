@@ -23,6 +23,9 @@ const Hero = () => {
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [desktopFilterOpen, setDesktopFilterOpen] = useState(null);
+  const [desktopFocus, setDesktopFocus] = useState(false);
+  const [mobileFocus, setMobileFocus] = useState(false);
+  const [mobileValue, setMobileValue] = useState('');
   const overlayRef = useRef(null);
   const filtersRef = useRef(null);
   const measuredRef = useRef(false);
@@ -166,8 +169,11 @@ const Hero = () => {
               <div className='flex items-end gap-3 bg-black rounded-xl p-5'>
                 <div className='flex-1'>
                   <div className='relative'>
-                    <svg className='absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30' viewBox='0 0 24 24' fill='currentColor'><path d='M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z'/></svg>
-                    <input type='text' name='term' placeholder='Buscar por ciudad, zona, dirección o palabra clave' className='w-full h-[54px] pl-12 pr-4 rounded-md bg-white/[0.06] border border-white/10 text-white text-sm placeholder:text-white/40 outline-none focus:border-white/30 transition-colors' value={filters.term || ''} onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))} required />
+                    <svg className='absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white' viewBox='0 0 24 24' fill='currentColor'><path d='M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z'/></svg>
+                    <label className={`absolute left-12 pointer-events-none transition-all duration-300 ${desktopFocus || filters.term ? '-top-2 text-[12px] text-white font-medium' : 'top-1/2 -translate-y-1/2 text-sm text-white/40'}`}>
+                      Buscar por ciudad, zona, dirección o palabra clave
+                    </label>
+                    <input type='text' name='term' className='w-full h-[54px] pl-12 pr-4 rounded-md bg-white/[0.06] border border-white/10 text-white text-sm outline-none focus:border-white/30 transition-colors pt-4' value={filters.term || ''} onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))} onFocus={() => setDesktopFocus(true)} onBlur={() => setDesktopFocus(false)} required />
                   </div>
                 </div>
                 <button type='button' onClick={() => setShowMore(!showMore)} className='h-[54px] text-white/55 text-xs font-normal uppercase tracking-wider hover:text-white transition-colors flex-shrink-0 self-end pb-0.5'>{showMore ? 'Mostrar menos' : 'Mostrar más'}</button>
@@ -228,14 +234,22 @@ const Hero = () => {
             <div className='md:hidden w-full relative bg-black rounded-xl p-4'>
               {/* Search input */}
               <div className='bg-white/[0.06] border border-white/10 flex items-center gap-2 px-3 py-2.5' style={{ borderRadius: 12 }}>
-                <svg className='w-5 h-5 text-white/30 flex-shrink-0' viewBox='0 0 24 24' fill='currentColor'>
+                <svg className='w-5 h-5 text-white flex-shrink-0' viewBox='0 0 24 24' fill='currentColor'>
                   <path d='M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z'/>
                 </svg>
-                <input
-                  type='text'
-                  placeholder='Buscar por ciudad, zona, dirección o palabra clave'
-                  className='bg-transparent text-white text-sm placeholder:text-white/40 w-full outline-none'
-                />
+                <div className='relative flex-1'>
+                  <label className={`absolute left-0 pointer-events-none transition-all duration-300 ${mobileFocus || mobileValue ? '-top-2 text-[11px] text-white font-medium' : 'top-1/2 -translate-y-1/2 text-sm text-white/40'}`}>
+                    Buscar por ciudad, zona, dirección o palabra clave
+                  </label>
+                  <input
+                    type='text'
+                    className='bg-transparent text-white text-sm w-full outline-none pt-4'
+                    value={mobileValue}
+                    onChange={(e) => setMobileValue(e.target.value)}
+                    onFocus={() => setMobileFocus(true)}
+                    onBlur={() => setMobileFocus(false)}
+                  />
+                </div>
               </div>
 
               {/* Button */}
