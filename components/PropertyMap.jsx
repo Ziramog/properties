@@ -97,12 +97,12 @@ const PropertyMap = ({ property }) => {
     if ('ontouchstart' in window) {
       map.dragPan.disable();
       map.touchZoomRotate?.disable();
+      map.touchPitch?.disable();
 
       const touchStartHandler = (e) => {
         if (e.touches.length >= 2) {
           map.dragPan.enable();
           map.scrollZoom.enable();
-          map.touchZoomRotate?.enable();
         }
       };
 
@@ -110,7 +110,6 @@ const PropertyMap = ({ property }) => {
         if (e.touches.length < 2) {
           map.dragPan.disable();
           map.scrollZoom.disable();
-          map.touchZoomRotate?.disable();
         }
       };
 
