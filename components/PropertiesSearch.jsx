@@ -54,6 +54,17 @@ export default function PropertiesSearch({ currentFilters = {} }) {
   const cityInputRef = useRef(null);
   const suggestionTimerRef = useRef(null);
 
+  const [openDropdown, setOpenDropdown] = useState(null);
+
+  useEffect(() => {
+    if (!openDropdown) return;
+    const handleClick = (e) => {
+      if (!e.target.closest('[data-dropdown]')) setOpenDropdown(null);
+    };
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, [openDropdown]);
+
   const [filters, setFilters] = useState({
     term: currentFilters.term || '',
     address: currentFilters.address || '',
@@ -70,9 +81,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
     sort: currentFilters.sort || 'price-desc',
   });
 
-  const [focused, setFocused] = useState({
-    term: false, type: false, area: false, price: false, bedrooms: false, baths: false,
-  });
+  const [focused, setFocused] = useState({ term: false });
 
   const labelActive = (field) => {
     if (field === 'term') return focused.term || filters.term !== '';
@@ -85,6 +94,24 @@ export default function PropertiesSearch({ currentFilters = {} }) {
   };
 
   const precioRanges = PRECIO_RANGES;
+
+  const FILTER_CONFIG = [
+    { name: 'tipo', label: 'Tipo',
+      options: TIPO_OPTIONS.filter((t) => t.value).map((t) => ({ value: t.value, label: t.label })),
+      className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/6' },
+    { name: 'area', label: 'Sq.Feet',
+      options: AREA_RANGES.filter((r) => r.value).map((r) => ({ value: r.value, label: r.label })),
+      className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[14%]' },
+    { name: 'price', label: 'Price',
+      options: PRECIO_RANGES.filter((r) => r.value).map((r) => ({ value: r.value, label: r.label })),
+      className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[15%]' },
+    { name: 'bedrooms', label: 'Bedrooms',
+      options: BEDROOM_OPTS.filter((o) => o).map((o) => ({ value: o, label: o + '+' })),
+      className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[11%]' },
+    { name: 'baths', label: 'Baths',
+      options: BATH_OPTS.filter((o) => o).map((o) => ({ value: o, label: o + '+' })),
+      className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[11%]' },
+  ];
 
   const fetchCitySuggestions = useCallback(async (query) => {
     if (query.length < 2) { setSuggestions([]); return; }
@@ -184,9 +211,9 @@ export default function PropertiesSearch({ currentFilters = {} }) {
               position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)',
               width: '19px', height: '19px', zIndex: 9, filter: 'brightness(0) invert(1)',
             }} viewBox="0 0 24 24" fill="currentColor"><path d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z"/></svg>
-            <label className={`animated-label ${labelActive('term') ? 'active' : ''}`} style={{
-              position: 'absolute', color: labelActive('term') ? '#fff' : '#a29696', fontSize: labelActive('term') ? '12px' : '16px',
-              fontWeight: labelActive('term') ? '500' : '400', zIndex: 9, left: '50px', top: labelActive('term') ? '-15px' : '10px',
+            <label className={`animated-label ${focused.term || filters.term ? 'active' : ''}`} style={{
+              position: 'absolute', color: focused.term || filters.term ? '#fff' : '#a29696', fontSize: focused.term || filters.term ? '12px' : '16px',
+              fontWeight: focused.term || filters.term ? '500' : '400', zIndex: 9, left: '50px', top: focused.term || filters.term ? '-15px' : '10px',
               pointerEvents: 'none', transition: 'all 0.3s ease-in-out',
             }}>Ciudad o código</label>
             <div className="input-wrap" style={{ display: 'flex', gap: '15px' }}>
@@ -220,60 +247,46 @@ export default function PropertiesSearch({ currentFilters = {} }) {
             )}
           </div>
 
-          {/* Type — type-group */}
-          <FormGroup name="tipo" label="Tipo" active={labelActive('type')}
-            className="w-full min-[651px]:w-1/2 min-[992px]:w-1/6"
-            onFocus={() => setFocused((p) => ({ ...p, type: true }))}
-            onBlur={() => setFocused((p) => ({ ...p, type: false }))}>
-            <select name="tipo" value={filters.tipo} onChange={handleChange} style={{ width: '100%', maxWidth: '100%', background: '#000', border: 'none', color: '#a29696', fontSize: '16px', fontWeight: 400, outline: 'none', paddingRight: '20px' }}>
-              <option value="" hidden disabled></option>
-              {TIPO_OPTIONS.filter((t) => t.value).map((t) => <option key={t.value} value={t.value} style={{ background: '#000' }}>{t.label}</option>)}
-            </select>
-          </FormGroup>
-
-          {/* Area — sqfeet-group */}
-          <FormGroup name="area" label="Sq.Feet" active={labelActive('area')}
-            className="w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[14%]"
-            onFocus={() => setFocused((p) => ({ ...p, area: true }))}
-            onBlur={() => setFocused((p) => ({ ...p, area: false }))}>
-            <select name="area" value={filters.area} onChange={handleChange} style={{ width: '100%', maxWidth: '100%', background: '#000', border: 'none', color: '#a29696', fontSize: '16px', fontWeight: 400, outline: 'none', paddingRight: '20px' }}>
-              <option value="" hidden disabled></option>
-              {AREA_RANGES.filter((r) => r.value).map((r) => <option key={r.value} value={r.value} style={{ background: '#000' }}>{r.label}</option>)}
-            </select>
-          </FormGroup>
-
-          {/* Price — price-group */}
-          <FormGroup name="price" label="Price" active={labelActive('price')}
-            className="w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[15%]"
-            onFocus={() => setFocused((p) => ({ ...p, price: true }))}
-            onBlur={() => setFocused((p) => ({ ...p, price: false }))}>
-            <select name="price" value={filters.price} onChange={handleChange} style={{ width: '100%', maxWidth: '100%', background: '#000', border: 'none', color: '#a29696', fontSize: '16px', fontWeight: 400, outline: 'none', paddingRight: '20px' }}>
-              <option value="" hidden disabled></option>
-              {PRECIO_RANGES.filter((r) => r.value).map((r) => <option key={r.value} value={r.value} style={{ background: '#000' }}>{r.label}</option>)}
-            </select>
-          </FormGroup>
-
-          {/* Bedrooms — bedrooms-group */}
-          <FormGroup name="bedrooms" label="Bedrooms" active={labelActive('bedrooms')}
-            className="w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[11%]"
-            onFocus={() => setFocused((p) => ({ ...p, bedrooms: true }))}
-            onBlur={() => setFocused((p) => ({ ...p, bedrooms: false }))}>
-            <select name="bedrooms" value={filters.bedrooms} onChange={handleChange} style={{ width: '100%', maxWidth: '100%', background: '#000', border: 'none', color: '#a29696', fontSize: '16px', fontWeight: 400, outline: 'none', paddingRight: '20px' }}>
-              <option value="" hidden disabled></option>
-              {BEDROOM_OPTS.filter((o) => o).map((o) => <option key={o} value={o} style={{ background: '#000' }}>{o}+</option>)}
-            </select>
-          </FormGroup>
-
-          {/* Baths — baths-group */}
-          <FormGroup name="baths" label="Baths" active={labelActive('baths')}
-            className="w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[11%]"
-            onFocus={() => setFocused((p) => ({ ...p, baths: true }))}
-            onBlur={() => setFocused((p) => ({ ...p, baths: false }))}>
-            <select name="baths" value={filters.baths} onChange={handleChange} style={{ width: '100%', maxWidth: '100%', background: '#000', border: 'none', color: '#a29696', fontSize: '16px', fontWeight: 400, outline: 'none', paddingRight: '20px' }}>
-              <option value="" hidden disabled></option>
-              {BATH_OPTS.filter((o) => o).map((o) => <option key={o} value={o} style={{ background: '#000' }}>{o}+</option>)}
-            </select>
-          </FormGroup>
+          {/* Filter dropdowns (Tipo, Sq.Feet, Price, Bedrooms, Baths) */}
+          {FILTER_CONFIG.map((f) => {
+            const isOpen = openDropdown === f.name;
+            const hasValue = filters[f.name] !== '';
+            const currentLabel = f.options.find((o) => o.value === filters[f.name])?.label || f.label;
+            return (
+              <div key={f.name} data-dropdown={f.name}
+                className={`form-group notranslate ${f.name}-group ${f.className} border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626]`}
+                style={{ position: 'relative', marginBottom: 0, padding: 0, outline: 'none' }}>
+                <label className={`animated-label ${isOpen || hasValue ? 'active' : ''}`} style={{
+                  position: 'absolute', color: isOpen || hasValue ? '#fff' : '#a29696',
+                  fontSize: isOpen || hasValue ? '12px' : '16px',
+                  fontWeight: isOpen || hasValue ? '500' : '400', zIndex: 9, left: '15px',
+                  top: isOpen || hasValue ? '-15px' : '10px',
+                  pointerEvents: 'none', transition: 'all 0.3s ease-in-out',
+                }}>{f.label}</label>
+                <div onClick={() => setOpenDropdown(isOpen ? null : f.name)}
+                  className="w-full h-10 flex items-center justify-between cursor-pointer px-3"
+                  style={{ color: hasValue ? '#fff' : '#a29696', fontSize: '16px' }}>
+                  <span>{currentLabel}</span>
+                  <svg className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: '#888', flexShrink: 0 }}>
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </div>
+                {isOpen && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-black border border-[#2a2626] rounded-xl py-2 z-50 shadow-xl max-h-[250px] overflow-y-auto">
+                    {f.options.map((o) => (
+                      <div key={o.value}
+                        onClick={() => { handleChange({ target: { name: f.name, value: o.value } }); setOpenDropdown(null); }}
+                        className="h-12 px-4 flex items-center cursor-pointer hover:bg-white/5 transition-colors">
+                        <span className={`text-sm px-3 py-1.5 rounded-lg ${filters[f.name] === o.value ? 'bg-[var(--color-brand)] text-white font-semibold' : 'text-white/70'}`}>
+                          {o.label}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
 
           {/* Search button */}
           <button type="submit" className="btn btn-primary btnSubmit" style={{
@@ -284,7 +297,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
             letterSpacing: '0.06em', transition: 'opacity 0.2s',
             marginLeft: '10px', flexShrink: 0,
           }} onMouseEnter={(e) => e.target.style.opacity = '0.85'} onMouseLeave={(e) => e.target.style.opacity = '1'}>
-            Search
+            Buscar
           </button>
         </div>
 
@@ -382,21 +395,6 @@ export default function PropertiesSearch({ currentFilters = {} }) {
           {expanded ? 'Standard Search' : 'Advanced Search'}
         </button>
       </div>
-    </div>
-  );
-}
-
-function FormGroup({ name, label, active, onFocus, onBlur, children, className = '' }) {
-  return (
-    <div className={`form-group notranslate ${name}-group ${className} border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626]`} style={{
-      position: 'relative', marginBottom: 0, padding: 0, outline: 'none',
-    }} tabIndex={-1} onFocus={onFocus} onBlur={onBlur}>
-      <label className={`animated-label ${active ? 'active' : ''}`} style={{
-        position: 'absolute', color: active ? '#fff' : '#a29696', fontSize: active ? '12px' : '16px',
-        fontWeight: active ? '500' : '400', zIndex: 9, left: '15px', top: active ? '-15px' : '10px',
-        pointerEvents: 'none', transition: 'all 0.3s ease-in-out',
-      }}>{label}</label>
-      {children}
     </div>
   );
 }
