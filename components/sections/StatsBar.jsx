@@ -1,13 +1,8 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import getPropertyCount from '@/app/actions/getPropertyCount';
 
-const STATS = [
-  { value: 500, suffix: '+', label: 'Propiedades' },
-  { value: 20, suffix: '+', label: 'Años de experiencia' },
-  { value: 4.8, suffix: '', label: 'Calificación', decimals: 1 },
-];
-
-const StatItem = ({ stat, isLast }) => {
+const StatItem = ({ stat }) => {
   const [count, setCount] = useState(0);
   const [active, setActive] = useState(false);
   const ref = useRef(null);
@@ -39,10 +34,7 @@ const StatItem = ({ stat, isLast }) => {
   }, [active, stat.value, stat.decimals]);
 
   return (
-    <div
-      ref={ref}
-      className="flex-1 text-center px-2"
-    >
+    <div ref={ref} className="flex-1 text-center px-2">
       <h3 className="text-[40px] md:text-[60px] leading-none text-[var(--color-brand)] font-bold" style={{ fontFamily: 'var(--font-display)' }}>
         {count}{stat.suffix}
       </h3>
@@ -54,12 +46,24 @@ const StatItem = ({ stat, isLast }) => {
 };
 
 const StatsBar = () => {
+  const [propertyCount, setPropertyCount] = useState(500);
+
+  useEffect(() => {
+    getPropertyCount().then(setPropertyCount);
+  }, []);
+
+  const STATS = [
+    { value: propertyCount, suffix: '+', label: 'Propiedades' },
+    { value: 20, suffix: '+', label: 'Años de experiencia' },
+    { value: 4.8, suffix: '', label: 'Calificación', decimals: 1 },
+  ];
+
   return (
     <section className="pb-[15px] pt-0">
       <div className="bg-white w-full py-[15px]">
       <div className="max-w-[60vw] mx-auto px-4 md:px-8">
         <div className="flex justify-center">
-          {STATS.map((stat, i) => (
+          {STATS.map((stat) => (
             <div key={stat.label} className="flex-1 text-center px-2">
               <StatItem stat={stat} />
             </div>
