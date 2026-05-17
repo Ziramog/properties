@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaSearch } from 'react-icons/fa';
+import logSearch from '@/app/actions/logSearch';
+import getTopSearches from '@/app/actions/getTopSearches';
 
 const HERO_LINE1 = 'Vendemos Inmuebles';
 const HERO_LINE2 = 'Construimos Confianza';
@@ -26,9 +28,12 @@ const Hero = () => {
   const [desktopFocus, setDesktopFocus] = useState(false);
   const [mobileFocus, setMobileFocus] = useState(false);
   const [mobileValue, setMobileValue] = useState('');
+  const [topSearches, setTopSearches] = useState([]);
   const overlayRef = useRef(null);
   const filtersRef = useRef(null);
   const measuredRef = useRef(false);
+
+  useEffect(() => { getTopSearches().then(setTopSearches); }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,7 +81,10 @@ const Hero = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (filters.term && filters.term.trim()) params.set('city', filters.term.trim());
+    if (filters.term && filters.term.trim()) {
+      params.set('city', filters.term.trim());
+      logSearch(filters.term.trim());
+    }
     if (filters.type && filters.type !== 'Todos') params.set('type', filters.type);
     if (filters.bedrooms) params.set('bedrooms', filters.bedrooms);
     if (filters.baths) params.set('baths', filters.baths);
@@ -224,10 +232,14 @@ const Hero = () => {
 
             {/* Popular locations */}
             <div className='hidden md:flex items-center gap-3 mt-4'>
-              <span className='text-white/40 text-xs font-medium uppercase tracking-wider flex-shrink-0'>Zonas populares:</span>
-              {['Alta Gracia','Córdoba','Villa Allende','Mina Clavero'].map(loc => (
-                <a key={loc} href={`/properties?city=${encodeURIComponent(loc)}`} className='text-white/55 hover:text-white text-xs font-medium transition-colors px-3 py-1.5 border border-white/10 rounded-full hover:border-white/25'>{loc}</a>
-              ))}
+              <span className='text-white/40 text-xs font-medium uppercase tracking-wider flex-shrink-0'>Búsquedas Populares:</span>
+              {topSearches.length > 0 ? topSearches.map(s => (
+                <a key={s.term} href={`/properties?city=${encodeURIComponent(s.term)}`} className='text-white/55 hover:text-white text-xs font-medium transition-colors px-3 py-1.5 border border-white/10 rounded-full hover:border-white/25'>{s.term}</a>
+              )) : (
+                ['Alta Gracia','Córdoba','Villa Allende','Mina Clavero'].map(loc => (
+                  <a key={loc} href={`/properties?city=${encodeURIComponent(loc)}`} className='text-white/55 hover:text-white text-xs font-medium transition-colors px-3 py-1.5 border border-white/10 rounded-full hover:border-white/25'>{loc}</a>
+                ))
+              )}
             </div>
 
             {/* Mobile: input + button + toggle all fixed; filters expand via position absolute below */}
@@ -255,7 +267,10 @@ const Hero = () => {
               {/* Button */}
               <button
                 type='button'
-                onClick={() => router.push('/properties')}
+                onClick={() => {
+                  if (mobileValue.trim()) logSearch(mobileValue.trim());
+                  router.push('/properties');
+                }}
                 className='w-full bg-primary hover:bg-[#e05a23] text-white font-bold text-sm uppercase tracking-wider rounded-xl h-12 flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/30 mt-3'
               >
                 <FaSearch className='w-4 h-4' />
