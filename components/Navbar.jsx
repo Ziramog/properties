@@ -232,102 +232,121 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Fullscreen Overlay — senada style: rOptions */}
+        {/* Mobile drawer overlay */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden fixed inset-0 bg-black/50 z-[61]" onClick={() => setIsMobileMenuOpen(false)} />
+        )}
+
+        {/* Mobile drawer — slides from left */}
         <div
-          className="rOptions absolute inset-x-0 z-[999] flex flex-col bg-black"
-          style={{
-            top: 'calc(env(safe-area-inset-top, 8px) + 60px)',
-            height: 'calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top, 8px) - 60px)',
-            padding: '80px 12px 20px',
-            overflowY: 'auto',
-            transformOrigin: 'top',
-            transform: isMobileMenuOpen ? 'scaleY(1)' : 'scaleY(0)',
-            opacity: isMobileMenuOpen ? 1 : 0,
-            transition: 'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease',
-            pointerEvents: isMobileMenuOpen ? 'auto' : 'none',
-          }}>
-          {/* Nav links — Senada .mobileMenu */}
-          <nav className="flex-1 flex flex-col px-0">
-            <Link href="/" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.2s' }} onClick={() => setIsMobileMenuOpen(false)}>
-              Inicio
+          className={`md:hidden fixed top-0 left-0 bottom-0 w-[280px] bg-black z-[62] flex flex-col transform transition-transform duration-300 ease-in-out ${
+            isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+          style={{ paddingTop: 'calc(env(safe-area-inset-top, 8px) + 60px)' }}
+        >
+          {/* Nav links */}
+          <nav className="flex-1 overflow-y-auto px-4 py-4">
+            {/* NUESTRA SELECCION */}
+            <Link href="/properties" className="flex items-center gap-3 text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+              <span className="text-lg">⭐</span>
+              NUESTRA SELECCION
             </Link>
 
-            {/* Propiedades — expandable dropdown */}
-            <div className={`border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ animationDelay: '0.4s' }}>
+            {/* Propiedades — expandable */}
+            <div className="border-b border-white/[.08]">
               <button
                 onClick={() => setMobileSubOpen(!mobileSubOpen)}
-                className="flex items-center justify-between w-full text-white text-[28px] font-normal py-[15px]"
-                style={{ fontFamily: 'var(--font-heading)' }}
+                className="flex items-center justify-between w-full text-white text-[16px] font-normal py-3 hover:text-[var(--color-brand)] transition-colors"
               >
-                Propiedades
-                <img src="/senada/images/icons/ico_chevron-right.svg" alt="" className={`w-5 h-5 opacity-40 transition-transform duration-300 ${mobileSubOpen ? 'rotate-90' : ''}`} style={{ filter: 'brightness(0) invert(1)' }} />
+                <span className="flex items-center gap-3">
+                  <span className="text-lg">🏠</span>
+                  PROPIEDADES
+                </span>
+                <svg className={`w-4 h-4 text-white/40 transition-transform duration-300 ${mobileSubOpen ? 'rotate-90' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 18l6-6-6-6"/>
+                </svg>
               </button>
-              <div className={`overflow-hidden transition-all duration-300 ${mobileSubOpen ? 'max-h-[300px] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
+              <div className={`overflow-hidden transition-all duration-300 ${mobileSubOpen ? 'max-h-[400px] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
                 {[
                   { href: '/properties?type=Casa', label: 'Casas' },
                   { href: '/properties?type=Departamento', label: 'Departamentos' },
                   { href: '/properties?type=Campo', label: 'Campos' },
                   { href: '/properties?type=Terreno', label: 'Terrenos' },
+                  { href: '/properties', label: 'Todas las propiedades' },
                 ].map(l => (
-                  <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] font-light py-2 pl-4 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link key={l.href} href={l.href} className="block text-white/60 text-[14px] py-2.5 pl-[44px] hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                     {l.label}
                   </Link>
                 ))}
               </div>
             </div>
 
-            <Link href="/contact" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.6s' }} onClick={() => setIsMobileMenuOpen(false)}>
+            {/* SOBRE NOSOTROS */}
+            <Link href="/#nuestra-historia" className="flex items-center gap-3 text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+              <span className="text-lg">📖</span>
+              SOBRE NOSOTROS
+            </Link>
+
+            {/* Contacto */}
+            <Link href="/contact" className="flex items-center gap-3 text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+              <span className="text-lg">📞</span>
               Contacto
             </Link>
+
+            {/* Session-based */}
             {session ? (
               <>
-                <Link href="/profile" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/profile" className="flex items-center gap-3 text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                  <span className="text-lg">👤</span>
                   Perfil
                 </Link>
                 {session.user?.role === 'admin' && (
-                  <Link href="/admin" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.9s' }} onClick={() => setIsMobileMenuOpen(false)}>
-                      Admin
+                  <Link href="/admin" className="flex items-center gap-3 text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                    <span className="text-lg">⚙️</span>
+                    Admin
                   </Link>
                 )}
-                <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '1.0s' }}>
+                <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className="flex items-center gap-3 w-full text-left text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors">
+                  <span className="text-lg">🚪</span>
                   Salir
                 </button>
               </>
             ) : (
               providers && Object.values(providers).map((provider) => (
-                <button key={provider.id} onClick={() => { signIn(provider.id, { callbackUrl: '/admin' }); }} className={`block w-full text-left text-white text-[28px] font-normal py-[15px] border-b border-white/[.1] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }}>
+                <button key={provider.id} onClick={() => { signIn(provider.id, { callbackUrl: '/admin' }); setIsMobileMenuOpen(false); }} className="flex items-center gap-3 w-full text-left text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors">
+                  <span className="text-lg">🔑</span>
                   Ingresar
                 </button>
               ))
             )}
           </nav>
 
-          {/* Bottom — social icons, senada style: .mobileMenuFooter */}
-          <div className="flex-shrink-0 pt-[30px] border-t border-white/[0.1]" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 16px)' }}>
-            <ul className="flex items-center justify-center gap-[40px]">
+          {/* Bottom — social icons */}
+          <div className="flex-shrink-0 px-4 py-4 border-t border-white/[.08]">
+            <ul className="flex items-center justify-center gap-5">
               <li>
-                <a href={`tel:${PHONE_NUMBER}`} className="flex items-center justify-center w-[48px] h-[48px] rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Llamar" style={{ filter: 'none' }}>
-                  <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-6 h-6" style={{ filter: 'brightness(0) invert(1)' }} />
+                <a href={`tel:${PHONE_NUMBER}`} className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 hover:bg-[var(--color-brand)] transition-colors" aria-label="Llamar">
+                  <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
                 </a>
               </li>
               <li>
-                <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[48px] h-[48px] rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Email" style={{ filter: 'none' }}>
-                  <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-6 h-6" style={{ filter: 'brightness(0) invert(1)' }} />
+                <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 hover:bg-[var(--color-brand)] transition-colors" aria-label="Email">
+                  <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
                 </a>
               </li>
               <li>
-                <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[48px] h-[48px] rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="WhatsApp" style={{ filter: 'none' }}>
-                  <FaWhatsapp className="text-white text-2xl" />
+                <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 hover:bg-[var(--color-brand)] transition-colors" aria-label="WhatsApp">
+                  <FaWhatsapp className="text-white text-xl" />
                 </a>
               </li>
               <li>
-                <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[48px] h-[48px] rounded-xl bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Instagram" style={{ filter: 'none' }}>
-                  <img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-6 h-6" />
+                <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 hover:bg-[var(--color-brand)] transition-colors" aria-label="Instagram">
+                  <img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-5 h-5" />
                 </a>
               </li>
               <li>
-                <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[48px] h-[48px] rounded-xl bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Facebook" style={{ filter: 'none' }}>
-                  <img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-6 h-6" />
+                <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 hover:bg-[var(--color-brand)] transition-colors" aria-label="Facebook">
+                  <img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-5 h-5" />
                 </a>
               </li>
             </ul>
@@ -359,44 +378,6 @@ const Navbar = () => {
           margin: unset;
           top: -8px;
           transform: rotate(-135deg);
-        }
-        .rButton.active .hamburger span:nth-child(2) {
-          opacity: 0;
-          transform: translateX(-30px);
-        }
-        .rButton.active .hamburger span:nth-child(3) {
-          width: 25px;
-          margin: unset;
-          top: -8px;
-          transform: rotate(-135deg);
-        }
-        .rOptions {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          z-index: 999;
-          background: #000;
-          width: 100%;
-          height: calc(var(--vh, 1vh) * 100);
-          padding: 80px 12px 20px;
-          overflow-y: auto;
-          transform: translateY(-100%);
-          transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-          display: flex;
-          flex-direction: column;
-        }
-        .rOptions.menu-open {
-          transform: translateY(0);
-          display: flex;
-        }
-        .mobile-item {
-          opacity: 0;
-          transform: translateY(10px);
-          animation: mobileFadeIn 0.5s ease-out forwards;
-        }
-        @keyframes mobileFadeIn {
-          to { opacity: 1; transform: translateY(0); }
         }
         /* Desktop dropdown animation — Senada .top_level */
         .desktop-dropdown ul {

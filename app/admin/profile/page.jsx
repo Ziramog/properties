@@ -36,7 +36,7 @@ const AdminProfilePage = async () => {
             <p className="text-white/50 text-sm">Propiedades: {totalProps} activas</p>
           </div>
           <div className="text-right">
-            <p className="text-[24px] font-bold">U$D 50<span className="text-sm font-normal text-white/50">/mes</span></p>
+            <p className="text-[24px] font-bold">U$D 25<span className="text-sm font-normal text-white/50">/mes</span></p>
             <p className="text-white/50 text-xs">Sin vencimiento</p>
           </div>
         </div>
