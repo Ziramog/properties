@@ -57,13 +57,13 @@ const AdminQuotationsPage = async () => {
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-[#eee] text-[10px] font-bold uppercase tracking-wider text-[#999]">
-                <th className="px-3 md:px-4 py-3">N°</th>
-                <th className="px-3 md:px-4 py-3">Cliente</th>
+                <th className="px-2 md:px-4 py-3">N°</th>
+                <th className="px-2 md:px-4 py-3">Cliente</th>
                 <th className="px-2 md:px-3 py-3 hidden md:table-cell">Propiedad</th>
                 <th className="px-2 md:px-3 py-3 text-right">Total</th>
                 <th className="px-2 md:px-3 py-3 text-center">Estado</th>
                 <th className="px-2 md:px-3 py-3 hidden md:table-cell">Fecha</th>
-                <th className="px-3 md:px-4 py-3 text-right">Acción</th>
+                <th className="px-2 md:px-4 py-3 text-right">Acción</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#f5f5f5]">
@@ -71,19 +71,19 @@ const AdminQuotationsPage = async () => {
                 const statusCfg = STATUS_CONFIG.find(s => s.id === q.status) || STATUS_CONFIG[0];
                 return (
                   <tr key={q._id.toString()} className="hover:bg-[#fafafa] transition-colors text-[13px]">
-                    <td className="px-3 md:px-4 py-3 font-medium text-[#0F172A] text-[12px]">{q.quoteNumber}</td>
-                    <td className="px-3 md:px-4 py-3">
-                      <p className="font-medium text-[#0F172A] truncate max-w-[140px]">{q.client?.name}</p>
+                    <td className="px-2 md:px-4 py-3 font-medium text-[#0F172A] text-[11px] md:text-[12px]">{q.quoteNumber}</td>
+                    <td className="px-2 md:px-4 py-3">
+                      <p className="font-medium text-[#0F172A] truncate max-w-[80px] md:max-w-[140px]">{q.client?.name}</p>
                     </td>
                     <td className="px-2 md:px-3 py-3 text-[#666] truncate max-w-[160px] hidden md:table-cell">{q.properties?.[0]?.title || '—'}</td>
-                    <td className="px-2 md:px-3 py-3 text-right font-semibold">U$D {q.totalValue?.toLocaleString('es-AR')}</td>
+                    <td className="px-2 md:px-3 py-3 text-right font-semibold text-[12px]">U$D {q.totalValue?.toLocaleString('es-AR')}</td>
                     <td className="px-2 md:px-3 py-3 text-center">
                       <span className={`inline-block text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider ${statusCfg.color}`}>{statusCfg.label}</span>
                     </td>
                     <td className="px-2 md:px-3 py-3 text-[#999] text-[12px] hidden md:table-cell">{new Date(q.createdAt).toLocaleDateString('es-AR')}</td>
-                    <td className="px-3 md:px-4 py-3 text-right">
+                    <td className="px-2 md:px-4 py-3 text-right">
                       <a href={`/api/quotations/${q._id}/generate-pdf`} target="_blank" rel="noopener noreferrer"
-                        className="text-[var(--color-brand)] hover:underline text-[12px] font-medium">PDF</a>
+                        className="inline-flex items-center justify-center w-7 h-7 bg-[var(--color-brand)] text-white text-[11px] font-bold rounded-lg hover:bg-[var(--color-brand-dark)] transition-colors" title="Descargar PDF">PDF</a>
                     </td>
                   </tr>
                 );
