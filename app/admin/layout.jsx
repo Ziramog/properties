@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: '/admin', label: 'Panel de Control', icon: '📊' },
   { href: '/admin/properties', label: 'Propiedades', icon: '🏠' },
   { href: '/admin/quotes', label: 'Presupuestos', icon: '📋' },
+  { href: '/admin/reviews', label: 'Reseñas', icon: '⭐' },
   { href: '/admin/profile', label: 'Perfil', icon: '👤' },
 ];
 
