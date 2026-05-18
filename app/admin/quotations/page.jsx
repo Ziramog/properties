@@ -26,15 +26,13 @@ const AdminQuotationsPage = async () => {
 
   return (
     <div className="p-3 md:p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-[24px] md:text-[36px] font-normal text-[#0F172A]" style={{ fontFamily: 'var(--font-heading)' }}>
-          Propuestas
-        </h1>
-        <Link href="/admin/quotations/new"
-          className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[12px] md:text-[13px] font-bold uppercase tracking-wider px-4 md:px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap flex-shrink-0">
-          + Nueva Propuesta
-        </Link>
-      </div>
+      <h1 className="text-[24px] md:text-[36px] font-normal text-[#0F172A] mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
+        Propuestas
+      </h1>
+      <Link href="/admin/quotations/new"
+        className="inline-block bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[12px] md:text-[13px] font-bold uppercase tracking-wider px-5 py-2.5 rounded-lg transition-colors mb-6">
+        + Nueva Propuesta
+      </Link>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
