@@ -118,7 +118,7 @@ const Navbar = () => {
                     { label: 'Todas las propiedades', query: '' },
                   ].map(item => (
                     <li key={item.label}>
-                      <Link href={`/properties${item.query ? `?${item.query}` : ''}`} className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">
+                      <Link href={`/properties${item.query ? `?${item.query}` : ''}`} className="block px-5 py-2.5 text-[13px] text-white hover:text-white/70 hover:bg-white/5 transition-colors font-normal uppercase tracking-wider">
                         {item.label}
                       </Link>
                     </li>
@@ -152,9 +152,7 @@ const Navbar = () => {
                 </span>
               </button>
               {desktopDropdown === 'more' && (
-                <ul className="absolute top-full right-0 mt-2 bg-[#222] border border-white/10 rounded-md py-2 min-w-[180px] shadow-xl z-50">
-                  <li><Link href="/" className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Inicio</Link></li>
-                  <li><Link href="/contact" className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Contacto</Link></li>
+                <ul className="absolute top-full right-0 mt-2 bg-black border border-white/10 rounded-md py-2 min-w-[180px] shadow-xl z-50">
                   {!session && providers && Object.values(providers).map((provider) => (
                     <li key={provider.id}>
                         <button onClick={() => signIn(provider.id, { callbackUrl: '/admin' })} className="block w-full text-left px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Ingresar</button>
