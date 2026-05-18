@@ -13,7 +13,21 @@ const AdminPage = async () => {
   const featured = await Property.countDocuments({ is_featured: true });
   const quotes = await Quote.countDocuments({});
 
-  const recentProperties = await Property.find({}).sort({ createdAt: -1 }).limit(5).lean();
+  const types = ['Casa', 'Departamento', 'Campo', 'Terreno', 'Inmueble Comercial'];
+  const categoryCounts = await Promise.all(
+    types.map(async (t) => ({
+      type: t,
+      count: await Property.countDocuments({ type: t }),
+    }))
+  );
+
+  const CATEGORIES = [
+    { type: 'Casa', icon: '🏠', color: '#F26B2E' },
+    { type: 'Departamento', icon: '🏢', color: '#652660' },
+    { type: 'Campo', icon: '🌾', color: '#25D366' },
+    { type: 'Terreno', icon: '📐', color: '#0F172A' },
+    { type: 'Inmueble Comercial', icon: '🏪', color: '#E94560' },
+  ];
 
   return (
     <div className="p-4 md:p-6">
@@ -38,34 +52,24 @@ const AdminPage = async () => {
         ))}
       </div>
 
-      {/* Recent properties */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[18px] font-semibold text-[#0F172A]">Últimas Propiedades</h2>
-          <Link href="/admin/properties" className="text-[var(--color-brand)] hover:underline text-sm font-medium">
-            Ver todas
-          </Link>
-        </div>
-        {recentProperties.length === 0 ? (
-          <p className="text-[13px] text-[#999] text-center py-8">No hay propiedades todavía.</p>
-        ) : (
-          <div className="space-y-2">
-            {recentProperties.map(p => (
-              <Link key={p._id.toString()} href={`/admin/properties/${p._id.toString()}/edit`}
-                className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-[#F9F9F9] transition-colors">
-                <div>
-                  <p className="text-[14px] font-medium text-[#0F172A]">{p.name}</p>
-                  <p className="text-[11px] text-[#999]">{p.location?.city || ''} · {p.location?.street || ''}</p>
-                </div>
-                <span className={`text-[11px] font-bold px-2 py-1 rounded uppercase tracking-wider text-white ${
-                  p.status === 'active' ? 'bg-green-500' : p.status === 'pending' ? 'bg-yellow-500' : p.status === 'coming_soon' ? 'bg-blue-500' : 'bg-gray-500'
-                }`}>
-                  {p.status === 'active' ? 'Activa' : p.status === 'pending' ? 'Pendiente' : p.status === 'coming_soon' ? 'Próximo' : p.status || '—'}
-                </span>
-              </Link>
-            ))}
-          </div>
-        )}
+      {/* Category cards */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {CATEGORIES.map((cat) => {
+          const count = categoryCounts.find((c) => c.type === cat.type)?.count || 0;
+          return (
+            <Link
+              key={cat.type}
+              href={`/admin/properties?type=${cat.type}`}
+              className="bg-white rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow text-center"
+            >
+              <p className="text-3xl mb-2">{cat.icon}</p>
+              <p className="text-[24px] font-bold leading-none mb-1" style={{ color: cat.color }}>
+                {count}
+              </p>
+              <p className="text-[11px] font-medium text-[#666] uppercase tracking-wider">{cat.type}</p>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
