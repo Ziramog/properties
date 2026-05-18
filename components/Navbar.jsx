@@ -101,31 +101,36 @@ const Navbar = () => {
               NUESTRA SELECCION
             </Link>
 
-            {/* Propiedades dropdown — Senada .dropdown */}
-            <div className="relative" onMouseEnter={() => openDropdown('props')} onMouseLeave={closeDropdown}>
-              <button className="flex items-center gap-1 text-white hover:text-[var(--color-brand)] transition-colors text-[15px] font-normal tracking-[0.02em] uppercase">
-                Propiedades
-                <svg className={`w-3 h-3 transition-transform ${desktopDropdown === 'props' ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
-              </button>
-              {desktopDropdown === 'props' && (
-                <ul className="absolute top-full left-0 mt-2 bg-black border border-white/10 rounded-md py-2 min-w-[200px] shadow-xl z-50">
-                  {[
-                    { label: 'Casas', query: 'type=Casa' },
-                    { label: 'Departamentos', query: 'type=Departamento' },
-                    { label: 'Campos', query: 'type=Campo' },
-                    { label: 'Inmuebles Comerciales', query: 'type=Inmueble+Comercial' },
-                    { label: 'Terrenos', query: 'type=Terreno' },
-                    { label: 'Todas las propiedades', query: '' },
-                  ].map(item => (
-                    <li key={item.label}>
-                      <Link href={`/properties${item.query ? `?${item.query}` : ''}`} className="block px-5 py-2.5 text-[13px] text-white hover:text-white/70 hover:bg-white/5 transition-colors font-normal uppercase tracking-wider">
-                        {item.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+              <div className="relative" onMouseEnter={() => openDropdown('props')} onMouseLeave={closeDropdown}>
+                <button className="flex items-center gap-1 text-white hover:text-[var(--color-brand)] transition-colors text-[15px] font-normal tracking-[0.02em] uppercase">
+                  Propiedades
+                  <svg className={`w-3 h-3 transition-transform ${desktopDropdown === 'props' ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div style={{
+                  maxHeight: desktopDropdown === 'props' ? '500px' : '0',
+                  opacity: desktopDropdown === 'props' ? 1 : 0,
+                  overflow: 'hidden',
+                  transition: 'max-height 500ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease',
+                  position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', zIndex: 50,
+                }}>
+                  <ul className="bg-black rounded-[6px] min-w-[200px] text-center shadow-[0_8px_14px_-3px_rgba(255,255,255,0.1)] mt-2">
+                    {[
+                      { label: 'Casas', query: 'type=Casa' },
+                      { label: 'Departamentos', query: 'type=Departamento' },
+                      { label: 'Campos', query: 'type=Campo' },
+                      { label: 'Inmuebles Comerciales', query: 'type=Inmueble+Comercial' },
+                      { label: 'Terrenos', query: 'type=Terreno' },
+                      { label: 'Todas las propiedades', query: '' },
+                    ].map(item => (
+                      <li key={item.label} className="border-b border-[#252525] last:border-b-0">
+                        <Link href={`/properties${item.query ? `?${item.query}` : ''}`} className="block text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
 
             <Link href="/#nuestra-historia" className="text-white hover:text-[var(--color-brand)] transition-colors text-[15px] font-normal tracking-[0.02em] uppercase">
               Sobre Nosotros
@@ -144,35 +149,41 @@ const Navbar = () => {
             </Link>
             {/* Show More / Hamburger */}
             <div className="relative" onMouseEnter={() => openDropdown('more')} onMouseLeave={closeDropdown}>
-              <button className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors" aria-label="Más">
-                <span className="space-y-1 flex flex-col items-center">
-                  <span className="block w-[18px] h-[2px] bg-white rounded-sm"></span>
-                  <span className="block w-[18px] h-[2px] bg-white rounded-sm"></span>
-                  <span className="block w-[18px] h-[2px] bg-white rounded-sm"></span>
-                </span>
-              </button>
-              {desktopDropdown === 'more' && (
-                <ul className="absolute top-full right-0 mt-2 bg-black border border-white/10 rounded-md py-2 min-w-[180px] shadow-xl z-50">
-                  {!session && providers && Object.values(providers).map((provider) => (
-                    <li key={provider.id}>
-                        <button onClick={() => signIn(provider.id, { callbackUrl: '/admin' })} className="block w-full text-left px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Ingresar</button>
-                    </li>
-                  ))}
-                  {session && (
-                    <>
-                      {session.user?.role === 'admin' && (
-                        <>
-                          <li><Link href="/admin" className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Panel Admin</Link></li>
-                          <li><Link href="/properties/add" className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Agregar Propiedad</Link></li>
-                        </>
-                      )}
-                      <li><Link href="/profile" className="block px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Perfil</Link></li>
-                      <li><button onClick={() => signOut()} className="block w-full text-left px-5 py-2.5 text-[13px] text-white/70 hover:text-white hover:bg-white/5 transition-colors font-normal">Salir</button></li>
-                    </>
-                  )}
-                </ul>
-              )}
-            </div>
+                <button className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors" aria-label="Más">
+                  <span className="space-y-1 flex flex-col items-center">
+                    <span className="block w-[18px] h-[2px] bg-white rounded-sm"></span>
+                    <span className="block w-[18px] h-[2px] bg-white rounded-sm"></span>
+                    <span className="block w-[18px] h-[2px] bg-white rounded-sm"></span>
+                  </span>
+                </button>
+                <div style={{
+                  maxHeight: desktopDropdown === 'more' ? '500px' : '0',
+                  opacity: desktopDropdown === 'more' ? 1 : 0,
+                  overflow: 'hidden',
+                  transition: 'max-height 500ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease',
+                  position: 'absolute', top: '100%', right: '0', zIndex: 50,
+                }}>
+                  <ul className="bg-black rounded-[6px] min-w-[180px] text-center shadow-[0_8px_14px_-3px_rgba(255,255,255,0.1)] mt-2">
+                    {!session && providers && Object.values(providers).map((provider) => (
+                      <li key={provider.id} className="border-b border-[#252525] last:border-b-0">
+                          <button onClick={() => signIn(provider.id, { callbackUrl: '/admin' })} className="block w-full text-center text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">Ingresar</button>
+                      </li>
+                    ))}
+                    {session && (
+                      <>
+                        {session.user?.role === 'admin' && (
+                          <>
+                            <li className="border-b border-[#252525]"><Link href="/admin" className="block text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">Panel Admin</Link></li>
+                            <li className="border-b border-[#252525]"><Link href="/properties/add" className="block text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">Agregar Propiedad</Link></li>
+                          </>
+                        )}
+                        <li className="border-b border-[#252525] last:border-b-0"><Link href="/profile" className="block text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">Perfil</Link></li>
+                        <li className="border-b border-[#252525] last:border-b-0"><button onClick={() => signOut()} className="block w-full text-center text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">Salir</button></li>
+                      </>
+                    )}
+                  </ul>
+                </div>
+              </div>
           </div>
         </div>
       </header>
