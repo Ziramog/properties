@@ -60,8 +60,8 @@ const FeaturedPropertyCard = ({ property }) => {
           />
 
           {/* Gradient overlay — black default (bottom 1/5), orange on hover (bottom 1/5) */}
-          <div className="absolute inset-0 z-10 group-hover:opacity-0 transition-opacity duration-300" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 20%, transparent 100%)' }} />
-          <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(180deg, transparent 60%, var(--color-brand))' }} />
+          <div className="absolute inset-0 z-10 group-hover:opacity-0 transition-opacity duration-300" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 10%, transparent 100%)' }} />
+          <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(180deg, transparent 80%, var(--color-brand))' }} />
 
           {/* Status badge — top left */}
           {badge && (

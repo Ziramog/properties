@@ -55,15 +55,20 @@ const PropertyCard = ({ property, isSelected = false, onMouseEnter, onMouseLeave
     >
       <Link href={`/properties/${property._id}`} className="block">
         <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-          <Image
-            src={image}
-            alt={property.name}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+            <Image
+              src={image}
+              alt={property.name}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
 
-          {/* Status badge — top left */}
+            {/* Black gradient overlay — default */}
+            <div className="absolute inset-0 z-10 group-hover:opacity-0 transition-opacity duration-300" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 10%, transparent 100%)' }} />
+            {/* Orange gradient overlay — on hover, bottom 20% */}
+            <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(180deg, transparent 80%, var(--color-brand))' }} />
+
+            {/* Status badge — top left */}
           <div className="absolute top-3 left-3 z-10">
             {badge ? (
               <span className="bg-[var(--color-brand)] backdrop-blur-sm text-white text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-md uppercase tracking-wider">
