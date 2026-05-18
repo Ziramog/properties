@@ -234,11 +234,11 @@ const Navbar = () => {
 
         {/* Mobile fullscreen overlay — Senada style */}
         <div
-          className="md:hidden fixed inset-x-0 z-[61] bg-black flex flex-col"
+          className="md:hidden fixed inset-x-0 z-[61] bg-black flex flex-col overflow-x-hidden"
           style={{
             top: 'calc(env(safe-area-inset-top, 8px) + 60px)',
             height: 'calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top, 8px) - 60px)',
-            padding: '80px 12px 20px',
+            padding: '40px 12px 20px',
             overflowY: 'auto',
             transformOrigin: 'top',
             transform: isMobileMenuOpen ? 'scaleY(1)' : 'scaleY(0)',
@@ -316,30 +316,30 @@ const Navbar = () => {
 
           {/* Social icons at bottom */}
           <div className="flex-shrink-0 pt-8 pb-4">
-            <ul className="flex items-center justify-center gap-[40px]">
+            <ul className="flex items-center justify-center gap-3 flex-wrap max-w-full mx-auto px-2">
               <li>
-                <a href={`tel:${PHONE_NUMBER}`} className="flex items-center justify-center w-[48px] h-[48px] rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Llamar">
-                  <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-6 h-6" style={{ filter: 'brightness(0) invert(1)' }} />
+                <a href={`tel:${PHONE_NUMBER}`} className="flex items-center justify-center w-10 h-10 rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Llamar">
+                  <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
                 </a>
               </li>
               <li>
-                <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[48px] h-[48px] rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Email">
-                  <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-6 h-6" style={{ filter: 'brightness(0) invert(1)' }} />
+                <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-10 h-10 rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Email">
+                  <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
                 </a>
               </li>
               <li>
-                <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[48px] h-[48px] rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="WhatsApp">
-                  <FaWhatsapp className="text-white text-2xl" />
+                <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="WhatsApp">
+                  <FaWhatsapp className="text-white text-xl" />
                 </a>
               </li>
               <li>
-                <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[48px] h-[48px] rounded-xl bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Instagram">
-                  <img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-6 h-6" />
+                <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Instagram">
+                  <img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-5 h-5" />
                 </a>
               </li>
               <li>
-                <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[48px] h-[48px] rounded-xl bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Facebook">
-                  <img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-6 h-6" />
+                <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/[0.15] hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Facebook">
+                  <img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-5 h-5" />
                 </a>
               </li>
             </ul>
