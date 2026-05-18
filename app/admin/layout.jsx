@@ -101,7 +101,7 @@ const AdminLayout = ({ children }) => {
             )}
           </svg>
         </button>
-        <Link href="/admin" className="text-white text-sm font-bold uppercase tracking-wider">Panel Admin</Link>
+        <Link href="/admin" className="text-white text-sm font-bold uppercase tracking-wider">ADMIN</Link>
         <div className="flex items-center gap-2 ml-auto">
           <Link href="/admin/profile" className="w-8 h-8 flex items-center justify-center text-white/60 hover:text-white transition-colors" title="Perfil">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
