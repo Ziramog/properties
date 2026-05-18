@@ -24,6 +24,17 @@ export default function StepCustomize({ data, onChange, onNext, onBack }) {
           </div>
         </div>
 
+        <div className="flex items-center justify-between bg-[#F9F9F9] rounded-xl px-4 py-3">
+          <div>
+            <p className="text-sm font-medium text-[#0F172A]">Descripción con IA</p>
+            <p className="text-xs text-[#666]">MiniMax genera un párrafo persuasivo para la propuesta</p>
+          </div>
+          <button onClick={() => update('showAIDescription', !data.showAIDescription)}
+            className={`relative w-12 h-7 rounded-full transition-colors ${data.showAIDescription ? 'bg-[var(--color-brand)]' : 'bg-zinc-300'}`}>
+            <span className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform ${data.showAIDescription ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
+          </button>
+        </div>
+
         <div>
           <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Notas del agente</label>
           <textarea value={data.agentNotes || ''} onChange={(e) => update('agentNotes', e.target.value)} rows={3}
