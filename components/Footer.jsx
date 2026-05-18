@@ -36,10 +36,9 @@ const Footer = () => {
                   className="brightness-0 invert"
                 />
               </Link>
-              <ul>
-                <li className="text-[13px] text-white/70 font-light py-[5px] block">Alta Gracia</li>
-                <li className="text-[13px] text-white/70 font-light py-[5px] block">Córdoba, Argentina</li>
-              </ul>
+                  <ul>
+                    <li className="text-[13px] text-white/70 font-light py-[5px] block">Blvd. Carlos Pellegrini 710, X5186 Alta Gracia, Córdoba</li>
+                  </ul>
               <a href={`mailto:${EMAIL}`} className="flex items-center gap-[5px] text-[13px] text-white font-light py-[5px] hover:text-white/70 transition-colors">
                 <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
                 {EMAIL}
@@ -93,15 +92,20 @@ const Footer = () => {
                       ))}
                     </ul>
                   </li>
-                  {/* LISTADO PREMIUM */}
+                  {/* NUESTRA SELECCION */}
                   <li>
                     <span className="block text-[15px] text-white uppercase font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                      Listado Premium
+                      NUESTRA SELECCION
                     </span>
                     <ul>
                       <li>
                         <Link href="/#propiedades-destacadas" className="block text-[13px] text-white/70 font-light py-[5px] pr-[10px] hover:text-white transition-colors">
                           Propiedades Destacadas
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/properties?type=Casa" className="block text-[13px] text-white/70 font-light py-[5px] pr-[10px] hover:text-white transition-colors">
+                          Ver todas
                         </Link>
                       </li>
                     </ul>
@@ -111,9 +115,9 @@ const Footer = () => {
 
               {/* Newsletter */}
               <div className="newsletter">
-                <h3 className="text-[15px] text-white uppercase font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Newsletter
-                </h3>
+                  <h3 className="text-[15px] text-white uppercase font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                    ENTERATE DE LOS NUEVOS INGRESOS
+                  </h3>
                 <form className="pt-[30px]">
                   <div className="relative mb-3">
                     <img src="/senada/images/icons/ico_newsletter_email.svg" alt="" className="absolute left-[15px] top-1/2 -translate-y-1/2 w-[25px] h-[20px]" style={{ filter: 'brightness(0) invert(1)' }} />
