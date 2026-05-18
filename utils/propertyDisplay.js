@@ -42,9 +42,9 @@ export function getPriceDisplay(property) {
     }
     if (!isNaN(num)) return `U$D ${num.toLocaleString('es-AR')}`;
   }
-  if (property.rates?.monthly) return `$${property.rates.monthly.toLocaleString()}/mes`;
-  if (property.rates?.weekly) return `$${property.rates.weekly.toLocaleString()}/sem`;
-  if (property.rates?.nightly) return `$${property.rates.nightly.toLocaleString()}/noche`;
+  if (property.rates?.monthly) return `U$D ${property.rates.monthly.toLocaleString()}/mes`;
+  if (property.rates?.weekly) return `U$D ${property.rates.weekly.toLocaleString()}/sem`;
+  if (property.rates?.nightly) return `U$D ${property.rates.nightly.toLocaleString()}/noche`;
   return 'Consultar';
 }
 
