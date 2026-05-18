@@ -98,7 +98,7 @@ const Navbar = () => {
           {/* Main Nav — Senada .mainMenu */}
           <nav className="desktop-dropdown flex items-center gap-8 lg:gap-10 ml-auto">
             <Link href="/#propiedades-destacadas" className="text-white hover:text-[var(--color-brand)] transition-colors text-[15px] font-normal tracking-[0.02em] uppercase">
-              Propiedades Destacadas
+              NUESTRA SELECCION
             </Link>
 
             {/* Propiedades dropdown — Senada .dropdown */}
@@ -108,7 +108,7 @@ const Navbar = () => {
                 <svg className={`w-3 h-3 transition-transform ${desktopDropdown === 'props' ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
               </button>
               {desktopDropdown === 'props' && (
-                <ul className="absolute top-full left-0 mt-2 bg-[#222] border border-white/10 rounded-md py-2 min-w-[200px] shadow-xl z-50">
+                <ul className="absolute top-full left-0 mt-2 bg-black border border-white/10 rounded-md py-2 min-w-[200px] shadow-xl z-50">
                   {[
                     { label: 'Casas', query: 'type=Casa' },
                     { label: 'Departamentos', query: 'type=Departamento' },
@@ -134,8 +134,8 @@ const Navbar = () => {
 
           {/* Side Nav — Senada .sideMenu: Phone | Search | Show More */}
           <div className="desktop-dropdown flex items-center gap-4 ml-8">
-            {/* Phone */}
-            <a href={`tel:${PHONE_NUMBER}`} className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors" aria-label="Llamar">
+            {/* Phone → WhatsApp */}
+            <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors" aria-label="WhatsApp">
               <img src="/senada/images/icons/ico_phone.svg" alt="Teléfono" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
             </a>
             {/* Search */}

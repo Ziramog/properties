@@ -166,7 +166,7 @@ const Hero = () => {
         )}
 
         {/* Search Bar */}
-        <div className='absolute left-0 w-full px-4 bottom-[90px] md:static md:w-full md:px-4 md:pb-8'>
+        <div className='absolute left-0 w-full px-4 bottom-[90px] md:static md:w-full md:px-4 md:pb-[70px]'>
           <div
             className='mx-auto max-w-[880px]'
             style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
@@ -184,7 +184,12 @@ const Hero = () => {
                     <input type='text' name='term' className='w-full h-[54px] pl-12 pr-4 rounded-md bg-transparent text-white text-sm outline-none pt-4' value={filters.term || ''} onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))} onFocus={() => setDesktopFocus(true)} onBlur={() => setDesktopFocus(false)} required />
                   </div>
                 </div>
-                <button type='button' onClick={() => setShowMore(!showMore)} className='h-[54px] text-white/55 text-xs font-normal uppercase tracking-wider hover:text-white transition-colors flex-shrink-0 self-end pb-0.5'>{showMore ? 'Mostrar menos' : 'Mostrar más'}</button>
+                <button type='button' onClick={() => setShowMore(!showMore)} className='h-[54px] text-white/55 text-xs font-normal uppercase tracking-wider hover:text-white transition-colors flex-shrink-0 self-end pb-0.5'>
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-[var(--color-brand)] text-lg font-bold leading-none">{showMore ? '−' : '+'}</span>
+                    {showMore ? 'Mostrar menos' : 'Mostrar más'}
+                  </span>
+                </button>
                 <button type='submit' className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold text-sm uppercase tracking-[0.06em] rounded-md h-[54px] px-8 transition-all shadow-lg shadow-[var(--color-brand)]/30 flex-shrink-0 self-end'>Buscar</button>
               </div>
               {/* .bottom-part */}
@@ -232,7 +237,7 @@ const Hero = () => {
 
             {/* Popular locations */}
             <div className='hidden md:flex items-center gap-3 mt-4'>
-              <span className='text-white/40 text-xs font-medium uppercase tracking-wider flex-shrink-0'>Búsquedas Populares:</span>
+              <span className='text-white text-xs font-medium uppercase tracking-wider flex-shrink-0'>Búsquedas Populares:</span>
               {topSearches.length > 0 ? topSearches.map(s => (
                 <a key={s.term} href={`/properties?city=${encodeURIComponent(s.term)}`} className='text-white/55 hover:text-white text-xs font-medium transition-colors px-3 py-1.5 border border-white/10 rounded-full hover:border-white/25'>{s.term}</a>
               )) : (
