@@ -30,18 +30,18 @@ const AREA_RANGES = [
 const BEDROOM_OPTS = ['', '1', '2', '3', '4', '5+'];
 const BATH_OPTS = ['', '1', '2', '3', '4', '5+'];
 const PROPERTY_TYPES_CHECKBOXES = [
-  { value: 'residential', label: 'Residential' },
-  { value: 'multi_family', label: 'Multi Family' },
-  { value: 'land', label: 'Land' },
-  { value: 'commercial', label: 'Commercial' },
+  { value: 'residential', label: 'Residencial' },
+  { value: 'multi_family', label: 'Multi Familiar' },
+  { value: 'land', label: 'Terreno' },
+  { value: 'commercial', label: 'Comercial' },
   { value: 'industrial', label: 'Industrial' },
 ];
 const STATUS_CHECKBOXES = [
-  { value: 'active', label: 'Active' },
-  { value: 'active_under_contract', label: 'Active Under Contract' },
-  { value: 'closed', label: 'Closed' },
-  { value: 'coming_soon', label: 'Coming soon' },
-  { value: 'pending', label: 'Pending' },
+  { value: 'active', label: 'Activo' },
+  { value: 'active_under_contract', label: 'Activo Bajo Contrato' },
+  { value: 'closed', label: 'Cerrado' },
+  { value: 'coming_soon', label: 'Próximamente' },
+  { value: 'pending', label: 'Pendiente' },
 ];
 
 export default function PropertiesSearch({ currentFilters = {} }) {
@@ -99,16 +99,16 @@ export default function PropertiesSearch({ currentFilters = {} }) {
     { name: 'tipo', label: 'Tipo',
       options: TIPO_OPTIONS.filter((t) => t.value).map((t) => ({ value: t.value, label: t.label })),
       className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/6' },
-    { name: 'area', label: 'Sq.Feet',
+    { name: 'area', label: 'Superficie',
       options: AREA_RANGES.filter((r) => r.value).map((r) => ({ value: r.value, label: r.label })),
       className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[14%]' },
-    { name: 'price', label: 'Price',
+    { name: 'price', label: 'Precio',
       options: PRECIO_RANGES.filter((r) => r.value).map((r) => ({ value: r.value, label: r.label })),
       className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[15%]' },
-    { name: 'bedrooms', label: 'Bedrooms',
+    { name: 'bedrooms', label: 'Dormitorios',
       options: BEDROOM_OPTS.filter((o) => o).map((o) => ({ value: o, label: o + '+' })),
       className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[11%]' },
-    { name: 'baths', label: 'Baths',
+    { name: 'baths', label: 'Baños',
       options: BATH_OPTS.filter((o) => o).map((o) => ({ value: o, label: o + '+' })),
       className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[11%]' },
   ];
@@ -247,7 +247,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
             )}
           </div>
 
-          {/* Filter dropdowns (Tipo, Sq.Feet, Price, Bedrooms, Baths) */}
+          {/* Filter dropdowns (Tipo, Superficie, Precio, Dormitorios, Baños) */}
           {FILTER_CONFIG.map((f) => {
             const isOpen = openDropdown === f.name;
             const hasValue = filters[f.name] !== '';
@@ -315,7 +315,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
           }}>
           <div className="inner grid-cols-1 min-[601px]:grid-cols-[2fr_3fr]" style={{ gap: '20px', display: 'grid' }}>
             <div className="left">
-              <p style={{ color: '#a29696', fontSize: '14px', textTransform: 'uppercase', margin: '0 0 15px' }}>Property type</p>
+              <p style={{ color: '#a29696', fontSize: '14px', textTransform: 'uppercase', margin: '0 0 15px' }}>Tipo de Propiedad</p>
               <div className="filter-wrapper" style={{ display: 'grid', columnGap: '20px', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))' }}>
                 {PROPERTY_TYPES_CHECKBOXES.map((pt) => (
                   <div key={pt.value} className="custom-checkbox-wrapper" style={{ marginBottom: '10px' }}>
@@ -344,7 +344,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
               </div>
             </div>
             <div className="right">
-              <p style={{ color: '#a29696', fontSize: '14px', textTransform: 'uppercase', margin: '0 0 15px' }}>Status</p>
+              <p style={{ color: '#a29696', fontSize: '14px', textTransform: 'uppercase', margin: '0 0 15px' }}>Estado</p>
               <div className="filter-wrapper" style={{ display: 'grid', columnGap: '20px', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))' }}>
                 {STATUS_CHECKBOXES.map((st) => (
                   <div key={st.value} className="custom-checkbox-wrapper" style={{ marginBottom: '10px' }}>
@@ -399,7 +399,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
               ? "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23919191'%3E%3Cpath d='M19 13H5v-2h14v2z'/%3E%3C/svg%3E\") center/contain no-repeat"
               : "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23919191'%3E%3Cpath d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'/%3E%3C/svg%3E\") center/contain no-repeat",
           }} />
-          {expanded ? 'Standard Search' : 'Advanced Search'}
+          {expanded ? 'Búsqueda Simple' : 'Búsqueda Avanzada'}
         </button>
       </div>
     </div>
