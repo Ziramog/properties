@@ -6,7 +6,7 @@ import Property from '@/models/Property';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 import AdminPropertyTable from '@/components/admin/AdminPropertyTable';
 
-const AdminPropertiesPage = async () => {
+const AdminPropertiesPage = async ({ searchParams }) => {
   await connectDB();
 
   const properties = await Property.find({}).sort({ createdAt: -1 }).lean();
@@ -23,7 +23,7 @@ const AdminPropertiesPage = async () => {
         Propiedades
       </h1>
 
-      <AdminPropertyTable properties={serialized} />
+      <AdminPropertyTable properties={serialized} defaultType={searchParams?.type || ''} />
     </div>
   );
 };
