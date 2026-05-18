@@ -3,7 +3,8 @@ import { useState } from 'react';
 
 export default function StepPreview({ wizardState, isGenerating, generatedPDFUrl, onGenerate, onBack }) {
   const { properties, client, payment, customization } = wizardState;
-  const totalValue = properties.reduce((sum, p) => sum + (parseFloat(p.price) || 0), 0);
+  const parsePrice = (val) => { if (!val) return 0; return parseFloat(String(val).replace(/[^0-9.]/g, '')) || 0; };
+  const totalValue = properties.reduce((sum, p) => sum + parsePrice(p.price), 0);
 
   return (
     <div>

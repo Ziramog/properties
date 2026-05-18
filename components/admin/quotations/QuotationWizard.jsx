@@ -28,7 +28,13 @@ export default function QuotationWizard() {
   });
 
   const updateState = (key, value) => setWizardState(prev => ({ ...prev, [key]: value }));
-  const totalPrice = wizardState.properties.reduce((sum, p) => sum + (parseFloat(p.price) || 0), 0);
+  const parsePrice = (val) => { if (!val) return 0; return parseFloat(String(val).replace(/[^0-9.]/g, '')) || 0; };
+  const totalPrice = wizardState.properties.reduce((sum, p) => sum + parsePrice(p.price), 0);
+
+  // Calculate payment values from wizard state
+  const paymentData = wizardState.payment;
+  const calcDownPayment = paymentData.downPaymentPct ? totalPrice * (paymentData.downPaymentPct / 100) : 0;
+  const calcInstallmentAmount = paymentData.installments ? (totalPrice - calcDownPayment) / paymentData.installments : 0;
 
   const handleGenerate = async () => {
     setIsGenerating(true);
@@ -40,7 +46,7 @@ export default function QuotationWizard() {
           address: `${p.location?.street || ''}, ${p.location?.city || ''}`,
           type: p.type || '',
           operation: p.operation || 'venta',
-          price: parseFloat(p.price) || 0,
+          price: parsePrice(p.price),
           surface: p.square_feet || null,
           bedrooms: p.beds || null,
           bathrooms: p.baths || null,
@@ -50,9 +56,9 @@ export default function QuotationWizard() {
         payment: {
           type: wizardState.payment.type,
           downPaymentPct: wizardState.payment.downPaymentPct || null,
-          downPayment: wizardState.payment.downPayment || null,
+          downPayment: calcDownPayment || null,
           installments: wizardState.payment.installments || null,
-          installmentAmount: wizardState.payment.installmentAmount || null,
+          installmentAmount: calcInstallmentAmount || null,
           interestRate: wizardState.payment.interestRate || null,
           notes: wizardState.payment.notes || null,
         },
