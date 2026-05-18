@@ -179,7 +179,7 @@ const Hero = () => {
                   <div className='relative'>
                     <svg className='absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white' viewBox='0 0 24 24' fill='currentColor'><path d='M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z'/></svg>
                     <label className={`absolute left-12 pointer-events-none transition-all duration-300 ${desktopFocus || filters.term ? '-top-2 text-[12px] text-white font-medium' : 'top-1/2 -translate-y-1/2 text-sm text-white/40'}`}>
-                      {'Buscar > Ciudad, Zona, Direccion, Palabra Clave'}
+                      {'Buscar > Ciudad, Precio, Tipo Inmueble, Palabra Clave'}
                     </label>
                     <input type='text' name='term' className='w-full h-[54px] pl-12 pr-4 rounded-md bg-transparent text-white text-sm outline-none pt-4' value={filters.term || ''} onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))} onFocus={() => setDesktopFocus(true)} onBlur={() => setDesktopFocus(false)} required />
                   </div>
