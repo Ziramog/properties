@@ -141,10 +141,10 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
           >
-            <h1 className='font-display font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(28px, 2vw, 32px)', lineHeight: 1.0 }}>
+            <h1 className='font-display font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(28px, 2.4vw, 38px)', lineHeight: 1.0 }}>
               {HERO_LINE1}
             </h1>
-            <h2 className='font-display font-normal text-white leading-tight' style={{ fontSize: 'clamp(28px, 2vw, 32px)', lineHeight: 1.0 }}>
+            <h2 className='font-display font-normal text-white leading-tight' style={{ fontSize: 'clamp(28px, 2.4vw, 38px)', lineHeight: 1.0 }}>
               {HERO_LINE2}
             </h2>
             <div className='flex items-center justify-center gap-3 mt-6'>
