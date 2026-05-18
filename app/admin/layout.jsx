@@ -1,8 +1,8 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import logo from '@/assets/images/logo-white.png';
 
@@ -16,26 +16,13 @@ const NAV_ITEMS = [
 
 const AdminLayout = ({ children }) => {
   const pathname = usePathname();
-  const router = useRouter();
   const { data: session } = useSession();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const drawerRef = useRef(null);
 
   const isActive = (href) => {
     if (href === '/admin') return pathname === '/admin';
     return pathname.startsWith(href);
   };
-
-  useEffect(() => {
-    if (!drawerOpen) return;
-    const handleClick = (e) => {
-      if (drawerRef.current && !drawerRef.current.contains(e.target) && e.target.closest('[data-close-drawer]')) {
-        setDrawerOpen(false);
-      }
-    };
-    document.addEventListener('click', handleClick);
-    return () => document.removeEventListener('click', handleClick);
-  }, [drawerOpen]);
 
   useEffect(() => {
     setDrawerOpen(false);
@@ -88,76 +75,48 @@ const AdminLayout = ({ children }) => {
 
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 bg-black z-50 h-[60px] flex items-center px-4 shadow-lg">
-        <button onClick={() => setDrawerOpen(!drawerOpen)} className="text-white mr-3" aria-label="Abrir menú">
+        <button onClick={() => setDrawerOpen(!drawerOpen)} className="text-white mr-3 p-2 -ml-2" aria-label="Abrir menú">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
             {drawerOpen ? (
-              <>
-                <path d="M18 6L6 18" /><path d="M6 6l12 12" />
-              </>
+              <><path d="M18 6L6 18" /><path d="M6 6l12 12" /></>
             ) : (
-              <>
-                <path d="M3 12h18" /><path d="M3 6h18" /><path d="M3 18h18" />
-              </>
+              <><path d="M3 12h18" /><path d="M3 6h18" /><path d="M3 18h18" /></>
             )}
           </svg>
         </button>
         <Link href="/admin" className="text-white text-sm font-bold uppercase tracking-wider">ADMIN</Link>
         <div className="flex items-center gap-2 ml-auto">
           <Link href="/admin/profile" className="w-8 h-8 flex items-center justify-center text-white/60 hover:text-white transition-colors" title="Perfil">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </Link>
           <button onClick={() => signOut({ callbackUrl: '/' })} className="w-8 h-8 flex items-center justify-center text-white/60 hover:text-white transition-colors" title="Cerrar Sesión">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-              <polyline points="16 17 21 12 16 7"/>
-              <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           </button>
         </div>
       </div>
 
-      {/* Mobile drawer overlay */}
+      {/* Mobile overlay + dropdown */}
       {drawerOpen && (
-        <div className="md:hidden fixed inset-0 bg-black/50 z-40" onClick={() => setDrawerOpen(false)} />
-      )}
-
-      {/* Mobile drawer */}
-      <div
-        ref={drawerRef}
-        className={`md:hidden fixed top-0 left-0 bottom-0 w-[260px] bg-black z-50 transform transition-transform duration-300 ease-in-out ${
-          drawerOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-        style={{ paddingTop: '60px' }}
-      >
-        <nav className="py-4">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 px-5 py-3 text-sm transition-colors ${
-                isActive(item.href)
-                  ? 'text-white bg-white/10 border-r-2 border-[var(--color-brand)] font-semibold'
-                  : 'text-white/60 hover:text-white hover:bg-white/5'
-              }`}
-              onClick={() => setDrawerOpen(false)}
-            >
-              <span className="text-base">{item.icon}</span>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10">
-          <button
-            onClick={() => signOut({ callbackUrl: '/' })}
-            className="w-full text-left px-3 py-2 text-xs text-white/40 hover:text-white transition-colors uppercase tracking-wider"
-          >
-            Cerrar Sesión
-          </button>
+        <div className="md:hidden fixed inset-0 z-[60] flex">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setDrawerOpen(false)} />
+          <div className="relative w-[260px] bg-black h-full overflow-y-auto shadow-xl pt-[60px]">
+            <nav className="py-4">
+              <div className="px-5 pb-3 mb-3 border-b border-white/10">
+                <p className="text-white text-sm font-medium truncate">{session?.user?.name || 'Admin'}</p>
+                <p className="text-white/40 text-[11px] truncate">{session?.user?.email || ''}</p>
+              </div>
+              {NAV_ITEMS.map((item) => (
+                <Link key={item.href} href={item.href}
+                  className={`flex items-center gap-3 px-5 py-3.5 text-sm transition-colors ${isActive(item.href) ? 'text-white bg-white/10 border-r-2 border-[var(--color-brand)] font-semibold' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                  onClick={() => setDrawerOpen(false)}>
+                  <span className="text-base">{item.icon}</span>
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Content */}
       <main className="flex-1 md:ml-[240px] pt-[60px] md:pt-0 min-h-screen">
