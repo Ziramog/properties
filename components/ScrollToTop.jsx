@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 
 export default function ScrollToTop({ searchParams }) {
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const el = document.getElementById('resultados');
+    if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
   }, [JSON.stringify(searchParams)]);
   return null;
 }

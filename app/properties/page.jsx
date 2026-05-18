@@ -150,11 +150,13 @@ const PropertiesPage = async ({ searchParams }) => {
       </section>
 
       {/* Sort Bar */}
-      <SortBar
-        total={total}
-        activeSort={sort}
-        searchParams={searchParams}
-      />
+      <div id="resultados">
+        <SortBar
+          total={total}
+          activeSort={sort}
+          searchParams={searchParams}
+        />
+      </div>
 
       {/* Results */}
       <section className="px-4 pb-12">
