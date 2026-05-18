@@ -61,7 +61,7 @@ const FeaturedProperties = ({ properties = [] }) => {
         <div className="text-center">
           <a
             href="/properties"
-            className="inline-block px-8 py-3 border-2 border-primary text-primary text-[13px] font-bold uppercase tracking-wider transition-all duration-200 hover:bg-primary hover:text-white"
+            className="inline-block text-[var(--color-brand)] text-[13px] font-bold uppercase tracking-wider transition-all duration-200 hover:underline underline-offset-4 decoration-[var(--color-brand)]"
           >
             Ver todas las propiedades
           </a>

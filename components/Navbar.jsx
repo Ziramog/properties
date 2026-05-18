@@ -101,11 +101,12 @@ const Navbar = () => {
               NUESTRA SELECCION
             </Link>
 
-              <div className="relative flex flex-col items-center" onMouseEnter={() => openDropdown('props')} onMouseLeave={closeDropdown}>
-                <button className="text-white hover:text-[var(--color-brand)] transition-colors text-[15px] font-normal tracking-[0.02em] uppercase text-center">
+              <div className="relative" onMouseEnter={() => openDropdown('props')} onMouseLeave={closeDropdown}>
+                <button className="text-white hover:text-[var(--color-brand)] transition-colors text-[15px] font-normal tracking-[0.02em] uppercase">
                   Propiedades
                 </button>
-                <svg className={`w-3 h-3 transition-transform mt-0.5 ${desktopDropdown === 'props' ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: desktopDropdown === 'props' ? 'var(--color-brand)' : '#fff' }}>
+                <svg className={`absolute left-1/2 -translate-x-1/2 w-[14px] h-[12px] transition-transform ${desktopDropdown === 'props' ? 'rotate-180' : ''}`}
+                  style={{ top: 'calc(100% + 2px)', color: desktopDropdown === 'props' ? 'var(--color-brand)' : '#fff' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M6 9l6 6 6-6"/>
                 </svg>
                 <div style={{
