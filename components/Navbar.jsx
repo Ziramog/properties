@@ -273,7 +273,7 @@ const Navbar = () => {
                   { href: '/properties?type=Terreno', label: 'Terrenos' },
                   { href: '/properties', label: 'Todas las propiedades' },
                 ].map(l => (
-                  <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] font-light py-2 pl-4 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] font-light uppercase py-2 pl-4 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                     {l.label}
                   </Link>
                 ))}
@@ -285,16 +285,17 @@ const Navbar = () => {
               SOBRE NOSOTROS
             </Link>
 
-            {/* Contacto */}
-            <Link href="/contact" className={`block text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.7s' }} onClick={() => setIsMobileMenuOpen(false)}>
-              Contacto
-            </Link>
-
             {session ? (
               <>
+                {session?.user?.role === 'admin' ? (
+                <Link href="/admin/profile" className={`block text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
+                  Perfil
+                </Link>
+              ) : (
                 <Link href="/profile" className={`block text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
                   Perfil
                 </Link>
+              )}
                 {session.user?.role === 'admin' && (
                   <Link href="/admin" className={`block text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.9s' }} onClick={() => setIsMobileMenuOpen(false)}>
                     Admin
