@@ -126,7 +126,7 @@ const Navbar = () => {
                       { label: 'Todas las propiedades', query: '' },
                     ].map(item => (
                       <li key={item.label} className="border-b border-[#252525] last:border-b-0">
-                        <Link href={`/properties${item.query ? `?${item.query}` : ''}`} className="block text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">
+                        <Link href={`/properties${item.query ? `?${item.query}` : ''}`} className="block text-white text-[13px] px-5 py-[15px] font-normal uppercase tracking-wider hover:opacity-40">
                           {item.label}
                         </Link>
                       </li>
