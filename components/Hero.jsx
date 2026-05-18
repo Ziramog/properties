@@ -135,16 +135,16 @@ const Hero = () => {
       {/* Content */}
       <div className='relative z-10 h-full md:flex md:flex-col'>
         {/* Title Area */}
-        <div className='absolute left-0 w-full px-6 text-center bottom-[350px] md:static md:flex-1 md:flex md:flex-col md:items-center md:justify-center'>
+        <div className='absolute left-0 w-full px-6 text-center bottom-[350px] md:static md:flex-1 md:flex md:flex-col md:items-center md:justify-end md:mb-10'>
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
           >
-            <h1 className='font-display font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(28px, 4.5vw, 76px)', lineHeight: 1.0 }}>
+            <h1 className='font-display font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(28px, 2vw, 32px)', lineHeight: 1.0 }}>
               {HERO_LINE1}
             </h1>
-            <h2 className='font-display font-normal text-white leading-tight' style={{ fontSize: 'clamp(28px, 4.5vw, 76px)', lineHeight: 1.0 }}>
+            <h2 className='font-display font-normal text-white leading-tight' style={{ fontSize: 'clamp(28px, 2vw, 32px)', lineHeight: 1.0 }}>
               {HERO_LINE2}
             </h2>
             <div className='flex items-center justify-center gap-3 mt-6'>
@@ -166,7 +166,7 @@ const Hero = () => {
         )}
 
         {/* Search Bar */}
-        <div className='absolute left-0 w-full px-4 bottom-[90px] md:static md:w-full md:px-4 md:pb-[70px]'>
+        <div className='absolute left-0 w-full px-4 bottom-[90px] md:static md:w-full md:px-4 md:pb-[150px]'>
           <div
             className='mx-auto max-w-[880px]'
             style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
