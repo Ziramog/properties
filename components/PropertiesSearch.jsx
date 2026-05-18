@@ -194,11 +194,11 @@ export default function PropertiesSearch({ currentFilters = {} }) {
   };
 
   return (
-    <div className="search-form" style={{ border: '1px solid #2a2626', borderRadius: '8px', background: '#000' }}>
+    <div className="search-form" style={{ background: '#000' }}>
       <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', lineHeight: '1.2', color: '#fff', padding: '20px 20px 0', margin: 0, fontWeight: 400 }}>
         Búsqueda de Propiedades
       </h1>
-      <form onSubmit={handleSubmit} className="searchForm" style={{ position: 'relative', zIndex: 1 }}>
+      <form onSubmit={handleSubmit} className="searchForm" style={{ border: '1px solid #2a2626', borderRadius: '8px', background: '#000', position: 'relative', zIndex: 1 }}>
         <div className="top-part p-3 min-[651px]:p-5" style={{
           borderRadius: '12px', background: '#000',
           display: 'flex', flexWrap: 'wrap', gap: 0, marginTop: '16px', marginLeft: '20px', marginRight: '20px',
@@ -266,7 +266,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
                 <div onClick={() => setOpenDropdown(isOpen ? null : f.name)}
                   className="w-full h-10 flex items-center justify-between cursor-pointer px-3"
                   style={{ color: hasValue ? '#fff' : '#a29696', fontSize: '16px' }}>
-                  <span>{currentLabel}</span>
+                  <span>{hasValue ? currentLabel : ''}</span>
                   <svg className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: '#888', flexShrink: 0 }}>
                     <path d="M6 9l6 6 6-6"/>
                   </svg>
@@ -301,12 +301,18 @@ export default function PropertiesSearch({ currentFilters = {} }) {
           </button>
         </div>
 
-        {/* Bottom-part expandable filters */}
-        <div className="bottom-part" style={{
-          display: expanded ? 'block' : 'none',
-          background: '#000', borderRadius: '12px', padding: '20px',
-          marginTop: '1px', marginLeft: '20px', marginRight: '20px',
+        {/* Bottom-part expandable filters — slide animation */}
+        <div style={{
+          maxHeight: expanded ? '450px' : '0',
+          opacity: expanded ? 1 : 0,
+          overflow: 'hidden',
+          transition: 'max-height 500ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease',
+          marginLeft: '20px', marginRight: '20px',
         }}>
+          <div className="bottom-part" style={{
+            background: '#000', borderRadius: '12px', padding: '20px',
+            marginTop: '1px',
+          }}>
           <div className="inner grid-cols-1 min-[601px]:grid-cols-[2fr_3fr]" style={{ gap: '20px', display: 'grid' }}>
             <div className="left">
               <p style={{ color: '#a29696', fontSize: '14px', textTransform: 'uppercase', margin: '0 0 15px' }}>Property type</p>
@@ -368,6 +374,7 @@ export default function PropertiesSearch({ currentFilters = {} }) {
             </div>
           </div>
         </div>
+      </div>
       </form>
 
       {/* Toggle + Reset */}
