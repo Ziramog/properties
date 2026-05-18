@@ -247,8 +247,7 @@ const Navbar = () => {
           {/* Nav links */}
           <nav className="flex-1 overflow-y-auto px-4 py-4">
             {/* NUESTRA SELECCION */}
-            <Link href="/properties" className="flex items-center gap-3 text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-              <span className="text-lg">⭐</span>
+            <Link href="/properties" className="block text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
               NUESTRA SELECCION
             </Link>
 
@@ -256,17 +255,15 @@ const Navbar = () => {
             <div className="border-b border-white/[.08]">
               <button
                 onClick={() => setMobileSubOpen(!mobileSubOpen)}
-                className="flex items-center justify-between w-full text-white text-[16px] font-normal py-3 hover:text-[var(--color-brand)] transition-colors"
+                className="flex items-center justify-between w-full text-white text-[28px] font-normal py-[15px] hover:text-[var(--color-brand)] transition-colors"
+                style={{ fontFamily: 'var(--font-heading)' }}
               >
-                <span className="flex items-center gap-3">
-                  <span className="text-lg">🏠</span>
-                  PROPIEDADES
-                </span>
-                <svg className={`w-4 h-4 text-white/40 transition-transform duration-300 ${mobileSubOpen ? 'rotate-90' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                PROPIEDADES
+                <svg className={`w-5 h-5 text-white/40 transition-transform duration-300 ${mobileSubOpen ? 'rotate-90' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M9 18l6-6-6-6"/>
                 </svg>
               </button>
-              <div className={`overflow-hidden transition-all duration-300 ${mobileSubOpen ? 'max-h-[400px] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
+              <div className={`overflow-hidden transition-all duration-300 ${mobileSubOpen ? 'max-h-[300px] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
                 {[
                   { href: '/properties?type=Casa', label: 'Casas' },
                   { href: '/properties?type=Departamento', label: 'Departamentos' },
@@ -274,7 +271,7 @@ const Navbar = () => {
                   { href: '/properties?type=Terreno', label: 'Terrenos' },
                   { href: '/properties', label: 'Todas las propiedades' },
                 ].map(l => (
-                  <Link key={l.href} href={l.href} className="block text-white/60 text-[14px] py-2.5 pl-[44px] hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] font-light py-2 pl-4 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                     {l.label}
                   </Link>
                 ))}
@@ -282,39 +279,33 @@ const Navbar = () => {
             </div>
 
             {/* SOBRE NOSOTROS */}
-            <Link href="/#nuestra-historia" className="flex items-center gap-3 text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-              <span className="text-lg">📖</span>
+            <Link href="/#nuestra-historia" className="block text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
               SOBRE NOSOTROS
             </Link>
 
             {/* Contacto */}
-            <Link href="/contact" className="flex items-center gap-3 text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-              <span className="text-lg">📞</span>
+            <Link href="/contact" className="block text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
               Contacto
             </Link>
 
             {/* Session-based */}
             {session ? (
               <>
-                <Link href="/profile" className="flex items-center gap-3 text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                  <span className="text-lg">👤</span>
+                <Link href="/profile" className="block text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
                   Perfil
                 </Link>
                 {session.user?.role === 'admin' && (
-                  <Link href="/admin" className="flex items-center gap-3 text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                    <span className="text-lg">⚙️</span>
+                  <Link href="/admin" className="block text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" style={{ fontFamily: 'var(--font-heading)' }} onClick={() => setIsMobileMenuOpen(false)}>
                     Admin
                   </Link>
                 )}
-                <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className="flex items-center gap-3 w-full text-left text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors">
-                  <span className="text-lg">🚪</span>
+                <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className="block w-full text-left text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>
                   Salir
                 </button>
               </>
             ) : (
               providers && Object.values(providers).map((provider) => (
-                <button key={provider.id} onClick={() => { signIn(provider.id, { callbackUrl: '/admin' }); setIsMobileMenuOpen(false); }} className="flex items-center gap-3 w-full text-left text-white text-[16px] font-normal py-3 border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors">
-                  <span className="text-lg">🔑</span>
+                <button key={provider.id} onClick={() => { signIn(provider.id, { callbackUrl: '/admin' }); setIsMobileMenuOpen(false); }} className="block w-full text-left text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>
                   Ingresar
                 </button>
               ))
