@@ -8,6 +8,7 @@ import Property from '@/models/Property';
 import User from '@/models/User';
 import PropertiesSearch from '@/components/PropertiesSearch';
 import { getSessionUser } from '@/utils/getSessionUser';
+import ScrollToTop from '@/components/ScrollToTop';
 
 const PropertiesPage = async ({ searchParams }) => {
   await connectDB();
@@ -139,6 +140,7 @@ const PropertiesPage = async ({ searchParams }) => {
 
   return (
     <div className="min-h-screen bg-white">
+      <ScrollToTop searchParams={searchParams} />
       {/* Header + Filters — full dark band */}
       <section className="bg-black px-4 pt-24 md:pt-28 pb-6">
         <div className="max-w-7xl mx-auto">
