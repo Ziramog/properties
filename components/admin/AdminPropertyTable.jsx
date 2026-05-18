@@ -162,13 +162,13 @@ const AdminPropertyTable = ({ properties = [], defaultType = '' }) => {
                 <td className="px-3 md:px-6 py-3">
                   <div className="flex items-center gap-3">
                     {prop.images?.[0]?.url ? (
-                      <img src={prop.images[0].url} alt="" className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover flex-shrink-0 bg-[#f5f5f5]" />
+                      <img src={prop.images[0].url} alt="" className="w-14 h-14 md:w-16 md:h-16 rounded-lg object-cover flex-shrink-0 bg-[#f5f5f5]" />
                     ) : (
-                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-[#f0f0f0] flex items-center justify-center flex-shrink-0">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5" className="w-5 h-5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                      <div className="w-14 h-14 md:w-16 md:h-16 rounded-lg bg-[#f0f0f0] flex items-center justify-center flex-shrink-0">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5" className="w-6 h-6"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                       </div>
                     )}
-                    <div className="min-w-0">
+                    <div className="min-w-0 max-w-[120px] md:max-w-none">
                       <Link href={`/properties/${prop._id}`} className="text-[13px] md:text-[14px] font-semibold text-[#0F172A] hover:text-[var(--color-brand)] transition-colors block leading-tight truncate">
                         {prop.name}
                       </Link>
