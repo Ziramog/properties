@@ -8,6 +8,7 @@ import getTopSearches from '@/app/actions/getTopSearches';
 
 const HERO_LINE1 = 'Vendemos Inmuebles';
 const HERO_LINE2 = 'Construimos Confianza';
+const HERO_TITLE = `${HERO_LINE1}, ${HERO_LINE2}`;
 
 const Hero = () => {
   const router = useRouter();
@@ -141,12 +142,9 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
           >
-            <h1 className='font-display font-normal text-white mb-1 leading-tight' style={{ fontSize: 'clamp(28px, 2.4vw, 38px)', lineHeight: 1.0 }}>
-              {HERO_LINE1}
+            <h1 className='font-display font-normal text-white leading-tight' style={{ fontSize: 'clamp(28px, 2.4vw, 38px)', lineHeight: 1.0 }}>
+              {HERO_TITLE}
             </h1>
-            <h2 className='font-display font-normal text-white leading-tight' style={{ fontSize: 'clamp(28px, 2.4vw, 38px)', lineHeight: 1.0 }}>
-              {HERO_LINE2}
-            </h2>
             <div className='flex items-center justify-center gap-3 mt-6'>
               <span className='w-7 h-px bg-white/40 flex-shrink-0' />
               <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Alta Gracia, Córdoba, Argentina</span>
