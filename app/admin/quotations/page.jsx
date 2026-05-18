@@ -31,7 +31,7 @@ const AdminQuotationsPage = async () => {
           Propuestas
         </h1>
         <Link href="/admin/quotations/new"
-          className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[12px] md:text-[13px] font-bold uppercase tracking-wider px-4 md:px-5 py-2.5 rounded-lg transition-colors">
+          className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[12px] md:text-[13px] font-bold uppercase tracking-wider px-4 md:px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap flex-shrink-0">
           + Nueva Propuesta
         </Link>
       </div>
