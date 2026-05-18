@@ -48,7 +48,7 @@ const PropertyDetails = ({ property }) => {
   const numericPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.-]/g, '')) : null;
 
   const featureItems = [
-    { label: 'Precio', value: numericPrice ? `$${numericPrice.toLocaleString('es-AR')}` : 'Consultar' },
+    { label: 'Precio', value: numericPrice ? `U$D ${numericPrice.toLocaleString('es-AR')}` : 'Consultar' },
     { label: 'Área Total', value: coveredArea ? `${coveredArea.toLocaleString('es-AR')} m²` : null },
     { label: 'Dormitorios', value: property.beds },
     { label: 'Baños', value: property.baths },

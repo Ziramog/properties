@@ -184,7 +184,7 @@ const PropertyGallery = ({ images = [], property }) => {
                 <meta itemProp="priceCurrency" content="USD" />
                 <span itemProp="price" content={numericPrice}>
                   {numericPrice
-                    ? `$${numericPrice.toLocaleString('es-AR')}`
+                    ? `U$D ${numericPrice.toLocaleString('es-AR')}`
                     : 'Consultar'}
                 </span>
               </h2>
