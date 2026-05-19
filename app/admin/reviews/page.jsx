@@ -58,7 +58,7 @@ const AdminReviewsPage = async ({ searchParams }) => {
       {syncResult && (
         <div className={`mb-4 p-4 rounded-xl text-sm ${syncResult.success ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
           {syncResult.success
-            ? `✅ Sync Google — ${syncResult.inserted} nuevas, ${syncResult.updated} actualizadas (${syncResult.durationMs}ms). Tenés ${stats.total} reseñas en total. ${syncResult.overallRating ? `★ ${syncResult.overallRating} en Google (${syncResult.totalRatings} reseñas).` : ''}`
+            ? `✅ Sync Google — ${syncResult.inserted} nuevas, ${syncResult.updated} actualizadas${syncResult.duplicatesRemoved > 0 ? `, ${syncResult.duplicatesRemoved} duplicadas eliminadas` : ''} (${syncResult.durationMs}ms). Tenés ${stats.total} reseñas en total. ${syncResult.overallRating ? `★ ${syncResult.overallRating} en Google (${syncResult.totalRatings} reseñas).` : ''}`
             : `❌ Error: ${syncResult.error}`}
         </div>
       )}
