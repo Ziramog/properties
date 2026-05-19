@@ -158,11 +158,11 @@ const Navbar = () => {
                 }}>
                   <ul className="bg-black rounded-[6px] min-w-[200px] text-center shadow-[0_8px_14px_-3px_rgba(255,255,255,0.1)] mt-2">
                     {[
+                      { href: '/admin/profile', label: 'Perfil' },
                       { href: '/admin', label: 'Panel' },
                       { href: '/admin/properties', label: 'Propiedades' },
                       { href: '/admin/quotations', label: 'Propuestas' },
                       { href: '/admin/reviews', label: 'Reseñas' },
-                      { href: '/admin/profile', label: 'Perfil' },
                     ].map(item => (
                       <li key={item.href} className="border-b border-[#252525] last:border-b-0">
                         <Link href={item.href} className="block text-white text-[13px] px-5 py-[15px] font-normal uppercase tracking-wider hover:opacity-40">
@@ -332,11 +332,11 @@ const Navbar = () => {
                 </button>
                 <div className={`overflow-hidden transition-all duration-300 ${mobileAdminOpen ? 'max-h-[400px] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
                   {[
+                    { href: '/admin/profile', label: 'Perfil' },
                     { href: '/admin', label: 'Panel' },
                     { href: '/admin/properties', label: 'Propiedades' },
                     { href: '/admin/quotations', label: 'Propuestas' },
                     { href: '/admin/reviews', label: 'Reseñas' },
-                    { href: '/admin/profile', label: 'Perfil' },
                   ].map(l => (
                     <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] font-light uppercase py-2 pl-4 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                       {l.label}

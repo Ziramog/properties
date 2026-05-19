@@ -4,11 +4,11 @@ import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 
 const NAV_ITEMS = [
+  { href: '/admin/profile', label: 'Perfil' },
   { href: '/admin', label: 'Panel' },
   { href: '/admin/properties', label: 'Propiedades' },
   { href: '/admin/quotations', label: 'Propuestas' },
   { href: '/admin/reviews', label: 'Reseñas' },
-  { href: '/admin/profile', label: 'Perfil' },
 ];
 
 const AdminLayout = ({ children }) => {
