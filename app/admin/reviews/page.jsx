@@ -3,28 +3,32 @@ export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import connectDB from '@/config/database';
 import Review from '@/models/Review';
+import BusinessInfo from '@/models/BusinessInfo';
 import { syncReviews } from '@/lib/sync/sync-reviews';
 import addManualReview from '@/app/actions/addManualReview';
-import bulkImportReviews from '@/app/actions/bulkImportReviews';
 
 const AdminReviewsPage = async ({ searchParams }) => {
   await connectDB();
 
   const syncNow = searchParams?.sync === '1';
   const showAdd = searchParams?.add === '1';
-  const showBulk = searchParams?.bulk === '1';
   let syncResult = null;
   let addResult = null;
-  let bulkResult = null;
 
   if (syncNow) syncResult = await syncReviews();
 
   const reviews = await Review.find({}).sort({ priority: -1, publishTime: -1 }).lean();
+  const businessInfo = await BusinessInfo.findOne({}).lean();
+  const googleRating = businessInfo?.overallRating;
+  const dbAvg = reviews.length > 0 ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) : 0;
+  const avgRating = googleRating || dbAvg;
+  const totalUserRatings = businessInfo?.totalUserRatings;
   const stats = {
     total: reviews.length,
     featured: reviews.filter(r => r.featured).length,
     hidden: reviews.filter(r => r.hidden).length,
-    avgRating: reviews.length > 0 ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : '—',
+    avgRating: avgRating ? avgRating.toFixed(1) : '—',
+    totalUserRatings,
   };
 
   return (
@@ -39,9 +43,6 @@ const AdminReviewsPage = async ({ searchParams }) => {
           Reseñas Google
         </h1>
         <div className="flex gap-2">
-          <a href={showBulk ? '/admin/reviews' : '/admin/reviews?bulk=1'} className="text-[12px] font-bold uppercase tracking-wider px-4 py-2.5 rounded-lg border border-[var(--color-brand)] text-[var(--color-brand)] hover:bg-[var(--color-brand)] hover:text-white transition-colors">
-            {showBulk ? 'Volver' : 'Importar masivo'}
-          </a>
           <a href={showAdd ? '/admin/reviews' : '/admin/reviews?add=1'} className="text-[12px] font-bold uppercase tracking-wider px-4 py-2.5 rounded-lg border border-[var(--color-brand)] text-[var(--color-brand)] hover:bg-[var(--color-brand)] hover:text-white transition-colors">
             {showAdd ? 'Volver' : '+ Agregar'}
           </a>
@@ -54,7 +55,7 @@ const AdminReviewsPage = async ({ searchParams }) => {
       {syncResult && (
         <div className={`mb-4 p-4 rounded-xl text-sm ${syncResult.success ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
           {syncResult.success
-            ? `✅ Sync Google — ${syncResult.inserted} nuevas, ${syncResult.updated} actualizadas (${syncResult.durationMs}ms). Tenés ${stats.total} reseñas en total.`
+            ? `✅ Sync Google — ${syncResult.inserted} nuevas, ${syncResult.updated} actualizadas (${syncResult.durationMs}ms). Tenés ${stats.total} reseñas en total. ${syncResult.overallRating ? `★ ${syncResult.overallRating} en Google (${syncResult.totalRatings} reseñas).` : ''}`
             : `❌ Error: ${syncResult.error}`}
         </div>
       )}
@@ -95,38 +96,15 @@ const AdminReviewsPage = async ({ searchParams }) => {
         </div>
       )}
 
-      {/* Bulk import form */}
-      {showBulk && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
-          <h2 className="text-[18px] font-semibold text-[#0F172A] mb-4">Importar reseñas masivamente</h2>
-          <p className="text-[13px] text-[#666] mb-4">
-            Pegá un array JSON con todas las reseñas. Copialas desde Google Maps y pasalas a este formato:
-          </p>
-          <pre className="bg-[#F6F6F6] p-4 rounded-xl text-[12px] text-[#333] mb-4 overflow-x-auto whitespace-pre-wrap">
-{`[
-  { "authorName": "Pablo Garcia", "rating": 5, "publishDate": "2023-04-29", "text": "Super recomendable..." },
-  { "authorName": "Juan Perez", "rating": 4, "publishDate": "2022-05-10", "text": "Muy buen servicio..." },
-  { "authorName": "Maria Lopez", "rating": 5, "publishDate": "2024-01-15", "text": "Excelente atencion..." }
-]`}
-          </pre>
-          <form action={bulkImportReviews}>
-            <textarea name="reviewsData" rows={10} className="w-full border border-[#ddd] rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[var(--color-brand)] font-mono mb-4" placeholder='Pega el JSON aqui...' />
-            <button type="submit" className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-sm font-bold px-6 py-2.5 rounded-lg transition-colors uppercase tracking-wider">
-              Importar
-            </button>
-          </form>
-        </div>
-      )}
-
       {/* Stats */}
-      {!showAdd && !showBulk && (
+      {!showAdd && (
         <>
           <div className="grid grid-cols-4 gap-3 mb-6">
             {[
               { value: stats.total, label: 'Total', color: '#0F172A' },
               { value: stats.featured, label: 'Destacadas', color: '#F26B2E' },
               { value: stats.hidden, label: 'Ocultas', color: '#999' },
-              { value: stats.avgRating, label: '★ Promedio', color: '#F59E0B' },
+              { value: stats.avgRating, label: `★ Google${stats.totalUserRatings ? ` (${stats.totalUserRatings})` : ''}`, color: '#F59E0B' },
             ].map(stat => (
               <div key={stat.label} className="bg-white rounded-xl p-3 md:p-4 shadow-sm text-center">
                 <p className="text-[20px] md:text-[28px] font-bold leading-none mb-1" style={{ color: stat.color }}>{stat.value}</p>
@@ -169,7 +147,7 @@ const AdminReviewsPage = async ({ searchParams }) => {
                   {reviews.length === 0 && (
                     <tr>
                       <td colSpan={7} className="px-4 py-12 text-center text-[#999] text-[14px]">
-                        No hay reseñas. Hacé clic en "Sincronizar ahora" para traerlas desde Google o usá "Importar masivo" para cargar todas de una.
+                        No hay reseñas. Hacé clic en "Sincronizar" para traerlas desde Google.
                       </td>
                     </tr>
                   )}

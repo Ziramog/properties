@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import connectDB from '@/config/database';
 import Review from '@/models/Review';
+import BusinessInfo from '@/models/BusinessInfo';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -17,9 +18,10 @@ export async function GET(request) {
 
     const limit = Math.min(parseInt(limitParam || '20', 10), 50);
 
-    const [reviews, allReviews] = await Promise.all([
+    const [reviews, allReviews, businessInfo] = await Promise.all([
       Review.find(query).sort({ priority: -1, publishTime: -1 }).limit(limit).lean(),
       Review.find({ hidden: false }).select('rating').lean(),
+      BusinessInfo.findOne({}).lean(),
     ]);
 
     const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
@@ -29,10 +31,14 @@ export async function GET(request) {
       ratingSum += r.rating;
     }
 
+    const dbAverage = allReviews.length > 0 ? Math.round((ratingSum / allReviews.length) * 10) / 10 : 0;
+
     const summary = {
       totalReviews: allReviews.length,
-      averageRating: allReviews.length > 0 ? Math.round((ratingSum / allReviews.length) * 10) / 10 : 0,
+      averageRating: businessInfo?.overallRating || dbAverage,
       ratingDistribution: distribution,
+      googleOverallRating: businessInfo?.overallRating,
+      totalUserRatings: businessInfo?.totalUserRatings,
       lastUpdated: new Date().toISOString(),
     };
 
