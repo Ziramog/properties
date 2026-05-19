@@ -122,11 +122,11 @@ export default function ReviewsCarousel({ reviews, googleRating, totalRatings })
 
   return (
     <section className="py-0">
-      <div className="bg-[#111] w-full pt-[40px] pb-[40px] md:pt-[60px] md:pb-[60px]">
+      <div className="bg-white w-full pt-[30px] pb-[30px] md:pt-[40px] md:pb-[40px]">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
 
           <div className="text-center mb-8 md:mb-10">
-            <h2 className="text-[28px] md:text-[40px] font-normal text-white leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
               Lo que dicen nuestros clientes
             </h2>
             <div className="flex items-center justify-center gap-3 mb-4">
@@ -139,10 +139,10 @@ export default function ReviewsCarousel({ reviews, googleRating, totalRatings })
             {googleRating && (
               <div className="flex items-center justify-center gap-2 mt-3">
                 <GoogleIcon className="w-4 h-4" />
-                <span className="text-[14px] text-[#999]">
-                  <span className="font-semibold text-white">{googleRating.toFixed(1)}</span>
+                <span className="text-[14px] text-zinc-600">
+                  <span className="font-semibold text-zinc-900">{googleRating.toFixed(1)}</span>
                   {totalRatings && (
-                    <span className="text-[#666]"> — {totalRatings} reseñas en Google</span>
+                    <span className="text-zinc-400"> — {totalRatings} reseñas en Google</span>
                   )}
                 </span>
               </div>
@@ -186,14 +186,14 @@ export default function ReviewsCarousel({ reviews, googleRating, totalRatings })
                 <>
                   <button
                     onClick={prev}
-                    className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 w-10 h-10 items-center justify-center rounded-full bg-[#1a1a1a] border border-[#333] shadow-lg hover:bg-[#222] hover:border-[#444] transition-all z-10 text-white"
+                    className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 w-10 h-10 items-center justify-center rounded-full bg-white border border-zinc-200 shadow-lg hover:bg-zinc-50 hover:border-zinc-300 transition-all z-10"
                     aria-label="Anterior"
                   >
                     <ArrowIcon direction="left" />
                   </button>
                   <button
                     onClick={next}
-                    className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 w-10 h-10 items-center justify-center rounded-full bg-[#1a1a1a] border border-[#333] shadow-lg hover:bg-[#222] hover:border-[#444] transition-all z-10 text-white"
+                    className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 w-10 h-10 items-center justify-center rounded-full bg-white border border-zinc-200 shadow-lg hover:bg-zinc-50 hover:border-zinc-300 transition-all z-10"
                     aria-label="Siguiente"
                   >
                     <ArrowIcon direction="right" />
@@ -209,7 +209,7 @@ export default function ReviewsCarousel({ reviews, googleRating, totalRatings })
                     className={`h-2 rounded-full transition-all duration-300 ${
                       i === activeIndex
                         ? 'bg-[var(--color-brand)] w-7'
-                        : 'bg-[#333] w-2 hover:bg-[#444]'
+                        : 'bg-zinc-200 w-2 hover:bg-zinc-300'
                     }`}
                     aria-label={`Ir a reseña ${i + 1}`}
                   />
