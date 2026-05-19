@@ -33,7 +33,6 @@ const AdminLayout = ({ children }) => {
         <Link href="/" className="min-w-[44px] min-h-[44px] flex items-center justify-center text-white/60 hover:text-white" title="Volver al sitio">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         </Link>
-        <span className="text-white text-sm font-bold uppercase tracking-wider ml-1">ADMIN</span>
         <div className="ml-auto flex items-center gap-1" ref={menuRef}>
           {/* PANEL DE CONTROL dropdown */}
           <div className="relative">
