@@ -1,10 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import logo from '@/assets/images/logo-white.png';
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Panel de Control', icon: '📊' },
@@ -15,16 +12,10 @@ const NAV_ITEMS = [
 ];
 
 const AdminLayout = ({ children }) => {
-  const pathname = usePathname();
   const { data: session } = useSession();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const isActive = (href) => {
-    if (href === '/admin') return pathname === '/admin';
-    return pathname.startsWith(href);
-  };
-
-  useEffect(() => { setDrawerOpen(false); }, [pathname]);
+  useEffect(() => { setDrawerOpen(false); }, []);
 
   useEffect(() => {
     document.body.style.overflow = drawerOpen ? 'hidden' : '';
@@ -40,45 +31,8 @@ const AdminLayout = ({ children }) => {
     return () => window.removeEventListener('resize', setVH);
   }, []);
 
-  const navLinkClass = (href) =>
-    `flex items-center gap-3 px-5 py-3 text-sm transition-colors ${
-      isActive(href)
-        ? 'text-white bg-white/10 border-r-2 border-[var(--color-brand)] font-semibold'
-        : 'text-white/60 hover:text-white hover:bg-white/5'
-    }`;
-
   return (
     <div className="min-h-screen flex bg-[#F6F6F6]">
-      {/* Desktop sidebar */}
-      <aside className="hidden md:flex md:flex-col fixed left-0 top-0 bottom-0 w-[240px] bg-black z-40">
-        <div className="flex items-center h-[60px] px-5 border-b border-white/10">
-          <Link href="/admin" className="flex items-center gap-3">
-            <Image src={logo} alt="Logo" width={32} height={32} className="brightness-0 invert" />
-            <span className="text-white text-sm font-bold uppercase tracking-wider">Panel Admin</span>
-          </Link>
-        </div>
-        <nav className="flex-1 py-4">
-          {NAV_ITEMS.map((item) => (
-            <Link key={item.href} href={item.href} className={navLinkClass(item.href)}>
-              <span className="text-base">{item.icon}</span>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="p-4 border-t border-white/10">
-          <div className="flex items-center gap-3 mb-3 px-2">
-            <div className="w-8 h-8 rounded-full bg-[var(--color-brand)] flex items-center justify-center text-white text-xs font-bold uppercase">
-              {session?.user?.name?.[0] || 'A'}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-xs font-medium truncate">{session?.user?.name || 'Admin'}</p>
-              <p className="text-white/40 text-[10px] truncate">{session?.user?.email || ''}</p>
-            </div>
-          </div>
-          <button onClick={() => signOut({ callbackUrl: '/' })} className="w-full text-left px-2 py-2 text-xs text-white/40 hover:text-white transition-colors uppercase tracking-wider">Cerrar Sesión</button>
-        </div>
-      </aside>
-
       {/* Mobile top bar — Senada style */}
       <div className="md:hidden fixed top-0 left-0 right-0 bg-black z-[60] h-[60px] flex items-center px-4 shadow-lg">
         <button
@@ -132,7 +86,7 @@ const AdminLayout = ({ children }) => {
       </div>
 
       {/* Content */}
-      <main className="flex-1 md:ml-[240px] pt-[60px] md:pt-0 min-h-screen">
+      <main className="flex-1 pt-[60px] md:pt-0 min-h-screen">
         {children}
       </main>
 

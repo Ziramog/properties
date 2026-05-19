@@ -18,6 +18,7 @@ const Navbar = () => {
   const [providers, setProviders] = useState(null);
   const [desktopDropdown, setDesktopDropdown] = useState(null);
   const [mobileSubOpen, setMobileSubOpen] = useState(false);
+  const [mobileAdminOpen, setMobileAdminOpen] = useState(false);
   const dropdownTimeout = useRef(null);
   const pathname = usePathname();
 
@@ -138,6 +139,41 @@ const Navbar = () => {
             <Link href="/#nuestra-historia" className="text-white hover:text-[var(--color-brand)] transition-colors text-[15px] font-normal tracking-[0.02em] uppercase">
               Sobre Nosotros
             </Link>
+
+            {session?.user?.role === 'admin' && (
+              <div className="relative" onMouseEnter={() => openDropdown('admin')} onMouseLeave={closeDropdown}>
+                <button className="text-white hover:text-[var(--color-brand)] transition-colors text-[15px] font-normal tracking-[0.02em] uppercase">
+                  Panel de Control
+                </button>
+                <svg className={`absolute left-1/2 -translate-x-1/2 w-[14px] h-[12px] transition-transform ${desktopDropdown === 'admin' ? 'rotate-180' : ''}`}
+                  style={{ top: 'calc(100% + 2px)', color: desktopDropdown === 'admin' ? 'var(--color-brand)' : '#fff' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+                <div style={{
+                  maxHeight: desktopDropdown === 'admin' ? '500px' : '0',
+                  opacity: desktopDropdown === 'admin' ? 1 : 0,
+                  overflow: 'hidden',
+                  transition: 'max-height 500ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease',
+                  position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', zIndex: 50,
+                }}>
+                  <ul className="bg-black rounded-[6px] min-w-[200px] text-center shadow-[0_8px_14px_-3px_rgba(255,255,255,0.1)] mt-2">
+                    {[
+                      { href: '/admin', label: 'Panel' },
+                      { href: '/admin/properties', label: 'Propiedades' },
+                      { href: '/admin/quotations', label: 'Propuestas' },
+                      { href: '/admin/reviews', label: 'Reseñas' },
+                      { href: '/admin/profile', label: 'Perfil' },
+                    ].map(item => (
+                      <li key={item.href} className="border-b border-[#252525] last:border-b-0">
+                        <Link href={item.href} className="block text-white text-[13px] px-5 py-[15px] font-normal uppercase tracking-wider hover:opacity-40">
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
           </nav>
 
           {/* Side Nav — Senada .sideMenu: Phone | Search | Show More */}
@@ -285,20 +321,40 @@ const Navbar = () => {
               SOBRE NOSOTROS
             </Link>
 
+            {/* PANEL DE CONTROL — expandable, admin only */}
+            {session?.user?.role === 'admin' && (
+              <div className={`border-b border-white/[.08] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ animationDelay: '0.7s' }}>
+                <button
+                  onClick={() => setMobileAdminOpen(!mobileAdminOpen)}
+                  className="flex items-center justify-between w-full text-white text-[28px] font-normal uppercase py-[15px] hover:text-[var(--color-brand)] transition-colors"
+                  style={{ fontFamily: 'var(--font-heading)' }}
+                >
+                  PANEL DE CONTROL
+                  <svg className={`w-5 h-5 text-white/40 transition-transform duration-300 ${mobileAdminOpen ? 'rotate-90' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 18l6-6-6-6"/>
+                  </svg>
+                </button>
+                <div className={`overflow-hidden transition-all duration-300 ${mobileAdminOpen ? 'max-h-[400px] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
+                  {[
+                    { href: '/admin', label: 'Panel' },
+                    { href: '/admin/properties', label: 'Propiedades' },
+                    { href: '/admin/quotations', label: 'Propuestas' },
+                    { href: '/admin/reviews', label: 'Reseñas' },
+                    { href: '/admin/profile', label: 'Perfil' },
+                  ].map(l => (
+                    <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] font-light uppercase py-2 pl-4 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                      {l.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {session ? (
               <>
-                {session?.user?.role === 'admin' ? (
-                <Link href="/admin/profile" className={`block text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
-                  Perfil
-                </Link>
-              ) : (
-                <Link href="/profile" className={`block text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
-                  Perfil
-                </Link>
-              )}
-                {session.user?.role === 'admin' && (
-                  <Link href="/admin" className={`block text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.9s' }} onClick={() => setIsMobileMenuOpen(false)}>
-                    Admin
+                {session?.user?.role !== 'admin' && (
+                  <Link href="/profile" className={`block text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
+                    Perfil
                   </Link>
                 )}
                 <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '1.0s' }}>
