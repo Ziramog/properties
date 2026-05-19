@@ -46,7 +46,7 @@ const propertySchema = new mongoose.Schema({
   },
   price: String,
   operation: { type: String, enum: ['compra', 'venta', 'alquiler'] },
-  status: { type: String, enum: ['active', 'active_under_contract', 'closed', 'coming_soon', 'pending'], default: 'active' },
+  status: { type: String, enum: ['active', 'PRECIO MEJORADO', 'ULTIMA UNIDAD', 'UNICO EN SU TIPO', 'NUEVA'], default: 'active' },
   property_type: { type: String, enum: ['residential', 'multi_family', 'land', 'commercial', 'rental', 'industrial'] },
 }, { timestamps: true });
 

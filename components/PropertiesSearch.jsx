@@ -37,11 +37,10 @@ const PROPERTY_TYPES_CHECKBOXES = [
   { value: 'industrial', label: 'Industrial' },
 ];
 const STATUS_CHECKBOXES = [
-  { value: 'active', label: 'Activo' },
-  { value: 'active_under_contract', label: 'Activo Bajo Contrato' },
-  { value: 'closed', label: 'Cerrado' },
-  { value: 'coming_soon', label: 'Próximamente' },
-  { value: 'pending', label: 'Pendiente' },
+  { value: 'NUEVA', label: 'Nueva' },
+  { value: 'PRECIO MEJORADO', label: 'Precio Mejorado' },
+  { value: 'ULTIMA UNIDAD', label: 'Última Unidad' },
+  { value: 'UNICO EN SU TIPO', label: 'Único en su Tipo' },
 ];
 
 export default function PropertiesSearch({ currentFilters = {} }) {

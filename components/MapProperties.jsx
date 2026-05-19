@@ -57,14 +57,14 @@ const PropertyDetail = ({ property, onClose }) => {
           alt={property.name}
           className="w-full h-full object-cover"
         />
-        {property.status && (
+        {property.status && property.status !== 'active' && (
           <div className="absolute top-3 left-3">
-            <span className={`text-[11px] font-bold px-[10px] py-1 rounded-[6px] uppercase tracking-wider shadow-sm ${
-              property.status === 'available' ? 'bg-[var(--color-success-bg)] text-[var(--color-success)]' :
-              property.status === 'rented' ? 'bg-[var(--color-warn-bg)] text-[var(--color-warn)]' :
-              'bg-white text-[var(--color-brand)] border border-[var(--color-brand)]'
-            }`}>
-              {property.status === 'available' ? 'Disponible' : property.status === 'rented' ? 'Arrendado' : 'A consultar'}
+            <span className="text-[11px] font-bold px-[10px] py-1 rounded-[6px] uppercase tracking-wider shadow-sm bg-[var(--color-brand)] text-white">
+              {property.status === 'NUEVA' ? 'Nueva' :
+               property.status === 'PRECIO MEJORADO' ? 'Precio Mejorado' :
+               property.status === 'ULTIMA UNIDAD' ? 'Última Unidad' :
+               property.status === 'UNICO EN SU TIPO' ? 'Único en su Tipo' :
+               property.status}
             </span>
           </div>
         )}

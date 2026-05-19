@@ -132,11 +132,10 @@ const AdminPropertyTable = ({ properties = [], defaultType = '' }) => {
             </select>
             <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className={selectCls}>
               <option value="">Estado: Todos</option>
-              <option value="active">Activa</option>
-              <option value="pending">Pendiente</option>
-              <option value="closed">Vendida</option>
-              <option value="coming_soon">Próximo</option>
-              <option value="active_under_contract">Bajo Contrato</option>
+              <option value="PRECIO MEJORADO">Precio Mejorado</option>
+              <option value="ULTIMA UNIDAD">Última Unidad</option>
+              <option value="UNICO EN SU TIPO">Único en su Tipo</option>
+              <option value="NUEVA">Nueva</option>
             </select>
           </div>
         </div>

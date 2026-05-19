@@ -58,27 +58,20 @@ export function isNewListing(property, days = 7) {
 }
 
 const STATUS_BADGE_MAP = {
-  active:              { label: 'Activo',      letter: 'A' },
-  closed:              { label: 'Vendido',      letter: 'V' },
-  pending:             { label: 'Pendiente',    letter: 'P' },
-  active_under_contract: { label: 'Bajo Contrato', letter: 'B' },
-  coming_soon:         { label: 'Próximamente', letter: 'C' },
+  'PRECIO MEJORADO':  { label: 'Precio Mejorado', color: 'bg-green-500' },
+  'ULTIMA UNIDAD':    { label: 'Última Unidad',   color: 'bg-[var(--color-brand)]' },
+  'UNICO EN SU TIPO': { label: 'Único en su Tipo', color: 'bg-purple-500' },
+  'NUEVA':            { label: 'Nueva',           color: 'bg-blue-500' },
 };
 
 /**
  * Return a status badge config for a property card, or null if no badge.
- * Priority: non-active statuses > active+new > active
  */
 export function getStatusBadge(property) {
-  // Non-default statuses (closed, pending, etc.) take priority
   if (property.status && property.status !== 'active') {
     return STATUS_BADGE_MAP[property.status] || null;
   }
-  // Active: show "Nuevo" if recently listed, "Activo" otherwise
-  if (isNewListing(property)) {
-    return { label: 'Nuevo', letter: 'N' };
-  }
-  return STATUS_BADGE_MAP.active;
+  return null;
 }
 
 /**

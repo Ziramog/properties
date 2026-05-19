@@ -100,11 +100,11 @@ const PropertyEditForm = ({ property }) => {
       <div className='mb-4'>
         <label htmlFor='status' className='block text-gray-700 font-bold mb-2'>Estado</label>
         <select id='status' name='status' className='border rounded w-full py-2 px-3' defaultValue={property.status || 'active'}>
-          <option value='active'>Activo</option>
-          <option value='active_under_contract'>Bajo Contrato</option>
-          <option value='pending'>Pendiente</option>
-          <option value='coming_soon'>Próximamente</option>
-          <option value='closed'>Vendido</option>
+          <option value='active'>Sin etiqueta</option>
+          <option value='PRECIO MEJORADO'>Precio Mejorado</option>
+          <option value='ULTIMA UNIDAD'>Última Unidad</option>
+          <option value='UNICO EN SU TIPO'>Único en su Tipo</option>
+          <option value='NUEVA'>Nueva</option>
         </select>
       </div>
 

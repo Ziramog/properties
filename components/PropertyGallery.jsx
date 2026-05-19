@@ -17,11 +17,10 @@ const PropertyGallery = ({ images = [], property }) => {
     property?.operation === 'compra' ? 'Compra' : '';
 
   const statusMap = {
-    active: 'Activo',
-    active_under_contract: 'Bajo Contrato',
-    closed: 'Vendido',
-    coming_soon: 'Próximamente',
-    pending: 'Pendiente',
+    'PRECIO MEJORADO': 'Precio Mejorado',
+    'ULTIMA UNIDAD': 'Última Unidad',
+    'UNICO EN SU TIPO': 'Único en su Tipo',
+    'NUEVA': 'Nueva',
   };
   const statusLabel = statusMap[property?.status];
 
