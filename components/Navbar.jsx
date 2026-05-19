@@ -210,13 +210,9 @@ const Navbar = () => {
                     ))}
                     {session && (
                       <>
-                        {session.user?.role === 'admin' && (
-                          <>
-                            <li className="border-b border-[#252525]"><Link href="/admin" className="block text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">Panel Admin</Link></li>
-                            <li className="border-b border-[#252525]"><Link href="/properties/add" className="block text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">Agregar Propiedad</Link></li>
-                          </>
+                        {session.user?.role !== 'admin' && (
+                          <li className="border-b border-[#252525] last:border-b-0"><Link href="/profile" className="block text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">Perfil</Link></li>
                         )}
-                        <li className="border-b border-[#252525] last:border-b-0"><Link href="/profile" className="block text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">Perfil</Link></li>
                         <li className="border-b border-[#252525] last:border-b-0"><button onClick={() => signOut()} className="block w-full text-center text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">Salir</button></li>
                       </>
                     )}
