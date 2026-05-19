@@ -57,7 +57,7 @@ async function importAll() {
       googlePlaceId: process.env.GOOGLE_PLACE_ID || 'ChIJo00-jbBQLZQRpkMte_gAehk',
       reviewId,
       authorName: item.authorName,
-      authorPhoto: null,
+      authorPhoto: item.authorPhoto || null,
       authorUri: null,
       rating: item.rating,
       text: item.text || null,

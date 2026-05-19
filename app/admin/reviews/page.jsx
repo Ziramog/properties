@@ -6,6 +6,9 @@ import Review from '@/models/Review';
 import BusinessInfo from '@/models/BusinessInfo';
 import { syncReviews } from '@/lib/sync/sync-reviews';
 import addManualReview from '@/app/actions/addManualReview';
+import toggleReviewFeatured from '@/app/actions/toggleReviewFeatured';
+import toggleReviewHidden from '@/app/actions/toggleReviewHidden';
+import updateReviewPriority from '@/app/actions/updateReviewPriority';
 
 const AdminReviewsPage = async ({ searchParams }) => {
   await connectDB();
@@ -136,12 +139,34 @@ const AdminReviewsPage = async ({ searchParams }) => {
                       <td className="px-2 md:px-3 py-3 text-[#666] hidden md:table-cell truncate max-w-[300px]">{r.text || '—'}</td>
                       <td className="px-2 md:px-3 py-3 text-[#999] hidden md:table-cell text-[12px]">{r.relativeTimeDescription || r.publishTime?.toISOString().split('T')[0]}</td>
                       <td className="px-2 md:px-3 py-3 text-center">
-                        <span className={`inline-block w-6 h-6 rounded-full text-[12px] leading-6 font-bold ${r.featured ? 'bg-[var(--color-brand)] text-white' : 'bg-[#eee] text-[#999]'}`}>★</span>
+                        <form action={toggleReviewFeatured}>
+                          <input type="hidden" name="reviewId" value={r._id.toString()} />
+                          <input type="hidden" name="current" value={r.featured ? 'true' : 'false'} />
+                          <button type="submit" className={`inline-block w-6 h-6 rounded-full text-[12px] leading-6 font-bold cursor-pointer transition-colors ${r.featured ? 'bg-[var(--color-brand)] text-white' : 'bg-[#eee] text-[#999] hover:bg-[#ddd]'}`}>★</button>
+                        </form>
                       </td>
                       <td className="px-2 md:px-3 py-3 text-center">
-                        <span className={`inline-block w-2.5 h-2.5 rounded-full ${r.hidden ? 'bg-red-500' : 'bg-green-500'}`} />
+                        <form action={toggleReviewHidden}>
+                          <input type="hidden" name="reviewId" value={r._id.toString()} />
+                          <input type="hidden" name="current" value={r.hidden ? 'true' : 'false'} />
+                          <button type="submit" className={`inline-block w-2.5 h-2.5 rounded-full cursor-pointer transition-colors ${r.hidden ? 'bg-red-500' : 'bg-green-500 hover:bg-red-400'}`} />
+                        </form>
                       </td>
-                      <td className="px-3 md:px-4 py-3 text-right text-[#999] text-[12px]">{r.priority}</td>
+                      <td className="px-3 md:px-4 py-3 text-right">
+                        <div className="flex items-center gap-1 justify-end">
+                          <form action={updateReviewPriority}>
+                            <input type="hidden" name="reviewId" value={r._id.toString()} />
+                            <input type="hidden" name="delta" value="-1" />
+                            <button type="submit" className="text-[#999] hover:text-[var(--color-brand)] text-xs leading-none px-1 cursor-pointer">−</button>
+                          </form>
+                          <span className="text-[12px] text-[#999] w-4 text-center leading-none">{r.priority}</span>
+                          <form action={updateReviewPriority}>
+                            <input type="hidden" name="reviewId" value={r._id.toString()} />
+                            <input type="hidden" name="delta" value="1" />
+                            <button type="submit" className="text-[#999] hover:text-[var(--color-brand)] text-xs leading-none px-1 cursor-pointer">+</button>
+                          </form>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                   {reviews.length === 0 && (
