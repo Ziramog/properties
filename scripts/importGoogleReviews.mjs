@@ -30,6 +30,22 @@ const ReviewSchema = new mongoose.Schema({
 
 const Review = mongoose.models.Review || mongoose.model('Review', ReviewSchema);
 
+function getRelativeTime(dateStr) {
+  const now = new Date();
+  const d = new Date(dateStr);
+  const diffMs = now - d;
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  if (diffDays < 1) return 'Hoy';
+  if (diffDays === 1) return 'Ayer';
+  if (diffDays < 7) return `Hace ${diffDays} días`;
+  if (diffDays < 14) return 'Hace 1 semana';
+  if (diffDays < 30) return `Hace ${Math.floor(diffDays / 7)} semanas`;
+  const diffMonths = Math.floor(diffDays / 30);
+  if (diffMonths < 12) return `Hace ${diffMonths} ${diffMonths === 1 ? 'mes' : 'meses'}`;
+  const diffYears = Math.floor(diffMonths / 12);
+  return `Hace ${diffYears} ${diffYears === 1 ? 'año' : 'años'}`;
+}
+
 async function importAll() {
   await mongoose.connect(process.env.MONGODB_URI);
   console.log('✅ Connected to MongoDB\n');
@@ -61,9 +77,9 @@ async function importAll() {
       authorUri: null,
       rating: item.rating,
       text: item.text || null,
-      textOriginalLanguage: 'es',
+      textOriginalLanguage: item.language || 'es',
       publishTime: new Date(dateStr),
-      relativeTimeDescription: item.text ? '—' : '(sin texto)',
+      relativeTimeDescription: getRelativeTime(dateStr),
       googleUpdatedAt: new Date(),
       featured: false,
       hidden: false,
