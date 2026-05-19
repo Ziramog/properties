@@ -41,11 +41,13 @@ export default function ReviewsCarousel({ reviews, googleRating, totalRatings })
   const scrollTo = useCallback((index) => {
     const clamped = Math.max(0, Math.min(index, totalCards - 1));
     setActiveIndex(clamped);
-    if (trackRef.current) {
-      const card = trackRef.current.children[clamped];
-      if (card) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-      }
+    if (trackRef.current && trackRef.current.children[0]) {
+      const cardWidth = trackRef.current.children[0].offsetWidth;
+      const gap = 20;
+      trackRef.current.scrollTo({
+        left: clamped * (cardWidth + gap),
+        behavior: 'smooth'
+      });
     }
   }, [totalCards]);
 
@@ -61,12 +63,16 @@ export default function ReviewsCarousel({ reviews, googleRating, totalRatings })
     if (isPaused || !isCarousel) return;
     autoRotateRef.current = setInterval(() => {
       setActiveIndex(prev => {
-        const next = (prev + 1) % totalCards;
-        if (trackRef.current) {
-          const card = trackRef.current.children[next];
-          if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+        const nextIdx = (prev + 1) % totalCards;
+        if (trackRef.current && trackRef.current.children[0]) {
+          const cardWidth = trackRef.current.children[0].offsetWidth;
+          const gap = 20;
+          trackRef.current.scrollTo({
+            left: nextIdx * (cardWidth + gap),
+            behavior: 'smooth'
+          });
         }
-        return next;
+        return nextIdx;
       });
     }, 5000);
     return () => clearInterval(autoRotateRef.current);
