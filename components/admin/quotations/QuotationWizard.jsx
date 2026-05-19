@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { generateAIDescription } from '@/lib/quotations/ai-description';
 import StepProperty from './steps/StepProperty';
 import StepClient from './steps/StepClient';
 import StepPayment from './steps/StepPayment';
@@ -39,6 +40,26 @@ export default function QuotationWizard() {
   const handleGenerate = async () => {
     setIsGenerating(true);
     try {
+      // Generate AI description if toggled
+      let aiDescription = null;
+      if (wizardState.customization.showAIDescription) {
+        const firstProp = wizardState.properties[0];
+        if (firstProp) {
+          aiDescription = await generateAIDescription({
+            propertyTitle: firstProp.name || '',
+            address: `${firstProp.location?.street || ''}, ${firstProp.location?.city || ''}`,
+            type: firstProp.type || '',
+            surface: firstProp.square_feet || null,
+            bedrooms: firstProp.beds || null,
+            bathrooms: firstProp.baths || null,
+            priceUSD: totalPrice,
+            clientName: wizardState.client.name || 'Cliente',
+            agentNotes: wizardState.customization.agentNotes || '',
+            language: 'es',
+          });
+        }
+      }
+
       const body = {
         properties: wizardState.properties.map(p => ({
           propertyId: p._id,
@@ -64,7 +85,8 @@ export default function QuotationWizard() {
         },
         customization: {
           template: wizardState.customization.template,
-          showAIDescription: false,
+          showAIDescription: wizardState.customization.showAIDescription,
+          aiDescription,
           agentNotes: wizardState.customization.agentNotes || null,
           validUntil: wizardState.customization.validUntil || null,
         },

@@ -104,6 +104,16 @@ export function ModernTemplate({ quotation, branding = {} }) {
             </>
           )}
 
+          {/* AI Description */}
+          {quotation.customization.showAIDescription && quotation.customization.aiDescription && (
+            <>
+              <Text style={{ ...styles.sectionTitle, marginTop: 12 }}>Nuestra Recomendacion</Text>
+              <View style={{ backgroundColor: '#f8f4f0', borderRadius: 6, padding: '10 14', marginBottom: 8 }}>
+                <Text style={{ fontSize: 9, color: '#555', lineHeight: 1.6, fontStyle: 'italic' }}>{quotation.customization.aiDescription}</Text>
+              </View>
+            </>
+          )}
+
           {/* Vencimiento */}
           {quotation.customization.validUntil && (
             <View style={{ marginTop: 12, padding: '8 12', border: '1 solid #e8e8e8', borderRadius: 6 }}>
