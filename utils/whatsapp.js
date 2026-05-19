@@ -1,11 +1,19 @@
 const WA_NUMBER = '5493547563911';
 
 const MESSAGES = {
+
   hero: 'Hola! Estoy buscando una propiedad en las Sierras de Córdoba. ¿Me pueden asesorar?',
+
   seller:
+
     'Hola! Quiero vender mi propiedad. ¿Me pueden dar información sobre su servicio de tasación?',
+
+  rental: 'Hola! Estoy interesado en alquilar una propiedad. ¿Me pueden asesorar con las opciones disponibles?',
+
   float: 'Hola! Estoy navegando su sitio web y tengo una consulta.',
+
   general: 'Hola! Quisiera información sobre propiedades disponibles.',
+
 };
 
 /**
