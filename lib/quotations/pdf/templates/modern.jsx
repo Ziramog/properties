@@ -2,17 +2,21 @@ import { Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/render
 
 const styles = StyleSheet.create({
   page: { fontFamily: 'Helvetica', backgroundColor: '#ffffff', padding: 0, fontSize: 10, color: '#333' },
-  header: { backgroundColor: '#1a1a2e', padding: '24 32', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  headerTitle: { color: '#fff', fontSize: 18, fontWeight: 700 },
+  headerImage: { width: '100%', height: 180, objectFit: 'cover' },
+  headerOverlay: { backgroundColor: '#1a1a2e', padding: '16 32', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  headerLogo: { color: '#F26B2E', fontSize: 22, fontWeight: 700 },
+  headerTitle: { color: '#fff', fontSize: 14, fontWeight: 700 },
   headerSub: { color: 'rgba(255,255,255,0.6)', fontSize: 8, marginTop: 2 },
+  headerRight: { alignItems: 'flex-end' },
+  headerPropName: { color: '#fff', fontSize: 12, fontWeight: 600 },
+  headerPrice: { color: '#F26B2E', fontSize: 14, fontWeight: 700, marginTop: 2 },
   body: { padding: '24 32' },
   sectionTitle: { fontSize: 11, fontWeight: 700, color: '#111', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1, borderBottom: '1 solid #eee', paddingBottom: 4 },
   propertyCard: { border: '1 solid #e8e8e8', borderRadius: 6, marginBottom: 12, overflow: 'hidden' },
-  propertyImage: { width: '100%', height: 160, objectFit: 'cover' },
   propertyInfo: { padding: '10 14' },
   propertyName: { fontSize: 13, fontWeight: 700, color: '#111' },
   propertyAddress: { fontSize: 9, color: '#666', marginTop: 2 },
-  propertyPrice: { fontSize: 16, fontWeight: 700, color: '#1a1a2e', marginTop: 6 },
   statsRow: { flexDirection: 'row', gap: 12, marginTop: 6 },
   stat: { fontSize: 9, color: '#555' },
   row: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4, borderBottom: '1 solid #f5f5f5' },
@@ -21,10 +25,6 @@ const styles = StyleSheet.create({
   highlight: { backgroundColor: '#1a1a2e', borderRadius: 4, padding: '6 10', marginTop: 6 },
   highlightText: { fontSize: 10, fontWeight: 700, color: '#fff', textAlign: 'center' },
   footer: { borderTop: '1 solid #eee', padding: '10 32', flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: '#aaa', position: 'absolute', bottom: 16, left: 0, right: 0 },
-  signatureBox: { flexDirection: 'row', gap: 40, marginTop: 20 },
-  sigCol: { flex: 1, alignItems: 'center' },
-  sigLine: { width: '100%', borderTop: '1 solid #333', marginBottom: 4 },
-  sigLabel: { fontSize: 8, color: '#666' },
 });
 
 export function ModernTemplate({ quotation, branding = {} }) {
@@ -34,10 +34,21 @@ export function ModernTemplate({ quotation, branding = {} }) {
   return (
     <Document title={`Propuesta ${quotation.quoteNumber}`} author={branding.name || 'Roggero & Roma'}>
       <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.headerTitle}>{branding.name || 'Roggero & Roma'}</Text>
-            <Text style={styles.headerSub}>Propuesta Comercial N° {quotation.quoteNumber}</Text>
+        {/* Header with property photo + dark bar */}
+        {prop.photos?.[0] && (
+          <Image style={styles.headerImage} src={prop.photos[0]} />
+        )}
+        <View style={styles.headerOverlay}>
+          <View style={styles.headerLeft}>
+            <Text style={styles.headerLogo}>R&amp;R</Text>
+            <View>
+              <Text style={styles.headerTitle}>{branding.name || 'Roggero & Roma'}</Text>
+              <Text style={styles.headerSub}>Propuesta Comercial N° {quotation.quoteNumber}</Text>
+            </View>
+          </View>
+          <View style={styles.headerRight}>
+            <Text style={styles.headerPropName}>{prop.title}</Text>
+            <Text style={styles.headerPrice}>U$D {fmt(prop.price)}</Text>
           </View>
         </View>
 
@@ -53,11 +64,9 @@ export function ModernTemplate({ quotation, branding = {} }) {
           {/* Propiedad */}
           <Text style={styles.sectionTitle}>Propiedad</Text>
           <View style={styles.propertyCard}>
-            {prop.photos?.[0] && <Image style={styles.propertyImage} src={prop.photos[0]} />}
             <View style={styles.propertyInfo}>
               <Text style={styles.propertyName}>{prop.title}</Text>
               <Text style={styles.propertyAddress}>{prop.address}</Text>
-              <Text style={styles.propertyPrice}>U$D {fmt(prop.price)}</Text>
               <View style={styles.statsRow}>
                 {prop.surface && <Text style={styles.stat}>{prop.surface} m²</Text>}
                 {prop.bedrooms && <Text style={styles.stat}>{prop.bedrooms} dorm.</Text>}
@@ -123,20 +132,6 @@ export function ModernTemplate({ quotation, branding = {} }) {
               </Text>
             </View>
           )}
-
-          {/* Firmas */}
-          <View style={styles.signatureBox}>
-            <View style={styles.sigCol}>
-              <View style={styles.sigLine} />
-              <Text style={styles.sigLabel}>{branding.name || 'Roggero & Roma'}</Text>
-              <Text style={{ ...styles.sigLabel, marginTop: 1 }}>Agente</Text>
-            </View>
-            <View style={styles.sigCol}>
-              <View style={styles.sigLine} />
-              <Text style={styles.sigLabel}>{quotation.client.name}</Text>
-              <Text style={{ ...styles.sigLabel, marginTop: 1 }}>Cliente</Text>
-            </View>
-          </View>
         </View>
 
         <View style={styles.footer} fixed>

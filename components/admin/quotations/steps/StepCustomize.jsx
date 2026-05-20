@@ -31,7 +31,7 @@ export default function StepCustomize({ data, onChange, onNext, onBack }) {
           </div>
           <button onClick={() => update('showAIDescription', !data.showAIDescription)}
             className={`relative w-12 h-7 rounded-full transition-colors ${data.showAIDescription ? 'bg-[var(--color-brand)]' : 'bg-zinc-300'}`}>
-            <span className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform ${data.showAIDescription ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
+            <span className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform ${data.showAIDescription ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
           </button>
         </div>
 
