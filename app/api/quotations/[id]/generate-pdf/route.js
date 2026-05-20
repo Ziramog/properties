@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/config/database';
 import Quotation from '@/models/Quotation';
+import SiteConfig from '@/models/SiteConfig';
 import { renderQuotationPDF } from '@/lib/quotations/pdf/renderer';
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +13,15 @@ async function generatePDF(quotationId) {
     return NextResponse.json({ error: 'Presupuesto no encontrado' }, { status: 404 });
   }
 
-  const pdfBuffer = await renderQuotationPDF(quotation, { name: 'Roggero & Roma' });
+  const config = await SiteConfig.findOne({}).lean();
+
+  const branding = {
+    name: 'Roggero & Roma',
+    logoUrl: config?.logoUrl || null,
+    signatureBase64: quotation.signature || null,
+  };
+
+  const pdfBuffer = await renderQuotationPDF(quotation, branding);
 
   // Try to save to Vercel Blob if token is set
   let pdfUrl = null;

@@ -5,12 +5,14 @@ const styles = StyleSheet.create({
   headerImage: { width: '100%', height: 180, objectFit: 'cover' },
   headerOverlay: { backgroundColor: '#1a1a2e', padding: '16 32', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  headerLogo: { color: '#F26B2E', fontSize: 22, fontWeight: 700 },
+  headerLogoImg: { width: 48, height: 48, objectFit: 'contain' },
+  headerLogoText: { color: '#F26B2E', fontSize: 22, fontWeight: 700 },
   headerTitle: { color: '#fff', fontSize: 14, fontWeight: 700 },
   headerSub: { color: 'rgba(255,255,255,0.6)', fontSize: 8, marginTop: 2 },
   headerRight: { alignItems: 'flex-end' },
   headerPropName: { color: '#fff', fontSize: 12, fontWeight: 600 },
   headerPrice: { color: '#F26B2E', fontSize: 14, fontWeight: 700, marginTop: 2 },
+  headerPriceARS: { color: 'rgba(255,255,255,0.5)', fontSize: 9, marginTop: 1 },
   body: { padding: '24 32' },
   sectionTitle: { fontSize: 11, fontWeight: 700, color: '#111', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1, borderBottom: '1 solid #eee', paddingBottom: 4 },
   propertyCard: { border: '1 solid #e8e8e8', borderRadius: 6, marginBottom: 12, overflow: 'hidden' },
@@ -24,12 +26,20 @@ const styles = StyleSheet.create({
   value: { fontSize: 9, fontWeight: 600, color: '#111' },
   highlight: { backgroundColor: '#1a1a2e', borderRadius: 4, padding: '6 10', marginTop: 6 },
   highlightText: { fontSize: 10, fontWeight: 700, color: '#fff', textAlign: 'center' },
+  signatureContainer: { alignItems: 'flex-end', marginTop: 20 },
+  signatureLine: { width: 180, borderTop: '1 solid #333', marginBottom: 4 },
+  signatureLabel: { fontSize: 8, color: '#666', textAlign: 'center' },
+  signatureImg: { height: 40, objectFit: 'contain', marginBottom: 4 },
   footer: { borderTop: '1 solid #eee', padding: '10 32', flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: '#aaa', position: 'absolute', bottom: 16, left: 0, right: 0 },
 });
 
 export function ModernTemplate({ quotation, branding = {} }) {
   const prop = quotation.properties[0];
   const fmt = (n) => n?.toLocaleString('es-AR') || '0';
+  const fmtARS = (n) => n?.toLocaleString('es-AR') || '0';
+  const hasLogo = !!branding.logoUrl;
+  const hasSignature = !!branding.signatureBase64;
+  const hasARS = prop?.priceARS > 0;
 
   return (
     <Document title={`Propuesta ${quotation.quoteNumber}`} author={branding.name || 'Roggero & Roma'}>
@@ -40,7 +50,11 @@ export function ModernTemplate({ quotation, branding = {} }) {
         )}
         <View style={styles.headerOverlay}>
           <View style={styles.headerLeft}>
-            <Text style={styles.headerLogo}>R&amp;R</Text>
+            {hasLogo ? (
+              <Image style={styles.headerLogoImg} src={branding.logoUrl} />
+            ) : (
+              <Text style={styles.headerLogoText}>R&amp;R</Text>
+            )}
             <View>
               <Text style={styles.headerTitle}>{branding.name || 'Roggero & Roma'}</Text>
               <Text style={styles.headerSub}>Propuesta Comercial N° {quotation.quoteNumber}</Text>
@@ -49,6 +63,9 @@ export function ModernTemplate({ quotation, branding = {} }) {
           <View style={styles.headerRight}>
             <Text style={styles.headerPropName}>{prop.title}</Text>
             <Text style={styles.headerPrice}>U$D {fmt(prop.price)}</Text>
+            {hasARS && (
+              <Text style={styles.headerPriceARS}>ARS $ {fmtARS(prop.priceARS)}</Text>
+            )}
           </View>
         </View>
 
@@ -130,6 +147,16 @@ export function ModernTemplate({ quotation, branding = {} }) {
               <Text style={{ fontSize: 11, fontWeight: 700, marginTop: 2 }}>
                 {new Date(quotation.customization.validUntil).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' })}
               </Text>
+            </View>
+          )}
+
+          {/* Firma digital */}
+          {hasSignature && (
+            <View style={styles.signatureContainer}>
+              <Image style={styles.signatureImg} src={branding.signatureBase64} />
+              <View style={styles.signatureLine} />
+              <Text style={styles.signatureLabel}>{branding.name}</Text>
+              <Text style={{ ...styles.signatureLabel, marginTop: 1 }}>Agente Inmobiliario</Text>
             </View>
           )}
         </View>

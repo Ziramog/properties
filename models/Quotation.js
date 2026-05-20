@@ -7,6 +7,7 @@ const PropertySnapshotSchema = new Schema({
   type: { type: String, required: true },
   operation: { type: String, enum: ['venta', 'alquiler'], required: true },
   price: { type: Number, required: true },
+  priceARS: { type: Number, default: null },
   surface: { type: Number, default: null },
   bedrooms: { type: Number, default: null },
   bathrooms: { type: Number, default: null },
@@ -63,6 +64,7 @@ const QuotationSchema = new Schema({
   customization: { type: CustomizationSchema, default: () => ({}) },
   delivery: { type: DeliverySchema, default: () => ({}) },
   totalValue: { type: Number, required: true },
+  signature: { type: String, default: null },
   createdBy: { type: String, required: true },
 }, { timestamps: true });
 
