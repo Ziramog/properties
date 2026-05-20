@@ -52,31 +52,42 @@ export default function ProfileClient({ user, totalProps, payments, config: init
   };
 
   const saveSignature = async () => {
-    if (!sigRef.current || sigRef.current.isEmpty()) {
-      if (config.signatureBase64) {
-        // Clear signature
-        setSavingSig(true);
-        try {
-          const res = await fetch('/api/site-config', {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ signatureBase64: null }),
-          });
-          if (res.ok) setConfig(prev => ({ ...prev, signatureBase64: null }));
-        } catch (err) { alert('Error: ' + err.message); }
-        finally { setSavingSig(false); }
-      }
-      return;
-    }
     setSavingSig(true);
     try {
-      const dataUrl = sigRef.current.toDataURL('image/png');
-      const res = await fetch('/api/site-config', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ signatureBase64: dataUrl }),
-      });
-      if (res.ok) setConfig(prev => ({ ...prev, signatureBase64: dataUrl }));
+      // Get canvas data regardless of isEmpty state
+      const dataUrl = sigRef.current?.toDataURL?.('image/png');
+
+      // Check if canvas is effectively empty
+      // isEmpty() can be unreliable, so we check if dataUrl is a blank canvas
+      const isEmpty = !dataUrl || dataUrl === 'data:image/png;base64,';
+
+      if (isEmpty) {
+        // Clear signature
+        const res = await fetch('/api/site-config', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ signatureBase64: null }),
+        });
+        if (res.ok) {
+          setConfig(prev => ({ ...prev, signatureBase64: null }));
+        } else {
+          const errData = await res.json();
+          alert('Error al limpiar firma: ' + (errData.error || res.status));
+        }
+      } else {
+        // Save signature
+        const res = await fetch('/api/site-config', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ signatureBase64: dataUrl }),
+        });
+        if (res.ok) {
+          setConfig(prev => ({ ...prev, signatureBase64: dataUrl }));
+        } else {
+          const errData = await res.json();
+          alert('Error al guardar firma: ' + (errData.error || res.status));
+        }
+      }
     } catch (err) {
       alert('Error: ' + err.message);
     } finally {
