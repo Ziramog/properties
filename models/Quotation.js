@@ -64,7 +64,6 @@ const QuotationSchema = new Schema({
   customization: { type: CustomizationSchema, default: () => ({}) },
   delivery: { type: DeliverySchema, default: () => ({}) },
   totalValue: { type: Number, required: true },
-  signature: { type: String, default: null },
   createdBy: { type: String, required: true },
 }, { timestamps: true });
 

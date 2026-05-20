@@ -5,7 +5,6 @@ export default function StepPreview({ wizardState, isGenerating, generatedPDFUrl
   const { properties, client, payment, customization } = wizardState;
   const parsePrice = (val) => { if (!val) return 0; return parseFloat(String(val).replace(/[^0-9.]/g, '')) || 0; };
   const totalValue = properties.reduce((sum, p) => sum + parsePrice(p.price), 0);
-  const hasSignature = !!wizardState.signature;
 
   return (
     <div>
@@ -46,14 +45,6 @@ export default function StepPreview({ wizardState, isGenerating, generatedPDFUrl
           {payment.downPaymentPct > 0 && <p className="text-xs text-[#666]">{payment.downPaymentPct}% anticipo</p>}
           {payment.installments > 0 && <p className="text-xs text-[#666]">{payment.installments} cuotas</p>}
         </div>
-
-        {/* Firma */}
-        {hasSignature && (
-          <div className="bg-[#F9F9F9] rounded-xl p-4">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Firma del Agente</p>
-            <img src={wizardState.signature} alt="Firma" className="h-10" />
-          </div>
-        )}
 
         {/* Generar PDF */}
         {generatedPDFUrl ? (

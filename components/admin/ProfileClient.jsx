@@ -1,12 +1,15 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
+import SignatureCanvas from 'react-signature-canvas';
 
 export default function ProfileClient({ user, totalProps, payments, config: initialConfig }) {
   const [config, setConfig] = useState(initialConfig || {});
   const [uploading, setUploading] = useState(false);
   const [savingRate, setSavingRate] = useState(false);
+  const [savingSig, setSavingSig] = useState(false);
   const [rateValue, setRateValue] = useState(config?.exchangeRateARS || '');
+  const sigRef = useRef(null);
 
   const handleLogoUpload = async (e) => {
     const file = e.target.files[0];
@@ -45,6 +48,45 @@ export default function ProfileClient({ user, totalProps, payments, config: init
       alert('Error: ' + err.message);
     } finally {
       setSavingRate(false);
+    }
+  };
+
+  const saveSignature = async () => {
+    if (!sigRef.current || sigRef.current.isEmpty()) {
+      if (config.signatureBase64) {
+        // Clear signature
+        setSavingSig(true);
+        try {
+          const res = await fetch('/api/site-config', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ signatureBase64: null }),
+          });
+          if (res.ok) setConfig(prev => ({ ...prev, signatureBase64: null }));
+        } catch (err) { alert('Error: ' + err.message); }
+        finally { setSavingSig(false); }
+      }
+      return;
+    }
+    setSavingSig(true);
+    try {
+      const dataUrl = sigRef.current.toDataURL('image/png');
+      const res = await fetch('/api/site-config', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ signatureBase64: dataUrl }),
+      });
+      if (res.ok) setConfig(prev => ({ ...prev, signatureBase64: dataUrl }));
+    } catch (err) {
+      alert('Error: ' + err.message);
+    } finally {
+      setSavingSig(false);
+    }
+  };
+
+  const clearSignaturePad = () => {
+    if (sigRef.current) {
+      sigRef.current.clear();
     }
   };
 
@@ -133,6 +175,35 @@ export default function ProfileClient({ user, totalProps, payments, config: init
         </div>
         {config.exchangeRateARS && (
           <p className="text-[12px] text-[#999] mt-2">Tipo de cambio actual: $ {parseFloat(config.exchangeRateARS).toLocaleString('es-AR')} ARS/USD</p>
+        )}
+      </div>
+
+      {/* Firma digital */}
+      <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm mb-6">
+        <h3 className="text-[18px] font-semibold text-[#0F172A] mb-4">Firma Digital del Agente</h3>
+        <p className="text-[13px] text-[#666] mb-4">Firmá una vez y la firma aparecerá automáticamente en todas las propuestas PDF.</p>
+        <div className="border border-[#ddd] rounded-lg overflow-hidden mb-3">
+          <SignatureCanvas
+            ref={sigRef}
+            penColor="#1a1a1a"
+            canvasProps={{ className: 'w-full h-28', style: { width: '100%', height: 112 } }}
+          />
+        </div>
+        <div className="flex items-center gap-3">
+          <button onClick={clearSignaturePad}
+            className="text-sm text-[#666] hover:text-[#333] border border-[#ddd] px-4 py-2 rounded-lg transition-colors">
+            Limpiar
+          </button>
+          <button onClick={saveSignature} disabled={savingSig}
+            className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-sm font-bold px-5 py-2 rounded-lg transition-colors uppercase tracking-wider disabled:opacity-40">
+            {savingSig ? 'Guardando...' : 'Guardar Firma'}
+          </button>
+        </div>
+        {config.signatureBase64 && (
+          <div className="mt-3 p-3 bg-[#f9f9f9] rounded-lg">
+            <p className="text-[11px] text-[#999] mb-2 uppercase tracking-wider font-bold">Firma actual:</p>
+            <img src={config.signatureBase64} alt="Firma guardada" className="h-10" />
+          </div>
         )}
       </div>
 

@@ -25,7 +25,6 @@ export default function QuotationWizard() {
     client: { name: '', email: '', phone: '', dni: '', notes: '' },
     payment: { type: 'contado', downPaymentPct: 30, downPayment: null, installments: null, installmentAmount: null, interestRate: null, notes: '' },
     customization: { template: 'modern', showAIDescription: false, aiDescription: null, agentNotes: '', validUntil: '' },
-    signature: null,
   });
 
   const updateState = (key, value) => setWizardState(prev => ({ ...prev, [key]: value }));
@@ -105,7 +104,6 @@ export default function QuotationWizard() {
           agentNotes: wizardState.customization.agentNotes || null,
           validUntil: wizardState.customization.validUntil || null,
         },
-        signature: wizardState.signature,
       };
 
       const createRes = await fetch('/api/quotations', {
@@ -159,7 +157,7 @@ export default function QuotationWizard() {
       {step === 1 && <StepProperty selected={wizardState.properties} onChange={(p) => updateState('properties', p)} onNext={() => setStep(2)} />}
       {step === 2 && <StepClient data={wizardState.client} onChange={(c) => updateState('client', c)} onNext={() => setStep(3)} onBack={() => setStep(1)} />}
       {step === 3 && <StepPayment data={wizardState.payment} propertyPrice={totalPrice} onChange={(p) => updateState('payment', p)} onNext={() => setStep(4)} onBack={() => setStep(2)} />}
-      {step === 4 && <StepCustomize data={wizardState.customization} signature={wizardState.signature} onSignatureChange={(sig) => setWizardState(prev => ({ ...prev, signature: sig }))} onChange={(c) => updateState('customization', c)} onNext={() => setStep(5)} onBack={() => setStep(3)} />}
+      {step === 4 && <StepCustomize data={wizardState.customization} onChange={(c) => updateState('customization', c)} onNext={() => setStep(5)} onBack={() => setStep(3)} />}
       {step === 5 && <StepPreview wizardState={wizardState} isGenerating={isGenerating} generatedPDFUrl={generatedPDFUrl} onGenerate={handleGenerate} onBack={() => setStep(4)} />}
     </div>
   );

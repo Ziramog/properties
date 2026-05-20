@@ -39,7 +39,6 @@ export async function POST(request) {
       payment: body.payment,
       customization: body.customization || {},
       totalValue,
-      signature: body.signature || null,
       createdBy: sessionUser.userId,
     });
 

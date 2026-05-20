@@ -18,7 +18,7 @@ async function generatePDF(quotationId) {
   const branding = {
     name: 'Roggero & Roma',
     logoUrl: config?.logoUrl || null,
-    signatureBase64: quotation.signature || null,
+    signatureBase64: config?.signatureBase64 || null,
   };
 
   const pdfBuffer = await renderQuotationPDF(quotation, branding);
