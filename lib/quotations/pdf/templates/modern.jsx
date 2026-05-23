@@ -1,79 +1,88 @@
 import { Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer';
 
 const BRAND = '#F26B2E';
+const INK = '#1A1A18';
+const INK2 = '#4B4B48';
+const INK3 = '#8C8C88';
+const BORDER = '#E8E6E0';
+const SURFACE = '#F7F6F2';
+const WHITE = '#FFFFFF';
+const BLACK = '#000000';
 const MUTED = '#b8b8b8';
 
 const styles = StyleSheet.create({
-  page: { fontFamily: 'Helvetica', backgroundColor: '#ffffff', padding: 0, fontSize: 10, color: '#333' },
+  page: { fontFamily: 'Lato', backgroundColor: WHITE, padding: 0, fontSize: 9, color: INK2, lineHeight: 1.5 },
   /* Hero */
-  heroImage: { width: '100%', height: 180, objectFit: 'cover' },
-  /* Thumbnail grid */
+  heroImage: { width: '100%', height: 200, objectFit: 'cover' },
+  /* Thumbnail mosaic */
   thumbRow: { flexDirection: 'row' },
   thumbCell: { width: '16.666%', height: 55 },
   thumbImg: { width: '100%', height: '100%', objectFit: 'cover' },
   /* Dark info bar */
-  darkBar: { backgroundColor: '#000000', padding: '20 32', minHeight: 180 },
+  darkBar: { backgroundColor: BLACK, paddingTop: 20, paddingBottom: 20, paddingLeft: 32, paddingRight: 32 },
   darkRow: { flexDirection: 'row', justifyContent: 'space-between' },
   leftCol: { flex: 1, paddingRight: 20 },
-  rightCol: { alignItems: 'flex-end', flexShrink: 0, maxWidth: 260 },
+  rightCol: { alignItems: 'flex-end', flexShrink: 0, maxWidth: 240 },
   /* Top logo area */
-  topRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  logoContainer: { width: 36, height: 36, backgroundColor: '#fff', borderRadius: 3, justifyContent: 'center', alignItems: 'center', marginRight: 8, padding: 3 },
+  topRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
+  logoContainer: { width: 36, height: 36, backgroundColor: WHITE, borderRadius: 3, justifyContent: 'center', alignItems: 'center', marginRight: 10, padding: 3 },
   logoImg: { width: '100%', height: '100%', objectFit: 'contain' },
-  logoText: { color: BRAND, fontSize: 18, fontWeight: 700 },
-  agencyBlock: {},
-  agencyName: { color: '#fff', fontSize: 12, fontWeight: 700 },
-  quoteNumber: { color: MUTED, fontSize: 7, marginTop: 1, letterSpacing: 0.5 },
+  logoText: { fontFamily: 'PT Serif', color: BRAND, fontSize: 18, fontWeight: 700 },
+  agencyName: { fontFamily: 'Lato', color: WHITE, fontSize: 11, fontWeight: 700, letterSpacing: 0.3 },
+  quoteNumber: { fontFamily: 'Lato', color: INK3, fontSize: 7, marginTop: 1, letterSpacing: 0.5 },
   /* Property name */
-  propName: { color: '#fff', fontSize: 22, fontWeight: 300, marginBottom: 4, lineHeight: 1.2 },
-  /* Address */
-  address: { color: MUTED, fontSize: 9, marginBottom: 8 },
+  propName: { fontFamily: 'PT Serif', color: WHITE, fontSize: 24, fontWeight: 400, marginBottom: 4, lineHeight: 1.15 },
+  address: { fontFamily: 'Lato', color: MUTED, fontSize: 9, marginBottom: 8, fontWeight: 300 },
   /* Features */
-  featuresRow: { flexDirection: 'row', gap: 10, marginTop: 2 },
-  feature: { color: '#fff', fontSize: 13, fontWeight: 700 },
-  featureSep: { color: MUTED, fontSize: 13, fontWeight: 300 },
-  /* Right column: status/operation */
-  statusBlock: { marginBottom: 8 },
+  featuresRow: { flexDirection: 'row', marginTop: 4 },
+  featureItem: { flexDirection: 'row', alignItems: 'center', marginRight: 14 },
+  featureText: { fontFamily: 'Lato', color: WHITE, fontSize: 12, fontWeight: 700 },
+  /* Operation / Status */
+  statusBlock: { marginBottom: 10 },
   statusLine: { flexDirection: 'row', marginBottom: 2 },
-  statusLabel: { color: MUTED, fontSize: 9, marginRight: 4 },
-  statusValue: { color: '#fff', fontSize: 9, fontWeight: 700 },
+  statusLabel: { fontFamily: 'Lato', color: MUTED, fontSize: 9, marginRight: 6, fontWeight: 300 },
+  statusValue: { fontFamily: 'Lato', color: WHITE, fontSize: 9, fontWeight: 700 },
   /* Price */
-  priceBlock: { alignItems: 'flex-end', marginBottom: 8 },
-  priceUSD: { color: BRAND, fontSize: 28, fontWeight: 700, lineHeight: 1.1 },
-  priceARS: { color: 'rgba(255,255,255,0.4)', fontSize: 9, marginTop: 2 },
+  priceBlock: { alignItems: 'flex-end', marginBottom: 10 },
+  priceUSD: { fontFamily: 'PT Serif', color: BRAND, fontSize: 28, fontWeight: 700, lineHeight: 1.1 },
+  priceARS: { fontFamily: 'Lato', color: 'rgba(255,255,255,0.4)', fontSize: 9, marginTop: 2, fontWeight: 300 },
   /* CTA */
-  cta: { backgroundColor: BRAND, borderRadius: 4, padding: '8 20', marginTop: 4 },
-  ctaText: { color: '#fff', fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.5, textAlign: 'center' },
-  /* Body (unchanged) */
-  body: { padding: '24 32' },
-  sectionTitle: { fontSize: 11, fontWeight: 700, color: '#111', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1, borderBottom: '1 solid #eee', paddingBottom: 4 },
-  propertyCard: { border: '1 solid #e8e8e8', borderRadius: 6, marginBottom: 12, overflow: 'hidden' },
-  propertyInfo: { padding: '10 14' },
-  propertyName: { fontSize: 13, fontWeight: 700, color: '#111' },
-  propertyAddress: { fontSize: 9, color: '#666', marginTop: 2 },
-  statsRow: { flexDirection: 'row', gap: 12, marginTop: 6 },
-  stat: { fontSize: 9, color: '#555' },
-  row: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4, borderBottom: '1 solid #f5f5f5' },
-  label: { fontSize: 9, color: '#666' },
-  value: { fontSize: 9, fontWeight: 600, color: '#111' },
-  highlight: { backgroundColor: '#1a1a2e', borderRadius: 4, padding: '6 10', marginTop: 6 },
-  highlightText: { fontSize: 10, fontWeight: 700, color: '#fff', textAlign: 'center' },
-  signatureContainer: { alignItems: 'flex-end', marginTop: 20 },
-  signatureLine: { width: 180, borderTop: '1 solid #333', marginBottom: 4 },
-  signatureLabel: { fontSize: 8, color: '#666', textAlign: 'center' },
-  signatureImg: { height: 40, objectFit: 'contain', marginBottom: 4 },
-  footer: { borderTop: '1 solid #eee', padding: '10 32', flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: '#aaa', position: 'absolute', bottom: 16, left: 0, right: 0 },
+  cta: { backgroundColor: BRAND, borderRadius: 4, paddingTop: 8, paddingBottom: 8, paddingLeft: 24, paddingRight: 24 },
+  ctaText: { fontFamily: 'Lato', color: WHITE, fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, textAlign: 'center' },
+  /* Body sections */
+  body: { paddingTop: 28, paddingBottom: 28, paddingLeft: 32, paddingRight: 32, backgroundColor: SURFACE },
+  sectionCard: { backgroundColor: WHITE, borderRadius: 10, padding: 18, marginBottom: 14 },
+  sectionHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 12, paddingBottom: 8, borderBottom: `1 solid ${BORDER}` },
+  sectionAccent: { width: 3, height: 16, backgroundColor: BRAND, borderRadius: 2, marginRight: 10 },
+  sectionTitleText: { fontFamily: 'PT Serif', color: INK, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.5 },
+  /* Client */
+  clientName: { fontFamily: 'Lato', color: INK, fontSize: 11, fontWeight: 700, marginBottom: 2 },
+  clientDetail: { fontFamily: 'Lato', color: INK2, fontSize: 9, marginBottom: 1, fontWeight: 400 },
+  /* Payment */
+  paymentRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5, borderBottom: `1 solid ${BORDER}` },
+  paymentLabel: { fontFamily: 'Lato', color: INK3, fontSize: 9, fontWeight: 400 },
+  paymentValue: { fontFamily: 'Lato', color: INK, fontSize: 9, fontWeight: 700 },
+  totalBox: { backgroundColor: INK, borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 14, paddingRight: 14, marginTop: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  totalLabel: { fontFamily: 'Lato', color: 'rgba(255,255,255,0.7)', fontSize: 9, textTransform: 'uppercase', letterSpacing: 1 },
+  totalValue: { fontFamily: 'PT Serif', color: WHITE, fontSize: 14, fontWeight: 700 },
+  /* Notes */
+  notesText: { fontFamily: 'Lato', color: INK2, fontSize: 9, lineHeight: 1.6, fontWeight: 400 },
+  aiBox: { backgroundColor: SURFACE, borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 14, paddingRight: 14 },
+  aiText: { fontFamily: 'Lato', color: INK2, fontSize: 9, lineHeight: 1.6, fontStyle: 'italic', fontWeight: 400 },
+  /* Valid until */
+  validBox: { border: `1 solid ${BORDER}`, borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 12, paddingRight: 12 },
+  validLabel: { fontFamily: 'Lato', color: INK3, fontSize: 8, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 400 },
+  validDate: { fontFamily: 'PT Serif', color: INK, fontSize: 11, fontWeight: 700, marginTop: 2 },
+  /* Signature */
+  signatureContainer: { alignItems: 'flex-end', marginTop: 24 },
+  signatureImg: { height: 36, objectFit: 'contain', marginBottom: 4 },
+  signatureLine: { width: 180, borderTop: `1 solid ${INK}`, marginBottom: 4 },
+  signatureLabel: { fontFamily: 'Lato', color: INK3, fontSize: 8, textAlign: 'center', fontWeight: 400 },
+  /* Footer */
+  footer: { borderTop: `1 solid ${BORDER}`, paddingTop: 10, paddingBottom: 10, paddingLeft: 32, paddingRight: 32, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: INK3, fontFamily: 'Lato', position: 'absolute', bottom: 16, left: 0, right: 0 },
 });
 
 function fmt(n) { return n?.toLocaleString('es-AR') || '0'; }
-
-function fmtARS(n) { return n?.toLocaleString('es-AR') || '0'; }
-
-function operationLabel(op) {
-  if (op === 'venta') return 'Venta';
-  if (op === 'alquiler') return 'Alquiler';
-  return op || '';
-}
 
 const STATUS_MAP = {
   'PRECIO MEJORADO': 'Precio Mejorado',
@@ -82,14 +91,27 @@ const STATUS_MAP = {
   'NUEVA': 'Nueva',
 };
 
+function opLabel(op) {
+  if (op === 'venta') return 'Venta';
+  if (op === 'alquiler') return 'Alquiler';
+  return op || '';
+}
+
+function SectionTitle({ text }) {
+  return (
+    <View style={styles.sectionHeader}>
+      <View style={styles.sectionAccent} />
+      <Text style={styles.sectionTitleText}>{text}</Text>
+    </View>
+  );
+}
+
 export function ModernTemplate({ quotation, branding = {} }) {
   const prop = quotation.properties[0];
   const hasLogo = !!branding.logoUrl;
   const hasSignature = !!branding.signatureBase64;
   const hasARS = prop?.priceARS > 0;
   const thumbs = (prop?.photos || []).slice(1, 7);
-  const opLabel = operationLabel(prop?.operation);
-  const stLabel = STATUS_MAP[prop?.status];
 
   return (
     <Document title={`Propuesta ${quotation.quoteNumber}`} author={branding.name || 'Roggero & Roma'}>
@@ -99,7 +121,7 @@ export function ModernTemplate({ quotation, branding = {} }) {
           <Image style={styles.heroImage} src={prop.photos[0]} />
         )}
 
-        {/* Thumbnail mosaic: 6 photos in 2 rows × 3 cols */}
+        {/* Thumbnail mosaic */}
         {thumbs.length > 0 && (
           <View>
             <View style={styles.thumbRow}>
@@ -124,9 +146,7 @@ export function ModernTemplate({ quotation, branding = {} }) {
         {/* Dark info bar */}
         <View style={styles.darkBar}>
           <View style={styles.darkRow}>
-            {/* Left column */}
             <View style={styles.leftCol}>
-              {/* Logo + Agency */}
               <View style={styles.topRow}>
                 {hasLogo ? (
                   <View style={styles.logoContainer}>
@@ -135,69 +155,56 @@ export function ModernTemplate({ quotation, branding = {} }) {
                 ) : (
                   <Text style={styles.logoText}>R&amp;R</Text>
                 )}
-                <View style={styles.agencyBlock}>
+                <View>
                   <Text style={styles.agencyName}>{branding.name || 'Roggero & Roma'}</Text>
                   <Text style={styles.quoteNumber}>Propuesta N° {quotation.quoteNumber}</Text>
                 </View>
               </View>
-
-              {/* Property name */}
               {prop?.title && (
                 <Text style={styles.propName}>{prop.title}</Text>
               )}
-
-              {/* Address */}
               {prop?.address && (
                 <Text style={styles.address}>{prop.address}</Text>
               )}
-
-              {/* Features */}
               <View style={styles.featuresRow}>
                 {prop?.bedrooms != null && (
-                  <>
-                    <Text style={styles.feature}>{prop.bedrooms} dorm.</Text>
-                    <Text style={styles.featureSep}>|</Text>
-                  </>
+                  <View style={styles.featureItem}>
+                    <Text style={styles.featureText}>{prop.bedrooms} dorm.</Text>
+                  </View>
                 )}
                 {prop?.bathrooms != null && (
-                  <>
-                    <Text style={styles.feature}>{prop.bathrooms} baños</Text>
-                    <Text style={styles.featureSep}>|</Text>
-                  </>
+                  <View style={styles.featureItem}>
+                    <Text style={styles.featureText}>{prop.bathrooms} baños</Text>
+                  </View>
                 )}
                 {prop?.surface != null && (
-                  <Text style={styles.feature}>{fmt(prop.surface)} m²</Text>
+                  <View style={styles.featureItem}>
+                    <Text style={styles.featureText}>{fmt(prop.surface)} m²</Text>
+                  </View>
                 )}
               </View>
             </View>
-
-            {/* Right column */}
             <View style={styles.rightCol}>
-              {/* Operation + Status */}
               <View style={styles.statusBlock}>
-                {opLabel && (
+                {opLabel(prop?.operation) && (
                   <View style={styles.statusLine}>
                     <Text style={styles.statusLabel}>OPERACIÓN</Text>
-                    <Text style={styles.statusValue}>{opLabel}</Text>
+                    <Text style={styles.statusValue}>{opLabel(prop?.operation)}</Text>
                   </View>
                 )}
-                {stLabel && (
+                {STATUS_MAP[prop?.status] && (
                   <View style={styles.statusLine}>
                     <Text style={styles.statusLabel}>ESTADO</Text>
-                    <Text style={styles.statusValue}>{stLabel}</Text>
+                    <Text style={styles.statusValue}>{STATUS_MAP[prop?.status]}</Text>
                   </View>
                 )}
               </View>
-
-              {/* Price */}
               <View style={styles.priceBlock}>
                 <Text style={styles.priceUSD}>U$D {fmt(prop?.price)}</Text>
                 {hasARS && (
-                  <Text style={styles.priceARS}>ARS $ {fmtARS(prop?.priceARS)}</Text>
+                  <Text style={styles.priceARS}>ARS $ {fmt(prop?.priceARS)}</Text>
                 )}
               </View>
-
-              {/* CTA */}
               <View style={styles.cta}>
                 <Text style={styles.ctaText}>Propuesta Comercial</Text>
               </View>
@@ -205,69 +212,80 @@ export function ModernTemplate({ quotation, branding = {} }) {
           </View>
         </View>
 
-        {/* Body (unchanged) */}
+        {/* Body sections */}
         <View style={styles.body}>
-          <Text style={styles.sectionTitle}>Cliente</Text>
-          <View style={{ marginBottom: 12 }}>
-            <Text style={{ fontSize: 12, fontWeight: 600 }}>{quotation.client.name}</Text>
-            {quotation.client.email && <Text style={{ fontSize: 9, color: '#666' }}>{quotation.client.email}</Text>}
-            {quotation.client.phone && <Text style={{ fontSize: 9, color: '#666' }}>{quotation.client.phone}</Text>}
+          {/* Cliente */}
+          <View style={styles.sectionCard}>
+            <SectionTitle text="Cliente" />
+            <Text style={styles.clientName}>{quotation.client.name}</Text>
+            {quotation.client.email && <Text style={styles.clientDetail}>{quotation.client.email}</Text>}
+            {quotation.client.phone && <Text style={styles.clientDetail}>{quotation.client.phone}</Text>}
           </View>
 
-          <Text style={styles.sectionTitle}>Condiciones de pago</Text>
-          {quotation.payment.downPayment > 0 && (
-            <View style={styles.row}>
-              <Text style={styles.label}>Seña / anticipo</Text>
-              <Text style={styles.value}>U$D {fmt(quotation.payment.downPayment)} ({quotation.payment.downPaymentPct}%)</Text>
-            </View>
-          )}
-          {quotation.payment.installments > 0 && (
-            <View style={styles.row}>
-              <Text style={styles.label}>Cuotas</Text>
-              <Text style={styles.value}>{quotation.payment.installments} cuotas de U$D {fmt(quotation.payment.installmentAmount)}</Text>
-            </View>
-          )}
-          {quotation.payment.interestRate > 0 && (
-            <View style={styles.row}>
-              <Text style={styles.label}>Tasa de interés</Text>
-              <Text style={styles.value}>{quotation.payment.interestRate}% anual</Text>
-            </View>
-          )}
-          {quotation.payment.notes && (
-            <View style={styles.row}>
-              <Text style={styles.label}>Notas</Text>
-              <Text style={styles.value}>{quotation.payment.notes}</Text>
-            </View>
-          )}
-          <View style={styles.highlight}>
-            <Text style={styles.highlightText}>Valor total: U$D {fmt(quotation.totalValue)}</Text>
-          </View>
-
-          {quotation.customization.agentNotes && (
-            <>
-              <Text style={{ ...styles.sectionTitle, marginTop: 12 }}>Observaciones</Text>
-              <Text style={{ fontSize: 9, color: '#555', lineHeight: 1.5, marginBottom: 8 }}>{quotation.customization.agentNotes}</Text>
-            </>
-          )}
-
-          {quotation.customization.showAIDescription && quotation.customization.aiDescription && (
-            <>
-              <Text style={{ ...styles.sectionTitle, marginTop: 12 }}>Nuestra Recomendacion</Text>
-              <View style={{ backgroundColor: '#f8f4f0', borderRadius: 6, padding: '10 14', marginBottom: 8 }}>
-                <Text style={{ fontSize: 9, color: '#555', lineHeight: 1.6, fontStyle: 'italic' }}>{quotation.customization.aiDescription}</Text>
+          {/* Condiciones de pago */}
+          <View style={styles.sectionCard}>
+            <SectionTitle text="Condiciones de pago" />
+            {quotation.payment.downPayment > 0 && (
+              <View style={styles.paymentRow}>
+                <Text style={styles.paymentLabel}>Seña / anticipo</Text>
+                <Text style={styles.paymentValue}>U$D {fmt(quotation.payment.downPayment)} ({quotation.payment.downPaymentPct}%)</Text>
               </View>
-            </>
-          )}
+            )}
+            {quotation.payment.installments > 0 && (
+              <View style={styles.paymentRow}>
+                <Text style={styles.paymentLabel}>Cuotas</Text>
+                <Text style={styles.paymentValue}>{quotation.payment.installments} cuotas de U$D {fmt(quotation.payment.installmentAmount)}</Text>
+              </View>
+            )}
+            {quotation.payment.interestRate > 0 && (
+              <View style={styles.paymentRow}>
+                <Text style={styles.paymentLabel}>Tasa de interés</Text>
+                <Text style={styles.paymentValue}>{quotation.payment.interestRate}% anual</Text>
+              </View>
+            )}
+            {quotation.payment.notes && (
+              <View style={styles.paymentRow}>
+                <Text style={styles.paymentLabel}>Notas</Text>
+                <Text style={styles.paymentValue}>{quotation.payment.notes}</Text>
+              </View>
+            )}
+            <View style={styles.totalBox}>
+              <Text style={styles.totalLabel}>Valor total</Text>
+              <Text style={styles.totalValue}>U$D {fmt(quotation.totalValue)}</Text>
+            </View>
+          </View>
 
-          {quotation.customization.validUntil && (
-            <View style={{ marginTop: 12, padding: '8 12', border: '1 solid #e8e8e8', borderRadius: 6 }}>
-              <Text style={{ fontSize: 8, color: '#999', textTransform: 'uppercase', letterSpacing: 1 }}>Oferta válida hasta</Text>
-              <Text style={{ fontSize: 11, fontWeight: 700, marginTop: 2 }}>
-                {new Date(quotation.customization.validUntil).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' })}
-              </Text>
+          {/* Observaciones */}
+          {quotation.customization.agentNotes && (
+            <View style={styles.sectionCard}>
+              <SectionTitle text="Observaciones" />
+              <Text style={styles.notesText}>{quotation.customization.agentNotes}</Text>
             </View>
           )}
 
+          {/* AI Description */}
+          {quotation.customization.showAIDescription && quotation.customization.aiDescription && (
+            <View style={styles.sectionCard}>
+              <SectionTitle text="Nuestra Recomendación" />
+              <View style={styles.aiBox}>
+                <Text style={styles.aiText}>{quotation.customization.aiDescription}</Text>
+              </View>
+            </View>
+          )}
+
+          {/* Vencimiento */}
+          {quotation.customization.validUntil && (
+            <View style={styles.sectionCard}>
+              <View style={styles.validBox}>
+                <Text style={styles.validLabel}>Oferta válida hasta</Text>
+                <Text style={styles.validDate}>
+                  {new Date(quotation.customization.validUntil).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                </Text>
+              </View>
+            </View>
+          )}
+
+          {/* Firma digital */}
           {hasSignature && (
             <View style={styles.signatureContainer}>
               <Image style={styles.signatureImg} src={branding.signatureBase64} />
@@ -278,6 +296,7 @@ export function ModernTemplate({ quotation, branding = {} }) {
           )}
         </View>
 
+        {/* Footer */}
         <View style={styles.footer} fixed>
           <Text>{branding.name || 'Roggero & Roma Inmobiliaria'}</Text>
           <Text>Generado el {new Date().toLocaleDateString('es-AR')}</Text>
