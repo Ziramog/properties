@@ -86,6 +86,7 @@ export default function QuotationWizard() {
           bedrooms: p.beds || null,
           bathrooms: p.baths || null,
           photos: (p.images || []).map(i => i?.url).filter(Boolean),
+          status: p.status || null,
         })),
         client: wizardState.client,
         payment: {

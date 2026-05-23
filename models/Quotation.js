@@ -13,6 +13,7 @@ const PropertySnapshotSchema = new Schema({
   bathrooms: { type: Number, default: null },
   photos: [{ type: String }],
   listingUrl: { type: String, default: null },
+  status: { type: String, default: null },
 }, { _id: false });
 
 const PaymentSchema = new Schema({
