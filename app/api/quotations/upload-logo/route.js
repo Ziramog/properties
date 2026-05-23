@@ -42,7 +42,14 @@ export async function POST(request) {
     }
 
     if (!logoUrl) {
-      return NextResponse.json({ error: 'Error al subir el logo. Configurá BLOB_READ_WRITE_TOKEN en Vercel.' }, { status: 500 });
+      // Fallback: store as base64 data URI directly in MongoDB
+      const base64 = `data:image/png;base64,${buffer.toString('base64')}`;
+      await SiteConfig.findOneAndUpdate(
+        {},
+        { $set: { logoUrl: base64 } },
+        { upsert: true }
+      );
+      return NextResponse.json({ logoUrl: base64 });
     }
 
     await SiteConfig.findOneAndUpdate(

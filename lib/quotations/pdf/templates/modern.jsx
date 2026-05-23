@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   headerImage: { width: '100%', height: 180, objectFit: 'cover' },
   headerOverlay: { backgroundColor: '#1a1a2e', padding: '16 32', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  headerLogoImg: { width: 48, height: 48, objectFit: 'contain' },
+  headerLogoImg: { width: 130, height: 48, objectFit: 'contain' },
   headerLogoText: { color: '#F26B2E', fontSize: 22, fontWeight: 700 },
   headerTitle: { color: '#fff', fontSize: 14, fontWeight: 700 },
   headerSub: { color: 'rgba(255,255,255,0.6)', fontSize: 8, marginTop: 2 },
@@ -51,7 +51,9 @@ export function ModernTemplate({ quotation, branding = {} }) {
         <View style={styles.headerOverlay}>
           <View style={styles.headerLeft}>
             {hasLogo ? (
-              <Image style={styles.headerLogoImg} src={branding.logoUrl} />
+              <View style={{ width: 130, height: 48, backgroundColor: '#fff', borderRadius: 4, justifyContent: 'center', alignItems: 'center', padding: 4 }}>
+                <Image style={styles.headerLogoImg} src={branding.logoUrl} />
+              </View>
             ) : (
               <Text style={styles.headerLogoText}>R&amp;R</Text>
             )}

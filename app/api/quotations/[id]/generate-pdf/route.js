@@ -1,10 +1,23 @@
 import { NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
 import connectDB from '@/config/database';
 import Quotation from '@/models/Quotation';
 import SiteConfig from '@/models/SiteConfig';
 import { renderQuotationPDF } from '@/lib/quotations/pdf/renderer';
 
 export const dynamic = 'force-dynamic';
+
+function getDefaultLogoBase64() {
+  try {
+    const filePath = path.join(process.cwd(), 'public', 'images', 'LOGO R&R 2023.png');
+    const buffer = fs.readFileSync(filePath);
+    return `data:image/png;base64,${buffer.toString('base64')}`;
+  } catch (e) {
+    console.log('[generate-pdf] Logo fallback failed:', e.message);
+    return null;
+  }
+}
 
 async function generatePDF(quotationId) {
   await connectDB();
@@ -17,7 +30,7 @@ async function generatePDF(quotationId) {
 
   const branding = {
     name: 'Roggero & Roma',
-    logoUrl: config?.logoUrl || null,
+    logoUrl: config?.logoUrl || getDefaultLogoBase64(),
     signatureBase64: config?.signatureBase64 || null,
   };
 

@@ -211,9 +211,19 @@ export default function ProfileClient({ user, totalProps, payments, config: init
           </button>
         </div>
         {config.signatureBase64 && (
-          <div className="mt-3 p-3 bg-[#f9f9f9] rounded-lg">
-            <p className="text-[11px] text-[#999] mb-2 uppercase tracking-wider font-bold">Firma actual:</p>
-            <img src={config.signatureBase64} alt="Firma guardada" className="h-10" />
+          <div className="mt-4 p-4 bg-[#f0faf0] border border-[#b8e6b8] rounded-lg">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center text-white text-[11px] font-bold">✓</span>
+              <span className="text-[12px] font-bold text-green-700 uppercase tracking-wider">Firma guardada y en uso</span>
+            </div>
+            <p className="text-[11px] text-[#666] mb-2">Esta firma se incluirá automáticamente al pie de todas las propuestas PDF.</p>
+            <div className="bg-white rounded-lg border border-[#e0e0e0] p-3 inline-block">
+              <img src={config.signatureBase64} alt="Firma guardada" className="h-10" />
+            </div>
+            <div className="mt-3 flex items-center gap-2 text-[11px] text-[#666] bg-white/50 rounded px-3 py-2">
+              <span className="text-green-600 font-bold">→</span>
+              <span>Aparecerá en: <span className="font-medium text-[#333]">Propuestas &gt; Generar PDF &gt; Pie de página</span></span>
+            </div>
           </div>
         )}
       </div>
