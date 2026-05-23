@@ -34,7 +34,13 @@ async function generatePDF(quotationId) {
     signatureBase64: config?.signatureBase64 || null,
   };
 
-  const pdfBuffer = await renderQuotationPDF(quotation, branding);
+  let pdfBuffer;
+  try {
+    pdfBuffer = await renderQuotationPDF(quotation, branding);
+  } catch (renderErr) {
+    console.error('[generate-pdf] Render failed:', renderErr);
+    return NextResponse.json({ error: 'Error al renderizar PDF: ' + renderErr.message }, { status: 500 });
+  }
 
   // Try to save to Vercel Blob if token is set
   let pdfUrl = null;
@@ -73,9 +79,19 @@ async function generatePDF(quotationId) {
 }
 
 export async function POST(request, { params }) {
-  return generatePDF(params.id);
+  try {
+    return await generatePDF(params.id);
+  } catch (err) {
+    console.error('[generate-pdf] Error:', err);
+    return NextResponse.json({ error: err.message || 'Error al generar PDF' }, { status: 500 });
+  }
 }
 
 export async function GET(request, { params }) {
-  return generatePDF(params.id);
+  try {
+    return await generatePDF(params.id);
+  } catch (err) {
+    console.error('[generate-pdf] Error:', err);
+    return NextResponse.json({ error: err.message || 'Error al generar PDF' }, { status: 500 });
+  }
 }
