@@ -11,7 +11,7 @@ const BLACK = '#000000';
 const MUTED = '#b8b8b8';
 
 const styles = StyleSheet.create({
-  page: { fontFamily: 'Lato', backgroundColor: WHITE, padding: 0, fontSize: 9, color: INK2, lineHeight: 1.5 },
+  page: { fontFamily: 'Helvetica', backgroundColor: WHITE, padding: 0, fontSize: 9, color: INK2, lineHeight: 1.5 },
   /* Hero */
   heroImage: { width: '100%', height: 200, objectFit: 'cover' },
   /* Thumbnail mosaic */
@@ -27,59 +27,59 @@ const styles = StyleSheet.create({
   topRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
   logoContainer: { width: 36, height: 36, backgroundColor: WHITE, borderRadius: 3, justifyContent: 'center', alignItems: 'center', marginRight: 10, padding: 3 },
   logoImg: { width: '100%', height: '100%', objectFit: 'contain' },
-  logoText: { fontFamily: 'PT Serif', color: BRAND, fontSize: 18, fontWeight: 700 },
-  agencyName: { fontFamily: 'Lato', color: WHITE, fontSize: 11, fontWeight: 700, letterSpacing: 0.3 },
-  quoteNumber: { fontFamily: 'Lato', color: INK3, fontSize: 7, marginTop: 1, letterSpacing: 0.5 },
+  logoText: { fontFamily: 'Helvetica', color: BRAND, fontSize: 18, fontWeight: 700 },
+  agencyName: { fontFamily: 'Helvetica', color: WHITE, fontSize: 11, fontWeight: 700, letterSpacing: 0.3 },
+  quoteNumber: { fontFamily: 'Helvetica', color: INK3, fontSize: 7, marginTop: 1, letterSpacing: 0.5 },
   /* Property name */
-  propName: { fontFamily: 'PT Serif', color: WHITE, fontSize: 24, fontWeight: 400, marginBottom: 4, lineHeight: 1.15 },
-  address: { fontFamily: 'Lato', color: MUTED, fontSize: 9, marginBottom: 8, fontWeight: 300 },
+  propName: { fontFamily: 'Helvetica', color: WHITE, fontSize: 24, fontWeight: 400, marginBottom: 4, lineHeight: 1.15 },
+  address: { fontFamily: 'Helvetica', color: MUTED, fontSize: 9, marginBottom: 8, fontWeight: 300 },
   /* Features */
   featuresRow: { flexDirection: 'row', marginTop: 4 },
   featureItem: { flexDirection: 'row', alignItems: 'center', marginRight: 14 },
-  featureText: { fontFamily: 'Lato', color: WHITE, fontSize: 12, fontWeight: 700 },
+  featureText: { fontFamily: 'Helvetica', color: WHITE, fontSize: 12, fontWeight: 700 },
   /* Operation / Status */
   statusBlock: { marginBottom: 10 },
   statusLine: { flexDirection: 'row', marginBottom: 2 },
-  statusLabel: { fontFamily: 'Lato', color: MUTED, fontSize: 9, marginRight: 6, fontWeight: 300 },
-  statusValue: { fontFamily: 'Lato', color: WHITE, fontSize: 9, fontWeight: 700 },
+  statusLabel: { fontFamily: 'Helvetica', color: MUTED, fontSize: 9, marginRight: 6, fontWeight: 300 },
+  statusValue: { fontFamily: 'Helvetica', color: WHITE, fontSize: 9, fontWeight: 700 },
   /* Price */
   priceBlock: { alignItems: 'flex-end', marginBottom: 10 },
-  priceUSD: { fontFamily: 'PT Serif', color: BRAND, fontSize: 28, fontWeight: 700, lineHeight: 1.1 },
-  priceARS: { fontFamily: 'Lato', color: 'rgba(255,255,255,0.4)', fontSize: 9, marginTop: 2, fontWeight: 300 },
+  priceUSD: { fontFamily: 'Helvetica', color: BRAND, fontSize: 28, fontWeight: 700, lineHeight: 1.1 },
+  priceARS: { fontFamily: 'Helvetica', color: 'rgba(255,255,255,0.4)', fontSize: 9, marginTop: 2, fontWeight: 300 },
   /* CTA */
   cta: { backgroundColor: BRAND, borderRadius: 4, paddingTop: 8, paddingBottom: 8, paddingLeft: 24, paddingRight: 24 },
-  ctaText: { fontFamily: 'Lato', color: WHITE, fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, textAlign: 'center' },
+  ctaText: { fontFamily: 'Helvetica', color: WHITE, fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, textAlign: 'center' },
   /* Body sections */
   body: { paddingTop: 28, paddingBottom: 28, paddingLeft: 32, paddingRight: 32, backgroundColor: SURFACE },
   sectionCard: { backgroundColor: WHITE, borderRadius: 10, padding: 18, marginBottom: 14 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 12, paddingBottom: 8, borderBottom: `1 solid ${BORDER}` },
   sectionAccent: { width: 3, height: 16, backgroundColor: BRAND, borderRadius: 2, marginRight: 10 },
-  sectionTitleText: { fontFamily: 'PT Serif', color: INK, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.5 },
+  sectionTitleText: { fontFamily: 'Helvetica', color: INK, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.5 },
   /* Client */
-  clientName: { fontFamily: 'Lato', color: INK, fontSize: 11, fontWeight: 700, marginBottom: 2 },
-  clientDetail: { fontFamily: 'Lato', color: INK2, fontSize: 9, marginBottom: 1, fontWeight: 400 },
+  clientName: { fontFamily: 'Helvetica', color: INK, fontSize: 11, fontWeight: 700, marginBottom: 2 },
+  clientDetail: { fontFamily: 'Helvetica', color: INK2, fontSize: 9, marginBottom: 1, fontWeight: 400 },
   /* Payment */
   paymentRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5, borderBottom: `1 solid ${BORDER}` },
-  paymentLabel: { fontFamily: 'Lato', color: INK3, fontSize: 9, fontWeight: 400 },
-  paymentValue: { fontFamily: 'Lato', color: INK, fontSize: 9, fontWeight: 700 },
+  paymentLabel: { fontFamily: 'Helvetica', color: INK3, fontSize: 9, fontWeight: 400 },
+  paymentValue: { fontFamily: 'Helvetica', color: INK, fontSize: 9, fontWeight: 700 },
   totalBox: { backgroundColor: INK, borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 14, paddingRight: 14, marginTop: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  totalLabel: { fontFamily: 'Lato', color: 'rgba(255,255,255,0.7)', fontSize: 9, textTransform: 'uppercase', letterSpacing: 1 },
-  totalValue: { fontFamily: 'PT Serif', color: WHITE, fontSize: 14, fontWeight: 700 },
+  totalLabel: { fontFamily: 'Helvetica', color: 'rgba(255,255,255,0.7)', fontSize: 9, textTransform: 'uppercase', letterSpacing: 1 },
+  totalValue: { fontFamily: 'Helvetica', color: WHITE, fontSize: 14, fontWeight: 700 },
   /* Notes */
-  notesText: { fontFamily: 'Lato', color: INK2, fontSize: 9, lineHeight: 1.6, fontWeight: 400 },
+  notesText: { fontFamily: 'Helvetica', color: INK2, fontSize: 9, lineHeight: 1.6, fontWeight: 400 },
   aiBox: { backgroundColor: SURFACE, borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 14, paddingRight: 14 },
-  aiText: { fontFamily: 'Lato', color: INK2, fontSize: 9, lineHeight: 1.6, fontStyle: 'italic', fontWeight: 400 },
+  aiText: { fontFamily: 'Helvetica', color: INK2, fontSize: 9, lineHeight: 1.6, fontStyle: 'italic', fontWeight: 400 },
   /* Valid until */
   validBox: { border: `1 solid ${BORDER}`, borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 12, paddingRight: 12 },
-  validLabel: { fontFamily: 'Lato', color: INK3, fontSize: 8, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 400 },
-  validDate: { fontFamily: 'PT Serif', color: INK, fontSize: 11, fontWeight: 700, marginTop: 2 },
+  validLabel: { fontFamily: 'Helvetica', color: INK3, fontSize: 8, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 400 },
+  validDate: { fontFamily: 'Helvetica', color: INK, fontSize: 11, fontWeight: 700, marginTop: 2 },
   /* Signature */
   signatureContainer: { alignItems: 'flex-end', marginTop: 24 },
   signatureImg: { height: 36, objectFit: 'contain', marginBottom: 4 },
   signatureLine: { width: 180, borderTop: `1 solid ${INK}`, marginBottom: 4 },
-  signatureLabel: { fontFamily: 'Lato', color: INK3, fontSize: 8, textAlign: 'center', fontWeight: 400 },
+  signatureLabel: { fontFamily: 'Helvetica', color: INK3, fontSize: 8, textAlign: 'center', fontWeight: 400 },
   /* Footer */
-  footer: { borderTop: `1 solid ${BORDER}`, paddingTop: 10, paddingBottom: 10, paddingLeft: 32, paddingRight: 32, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: INK3, fontFamily: 'Lato', position: 'absolute', bottom: 16, left: 0, right: 0 },
+  footer: { borderTop: `1 solid ${BORDER}`, paddingTop: 10, paddingBottom: 10, paddingLeft: 32, paddingRight: 32, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: INK3, fontFamily: 'Helvetica', position: 'absolute', bottom: 16, left: 0, right: 0 },
 });
 
 function fmt(n) { return n?.toLocaleString('es-AR') || '0'; }
