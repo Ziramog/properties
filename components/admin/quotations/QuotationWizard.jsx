@@ -118,7 +118,10 @@ export default function QuotationWizard() {
 
       // Generate PDF
       const pdfRes = await fetch(`/api/quotations/${id}/generate-pdf`, { method: 'POST' });
-      if (!pdfRes.ok) throw new Error('Error al generar PDF');
+      if (!pdfRes.ok) {
+        const errData = await pdfRes.json().catch(() => ({}));
+        throw new Error(errData.error || 'Error al generar PDF');
+      }
 
       // Create a blob URL from the response
       const blob = await pdfRes.blob();

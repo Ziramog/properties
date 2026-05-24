@@ -38,8 +38,15 @@ async function generatePDF(quotationId) {
   try {
     pdfBuffer = await renderQuotationPDF(quotation, branding);
   } catch (renderErr) {
-    console.error('[generate-pdf] Render failed:', renderErr);
-    return NextResponse.json({ error: 'Error al renderizar PDF: ' + renderErr.message }, { status: 500 });
+    console.error('[generate-pdf] Render with custom fonts failed:', renderErr.message);
+    // Retry with Helvetica-only (no custom font registration required)
+    try {
+      console.log('[generate-pdf] Retrying with Helvetica fallback...');
+      pdfBuffer = await renderQuotationPDF(quotation, branding, true);
+    } catch (e2) {
+      console.error('[generate-pdf] Helvetica fallback also failed:', e2);
+      return NextResponse.json({ error: 'Error al renderizar PDF: ' + e2.message }, { status: 500 });
+    }
   }
 
   // Try to save to Vercel Blob if token is set
