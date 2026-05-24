@@ -1,4 +1,8 @@
 import { Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer';
+import { fontsLoaded } from '../fonts';
+
+const BODY = fontsLoaded ? 'Lato' : 'Helvetica';
+const HEADING = fontsLoaded ? 'PT Serif' : 'Helvetica';
 
 const BRAND = '#F26B2E';
 const INK = '#1A1A18';
@@ -10,76 +14,100 @@ const WHITE = '#FFFFFF';
 const BLACK = '#000000';
 const MUTED = '#b8b8b8';
 
+const GALLERY_H = 240;
+const FULL_H = 220;
+
 const styles = StyleSheet.create({
-  page: { fontFamily: 'Helvetica', backgroundColor: WHITE, padding: 0, fontSize: 9, color: INK2, lineHeight: 1.5 },
-  /* Hero */
-  heroImage: { width: '100%', height: 200, objectFit: 'cover' },
-  /* Thumbnail mosaic */
-  thumbRow: { flexDirection: 'row' },
-  thumbCell: { width: '16.666%', height: 55 },
-  thumbImg: { width: '100%', height: '100%', objectFit: 'cover' },
+  page: { fontFamily: BODY, backgroundColor: WHITE, padding: 0, fontSize: 9, color: INK2, lineHeight: 1.5 },
+
+  /* Gallery: hero + side-by-side mosaic */
+  galleryRow: { flexDirection: 'row', height: GALLERY_H },
+  galleryHero: { width: '40%', height: GALLERY_H },
+  galleryGrid: { width: '60%', height: GALLERY_H },
+  galleryThumbRow: { flexDirection: 'row', height: '50%' },
+  galleryThumbCell: { width: '33.33%', height: '100%' },
+  galleryThumbImg: { width: '100%', height: '100%', objectFit: 'cover' },
+  galleryEmptyCell: { width: '33.33%', height: '100%', backgroundColor: '#111' },
+  galleryImg: { width: '100%', height: '100%', objectFit: 'cover' },
+
+  /* Single-hero fallback */
+  heroFull: { width: '100%', height: FULL_H, objectFit: 'cover' },
+
   /* Dark info bar */
   darkBar: { backgroundColor: BLACK, paddingTop: 20, paddingBottom: 20, paddingLeft: 32, paddingRight: 32 },
   darkRow: { flexDirection: 'row', justifyContent: 'space-between' },
   leftCol: { flex: 1, paddingRight: 20 },
   rightCol: { alignItems: 'flex-end', flexShrink: 0, maxWidth: 240 },
+
   /* Top logo area */
   topRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
   logoContainer: { width: 36, height: 36, backgroundColor: WHITE, borderRadius: 3, justifyContent: 'center', alignItems: 'center', marginRight: 10, padding: 3 },
   logoImg: { width: '100%', height: '100%', objectFit: 'contain' },
-  logoText: { fontFamily: 'Helvetica', color: BRAND, fontSize: 18, fontWeight: 700 },
-  agencyName: { fontFamily: 'Helvetica', color: WHITE, fontSize: 11, fontWeight: 700, letterSpacing: 0.3 },
-  quoteNumber: { fontFamily: 'Helvetica', color: INK3, fontSize: 7, marginTop: 1, letterSpacing: 0.5 },
+  logoText: { fontFamily: HEADING, color: BRAND, fontSize: 18, fontWeight: 700 },
+  agencyName: { fontFamily: BODY, color: WHITE, fontSize: 11, fontWeight: 700, letterSpacing: 0.3 },
+  quoteNumber: { fontFamily: BODY, color: INK3, fontSize: 7, marginTop: 1, letterSpacing: 0.5 },
+
   /* Property name */
-  propName: { fontFamily: 'Helvetica', color: WHITE, fontSize: 24, fontWeight: 400, marginBottom: 4, lineHeight: 1.15 },
-  address: { fontFamily: 'Helvetica', color: MUTED, fontSize: 9, marginBottom: 8, fontWeight: 300 },
+  propName: { fontFamily: HEADING, color: WHITE, fontSize: 24, fontWeight: 400, marginBottom: 4, lineHeight: 1.15 },
+  address: { fontFamily: BODY, color: MUTED, fontSize: 9, marginBottom: 8, fontWeight: 300 },
+
   /* Features */
   featuresRow: { flexDirection: 'row', marginTop: 4 },
   featureItem: { flexDirection: 'row', alignItems: 'center', marginRight: 14 },
-  featureText: { fontFamily: 'Helvetica', color: WHITE, fontSize: 12, fontWeight: 700 },
+  featureText: { fontFamily: BODY, color: WHITE, fontSize: 12, fontWeight: 700 },
+
   /* Operation / Status */
   statusBlock: { marginBottom: 10 },
   statusLine: { flexDirection: 'row', marginBottom: 2 },
-  statusLabel: { fontFamily: 'Helvetica', color: MUTED, fontSize: 9, marginRight: 6, fontWeight: 300 },
-  statusValue: { fontFamily: 'Helvetica', color: WHITE, fontSize: 9, fontWeight: 700 },
+  statusLabel: { fontFamily: BODY, color: MUTED, fontSize: 9, marginRight: 6, fontWeight: 300 },
+  statusValue: { fontFamily: BODY, color: WHITE, fontSize: 9, fontWeight: 700 },
+
   /* Price */
   priceBlock: { alignItems: 'flex-end', marginBottom: 10 },
-  priceUSD: { fontFamily: 'Helvetica', color: BRAND, fontSize: 28, fontWeight: 700, lineHeight: 1.1 },
-  priceARS: { fontFamily: 'Helvetica', color: 'rgba(255,255,255,0.4)', fontSize: 9, marginTop: 2, fontWeight: 300 },
+  priceUSD: { fontFamily: HEADING, color: BRAND, fontSize: 28, fontWeight: 700, lineHeight: 1.1 },
+  priceARS: { fontFamily: BODY, color: 'rgba(255,255,255,0.4)', fontSize: 9, marginTop: 2, fontWeight: 300 },
+
   /* CTA */
   cta: { backgroundColor: BRAND, borderRadius: 4, paddingTop: 8, paddingBottom: 8, paddingLeft: 24, paddingRight: 24 },
-  ctaText: { fontFamily: 'Helvetica', color: WHITE, fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, textAlign: 'center' },
+  ctaText: { fontFamily: BODY, color: WHITE, fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, textAlign: 'center' },
+
   /* Body sections */
   body: { paddingTop: 28, paddingBottom: 28, paddingLeft: 32, paddingRight: 32, backgroundColor: SURFACE },
   sectionCard: { backgroundColor: WHITE, borderRadius: 10, padding: 18, marginBottom: 14 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 12, paddingBottom: 8, borderBottom: `1 solid ${BORDER}` },
   sectionAccent: { width: 3, height: 16, backgroundColor: BRAND, borderRadius: 2, marginRight: 10 },
-  sectionTitleText: { fontFamily: 'Helvetica', color: INK, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.5 },
+  sectionTitleText: { fontFamily: HEADING, color: INK, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.5 },
+
   /* Client */
-  clientName: { fontFamily: 'Helvetica', color: INK, fontSize: 11, fontWeight: 700, marginBottom: 2 },
-  clientDetail: { fontFamily: 'Helvetica', color: INK2, fontSize: 9, marginBottom: 1, fontWeight: 400 },
+  clientName: { fontFamily: BODY, color: INK, fontSize: 11, fontWeight: 700, marginBottom: 2 },
+  clientDetail: { fontFamily: BODY, color: INK2, fontSize: 9, marginBottom: 1, fontWeight: 400 },
+
   /* Payment */
   paymentRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5, borderBottom: `1 solid ${BORDER}` },
-  paymentLabel: { fontFamily: 'Helvetica', color: INK3, fontSize: 9, fontWeight: 400 },
-  paymentValue: { fontFamily: 'Helvetica', color: INK, fontSize: 9, fontWeight: 700 },
+  paymentLabel: { fontFamily: BODY, color: INK3, fontSize: 9, fontWeight: 400 },
+  paymentValue: { fontFamily: BODY, color: INK, fontSize: 9, fontWeight: 700 },
   totalBox: { backgroundColor: INK, borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 14, paddingRight: 14, marginTop: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  totalLabel: { fontFamily: 'Helvetica', color: 'rgba(255,255,255,0.7)', fontSize: 9, textTransform: 'uppercase', letterSpacing: 1 },
-  totalValue: { fontFamily: 'Helvetica', color: WHITE, fontSize: 14, fontWeight: 700 },
+  totalLabel: { fontFamily: BODY, color: 'rgba(255,255,255,0.7)', fontSize: 9, textTransform: 'uppercase', letterSpacing: 1 },
+  totalValue: { fontFamily: HEADING, color: WHITE, fontSize: 14, fontWeight: 700 },
+
   /* Notes */
-  notesText: { fontFamily: 'Helvetica', color: INK2, fontSize: 9, lineHeight: 1.6, fontWeight: 400 },
+  notesText: { fontFamily: BODY, color: INK2, fontSize: 9, lineHeight: 1.6, fontWeight: 400 },
   aiBox: { backgroundColor: SURFACE, borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 14, paddingRight: 14 },
-  aiText: { fontFamily: 'Helvetica', color: INK2, fontSize: 9, lineHeight: 1.6, fontStyle: 'italic', fontWeight: 400 },
+  aiText: { fontFamily: BODY, color: INK2, fontSize: 9, lineHeight: 1.6, fontStyle: 'italic', fontWeight: 400 },
+
   /* Valid until */
   validBox: { border: `1 solid ${BORDER}`, borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 12, paddingRight: 12 },
-  validLabel: { fontFamily: 'Helvetica', color: INK3, fontSize: 8, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 400 },
-  validDate: { fontFamily: 'Helvetica', color: INK, fontSize: 11, fontWeight: 700, marginTop: 2 },
+  validLabel: { fontFamily: BODY, color: INK3, fontSize: 8, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 400 },
+  validDate: { fontFamily: HEADING, color: INK, fontSize: 11, fontWeight: 700, marginTop: 2 },
+
   /* Signature */
   signatureContainer: { alignItems: 'flex-end', marginTop: 24 },
   signatureImg: { height: 36, objectFit: 'contain', marginBottom: 4 },
   signatureLine: { width: 180, borderTop: `1 solid ${INK}`, marginBottom: 4 },
-  signatureLabel: { fontFamily: 'Helvetica', color: INK3, fontSize: 8, textAlign: 'center', fontWeight: 400 },
+  signatureLabel: { fontFamily: BODY, color: INK3, fontSize: 8, textAlign: 'center', fontWeight: 400 },
+
   /* Footer */
-  footer: { borderTop: `1 solid ${BORDER}`, paddingTop: 10, paddingBottom: 10, paddingLeft: 32, paddingRight: 32, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: INK3, fontFamily: 'Helvetica', position: 'absolute', bottom: 16, left: 0, right: 0 },
+  footer: { borderTop: `1 solid ${BORDER}`, paddingTop: 10, paddingBottom: 10, paddingLeft: 32, paddingRight: 32, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: INK3, fontFamily: BODY, position: 'absolute', bottom: 16, left: 0, right: 0 },
 });
 
 function fmt(n) { return n?.toLocaleString('es-AR') || '0'; }
@@ -106,40 +134,56 @@ function SectionTitle({ text }) {
   );
 }
 
+function GalleryCell({ url, empty }) {
+  if (empty) return <View style={styles.galleryEmptyCell} />;
+  return (
+    <View style={styles.galleryThumbCell}>
+      <Image style={styles.galleryThumbImg} src={url} />
+    </View>
+  );
+}
+
+function GalleryRow({ images, count }) {
+  const cells = [];
+  for (let i = 0; i < 3; i++) {
+    if (i < images.length) {
+      cells.push(<GalleryCell key={i} url={images[i]} />);
+    } else {
+      cells.push(<GalleryCell key={`e${i}`} empty />);
+    }
+  }
+  return <View style={styles.galleryThumbRow}>{cells}</View>;
+}
+
 export function ModernTemplate({ quotation, branding = {} }) {
   const prop = quotation.properties[0];
   const hasLogo = !!branding.logoUrl;
   const hasSignature = !!branding.signatureBase64;
   const hasARS = prop?.priceARS > 0;
-  const thumbs = (prop?.photos || []).slice(1, 7);
+  const photos = prop?.photos || [];
+  const photoCount = photos.length;
+  const heroUrl = photos[0];
+  const thumbs = photos.slice(1, 7);
+  const thumbCount = thumbs.length;
+  const row1 = thumbCount > 0 ? thumbs.slice(0, 3) : [];
+  const row2 = thumbCount > 3 ? thumbs.slice(3, 6) : [];
 
   return (
     <Document title={`Propuesta ${quotation.quoteNumber}`} author={branding.name || 'Roggero & Roma'}>
       <Page size="A4" style={styles.page}>
-        {/* Hero image */}
-        {prop.photos?.[0] && (
-          <Image style={styles.heroImage} src={prop.photos[0]} />
+        {/* Gallery: hero + side-by-side mosaic */}
+        {photoCount === 1 && heroUrl && (
+          <Image style={styles.heroFull} src={heroUrl} />
         )}
-
-        {/* Thumbnail mosaic */}
-        {thumbs.length > 0 && (
-          <View>
-            <View style={styles.thumbRow}>
-              {thumbs.slice(0, 3).map((url, i) => (
-                <View key={i} style={styles.thumbCell}>
-                  <Image style={styles.thumbImg} src={url} />
-                </View>
-              ))}
+        {photoCount >= 2 && heroUrl && (
+          <View style={styles.galleryRow}>
+            <View style={styles.galleryHero}>
+              <Image style={styles.galleryImg} src={heroUrl} />
             </View>
-            {thumbs.length > 3 && (
-              <View style={styles.thumbRow}>
-                {thumbs.slice(3, 6).map((url, i) => (
-                  <View key={i} style={styles.thumbCell}>
-                    <Image style={styles.thumbImg} src={url} />
-                  </View>
-                ))}
-              </View>
-            )}
+            <View style={styles.galleryGrid}>
+              <GalleryRow images={row1} />
+              {thumbs.length > 3 && <GalleryRow images={row2} />}
+            </View>
           </View>
         )}
 
