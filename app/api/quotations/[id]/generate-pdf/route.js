@@ -4,6 +4,7 @@ import path from 'path';
 import connectDB from '@/config/database';
 import Quotation from '@/models/Quotation';
 import SiteConfig from '@/models/SiteConfig';
+import User from '@/models/User';
 import { renderQuotationPDF } from '@/lib/quotations/pdf/renderer';
 
 export const dynamic = 'force-dynamic';
@@ -28,8 +29,19 @@ async function generatePDF(quotationId) {
 
   const config = await SiteConfig.findOne({}).lean();
 
+  // Find creator user for agent name
+  let agentName = 'Roggero & Roma';
+  try {
+    const creator = await User.findById(quotation.createdBy).lean();
+    if (creator) {
+      agentName = creator.agentName || creator.username || 'Roggero & Roma';
+    }
+  } catch (e) {
+    console.log('[generate-pdf] Could not fetch creator user:', e.message);
+  }
+
   const branding = {
-    name: 'Roggero & Roma',
+    name: agentName,
     logoUrl: config?.logoUrl || getDefaultLogoBase64(),
     signatureBase64: config?.signatureBase64 || null,
   };

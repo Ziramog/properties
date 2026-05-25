@@ -25,6 +25,10 @@ const UserSchema = new Schema(
       enum: ['admin', 'client'],
       default: 'client',
     },
+    agentName: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,

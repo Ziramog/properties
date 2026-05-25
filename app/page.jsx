@@ -10,6 +10,11 @@ import Property from '@/models/Property';
 
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: 'Inicio',
+  description: 'Roggero & Roma — Agencia inmobiliaria en Alta Gracia, Córdoba. Compra, venta y alquiler de propiedades con más de 10 años de experiencia.',
+};
+
 const HomePage = async () => {
   await connectDB();
 

@@ -6,6 +6,7 @@ import Property from '@/models/Property';
 import { getSessionUser } from '@/utils/getSessionUser';
 import profileDefault from '@/assets/images/profile.png';
 import ProfileProperties from '@/components/ProfileProperties';
+import AgentNameForm from '@/components/AgentNameForm';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 
 const ProfilePage = async () => {
@@ -47,6 +48,8 @@ const ProfilePage = async () => {
                 <span className='font-bold block'>Correo: </span>{' '}
                 {sessionUser.user.email}
               </h2>
+
+              <AgentNameForm initialName={sessionUser.user.name || ''} />
             </div>
 
             <div className='md:w-3/4 md:pl-4'>

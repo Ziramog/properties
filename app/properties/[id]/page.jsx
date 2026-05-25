@@ -9,6 +9,43 @@ import FullGallery from '@/components/FullGallery';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 import Link from 'next/link';
 
+export async function generateMetadata({ params }) {
+  await connectDB();
+  const propertyDoc = await Property.findById(params.id).lean();
+
+  if (!propertyDoc) {
+    return {
+      title: 'Propiedad no encontrada',
+    };
+  }
+
+  const property = convertToSerializeableObject(propertyDoc);
+  const title = `${property.name || 'Propiedad'} · ${property.location?.city || 'Alta Gracia'}`;
+  const description = `${property.type || 'Propiedad'} en ${property.operation || 'venta'} · U$D ${property.price || 'Consultar'} · ${property.description?.slice(0, 150) || 'Roggero & Roma Inmobiliaria'}`;
+  const image = property.images?.[0]?.url || '/images/og-default.jpg';
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: `${property.name || 'Propiedad'} · Roggero & Roma`,
+      description,
+      images: [image],
+      type: 'article',
+      locale: 'es_AR',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${property.name || 'Propiedad'} · Roggero & Roma`,
+      description,
+      images: [image],
+    },
+    alternates: {
+      canonical: `/properties/${params.id}`,
+    },
+  };
+}
+
 const PropertyPage = async ({ params }) => {
   try {
     await connectDB();

@@ -1,5 +1,10 @@
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: 'Propiedades',
+  description: 'Explorá todas las propiedades en venta y alquiler de Roggero & Roma Inmobiliaria en Alta Gracia, Córdoba. Casas, departamentos, campos y más.',
+};
+
 import FeaturedPropertyCard from '@/components/FeaturedPropertyCard';
 import Pagination from '@/components/Pagination';
 import SortBar from '@/components/shared/SortBar';

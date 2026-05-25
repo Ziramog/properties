@@ -33,11 +33,29 @@ const cormorantGaramond = Cormorant_Garamond({
 });
 
 export const metadata = {
-  title: 'Roggero & Roma | Negocios Inmobiliarios',
+  metadataBase: new URL('https://properties-srs5.vercel.app'),
+  title: {
+    template: '%s · Roggero & Roma',
+    default: 'Roggero & Roma | Negocios Inmobiliarios en Alta Gracia, Córdoba',
+  },
   description:
-    'Agencia inmobiliaria en Alta Gracia, Córdoba. Más de 10 años de experiencia en compra, venta y alquiler de propiedades.',
+    'Agencia inmobiliaria en Alta Gracia, Córdoba. Más de 10 años de experiencia en compra, venta y alquiler de casas, departamentos, campos y locales comerciales.',
   keywords:
-    'inmobiliaria, propiedades, casas, departamentos, campos, Alta Gracia, Córdoba, Argentina',
+    'inmobiliaria, propiedades, casas, departamentos, campos, Alta Gracia, Córdoba, Argentina, venta, alquiler',
+  authors: [{ name: 'Roggero & Roma' }],
+  openGraph: {
+    type: 'website',
+    locale: 'es_AR',
+    siteName: 'Roggero & Roma Inmobiliaria',
+    images: ['/images/og-default.jpg'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@roggeroroma',
+  },
+  alternates: {
+    canonical: '/',
+  },
 };
 
 const MainLayout = ({ children }) => {

@@ -77,6 +77,7 @@ export const authOptions = {
         }
         session.user.id = user._id.toString();
         session.user.role = user.role;
+        session.user.name = user.agentName || user.username || session.user.name || '';
       } catch (err) {
         console.error('[auth:session] Error:', err);
       }

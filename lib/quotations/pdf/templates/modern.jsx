@@ -27,10 +27,11 @@ const s = StyleSheet.create({
 
   // ── Compact Black Header ──
   headerBar: { backgroundColor: BLACK, paddingTop: 12, paddingBottom: 12, paddingLeft: PAD_X, paddingRight: PAD_X, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  headerLeft: { flexDirection: 'row', alignItems: 'center', flex: 1 },
+  headerLeft: { flexDirection: 'row', alignItems: 'center' },
   headerLogoImg: { width: 32, height: 32, objectFit: 'contain', marginRight: 10 },
-  headerTitle: { fontFamily: HEADING, fontSize: 14, fontWeight: 700, color: WHITE, lineHeight: 1.2 },
-  headerPrice: { fontFamily: BODY, fontSize: 12, fontWeight: 700, color: WHITE, marginTop: 2 },
+  headerRight: { alignItems: 'flex-end' },
+  headerTitle: { fontFamily: HEADING, fontSize: 14, fontWeight: 700, color: WHITE, lineHeight: 1.2, textAlign: 'right' },
+  headerPrice: { fontFamily: BODY, fontSize: 12, fontWeight: 700, color: WHITE, marginTop: 2, textAlign: 'right' },
 
   // ── Client Bar ──
   clientBar: { paddingTop: 8, paddingBottom: 8, paddingLeft: PAD_X, paddingRight: PAD_X, borderBottom: `0.5 solid ${BORDER}`, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
@@ -82,10 +83,10 @@ const s = StyleSheet.create({
 
   // Signature
   signatureSection: { paddingTop: 8, paddingBottom: 14, paddingLeft: PAD_X, paddingRight: PAD_X },
-  signatureBlock: { alignItems: 'flex-end' },
-  signatureImg: { height: 28, objectFit: 'contain', marginBottom: 3 },
-  signatureName: { fontFamily: BODY, fontSize: 9, fontWeight: 700, color: INK },
-  signatureRole: { fontFamily: BODY, fontSize: 7.5, color: INK3 },
+  signatureBlock: { alignItems: 'center' },
+  signatureImg: { height: 28, maxWidth: 120, objectFit: 'contain', marginBottom: 3 },
+  signatureName: { fontFamily: BODY, fontSize: 9, fontWeight: 700, color: INK, textAlign: 'center' },
+  signatureRole: { fontFamily: BODY, fontSize: 7.5, color: INK3, textAlign: 'center' },
 
   // Footer
   footer: { borderTop: `0.5 solid ${BORDER}`, paddingTop: 8, paddingBottom: 8, paddingLeft: PAD_X, paddingRight: PAD_X, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: INK3, fontFamily: BODY },
@@ -158,14 +159,11 @@ export function ModernTemplate({ quotation, branding = {} }) {
             {hasLogo ? (
               <Image style={s.headerLogoImg} src={branding.logoUrl} />
             ) : null}
-            <View>
-              <Text style={s.headerTitle}>{prop?.title || ''}</Text>
-              <Text style={s.headerPrice}>U$D {fmt(prop?.price)}</Text>
-            </View>
           </View>
-          {prop?.status && STATUS_COLORS[prop.status] && (
-            <StatusPill status={prop.status} />
-          )}
+          <View style={s.headerRight}>
+            <Text style={s.headerTitle}>{prop?.title || ''}</Text>
+            <Text style={s.headerPrice}>U$D {fmt(prop?.price)}</Text>
+          </View>
         </View>
 
         {/* ═════ CLIENT BAR ═════ */}
@@ -326,13 +324,13 @@ export function ModernTemplate({ quotation, branding = {} }) {
           </View>
         )}
 
-        {/* ═════ SIGNATURE (bottom right) ═════ */}
+        {/* ═════ SIGNATURE (centered) ═════ */}
         {hasSignature && (
           <View style={s.signatureSection}>
             <View style={s.signatureBlock}>
               <Image style={s.signatureImg} src={branding.signatureBase64} />
               <Text style={s.signatureName}>{branding.name || 'Roggero & Roma'}</Text>
-              <Text style={s.signatureRole}>Agente Inmobiliario</Text>
+              <Text style={s.signatureRole}>Roggero & Roma · Agente Inmobiliario</Text>
             </View>
           </View>
         )}
