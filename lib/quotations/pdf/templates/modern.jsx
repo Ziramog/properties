@@ -28,8 +28,7 @@ const s = StyleSheet.create({
   // ── Compact Black Header ──
   headerBar: { backgroundColor: BLACK, paddingTop: 12, paddingBottom: 12, paddingLeft: PAD_X, paddingRight: PAD_X, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   headerLeft: { flexDirection: 'row', alignItems: 'center', flex: 1 },
-  headerLogoBox: { width: 32, height: 32, backgroundColor: WHITE, borderRadius: 3, justifyContent: 'center', alignItems: 'center', marginRight: 10, padding: 2 },
-  headerLogoImg: { width: '100%', height: '100%', objectFit: 'contain' },
+  headerLogoImg: { width: 32, height: 32, objectFit: 'contain', marginRight: 10 },
   headerTitle: { fontFamily: HEADING, fontSize: 14, fontWeight: 700, color: WHITE, lineHeight: 1.2 },
   headerPrice: { fontFamily: BODY, fontSize: 12, fontWeight: 700, color: WHITE, marginTop: 2 },
 
@@ -157,9 +156,7 @@ export function ModernTemplate({ quotation, branding = {} }) {
         <View style={s.headerBar}>
           <View style={s.headerLeft}>
             {hasLogo ? (
-              <View style={s.headerLogoBox}>
-                <Image style={s.headerLogoImg} src={branding.logoUrl} />
-              </View>
+              <Image style={s.headerLogoImg} src={branding.logoUrl} />
             ) : null}
             <View>
               <Text style={s.headerTitle}>{prop?.title || ''}</Text>
@@ -311,16 +308,15 @@ export function ModernTemplate({ quotation, branding = {} }) {
               </>
             )}
 
+            {/* Notas de cotización (dentro de la columna de precio) */}
+            {pay?.notes && (
+              <View style={{ marginTop: 10, paddingTop: 8, borderTop: `0.5 solid ${BORDER}` }}>
+                <Text style={{ fontFamily: BODY, fontSize: 7.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: INK3, marginBottom: 3 }}>Notas de cotización</Text>
+                <Text style={{ fontFamily: BODY, fontSize: 8.5, color: INK2, lineHeight: 1.5 }}>{pay.notes}</Text>
+              </View>
+            )}
           </View>
         </View>
-
-        {/* ═════ NOTAS DE COTIZACIÓN ═════ */}
-        {pay?.notes && (
-          <View style={{ paddingTop: 10, paddingBottom: 8, paddingLeft: PAD_X, paddingRight: PAD_X, borderTop: `0.5 solid ${BORDER}` }}>
-            <SectionHeading title="Notas de cotización" />
-            <Text style={{ fontFamily: BODY, fontSize: 8.5, color: INK2, lineHeight: 1.5 }}>{pay.notes}</Text>
-          </View>
-        )}
 
         {/* ═════ NOTAS GENERALES ═════ */}
         {quotation.customization?.agentNotes && (
