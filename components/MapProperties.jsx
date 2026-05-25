@@ -152,6 +152,9 @@ const MapProperties = ({ initialProperties = [] }) => {
   const [activeType, setActiveType] = useState('Casa');
   const [showGranInversion, setShowGranInversion] = useState(false);
   const [showMobileDetail, setShowMobileDetail] = useState(false);
+  const [sheetPosition, setSheetPosition] = useState(1); // 0=closed, 1=peek, 2=half, 3=full
+  const sheetRef = useRef(null);
+  const touchStartY = useRef(null);
   const { filters } = useFilters();
   const mapRef = useRef(null);
 
@@ -175,6 +178,7 @@ const MapProperties = ({ initialProperties = [] }) => {
   const handleMarkerClick = useCallback((propertyId) => {
     setSelectedPropertyId(propertyId);
     setShowMobileDetail(true);
+    setSheetPosition(2);
     const prop = initialProperties.find((p) => p._id === propertyId);
     if (prop && mapRef.current) {
       const lat = prop.location?.lat;
@@ -186,6 +190,38 @@ const MapProperties = ({ initialProperties = [] }) => {
   const handleCloseMobileDetail = () => {
     setShowMobileDetail(false);
     setSelectedPropertyId(null);
+    setSheetPosition(1);
+  };
+
+  const snapPoints = {
+    0: 'translate-y-full',
+    1: 'translate-y-[40vh]',
+    2: 'translate-y-[15vh]',
+    3: 'translate-y-0',
+  };
+
+  const handleTouchStart = (e) => {
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e) => {
+    if (touchStartY.current === null) return;
+    const delta = touchStartY.current - e.touches[0].clientY;
+    if (delta > 50 && sheetPosition < 3) {
+      setSheetPosition((p) => Math.min(p + 1, 3));
+      touchStartY.current = null;
+    } else if (delta < -50 && sheetPosition > 0) {
+      setSheetPosition((p) => {
+        const next = Math.max(p - 1, 0);
+        if (next === 0) { setShowMobileDetail(false); setSelectedPropertyId(null); }
+        return next;
+      });
+      touchStartY.current = null;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    touchStartY.current = null;
   };
 
   return (
@@ -267,10 +303,11 @@ const MapProperties = ({ initialProperties = [] }) => {
             </div>
 
             <div
-              className={`absolute inset-x-0 bottom-0 z-20 bg-white rounded-t-3xl transition-transform duration-300 overflow-hidden ${
-                showMobileDetail && selectedProperty ? 'translate-y-0' : 'translate-y-full'
-              }`}
+              className={`absolute inset-x-0 bottom-0 z-20 bg-white rounded-t-3xl transition-transform duration-300 overflow-hidden ${snapPoints[sheetPosition]}`}
               style={{ height: '55vh', maxHeight: '60vh', boxShadow: '0 -8px 40px rgba(0,0,0,0.2), 0 -2px 12px rgba(0,0,0,0.1)' }}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
               <div className="flex justify-center pt-3 pb-2 sticky top-0 bg-white z-20">
                 <div className="w-10 h-1.5 bg-[var(--color-border-strong)] rounded-full" />

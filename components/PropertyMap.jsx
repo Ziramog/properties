@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import Map, { Marker } from 'react-map-gl';
+import Map, { Marker, useMap } from 'react-map-gl';
 import Image from 'next/image';
 import pin from '@/assets/images/pin.svg';
 import Spinner from './Spinner';
@@ -31,35 +31,54 @@ function geocodeCity(city) {
   return coords ? { lat: coords[0], lng: coords[1] } : null;
 }
 
-function GlassZoomControl({ mapRef: mapboxRef }) {
-  const handleZoomIn = () => {
-    const map = mapboxRef.current?.getMap();
-    map?.zoomIn({ duration: 300 });
-  };
-  const handleZoomOut = () => {
-    const map = mapboxRef.current?.getMap();
-    map?.zoomOut({ duration: 300 });
-  };
+function KeyboardControls({ mapRef }) {
+  const map = useMap();
 
-  return (
-    <div className="absolute bottom-4 right-4 z-20 flex flex-col gap-[1px] overflow-hidden rounded-xl shadow-xl backdrop-blur-xl bg-white/10 border border-white/20">
-      <button
-        onClick={handleZoomIn}
-        className="w-10 h-10 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 text-lg font-light"
-        aria-label="Zoom in"
-      >
-        +
-      </button>
-      <div className="h-[1px] bg-white/10" />
-      <button
-        onClick={handleZoomOut}
-        className="w-10 h-10 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 text-lg font-light"
-        aria-label="Zoom out"
-      >
-        −
-      </button>
-    </div>
-  );
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const m = mapRef.current?.getMap();
+      if (!m) return;
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      switch (e.key) {
+        case '+':
+        case '=':
+          e.preventDefault();
+          m.zoomIn({ duration: 300 });
+          break;
+        case '-':
+        case '_':
+          e.preventDefault();
+          m.zoomOut({ duration: 300 });
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          m.panBy([0, -100], { duration: 200 });
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          m.panBy([0, 100], { duration: 200 });
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          m.panBy([-100, 0], { duration: 200 });
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          m.panBy([100, 0], { duration: 200 });
+          break;
+        case 'Enter':
+          e.preventDefault();
+          m.flyTo({ center: m.getCenter(), zoom: 15, duration: 800 });
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mapRef, map]);
+
+  return null;
 }
 
 const PropertyMap = ({ property }) => {
@@ -72,63 +91,14 @@ const PropertyMap = ({ property }) => {
 
   const onMapLoad = useCallback(() => {
     console.log('[PropertyMap] Map loaded successfully');
-    console.log('[PropertyMap] Style:', 'mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7');
-    console.log('[PropertyMap] Token present:', !!process.env.NEXT_PUBLIC_MAPBOX_TOKEN);
     const map = mapRef.current?.getMap();
     if (!map) return;
 
-    // Desktop: Ctrl+scroll zooms, drag pans normally
-    map.scrollZoom.disable();
-    map.dragRotate.disable();
-
-    const container = map.getContainer();
-
-    const wheelHandler = (e) => {
-      if (e.ctrlKey || e.metaKey) {
-        map.scrollZoom.enable();
-        requestAnimationFrame(() => map.scrollZoom.disable());
-      }
-    };
-
-    container.addEventListener('wheel', wheelHandler, { passive: true });
-
-    // Mobile: two fingers for zoom + pan
-    let touchCleanup = null;
+    // Mobile: enable pinch-to-zoom natively
     if ('ontouchstart' in window) {
-      map.dragPan.disable();
-      map.touchZoomRotate?.disable();
-      map.touchPitch?.disable();
-
-      const touchStartHandler = (e) => {
-        if (e.touches.length >= 2) {
-          map.dragPan.enable();
-          map.scrollZoom.enable();
-        }
-      };
-
-      const touchEndHandler = (e) => {
-        if (e.touches.length < 2) {
-          map.dragPan.disable();
-          map.scrollZoom.disable();
-        }
-      };
-
-      container.addEventListener('touchstart', touchStartHandler, { passive: true });
-      container.addEventListener('touchend', touchEndHandler, { passive: true });
-      container.addEventListener('touchcancel', touchEndHandler, { passive: true });
-
-      touchCleanup = () => {
-        container.removeEventListener('touchstart', touchStartHandler);
-        container.removeEventListener('touchend', touchEndHandler);
-        container.removeEventListener('touchcancel', touchEndHandler);
-      };
+      map.dragPan.enable();
+      map.scrollZoom.enable();
     }
-
-    // Cleanup
-    disposed.current = () => {
-      container.removeEventListener('wheel', wheelHandler);
-      if (touchCleanup) touchCleanup();
-    };
   }, []);
 
   useEffect(() => {
@@ -197,29 +167,17 @@ const PropertyMap = ({ property }) => {
         style={{ width: '100%', height: 500 }}
         mapStyle='mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7'
         onError={(e) => console.error('[PropertyMap] Map load ERROR:', e?.error?.message || e)}
-        scrollZoom={false}
+        scrollZoom={true}
         dragPan={true}
         dragRotate={false}
-        doubleClickZoom={false}
-        keyboard={false}
+        doubleClickZoom={true}
+        keyboard={true}
       >
         <Marker longitude={lng} latitude={lat} anchor='bottom'>
           <Image src={pin} alt='location' width={40} height={40} />
         </Marker>
+        <KeyboardControls mapRef={mapRef} />
       </Map>
-
-      {/* Glassmorphism zoom controls */}
-      <GlassZoomControl mapRef={mapRef} />
-
-      {/* Desktop hint */}
-      <div className="hidden md:block absolute bottom-0 left-0 right-0 z-10 bg-black/60 text-white/70 text-[11px] text-center py-1.5 px-3 pointer-events-none select-none backdrop-blur-sm">
-        Ctrl + scroll para hacer zoom
-      </div>
-
-      {/* Mobile hint */}
-      <div className="md:hidden absolute bottom-0 left-0 right-0 z-10 bg-black/60 text-white/70 text-[11px] text-center py-1.5 px-3 pointer-events-none select-none backdrop-blur-sm">
-        Usa dos dedos para mover y hacer zoom
-      </div>
     </div>
   );
 };

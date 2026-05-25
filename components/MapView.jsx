@@ -54,6 +54,30 @@ function geocode(property) {
   return null;
 }
 
+function MapViewControls({ mapRef, geocodedProps }) {
+  const map = useMap();
+
+  useEffect(() => {
+    const mapInstance = mapRef.current?.getMap();
+    if (!mapInstance || geocodedProps.length === 0) return;
+
+    const bounds = geocodedProps.reduce(
+      (acc, p) => {
+        return [
+          [Math.min(acc[0][0], p.coords.lng), Math.min(acc[0][1], p.coords.lat)],
+          [Math.max(acc[1][0], p.coords.lng), Math.max(acc[1][1], p.coords.lat)],
+        ];
+      },
+      [[Infinity, Infinity], [-Infinity, -Infinity]]
+    );
+
+    const padding = 60;
+    mapInstance.fitBounds(bounds, { padding, duration: 800, maxZoom: 14 });
+  }, [geocodedProps, mapRef, map]);
+
+  return null;
+}
+
 function formatPrice(property) {
   const priceStr = property.price;
   if (!priceStr) return '?';
@@ -123,6 +147,7 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
       scrollZoom={true}
       attributionControl={false}
     >
+      <MapViewControls mapRef={mapRef} geocodedProps={geocodedProps} />
       {geocodedProps.map((property) => {
         const isSelected = selectedId === property._id;
         const isVisited = visitedIds.has(property._id);
@@ -193,7 +218,7 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
           </div>
         </Popup>
       )}
-    </Map>
+      </Map>
   );
 });
 
