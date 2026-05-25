@@ -28,7 +28,7 @@ const s = StyleSheet.create({
   // ── Compact Black Header ──
   headerBar: { backgroundColor: BLACK, paddingTop: 12, paddingBottom: 12, paddingLeft: PAD_X, paddingRight: PAD_X, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   headerLeft: { flexDirection: 'row', alignItems: 'center' },
-  headerLogoImg: { width: 32, height: 32, objectFit: 'contain', marginRight: 10 },
+  headerLogoImg: { width: 64, height: 64, objectFit: 'contain', marginRight: 10 },
   headerRight: { alignItems: 'flex-end' },
   headerTitle: { fontFamily: HEADING, fontSize: 14, fontWeight: 700, color: WHITE, lineHeight: 1.2, textAlign: 'right' },
   headerPrice: { fontFamily: BODY, fontSize: 12, fontWeight: 700, color: WHITE, marginTop: 2, textAlign: 'right' },
