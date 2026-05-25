@@ -31,9 +31,9 @@ function geocodeCity(city) {
   return coords ? { lat: coords[0], lng: coords[1] } : null;
 }
 
-function MapHintOverlay({ isMobile }) {
-  const [visible, setVisible] = useState(true);
+function MapHintOverlay() {
   const [dismissed, setDismissed] = useState(false);
+  const isMobile = typeof window !== 'undefined' && 'ontouchstart' in window;
 
   useEffect(() => {
     if (dismissed) return;
@@ -41,9 +41,15 @@ function MapHintOverlay({ isMobile }) {
     const container = document.querySelector('.mapboxgl-map');
     if (!container) return;
 
-    const handler = () => setDismissed(true);
+    const handler = (e) => {
+      if (isMobile && e.touches && e.touches.length >= 2) setDismissed(true);
+      if (!isMobile && e.ctrlKey) setDismissed(true);
+    };
+
     container.addEventListener(isMobile ? 'touchstart' : 'wheel', handler, { once: true, passive: true });
-    return () => container.removeEventListener(isMobile ? 'touchstart' : 'wheel', handler);
+    return () => {
+      container.removeEventListener(isMobile ? 'touchstart' : 'wheel', handler);
+    };
   }, [dismissed, isMobile]);
 
   if (dismissed) return null;
@@ -139,7 +145,23 @@ const PropertyMap = ({ property }) => {
     const map = mapRef.current?.getMap();
     if (!map) return;
 
-    // Mobile: enable pinch-to-zoom natively
+    map.scrollZoom.disable();
+    map.dragRotate.disable();
+
+    const container = map.getContainer();
+
+    const wheelHandler = (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        map.scrollZoom.enable();
+        requestAnimationFrame(() => map.scrollZoom.disable());
+      }
+    };
+    container.addEventListener('wheel', wheelHandler, { passive: true });
+
+    disposed.current = () => {
+      container.removeEventListener('wheel', wheelHandler);
+    };
+
     if ('ontouchstart' in window) {
       map.dragPan.enable();
       map.scrollZoom.enable();
@@ -223,7 +245,7 @@ const PropertyMap = ({ property }) => {
         </Marker>
         <KeyboardControls mapRef={mapRef} />
       </Map>
-      <MapHintOverlay isMobile={isMobile} />
+      <MapHintOverlay />
     </div>
   );
 };
