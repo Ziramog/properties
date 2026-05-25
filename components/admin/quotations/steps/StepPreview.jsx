@@ -41,9 +41,17 @@ export default function StepPreview({ wizardState, isGenerating, generatedPDFUrl
         {/* Pago */}
         <div className="bg-[#F9F9F9] rounded-xl p-4">
           <p className="text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Pago</p>
-          <p className="text-sm capitalize">{payment.type === 'contado' ? 'Contado' : 'Financiado'}</p>
-          {payment.downPaymentPct > 0 && <p className="text-xs text-[#666]">{payment.downPaymentPct}% anticipo</p>}
-          {payment.installments > 0 && <p className="text-xs text-[#666]">{payment.installments} cuotas</p>}
+          {payment.type === 'contado' ? (
+            <p className="text-sm font-medium text-green-700">Pago de contado</p>
+          ) : (
+            <div className="space-y-1">
+              <p className="text-sm font-medium">Financiado</p>
+              {payment.downPaymentPct > 0 && <p className="text-xs text-[#666]">{payment.downPaymentPct}% anticipo — U$D {payment.downPayment?.toLocaleString('es-AR')}</p>}
+              {payment.installments > 0 && <p className="text-xs text-[#666]">{payment.installments} cuotas de U$D {payment.installmentAmount?.toLocaleString('es-AR')}</p>}
+              {payment.interestRate > 0 && <p className="text-xs text-[#666]">{payment.interestRate}% interés anual</p>}
+              {payment.totalPaid > 0 && <p className="text-xs font-semibold text-[var(--color-brand)]">Total con intereses: U$D {payment.totalPaid.toLocaleString('es-AR')}</p>}
+            </div>
+          )}
         </div>
 
         {/* Generar PDF */}

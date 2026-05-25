@@ -1,10 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import StepProperty from './steps/StepProperty';
 import StepClient from './steps/StepClient';
 import StepPayment from './steps/StepPayment';
 import StepCustomize from './steps/StepCustomize';
 import StepPreview from './steps/StepPreview';
+import { calculateFrenchSystem } from '@/lib/quotations/payment-calculator';
 
 const STEPS = [
   { id: 1, label: 'Propiedad', icon: '🏠' },
@@ -31,10 +32,16 @@ export default function QuotationWizard() {
   const parsePrice = (val) => { if (!val) return 0; return parseFloat(String(val).replace(/[^0-9.]/g, '')) || 0; };
   const totalPrice = wizardState.properties.reduce((sum, p) => sum + parsePrice(p.price), 0);
 
-  // Calculate payment values from wizard state
+  // Calculate payment values using French amortization system
   const paymentData = wizardState.payment;
   const calcDownPayment = paymentData.downPaymentPct ? totalPrice * (paymentData.downPaymentPct / 100) : 0;
-  const calcInstallmentAmount = paymentData.installments ? (totalPrice - calcDownPayment) / paymentData.installments : 0;
+  const paymentSchedule = useMemo(() => {
+    if (paymentData.type !== 'financiado' || !paymentData.installments) return null;
+    try {
+      return calculateFrenchSystem(totalPrice, paymentData.interestRate || 10, paymentData.installments, paymentData.downPaymentPct || 30);
+    } catch { return null; }
+  }, [paymentData.type, paymentData.installments, paymentData.interestRate, paymentData.downPaymentPct, totalPrice]);
+  const calcInstallmentAmount = paymentSchedule?.installmentAmount || 0;
 
   const handleGenerate = async () => {
     setIsGenerating(true);
@@ -87,6 +94,11 @@ export default function QuotationWizard() {
           bathrooms: p.baths || null,
           photos: (p.images || []).map(i => i?.url).filter(Boolean),
           status: p.status || null,
+          description: p.description || null,
+          coveredArea: p.covered_area || null,
+          garage: p.garage || null,
+          services: p.services || [],
+          titlesStatus: p.titles_status || null,
         })),
         client: wizardState.client,
         payment: {
@@ -96,6 +108,8 @@ export default function QuotationWizard() {
           installments: wizardState.payment.installments || null,
           installmentAmount: calcInstallmentAmount || null,
           interestRate: wizardState.payment.interestRate || null,
+          totalPaid: paymentSchedule?.totalPaid || null,
+          totalInterest: paymentSchedule?.totalInterest || null,
           notes: wizardState.payment.notes || null,
         },
         customization: {

@@ -14,6 +14,11 @@ const PropertySnapshotSchema = new Schema({
   photos: [{ type: String }],
   listingUrl: { type: String, default: null },
   status: { type: String, default: null },
+  description: { type: String, default: null },
+  coveredArea: { type: Number, default: null },
+  garage: { type: Number, default: null },
+  services: [{ type: String }],
+  titlesStatus: { type: String, default: null },
 }, { _id: false });
 
 const PaymentSchema = new Schema({
@@ -23,6 +28,8 @@ const PaymentSchema = new Schema({
   installments: { type: Number, default: null },
   installmentAmount: { type: Number, default: null },
   interestRate: { type: Number, default: null },
+  totalPaid: { type: Number, default: null },
+  totalInterest: { type: Number, default: null },
   notes: { type: String, default: null },
 }, { _id: false });
 
