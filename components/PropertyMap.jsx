@@ -33,13 +33,20 @@ function geocodeCity(city) {
 
 function MapHintOverlay({ isMobile }) {
   const [visible, setVisible] = useState(true);
+  const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(false), 4000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (dismissed) return;
 
-  if (!visible) return null;
+    const container = document.querySelector('.mapboxgl-map');
+    if (!container) return;
+
+    const handler = () => setDismissed(true);
+    container.addEventListener(isMobile ? 'touchstart' : 'wheel', handler, { once: true, passive: true });
+    return () => container.removeEventListener(isMobile ? 'touchstart' : 'wheel', handler);
+  }, [dismissed, isMobile]);
+
+  if (dismissed) return null;
 
   return (
     <div
