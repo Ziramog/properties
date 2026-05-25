@@ -31,6 +31,43 @@ function geocodeCity(city) {
   return coords ? { lat: coords[0], lng: coords[1] } : null;
 }
 
+function MapHintOverlay({ isMobile }) {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(false), 4000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!visible) return null;
+
+  return (
+    <div
+      className="absolute z-20 pointer-events-none select-none"
+      style={{ bottom: 16, left: '50%', transform: 'translateX(-50%)' }}
+    >
+      <div className="flex items-center gap-2 bg-black/70 backdrop-blur-sm text-white text-[11px] px-3 py-1.5 rounded-full shadow-lg">
+        {isMobile ? (
+          <>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 flex-shrink-0">
+              <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/>
+            </svg>
+            <span>Usa dos dedos para hacer zoom</span>
+          </>
+        ) : (
+          <>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 flex-shrink-0">
+              <rect x="5" y="2" width="14" height="20" rx="3"/>
+              <path d="M12 6v4"/>
+            </svg>
+            <span>Ctrl + scroll para hacer zoom</span>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function KeyboardControls({ mapRef }) {
   const map = useMap();
 
@@ -88,6 +125,7 @@ const PropertyMap = ({ property }) => {
   const [geocodeError, setGeocodeError] = useState(false);
   const mapRef = useRef();
   const disposed = useRef(false);
+  const isMobile = typeof window !== 'undefined' && 'ontouchstart' in window;
 
   const onMapLoad = useCallback(() => {
     console.log('[PropertyMap] Map loaded successfully');
@@ -178,6 +216,7 @@ const PropertyMap = ({ property }) => {
         </Marker>
         <KeyboardControls mapRef={mapRef} />
       </Map>
+      <MapHintOverlay isMobile={isMobile} />
     </div>
   );
 };
