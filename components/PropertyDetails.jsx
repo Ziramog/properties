@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import CheckIcon from './icons/CheckIcon';
 import ShareButtons from './ShareButtons';
+import ScrollReveal from '@/components/shared/ScrollReveal';
 
 const ReadMoreText = ({ text, maxChars = 400 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -64,25 +65,27 @@ const PropertyDetails = ({ property }) => {
       {featureItems.length > 0 && (
         <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-8 md:mb-8">
           <div className="max-w-[1430px] mx-auto px-[15px] py-[30px] md:py-[30px]">
-            <div className="pb-[30px]">
+            <div className="pb-[30px] js-animate">
               <SectionTitle>Características</SectionTitle>
             </div>
-            <div className="flex flex-wrap">
-              {featureItems.map(({ label, value }, i) => (
-                <div
-                  key={label}
-                  className={`flex-1 min-w-[50%] md:min-w-0 flex justify-center py-[30px] px-[20px] md:px-[40px] border-r border-b md:border-b-0 border-[#e9e9e9] ${i === featureItems.length - 1 ? 'border-r-0' : ''} md:[&:nth-last-child(-n+2)]:border-b-0`}
-                >
-                  <div>
-                    <h5 className="text-[22px] font-semibold text-[#0F172A] mb-[5px]"
-                        style={{ fontFamily: 'var(--font-heading)' }}>
-                      {typeof value === 'number' ? value.toLocaleString('es-AR') : value}
-                    </h5>
-                    <p className="text-[16px] leading-[24px] text-[#666]">{label}</p>
+            <ScrollReveal>
+              <div className="flex flex-wrap">
+                {featureItems.map(({ label, value }, i) => (
+                  <div
+                    key={label}
+                    className={`flex-1 min-w-[50%] md:min-w-0 flex justify-center py-[30px] px-[20px] md:px-[40px] border-r border-b md:border-b-0 border-[#e9e9e9] ${i === featureItems.length - 1 ? 'border-r-0' : ''} md:[&:nth-last-child(-n+2)]:border-b-0`}
+                  >
+                    <div>
+                      <h5 className="text-[22px] font-semibold text-[#0F172A] mb-[5px]"
+                          style={{ fontFamily: 'var(--font-heading)' }}>
+                        {typeof value === 'number' ? value.toLocaleString('es-AR') : value}
+                      </h5>
+                      <p className="text-[16px] leading-[24px] text-[#666]">{label}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       )}
@@ -94,8 +97,12 @@ const PropertyDetails = ({ property }) => {
           {property.description && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden h-full">
               <div className="px-[15px] md:pr-[130px] md:pl-[190px] pt-[40px] pb-0 flex flex-col h-full">
-                <SectionTitle>Descripción</SectionTitle>
-                <ReadMoreText text={property.description} maxChars={450} />
+                <div className="js-animate">
+                  <SectionTitle>Descripción</SectionTitle>
+                </div>
+                <ScrollReveal>
+                  <ReadMoreText text={property.description} maxChars={450} />
+                </ScrollReveal>
                 {property.seller_info?.name && (
                   <p className="mt-6 text-[12px] italic text-[#999]">
                     Publicado por {property.seller_info.name}
@@ -117,8 +124,11 @@ const PropertyDetails = ({ property }) => {
           {(property.square_feet || property.operation || coveredArea || property.garage != null || property.titles_status) && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
               <div className="px-[15px] md:pr-[170px] md:pl-[50px] pt-[40px] pb-[40px]">
-                <SectionTitle>Información Adicional</SectionTitle>
-                <ul>
+                <div className="js-animate">
+                  <SectionTitle>Información Adicional</SectionTitle>
+                </div>
+                <ScrollReveal>
+                  <ul>
                   {property.square_feet && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Sup. Cubierta</span>
@@ -149,7 +159,8 @@ const PropertyDetails = ({ property }) => {
                       <span className="text-[14px] font-semibold text-[#0F172A]">{property.titles_status}</span>
                     </li>
                   )}
-                </ul>
+                  </ul>
+                </ScrollReveal>
               </div>
             </div>
           )}
@@ -158,8 +169,11 @@ const PropertyDetails = ({ property }) => {
           {(property.location?.city || property.location?.state) && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
               <div className="px-[15px] md:pr-[170px] md:pl-[50px] pt-[40px] pb-[40px]">
-                <SectionTitle>Información de la Zona</SectionTitle>
-                <ol className="list-none">
+                <div className="js-animate">
+                  <SectionTitle>Información de la Zona</SectionTitle>
+                </div>
+                <ScrollReveal>
+                  <ol className="list-none">
                   {property.location?.state && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Provincia</span>
@@ -178,7 +192,8 @@ const PropertyDetails = ({ property }) => {
                       <span className="text-[14px] font-semibold text-[#0F172A] text-right max-w-[180px]">{property.location.street}</span>
                     </li>
                   )}
-                </ol>
+                  </ol>
+                </ScrollReveal>
               </div>
             </div>
           )}

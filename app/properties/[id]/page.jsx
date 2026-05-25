@@ -6,6 +6,7 @@ import Property from '@/models/Property';
 import PropertyGallery from '@/components/PropertyGallery';
 import PropertyMap from '@/components/PropertyMap';
 import FullGallery from '@/components/FullGallery';
+import ScrollReveal from '@/components/shared/ScrollReveal';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 import Link from 'next/link';
 
@@ -82,7 +83,7 @@ const PropertyPage = async ({ params }) => {
               <div className="mt-8" id="full-gallery">
                 <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
                   <div className="max-w-[1430px] mx-auto py-[30px] md:py-[80px] px-[15px] md:pb-[35px]">
-                    <div className="pb-[30px]">
+                    <div className="pb-[30px] js-animate">
                       <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center"
                           style={{ fontFamily: 'var(--font-heading)' }}>
                         {property.name
@@ -91,7 +92,9 @@ const PropertyPage = async ({ params }) => {
                         <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
                       </h2>
                     </div>
-                    <FullGallery images={property.images} propertyName={property.name} />
+                    <ScrollReveal>
+                      <FullGallery images={property.images} propertyName={property.name} />
+                    </ScrollReveal>
                   </div>
                 </div>
               </div>
@@ -101,29 +104,31 @@ const PropertyPage = async ({ params }) => {
             <div className="mt-8">
               <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
                 <div className="max-w-[1430px] mx-auto px-[15px] py-[30px] md:py-[40px]">
-                  <div className="pb-[30px] flex items-center justify-between">
-                  <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
-                    Ver en el Mapa
-                    <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
-                  </h2>
-                  <Link
-                    href="/properties"
-                    className="hidden md:inline-flex items-center gap-2 text-[var(--color-brand)] text-[13px] font-bold uppercase tracking-wider transition-colors hover:text-[#0F172A]"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
-                      <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
-                      <line x1="8" y1="2" x2="8" y2="18"/>
-                      <line x1="16" y1="6" x2="16" y2="22"/>
-                    </svg>
-                    Ver todas las propiedades en el mapa
-                  </Link>
-                </div>
-                <div className="rounded-none md:rounded-[30px] overflow-hidden">
-                  <PropertyMap property={property} />
+                  <div className="pb-[30px] flex items-center justify-between js-animate">
+                    <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
+                      Ver en el Mapa
+                      <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
+                    </h2>
+                    <Link
+                      href="/properties"
+                      className="hidden md:inline-flex items-center gap-2 text-[var(--color-brand)] text-[13px] font-bold uppercase tracking-wider transition-colors hover:text-[#0F172A]"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+                        <line x1="8" y1="2" x2="8" y2="18"/>
+                        <line x1="16" y1="6" x2="16" y2="22"/>
+                      </svg>
+                      Ver todas las propiedades en el mapa
+                    </Link>
+                  </div>
+                  <ScrollReveal>
+                    <div className="rounded-none md:rounded-[30px] overflow-hidden">
+                      <PropertyMap property={property} />
+                    </div>
+                  </ScrollReveal>
                 </div>
               </div>
             </div>
-          </div>
           </div>
         </section>
       </div>
