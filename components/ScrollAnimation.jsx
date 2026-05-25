@@ -14,10 +14,17 @@ export default function ScrollAnimation() {
       threshold: 0,
     };
 
+    const pending = new Map();
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting && entry.intersectionRatio >= 0) {
-          entry.target.classList.add('active');
+          // Delay activation so CSS animation is visible even for above-fold elements
+          const timer = setTimeout(() => {
+            entry.target.classList.add('active');
+            pending.delete(entry.target);
+          }, 150);
+          pending.set(entry.target, timer);
           observer.unobserve(entry.target);
         }
       });
@@ -46,6 +53,8 @@ export default function ScrollAnimation() {
     return () => {
       observer.disconnect();
       mutationObserver.disconnect();
+      pending.forEach((timer) => clearTimeout(timer));
+      pending.clear();
     };
   }, []);
 

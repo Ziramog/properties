@@ -6,10 +6,15 @@ const ScrollReveal = ({ children, className = '', delay = 0 }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    let timeout;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
+          // Delay reveal so the transition is always visible,
+          // even for elements already in the viewport on load
+          timeout = setTimeout(() => {
+            setIsVisible(true);
+          }, 150);
           observer.disconnect();
         }
       },
@@ -17,7 +22,10 @@ const ScrollReveal = ({ children, className = '', delay = 0 }) => {
     );
 
     if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (timeout) clearTimeout(timeout);
+    };
   }, []);
 
   return (
