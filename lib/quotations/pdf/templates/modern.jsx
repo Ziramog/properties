@@ -9,10 +9,11 @@ const INK = '#1a1a18';
 const INK2 = '#4b4b48';
 const INK3 = '#8c8c88';
 const BORDER = '#e8e6e0';
-const SURFACE = '#f7f6f2';
 const WHITE = '#ffffff';
 const BLACK = '#000000';
 const MUTED = '#b8b8b8';
+
+const PAD_X = 24;
 
 const STATUS_COLORS = {
   'NUEVA': { bg: '#22C55E', text: WHITE },
@@ -22,54 +23,52 @@ const STATUS_COLORS = {
 };
 
 const s = StyleSheet.create({
-  // ── Page ──
   page: { fontFamily: BODY, backgroundColor: WHITE, padding: 0, fontSize: 9, color: INK2, lineHeight: 1.5 },
 
   // ── Compact Black Header ──
-  headerBar: { backgroundColor: BLACK, paddingTop: 14, paddingBottom: 14, paddingLeft: 32, paddingRight: 32, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  headerLeft: { flexDirection: 'row', alignItems: 'center' },
+  headerBar: { backgroundColor: BLACK, paddingTop: 12, paddingBottom: 12, paddingLeft: PAD_X, paddingRight: PAD_X, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  headerLeft: { flexDirection: 'row', alignItems: 'center', flex: 1 },
   headerLogoBox: { width: 32, height: 32, backgroundColor: WHITE, borderRadius: 3, justifyContent: 'center', alignItems: 'center', marginRight: 10, padding: 2 },
   headerLogoImg: { width: '100%', height: '100%', objectFit: 'contain' },
-  headerTitle: { fontFamily: HEADING, fontSize: 15, fontWeight: 700, color: WHITE, lineHeight: 1.2 },
-  headerPrice: { fontFamily: BODY, fontSize: 13, fontWeight: 700, color: WHITE, marginTop: 2 },
+  headerTitle: { fontFamily: HEADING, fontSize: 14, fontWeight: 700, color: WHITE, lineHeight: 1.2 },
+  headerPrice: { fontFamily: BODY, fontSize: 12, fontWeight: 700, color: WHITE, marginTop: 2 },
 
   // ── Client Bar ──
-  clientBar: { paddingTop: 10, paddingBottom: 10, paddingLeft: 32, paddingRight: 32, borderBottom: `0.5 solid ${BORDER}`, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  clientBar: { paddingTop: 8, paddingBottom: 8, paddingLeft: PAD_X, paddingRight: PAD_X, borderBottom: `0.5 solid ${BORDER}`, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   clientLabel: { fontFamily: BODY, fontSize: 7.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: INK3 },
   clientValue: { fontFamily: BODY, fontSize: 9, fontWeight: 600, color: INK, marginTop: 1 },
   clientMeta: { fontFamily: BODY, fontSize: 8, color: INK3 },
 
-  // ── Photo Row (4 equal columns) ──
-  photoRow: { flexDirection: 'row', height: 110, borderBottom: `0.5 solid ${BORDER}` },
-  photoCell: { width: '25%', height: 110 },
+  // ── Photo Row ──
+  photoRow: { flexDirection: 'row', height: 130, borderBottom: `0.5 solid ${BORDER}` },
+  photoCell: { width: '25%', height: 130 },
   photoImg: { width: '100%', height: '100%', objectFit: 'cover' },
-  photoEmpty: { width: '25%', height: 110, backgroundColor: '#111' },
+  photoEmpty: { width: '25%', height: 130, backgroundColor: '#111' },
 
-  // ── Two-Column Section: Características + Precio ──
-  twoColSection: { flexDirection: 'row', paddingTop: 20, paddingBottom: 20, paddingLeft: 32, paddingRight: 32 },
-  leftCol: { width: '38%', paddingRight: 16 },
-  rightCol: { width: '62%', paddingLeft: 16, borderLeft: `0.5 solid ${BORDER}` },
+  // ── Two-Column Section ──
+  twoColSection: { flexDirection: 'row', paddingTop: 16, paddingBottom: 12, paddingLeft: PAD_X, paddingRight: PAD_X, flex: 1 },
+  leftCol: { width: '42%', paddingRight: 14 },
+  rightCol: { width: '58%', paddingLeft: 14, borderLeft: `0.5 solid ${BORDER}` },
 
-  // Section heading with orange bar
-  sectionHeading: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
+  // Section heading
+  sectionHeading: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
   sectionTitle: { fontFamily: HEADING, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.2, color: INK },
   brandBar: { width: 40, height: 2.5, backgroundColor: BRAND, marginLeft: 8 },
 
-  // Feature items
-  featureRow: { flexDirection: 'row', paddingVertical: 5, borderBottom: `0.5 solid ${BORDER}` },
-  featureLabel: { fontFamily: BODY, fontSize: 7.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: INK3, marginBottom: 2 },
+  // Feature items: label on top, value below
+  featureRow: { paddingVertical: 5, borderBottom: `0.5 solid ${BORDER}` },
+  featureLabel: { fontFamily: BODY, fontSize: 7, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: INK3, marginBottom: 2 },
   featureValue: { fontFamily: BODY, fontSize: 10, fontWeight: 700, color: INK },
-  statusPill: { borderRadius: 3, paddingTop: 2, paddingBottom: 2, paddingLeft: 6, paddingRight: 6, alignSelf: 'flex-start', marginTop: 2 },
+  statusPill: { borderRadius: 3, paddingTop: 2, paddingBottom: 2, paddingLeft: 6, paddingRight: 6, alignSelf: 'flex-start', marginTop: 3 },
   statusPillText: { fontFamily: BODY, fontSize: 7, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 },
 
-  // Price table with dotted lines
-  priceRow: { flexDirection: 'row', alignItems: 'baseline', paddingVertical: 5, marginBottom: 2 },
-  priceLabel: { fontFamily: BODY, fontSize: 8.5, fontWeight: 400, color: INK2, width: '45%' },
-  priceDots: { flex: 1, borderBottom: '1 dotted #ccc', marginLeft: 4, marginRight: 4, marginBottom: 3 },
-  priceValue: { fontFamily: BODY, fontSize: 9, fontWeight: 700, color: INK, textAlign: 'right', minWidth: 70 },
-  priceValueLarge: { fontFamily: BODY, fontSize: 11, fontWeight: 700, color: INK, textAlign: 'right', minWidth: 70 },
+  // Price table with dotted lines (manual dots for reliability)
+  priceRow: { flexDirection: 'row', alignItems: 'baseline', paddingVertical: 4, marginBottom: 1 },
+  priceLabel: { fontFamily: BODY, fontSize: 8.5, fontWeight: 400, color: INK2, width: '42%' },
+  priceDots: { fontFamily: BODY, fontSize: 8, color: INK3, flex: 1, textAlign: 'center', letterSpacing: 2 },
+  priceValue: { fontFamily: BODY, fontSize: 9, fontWeight: 700, color: INK, textAlign: 'right', minWidth: 80 },
+  priceValueLarge: { fontFamily: BODY, fontSize: 11, fontWeight: 700, color: INK, textAlign: 'right', minWidth: 80 },
 
-  // Highlight total box
   totalBox: { backgroundColor: INK, borderRadius: 4, paddingTop: 8, paddingBottom: 8, paddingLeft: 12, paddingRight: 12, marginTop: 6, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   totalLabel: { fontFamily: BODY, fontSize: 8, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(255,255,255,0.7)' },
   totalValue: { fontFamily: BODY, fontSize: 12, fontWeight: 700, color: WHITE },
@@ -79,20 +78,20 @@ const s = StyleSheet.create({
   contadoValue: { fontFamily: HEADING, fontSize: 14, fontWeight: 700, color: INK },
 
   // Notes
-  notesSection: { paddingTop: 8, paddingBottom: 8, paddingLeft: 32, paddingRight: 32, borderTop: `0.5 solid ${BORDER}` },
+  notesSection: { paddingTop: 6, paddingBottom: 8, paddingLeft: PAD_X, paddingRight: PAD_X, borderTop: `0.5 solid ${BORDER}` },
   notesText: { fontFamily: BODY, fontSize: 8.5, color: INK2, lineHeight: 1.5 },
 
   // Signature
-  signatureSection: { paddingTop: 12, paddingBottom: 20, paddingLeft: 32, paddingRight: 32, alignItems: 'flex-end' },
+  signatureSection: { paddingTop: 8, paddingBottom: 14, paddingLeft: PAD_X, paddingRight: PAD_X },
+  signatureBlock: { alignItems: 'flex-end' },
   signatureImg: { height: 28, objectFit: 'contain', marginBottom: 3 },
   signatureName: { fontFamily: BODY, fontSize: 9, fontWeight: 700, color: INK },
   signatureRole: { fontFamily: BODY, fontSize: 7.5, color: INK3 },
 
   // Footer
-  footer: { borderTop: `0.5 solid ${BORDER}`, paddingTop: 8, paddingBottom: 8, paddingLeft: 32, paddingRight: 32, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: INK3, fontFamily: BODY },
+  footer: { borderTop: `0.5 solid ${BORDER}`, paddingTop: 8, paddingBottom: 8, paddingLeft: PAD_X, paddingRight: PAD_X, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: INK3, fontFamily: BODY },
 });
 
-// ── Helpers ──
 function fmt(n) { return n?.toLocaleString('es-AR') || '0'; }
 
 function opLabel(op) {
@@ -126,18 +125,17 @@ function StatusPill({ status }) {
   );
 }
 
-// ── Price Row with Dotted Line ──
+// ── Price Row with manual dotted line ──
 function PriceRow({ label, value, large = false }) {
   return (
     <View style={s.priceRow}>
       <Text style={s.priceLabel}>{label}</Text>
-      <View style={s.priceDots} />
+      <Text style={s.priceDots}>· · · · · · · · · · · · · · · · · · · · · · · · ·</Text>
       <Text style={large ? s.priceValueLarge : s.priceValue}>{value}</Text>
     </View>
   );
 }
 
-// ── Main Template ──
 export function ModernTemplate({ quotation, branding = {} }) {
   const prop = quotation.properties?.[0] || {};
   const pay = quotation.payment || {};
@@ -146,7 +144,6 @@ export function ModernTemplate({ quotation, branding = {} }) {
   const isFinanced = pay?.type === 'financiado';
   const photos = prop?.photos || [];
 
-  // Get up to 4 photos
   const photo1 = photos[0];
   const photo2 = photos[1];
   const photo3 = photos[2];
@@ -156,7 +153,7 @@ export function ModernTemplate({ quotation, branding = {} }) {
     <Document title={`Propuesta ${quotation.quoteNumber}`} author={branding.name || 'Roggero & Roma'}>
       <Page size="A4" style={s.page}>
 
-        {/* ═════ HEADER (compact black bar) ═════ */}
+        {/* ═════ HEADER ═════ */}
         <View style={s.headerBar}>
           <View style={s.headerLeft}>
             {hasLogo ? (
@@ -183,7 +180,7 @@ export function ModernTemplate({ quotation, branding = {} }) {
           <Text style={s.clientMeta}>Propuesta N° {quotation.quoteNumber} · {todayShort()}</Text>
         </View>
 
-        {/* ═════ 4 PHOTOS IN A ROW ═════ */}
+        {/* ═════ 4 PHOTOS ═════ */}
         <View style={s.photoRow}>
           {photo1 ? (
             <View style={s.photoCell}>
@@ -216,7 +213,7 @@ export function ModernTemplate({ quotation, branding = {} }) {
 
             <View style={s.featureRow}>
               <Text style={s.featureLabel}>Tipo</Text>
-              <Text style={s.featureValue}>{prop?.type || ''}</Text>
+              <Text style={s.featureValue}>{prop?.type || '—'}</Text>
             </View>
 
             <View style={s.featureRow}>
@@ -323,7 +320,7 @@ export function ModernTemplate({ quotation, branding = {} }) {
           </View>
         </View>
 
-        {/* ═════ NOTES (if any) ═════ */}
+        {/* ═════ NOTES ═════ */}
         {quotation.customization?.agentNotes && (
           <View style={s.notesSection}>
             <Text style={{ fontFamily: BODY, fontSize: 7.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: INK3, marginBottom: 4 }}>Observaciones</Text>
@@ -334,9 +331,11 @@ export function ModernTemplate({ quotation, branding = {} }) {
         {/* ═════ SIGNATURE (bottom right) ═════ */}
         {hasSignature && (
           <View style={s.signatureSection}>
-            <Image style={s.signatureImg} src={branding.signatureBase64} />
-            <Text style={s.signatureName}>{branding.name || 'Roggero & Roma'}</Text>
-            <Text style={s.signatureRole}>Agente Inmobiliario</Text>
+            <View style={s.signatureBlock}>
+              <Image style={s.signatureImg} src={branding.signatureBase64} />
+              <Text style={s.signatureName}>{branding.name || 'Roggero & Roma'}</Text>
+              <Text style={s.signatureRole}>Agente Inmobiliario</Text>
+            </View>
           </View>
         )}
 
