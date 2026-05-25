@@ -194,9 +194,11 @@ export default function PropertiesSearch({ currentFilters = {} }) {
 
   return (
     <div className="search-form" style={{ background: '#000' }}>
-      <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', lineHeight: '1.2', color: '#fff', padding: '20px 20px 0', margin: 0, fontWeight: 400 }}>
-        Búsqueda de Propiedades
-      </h1>
+      <div className="js-animate">
+        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', lineHeight: '1.2', color: '#fff', padding: '20px 20px 0', margin: 0, fontWeight: 400 }}>
+          Búsqueda de Propiedades
+        </h1>
+      </div>
       <form onSubmit={handleSubmit} className="searchForm" style={{ border: '1px solid #2a2626', borderRadius: '8px', background: '#000', position: 'relative', zIndex: 1 }}>
         <div className="top-part p-3 min-[651px]:p-5" style={{
           borderRadius: '12px', background: '#000',

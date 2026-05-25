@@ -8,6 +8,7 @@ export const metadata = {
 import FeaturedPropertyCard from '@/components/FeaturedPropertyCard';
 import Pagination from '@/components/Pagination';
 import SortBar from '@/components/shared/SortBar';
+import ScrollReveal from '@/components/shared/ScrollReveal';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import User from '@/models/User';
@@ -168,7 +169,7 @@ const PropertiesPage = async ({ searchParams }) => {
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-2xl border border-[#eee] shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
           {filteredProperties.length === 0 ? (
-            <div className="text-center py-20">
+            <div className="text-center py-20 js-animate">
               <div className="w-16 h-16 rounded-full bg-[#f5f5f5] flex items-center justify-center mx-auto mb-4 shadow-sm">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 text-[#999]">
                   <circle cx="11" cy="11" r="8"/>
@@ -185,8 +186,10 @@ const PropertiesPage = async ({ searchParams }) => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 p-4 md:p-6">
-              {filteredProperties.map((property) => (
-                <FeaturedPropertyCard property={property} key={property._id} />
+              {filteredProperties.map((property, i) => (
+                <ScrollReveal key={property._id} delay={i * 80}>
+                  <FeaturedPropertyCard property={property} />
+                </ScrollReveal>
               ))}
             </div>
           )}
