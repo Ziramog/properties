@@ -63,7 +63,7 @@ export default function StepPayment({ data, propertyPrice, onChange, onNext, onB
         )}
 
         <div>
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Notas adicionales</label>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Notas de cotización</label>
           <textarea value={data.notes || ''} onChange={(e) => update('notes', e.target.value)} rows={2}
             className="w-full border border-[#ddd] rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[var(--color-brand)]" placeholder="Ej: El precio incluye gastos de escrituración..." />
         </div>

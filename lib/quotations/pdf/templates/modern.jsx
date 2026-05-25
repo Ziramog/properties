@@ -69,7 +69,7 @@ const s = StyleSheet.create({
   priceValue: { fontFamily: BODY, fontSize: 9, fontWeight: 700, color: INK, textAlign: 'right', minWidth: 80 },
   priceValueLarge: { fontFamily: BODY, fontSize: 11, fontWeight: 700, color: INK, textAlign: 'right', minWidth: 80 },
 
-  totalBox: { backgroundColor: INK, borderRadius: 4, paddingTop: 8, paddingBottom: 8, paddingLeft: 12, paddingRight: 12, marginTop: 6, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  totalBox: { backgroundColor: INK, borderRadius: 4, paddingTop: 8, paddingBottom: 8, paddingLeft: 12, paddingRight: 12, marginTop: 14, marginBottom: 4, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   totalLabel: { fontFamily: BODY, fontSize: 8, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(255,255,255,0.7)' },
   totalValue: { fontFamily: BODY, fontSize: 12, fontWeight: 700, color: WHITE },
 
@@ -311,20 +311,22 @@ export function ModernTemplate({ quotation, branding = {} }) {
               </>
             )}
 
-            {pay?.notes && (
-              <View style={{ marginTop: 8 }}>
-                <Text style={{ fontFamily: BODY, fontSize: 7.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: INK3, marginBottom: 3 }}>Notas</Text>
-                <Text style={{ fontFamily: BODY, fontSize: 8.5, color: INK2, lineHeight: 1.5 }}>{pay.notes}</Text>
-              </View>
-            )}
           </View>
         </View>
 
-        {/* ═════ NOTES ═════ */}
+        {/* ═════ NOTAS DE COTIZACIÓN ═════ */}
+        {pay?.notes && (
+          <View style={{ paddingTop: 10, paddingBottom: 8, paddingLeft: PAD_X, paddingRight: PAD_X, borderTop: `0.5 solid ${BORDER}` }}>
+            <SectionHeading title="Notas de cotización" />
+            <Text style={{ fontFamily: BODY, fontSize: 8.5, color: INK2, lineHeight: 1.5 }}>{pay.notes}</Text>
+          </View>
+        )}
+
+        {/* ═════ NOTAS GENERALES ═════ */}
         {quotation.customization?.agentNotes && (
-          <View style={s.notesSection}>
-            <Text style={{ fontFamily: BODY, fontSize: 7.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: INK3, marginBottom: 4 }}>Observaciones</Text>
-            <Text style={s.notesText}>{quotation.customization.agentNotes}</Text>
+          <View style={{ paddingTop: 8, paddingBottom: 8, paddingLeft: PAD_X, paddingRight: PAD_X, borderTop: `0.5 solid ${BORDER}` }}>
+            <SectionHeading title="Notas generales" />
+            <Text style={{ fontFamily: BODY, fontSize: 8.5, color: INK2, lineHeight: 1.5 }}>{quotation.customization.agentNotes}</Text>
           </View>
         )}
 

@@ -36,7 +36,7 @@ export default function StepCustomize({ data, onChange, onNext, onBack }) {
         </div>
 
         <div>
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Notas del agente</label>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Notas generales</label>
           <textarea value={data.agentNotes || ''} onChange={(e) => update('agentNotes', e.target.value)} rows={3}
             className="w-full border border-[#ddd] rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[var(--color-brand)]" placeholder="Notas personalizadas para el cliente..." />
         </div>

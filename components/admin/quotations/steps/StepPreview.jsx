@@ -54,6 +54,15 @@ export default function StepPreview({ wizardState, isGenerating, generatedPDFUrl
           )}
         </div>
 
+        {/* Notas */}
+        {(payment.notes || customization.agentNotes) && (
+          <div className="bg-[#F9F9F9] rounded-xl p-4">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-[#999] mb-2">Notas</p>
+            {payment.notes && <p className="text-xs text-[#666] mb-1">{payment.notes}</p>}
+            {customization.agentNotes && <p className="text-xs text-[#666]">{customization.agentNotes}</p>}
+          </div>
+        )}
+
         {/* Generar PDF */}
         {generatedPDFUrl ? (
           <div className="bg-green-50 rounded-xl p-4 text-center">
