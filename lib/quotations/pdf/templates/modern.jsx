@@ -1,159 +1,32 @@
 import { Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer';
 import { fontsLoaded } from '../fonts';
 
-const BODY_DEFAULT = fontsLoaded ? 'Lato' : 'Helvetica';
-const HEADING_DEFAULT = fontsLoaded ? 'PT Serif' : 'Helvetica';
+// ── Typography ──
+const BODY = fontsLoaded ? 'Lato' : 'Helvetica';
+const HEADING = fontsLoaded ? 'PT Serif' : 'Helvetica';
 
-const BRAND = '#F26B2E';
-const INK = '#1A1A18';
-const INK2 = '#4B4B48';
-const INK3 = '#8C8C88';
-const BORDER = '#E8E6E0';
-const SURFACE = '#F7F6F2';
-const WHITE = '#FFFFFF';
+// ── Color System (exact match to property website) ──
+const BRAND = '#f26b2e';
+const INK = '#1a1a18';
+const INK2 = '#4b4b48';
+const INK3 = '#8c8c88';
+const SURFACE = '#f7f6f2';
+const SURFACE_DARK = '#1c1c1a';
+const BORDER = '#e8e6e0';
+const WHITE = '#ffffff';
 const BLACK = '#000000';
 const MUTED = '#b8b8b8';
-const GALLERY_H = 240;
-const FULL_H = 220;
 
-const STATUS_STYLES = {
-  'NUEVA': { bg: '#22C55E', label: 'Nueva' },
-  'PRECIO MEJORADO': { bg: '#F59E0B', label: 'Precio Mejorado' },
-  'ULTIMA UNIDAD': { bg: '#EF4444', label: 'Última Unidad' },
-  'UNICO EN SU TIPO': { bg: '#8B5CF6', label: 'Único en su Tipo' },
+// ── Status colors ──
+const STATUS_COLORS = {
+  'NUEVA': { bg: '#22C55E', text: WHITE },
+  'PRECIO MEJORADO': { bg: '#F59E0B', text: WHITE },
+  'ULTIMA UNIDAD': { bg: '#EF4444', text: WHITE },
+  'UNICO EN SU TIPO': { bg: '#8B5CF6', text: WHITE },
 };
 
-function buildStyles(BODY, HEADING) {
-  return StyleSheet.create({
-    page: { fontFamily: BODY, backgroundColor: WHITE, padding: 0, fontSize: 9, color: INK2, lineHeight: 1.5 },
-
-    /* Gallery: hero + side-by-side mosaic */
-    galleryRow: { flexDirection: 'row', height: GALLERY_H },
-    galleryHero: { width: '40%', height: GALLERY_H, paddingRight: 1 },
-    galleryGrid: { width: '60%', height: GALLERY_H },
-    galleryThumbRow: { flexDirection: 'row', height: '50%' },
-    galleryThumbCell: { width: '33.33%', height: '100%', paddingRight: 1, paddingBottom: 1 },
-    galleryThumbImg: { width: '100%', height: '100%', objectFit: 'cover', borderRadius: 4 },
-    galleryEmptyCell: { width: '33.33%', height: '100%', backgroundColor: '#111', paddingRight: 1, paddingBottom: 1, borderRadius: 4 },
-    galleryImg: { width: '100%', height: '100%', objectFit: 'cover', borderRadius: 4 },
-
-    /* Single-hero fallback */
-    heroFull: { width: '100%', height: FULL_H, objectFit: 'cover', borderRadius: 4 },
-
-    /* Dark info bar */
-    darkBar: { backgroundColor: BLACK, paddingTop: 20, paddingBottom: 20, paddingLeft: 32, paddingRight: 32 },
-    darkRow: { flexDirection: 'row', justifyContent: 'space-between' },
-    leftCol: { flex: 1, paddingRight: 20 },
-    rightCol: { alignItems: 'flex-end', flexShrink: 0, maxWidth: 240 },
-
-    /* Top logo area */
-    topRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
-    logoContainer: { width: 36, height: 36, backgroundColor: WHITE, borderRadius: 3, justifyContent: 'center', alignItems: 'center', marginRight: 10, padding: 3 },
-    logoImg: { width: '100%', height: '100%', objectFit: 'contain' },
-    logoText: { fontFamily: HEADING, color: BRAND, fontSize: 18, fontWeight: 700 },
-    agencyName: { fontFamily: BODY, color: WHITE, fontSize: 11, fontWeight: 700, letterSpacing: 0.3 },
-    quoteNumber: { fontFamily: BODY, color: INK3, fontSize: 7, marginTop: 1, letterSpacing: 0.5 },
-
-    /* Property name */
-    propName: { fontFamily: HEADING, color: WHITE, fontSize: 24, fontWeight: 400, marginBottom: 4, lineHeight: 1.15 },
-    address: { fontFamily: BODY, color: MUTED, fontSize: 9, marginBottom: 8, fontWeight: 300 },
-
-    /* Features */
-    featuresRow: { flexDirection: 'row', marginTop: 4 },
-    featureItem: { flexDirection: 'row', alignItems: 'center', marginRight: 14 },
-    featureText: { fontFamily: BODY, color: WHITE, fontSize: 12, fontWeight: 700 },
-
-    /* Badge for payment type */
-    badgeRow: { flexDirection: 'row', marginBottom: 8, justifyContent: 'flex-end' },
-    badge: { borderRadius: 3, paddingTop: 3, paddingBottom: 3, paddingLeft: 8, paddingRight: 8 },
-    badgeText: { fontFamily: BODY, color: WHITE, fontSize: 7, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 },
-
-    /* Status pill */
-    statusPill: { borderRadius: 3, paddingTop: 2, paddingBottom: 2, paddingLeft: 8, paddingRight: 8 },
-    statusPillText: { fontFamily: BODY, color: WHITE, fontSize: 7, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 },
-
-    /* Operation / Status */
-    statusBlock: { marginBottom: 10 },
-    statusLine: { flexDirection: 'row', marginBottom: 2 },
-    statusLabel: { fontFamily: BODY, color: MUTED, fontSize: 9, marginRight: 6, fontWeight: 300 },
-    statusValue: { fontFamily: BODY, color: WHITE, fontSize: 9, fontWeight: 700 },
-
-    /* Price */
-    priceBlock: { alignItems: 'flex-end', marginBottom: 10 },
-    priceUSD: { fontFamily: HEADING, color: BRAND, fontSize: 28, fontWeight: 700, lineHeight: 1.1 },
-    priceARS: { fontFamily: BODY, color: 'rgba(255,255,255,0.4)', fontSize: 9, marginTop: 2, fontWeight: 300 },
-
-    /* CTA */
-    cta: { backgroundColor: BRAND, borderRadius: 4, paddingTop: 8, paddingBottom: 8, paddingLeft: 24, paddingRight: 24 },
-    ctaText: { fontFamily: BODY, color: WHITE, fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, textAlign: 'center' },
-
-    /* Body sections */
-    body: { paddingTop: 28, paddingBottom: 28, paddingLeft: 32, paddingRight: 32, backgroundColor: SURFACE },
-    sectionCard: { backgroundColor: WHITE, borderRadius: 10, padding: 18, marginBottom: 14 },
-    sectionHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 12, paddingBottom: 8, borderBottom: `1 solid ${BORDER}` },
-    sectionAccent: { width: 3, height: 16, backgroundColor: BRAND, borderRadius: 2, marginRight: 10 },
-    sectionTitleText: { fontFamily: HEADING, color: INK, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.5 },
-
-    /* Client */
-    clientName: { fontFamily: BODY, color: INK, fontSize: 11, fontWeight: 700, marginBottom: 2 },
-    clientDetail: { fontFamily: BODY, color: INK2, fontSize: 9, marginBottom: 1, fontWeight: 400 },
-
-    /* Payment */
-    paymentRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5, borderBottom: `1 solid ${BORDER}` },
-    paymentLabel: { fontFamily: BODY, color: INK3, fontSize: 9, fontWeight: 400 },
-    paymentValue: { fontFamily: BODY, color: INK, fontSize: 9, fontWeight: 700 },
-    contadoBox: { borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 14, paddingRight: 14, marginTop: 4, marginBottom: 8, border: `1 solid ${BORDER}`, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-    contadoLabel: { fontFamily: BODY, color: INK3, fontSize: 9, textTransform: 'uppercase', letterSpacing: 1 },
-    contadoValue: { fontFamily: HEADING, color: INK, fontSize: 14, fontWeight: 700 },
-    totalBox: { backgroundColor: INK, borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 14, paddingRight: 14, marginTop: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-    totalLabel: { fontFamily: BODY, color: 'rgba(255,255,255,0.7)', fontSize: 9, textTransform: 'uppercase', letterSpacing: 1 },
-    totalValue: { fontFamily: HEADING, color: WHITE, fontSize: 14, fontWeight: 700 },
-    interestRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4, borderBottom: 'none' },
-    interestLabel: { fontFamily: BODY, color: INK3, fontSize: 9, fontWeight: 400 },
-    interestValue: { fontFamily: BODY, color: BRAND, fontSize: 9, fontWeight: 700 },
-
-    /* Description */
-    descText: { fontFamily: BODY, color: INK2, fontSize: 9, lineHeight: 1.7, fontWeight: 400 },
-
-    /* Additional info */
-    infoRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4, borderBottom: `1 solid ${BORDER}` },
-    infoLabel: { fontFamily: BODY, color: INK3, fontSize: 9, fontWeight: 400 },
-    infoValue: { fontFamily: BODY, color: INK, fontSize: 9, fontWeight: 600 },
-    servicesBlock: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 4 },
-    serviceTag: { backgroundColor: SURFACE, borderRadius: 3, paddingTop: 2, paddingBottom: 2, paddingLeft: 6, paddingRight: 6, marginRight: 4, marginBottom: 3 },
-    serviceTagText: { fontFamily: BODY, color: INK2, fontSize: 7 },
-
-    /* Notes */
-    notesText: { fontFamily: BODY, color: INK2, fontSize: 9, lineHeight: 1.6, fontWeight: 400 },
-    aiBox: { backgroundColor: SURFACE, borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 14, paddingRight: 14 },
-    aiText: { fontFamily: BODY, color: INK2, fontSize: 9, lineHeight: 1.6, fontStyle: 'italic', fontWeight: 400 },
-
-    /* Valid until */
-    validBox: { border: `1 solid ${BORDER}`, borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 12, paddingRight: 12 },
-    validLabel: { fontFamily: BODY, color: INK3, fontSize: 8, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 400 },
-    validDate: { fontFamily: HEADING, color: INK, fontSize: 11, fontWeight: 700, marginTop: 2 },
-
-    /* Signature */
-    signatureContainer: { alignItems: 'flex-end', marginTop: 24 },
-    signatureImg: { height: 36, objectFit: 'contain', marginBottom: 4 },
-    signatureLine: { width: 180, borderTop: `1 solid ${INK}`, marginBottom: 4 },
-    signatureLabel: { fontFamily: BODY, color: INK3, fontSize: 8, textAlign: 'center', fontWeight: 400 },
-
-    /* Footer */
-    footer: { borderTop: `1 solid ${BORDER}`, paddingTop: 10, paddingBottom: 10, paddingLeft: 32, paddingRight: 32, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: INK3, fontFamily: BODY, position: 'absolute', bottom: 16, left: 0, right: 0 },
-  });
-}
-
-const defaultStyles = buildStyles(BODY_DEFAULT, HEADING_DEFAULT);
-
+// ── Helpers ──
 function fmt(n) { return n?.toLocaleString('es-AR') || '0'; }
-
-const STATUS_MAP = {
-  'PRECIO MEJORADO': 'Precio Mejorado',
-  'ULTIMA UNIDAD': 'Última Unidad',
-  'UNICO EN SU TIPO': 'Único en su Tipo',
-  'NUEVA': 'Nueva',
-};
 
 function opLabel(op) {
   if (op === 'venta') return 'Venta';
@@ -161,325 +34,461 @@ function opLabel(op) {
   return op || '';
 }
 
-function SectionTitle({ text, styles }) {
+function fmtDate(d) {
+  if (!d) return '';
+  return new Date(d).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' });
+}
+
+function todayShort() {
+  return new Date().toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
+}
+
+// ── Shared Styles Builder ──
+function buildStyles() {
+  return StyleSheet.create({
+    // ── Page & Layout ──
+    page: { fontFamily: BODY, backgroundColor: WHITE, padding: 0, fontSize: 9, color: INK2, lineHeight: 1.6 },
+    contentWrap: { paddingTop: 32, paddingBottom: 32, paddingLeft: 40, paddingRight: 40 },
+    row: { flexDirection: 'row' },
+    col65: { width: '65%', paddingRight: 20 },
+    col35: { width: '35%' },
+    col50: { width: '50%' },
+
+    // ── Header (shared across content pages) ──
+    pageHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingTop: 20, paddingBottom: 16, paddingLeft: 40, paddingRight: 40, borderBottom: `0.5 solid ${BORDER}` },
+    headerLogoBox: { width: 28, height: 28, backgroundColor: WHITE, borderRadius: 3, justifyContent: 'center', alignItems: 'center', padding: 2, border: `0.5 solid ${BORDER}` },
+    headerLogoImg: { width: '100%', height: '100%', objectFit: 'contain' },
+    headerBrand: { fontFamily: BODY, fontSize: 9, fontWeight: 700, color: INK, letterSpacing: 0.5 },
+    headerMeta: { fontFamily: BODY, fontSize: 7, color: INK3, letterSpacing: 0.5 },
+
+    // ── Section Heading with Brand Bar ──
+    sectionHeading: { flexDirection: 'row', alignItems: 'center', marginBottom: 14 },
+    sectionTitle: { fontFamily: HEADING, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.2, color: INK },
+    brandBar: { width: 50, height: 2.5, backgroundColor: BRAND, marginLeft: 10 },
+
+    // ── Cover Page ──
+    coverHero: { width: '100%', height: 500, objectFit: 'cover' },
+    coverDarkSection: { backgroundColor: BLACK, paddingTop: 36, paddingBottom: 36, paddingLeft: 40, paddingRight: 40, flex: 1 },
+    coverTopRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
+    coverLogoBox: { width: 32, height: 32, backgroundColor: WHITE, borderRadius: 3, justifyContent: 'center', alignItems: 'center', marginRight: 10, padding: 2 },
+    coverLogoImg: { width: '100%', height: '100%', objectFit: 'contain' },
+    coverAgency: { fontFamily: BODY, fontSize: 10, fontWeight: 700, color: WHITE, letterSpacing: 0.5 },
+    coverPropTitle: { fontFamily: HEADING, fontSize: 26, fontWeight: 400, color: WHITE, lineHeight: 1.15, marginBottom: 8 },
+    coverLocation: { fontFamily: BODY, fontSize: 11, fontWeight: 300, color: MUTED, marginBottom: 20 },
+    coverDivider: { width: 40, height: 1.5, backgroundColor: BRAND, marginBottom: 20 },
+    coverPrice: { fontFamily: HEADING, fontSize: 26, fontWeight: 400, color: WHITE, marginBottom: 24 },
+    coverLabel: { fontFamily: BODY, fontSize: 8, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.5, color: INK3, marginBottom: 3 },
+    coverValue: { fontFamily: BODY, fontSize: 10, fontWeight: 400, color: WHITE },
+    coverClientRow: { marginTop: 4 },
+
+    // ── Property Details Page ──
+    descText: { fontFamily: BODY, fontSize: 9.5, color: INK2, lineHeight: 1.7, textAlign: 'justify' },
+    featureGrid: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 4 },
+    featureCell: { width: '50%', paddingVertical: 8, paddingRight: 8, borderBottom: `0.5 solid ${BORDER}` },
+    featureLabel: { fontFamily: BODY, fontSize: 7.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: INK3, marginBottom: 3 },
+    featureValue: { fontFamily: BODY, fontSize: 11, fontWeight: 700, color: INK },
+    infoRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, borderBottom: `0.5 solid ${BORDER}` },
+    infoLabel: { fontFamily: BODY, fontSize: 8, fontWeight: 400, color: INK3 },
+    infoValue: { fontFamily: BODY, fontSize: 9, fontWeight: 600, color: INK },
+    servicesWrap: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 6 },
+    serviceTag: { backgroundColor: SURFACE, borderRadius: 3, paddingTop: 2, paddingBottom: 2, paddingLeft: 6, paddingRight: 6, marginRight: 4, marginBottom: 3 },
+    serviceTagText: { fontFamily: BODY, fontSize: 7.5, color: INK2 },
+
+    // ── Financing Page ──
+    finCard: { border: `0.5 solid ${BORDER}`, borderRadius: 6, padding: 16, marginBottom: 10 },
+    finCardLabel: { fontFamily: BODY, fontSize: 7.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: INK3, marginBottom: 6 },
+    finCardValue: { fontFamily: HEADING, fontSize: 16, fontWeight: 400, color: INK },
+    finCardValueLarge: { fontFamily: HEADING, fontSize: 20, fontWeight: 400, color: INK },
+    finCardSub: { fontFamily: BODY, fontSize: 8, color: INK3, marginTop: 2 },
+    finHighlightCard: { borderRadius: 6, padding: 16, marginBottom: 10, backgroundColor: INK },
+    finHighlightLabel: { fontFamily: BODY, fontSize: 7.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(255,255,255,0.6)', marginBottom: 6 },
+    finHighlightValue: { fontFamily: HEADING, fontSize: 20, fontWeight: 400, color: WHITE },
+    finNotes: { fontFamily: BODY, fontSize: 9, color: INK2, lineHeight: 1.6, marginTop: 8, paddingTop: 8, borderTop: `0.5 solid ${BORDER}` },
+    finGrid2: { flexDirection: 'row', gap: 10 },
+    finGrid2Col: { flex: 1 },
+
+    // ── Contact Page ──
+    contactCtaText: { fontFamily: HEADING, fontSize: 18, fontWeight: 400, color: INK, lineHeight: 1.3, marginBottom: 20 },
+    contactLabel: { fontFamily: BODY, fontSize: 8, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: INK3, marginBottom: 4 },
+    contactValue: { fontFamily: BODY, fontSize: 10, fontWeight: 600, color: INK, marginBottom: 10 },
+    contactButton: { backgroundColor: BRAND, borderRadius: 6, paddingTop: 10, paddingBottom: 10, paddingLeft: 24, paddingRight: 24, marginTop: 16, alignSelf: 'flex-start' },
+    contactButtonText: { fontFamily: BODY, fontSize: 9, fontWeight: 700, color: WHITE, textTransform: 'uppercase', letterSpacing: 1.5 },
+    signatureBlock: { alignItems: 'flex-end', marginTop: 20 },
+    signatureImg: { height: 32, objectFit: 'contain', marginBottom: 4 },
+    signatureLine: { width: 140, height: 0.5, backgroundColor: INK, marginBottom: 4 },
+    signatureName: { fontFamily: BODY, fontSize: 9, fontWeight: 700, color: INK },
+    signatureRole: { fontFamily: BODY, fontSize: 7.5, color: INK3 },
+    validityBox: { border: `0.5 solid ${BORDER}`, borderRadius: 6, padding: 12, marginTop: 16 },
+
+    // ── Footer ──
+    footer: { borderTop: `0.5 solid ${BORDER}`, paddingTop: 10, paddingBottom: 10, paddingLeft: 40, paddingRight: 40, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: INK3, fontFamily: BODY, position: 'absolute', bottom: 12, left: 0, right: 0 },
+  });
+}
+
+const s = buildStyles();
+
+// ── Shared Components ──
+function PageHeader({ branding, quotation }) {
+  const hasLogo = !!branding.logoUrl;
   return (
-    <View style={styles.sectionHeader}>
-      <View style={styles.sectionAccent} />
-      <Text style={styles.sectionTitleText}>{text}</Text>
+    <View style={s.pageHeader}>
+      <View style={s.row}>
+        {hasLogo ? (
+          <View style={s.headerLogoBox}>
+            <Image style={s.headerLogoImg} src={branding.logoUrl} />
+          </View>
+        ) : null}
+        <View>
+          <Text style={s.headerBrand}>{branding.name || 'Roggero & Roma'}</Text>
+          <Text style={s.headerMeta}>Propuesta N° {quotation.quoteNumber}</Text>
+        </View>
+      </View>
+      <Text style={s.headerMeta}>{todayShort()}</Text>
     </View>
   );
 }
 
-function GalleryCell({ url, empty, styles }) {
-  if (empty) return <View style={styles.galleryEmptyCell} />;
+function SectionHeading({ title }) {
   return (
-    <View style={styles.galleryThumbCell}>
-      <Image style={styles.galleryThumbImg} src={url} />
+    <View style={s.sectionHeading}>
+      <Text style={s.sectionTitle}>{title}</Text>
+      <View style={s.brandBar} />
     </View>
   );
 }
 
-function GalleryRow({ images, styles }) {
-  const cells = [];
-  for (let i = 0; i < 3; i++) {
-    if (i < images.length) {
-      cells.push(<GalleryCell key={i} url={images[i]} styles={styles} />);
-    } else {
-      cells.push(<GalleryCell key={`e${i}`} empty styles={styles} />);
-    }
-  }
-  return <View style={styles.galleryThumbRow}>{cells}</View>;
-}
-
-function StatusPill({ status, styles }) {
-  const cfg = STATUS_STYLES[status];
+function StatusPill({ status }) {
+  const cfg = STATUS_COLORS[status];
   if (!cfg) return null;
   return (
-    <View style={[styles.statusPill, { backgroundColor: cfg.bg }]}>
-      <Text style={styles.statusPillText}>{cfg.label}</Text>
+    <View style={{ backgroundColor: cfg.bg, borderRadius: 3, paddingTop: 2, paddingBottom: 2, paddingLeft: 8, paddingRight: 8 }}>
+      <Text style={{ fontFamily: BODY, color: cfg.text, fontSize: 7.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+        {status === 'NUEVA' ? 'Nueva' : status === 'PRECIO MEJORADO' ? 'Precio Mejorado' : status === 'ULTIMA UNIDAD' ? 'Última Unidad' : 'Único en su Tipo'}
+      </Text>
     </View>
   );
 }
 
-export function ModernTemplate({ quotation, branding = {}, forceHelvetica = false }) {
-  const BODY = forceHelvetica ? 'Helvetica' : BODY_DEFAULT;
-  const HEADING = forceHelvetica ? 'Helvetica' : HEADING_DEFAULT;
-  const styles = forceHelvetica ? buildStyles(BODY, HEADING) : defaultStyles;
-
-  const prop = quotation.properties[0];
-  const pay = quotation.payment;
+// ── Page 1: Cover ──
+function CoverPage({ prop, quotation, branding }) {
   const hasLogo = !!branding.logoUrl;
-  const hasSignature = !!branding.signatureBase64;
-  const hasARS = prop?.priceARS > 0;
-  const isFinanced = pay?.type === 'financiado';
-  const photos = prop?.photos || [];
-  const photoCount = photos.length;
-  const heroUrl = photos[0];
-  const thumbs = photos.slice(1, 7);
-  const row1 = thumbs.length > 0 ? thumbs.slice(0, 3) : [];
-  const row2 = thumbs.length > 3 ? thumbs.slice(3, 6) : [];
-  const statusCfg = STATUS_STYLES[prop?.status];
+  const heroUrl = prop?.photos?.[0];
 
   return (
-    <Document title={`Propuesta ${quotation.quoteNumber}`} author={branding.name || 'Roggero & Roma'}>
-      <Page size="A4" style={styles.page}>
-        {/* Gallery: hero + side-by-side mosaic */}
-        {photoCount === 1 && heroUrl && (
-          <Image style={styles.heroFull} src={heroUrl} />
-        )}
-        {photoCount >= 2 && heroUrl && (
-          <View style={styles.galleryRow}>
-            <View style={styles.galleryHero}>
-              <Image style={styles.galleryImg} src={heroUrl} />
-            </View>
-            <View style={styles.galleryGrid}>
-              <GalleryRow images={row1} styles={styles} />
-              {thumbs.length > 3 && <GalleryRow images={row2} styles={styles} />}
-            </View>
-          </View>
-        )}
+    <Page size="A4" style={{ padding: 0 }}>
+      {/* Full-bleed hero image */}
+      {heroUrl ? (
+        <Image style={s.coverHero} src={heroUrl} />
+      ) : (
+        <View style={{ width: '100%', height: 500, backgroundColor: SURFACE_DARK }} />
+      )}
 
-        {/* Dark info bar */}
-        <View style={styles.darkBar}>
-          <View style={styles.darkRow}>
-            <View style={styles.leftCol}>
-              <View style={styles.topRow}>
-                {hasLogo ? (
-                  <View style={styles.logoContainer}>
-                    <Image style={styles.logoImg} src={branding.logoUrl} />
-                  </View>
-                ) : (
-                  <Text style={styles.logoText}>R&amp;R</Text>
-                )}
-                <View>
-                  <Text style={styles.agencyName}>{branding.name || 'Roggero & Roma'}</Text>
-                  <Text style={styles.quoteNumber}>Propuesta N° {quotation.quoteNumber}</Text>
-                </View>
-              </View>
-              {prop?.title && (
-                <Text style={styles.propName}>{prop.title}</Text>
-              )}
-              {prop?.address && (
-                <Text style={styles.address}>{prop.address}</Text>
-              )}
-              <View style={styles.featuresRow}>
-                {prop?.bedrooms != null && (
-                  <View style={styles.featureItem}>
-                    <Text style={styles.featureText}>{prop.bedrooms} dorm.</Text>
-                  </View>
-                )}
-                {prop?.bathrooms != null && (
-                  <View style={styles.featureItem}>
-                    <Text style={styles.featureText}>{prop.bathrooms} baños</Text>
-                  </View>
-                )}
-                {prop?.surface != null && (
-                  <View style={styles.featureItem}>
-                    <Text style={styles.featureText}>{fmt(prop.surface)} m²</Text>
-                  </View>
-                )}
-              </View>
+      {/* Dark info section */}
+      <View style={s.coverDarkSection}>
+        {/* Agency branding */}
+        <View style={s.coverTopRow}>
+          {hasLogo ? (
+            <View style={s.coverLogoBox}>
+              <Image style={s.coverLogoImg} src={branding.logoUrl} />
             </View>
-            <View style={styles.rightCol}>
-              <View style={styles.badgeRow}>
-                <View style={[styles.badge, { backgroundColor: isFinanced ? '#6366F1' : '#22C55E' }]}>
-                  <Text style={styles.badgeText}>{isFinanced ? 'Financiado' : 'Contado'}</Text>
-                </View>
-              </View>
-              <View style={styles.statusBlock}>
-                {opLabel(prop?.operation) && (
-                  <View style={styles.statusLine}>
-                    <Text style={styles.statusLabel}>OPERACIÓN</Text>
-                    <Text style={styles.statusValue}>{opLabel(prop?.operation)}</Text>
-                  </View>
-                )}
-                {statusCfg && (
-                  <View style={styles.statusLine}>
-                    <Text style={styles.statusLabel}>ESTADO</Text>
-                    <StatusPill status={prop.status} styles={styles} />
-                  </View>
-                )}
-              </View>
-              <View style={styles.priceBlock}>
-                <Text style={styles.priceUSD}>U$D {fmt(prop?.price)}</Text>
-                {hasARS && (
-                  <Text style={styles.priceARS}>ARS $ {fmt(prop?.priceARS)}</Text>
-                )}
-              </View>
-              <View style={styles.cta}>
-                <Text style={styles.ctaText}>Propuesta Comercial</Text>
-              </View>
-            </View>
-          </View>
+          ) : null}
+          <Text style={s.coverAgency}>{branding.name || 'Roggero & Roma'}</Text>
         </View>
 
-        {/* Body sections */}
-        <View style={styles.body}>
-          {/* Cliente */}
-          <View style={styles.sectionCard}>
-            <SectionTitle text="Cliente" styles={styles} />
-            <Text style={styles.clientName}>{quotation.client.name}</Text>
-            {quotation.client.email && <Text style={styles.clientDetail}>{quotation.client.email}</Text>}
-            {quotation.client.phone && <Text style={styles.clientDetail}>{quotation.client.phone}</Text>}
-            {quotation.client.dni && <Text style={styles.clientDetail}>DNI: {quotation.client.dni}</Text>}
-          </View>
+        {/* Property title */}
+        <Text style={s.coverPropTitle}>{prop?.title || ''}</Text>
+        {prop?.address ? <Text style={s.coverLocation}>{prop.address}</Text> : null}
 
-          {/* Descripción */}
-          {prop?.description && (
-            <View style={styles.sectionCard}>
-              <SectionTitle text="Descripción" styles={styles} />
-              <Text style={styles.descText}>{prop.description}</Text>
-            </View>
-          )}
+        {/* Brand accent divider */}
+        <View style={s.coverDivider} />
 
-          {/* Condiciones de pago */}
-          <View style={styles.sectionCard}>
-            <SectionTitle text="Condiciones de pago" styles={styles} />
-            {isFinanced ? (
+        {/* Price */}
+        <Text style={s.coverPrice}>U$D {fmt(prop?.price)}</Text>
+
+        {/* Client & proposal meta */}
+        <View style={s.coverClientRow}>
+          <Text style={s.coverLabel}>Preparado para</Text>
+          <Text style={s.coverValue}>{quotation.client?.name || ''}</Text>
+        </View>
+        <View style={{ marginTop: 8 }}>
+          <Text style={s.coverLabel}>Propuesta</Text>
+          <Text style={s.coverValue}>{quotation.quoteNumber} · {todayShort()}</Text>
+        </View>
+      </View>
+    </Page>
+  );
+}
+
+// ── Page 2: Property Details ──
+function DetailsPage({ prop, quotation, branding }) {
+  const hasDescription = !!prop?.description;
+  const hasAdditionalInfo = prop?.coveredArea != null || prop?.garage != null || (prop?.services && prop?.services.length > 0) || prop?.titlesStatus;
+
+  return (
+    <Page size="A4" style={s.page}>
+      <PageHeader branding={branding} quotation={quotation} />
+
+      <View style={s.contentWrap}>
+        {/* Two-column layout: Description (left) + Specs (right) */}
+        <View style={s.row}>
+          {/* LEFT: Description */}
+          <View style={s.col65}>
+            {hasDescription && (
               <>
-                {pay?.downPayment > 0 && (
-                  <View style={styles.paymentRow}>
-                    <Text style={styles.paymentLabel}>Seña / anticipo</Text>
-                    <Text style={styles.paymentValue}>U$D {fmt(pay.downPayment)} ({pay.downPaymentPct}%)</Text>
-                  </View>
-                )}
-                {pay?.installments > 0 && (
-                  <View style={styles.paymentRow}>
-                    <Text style={styles.paymentLabel}>Cuotas</Text>
-                    <Text style={styles.paymentValue}>{pay.installments} cuotas de U$D {fmt(pay.installmentAmount)}</Text>
-                  </View>
-                )}
-                {pay?.interestRate > 0 && (
-                  <View style={styles.paymentRow}>
-                    <Text style={styles.paymentLabel}>Tasa de interés</Text>
-                    <Text style={styles.paymentValue}>{pay.interestRate}% anual</Text>
-                  </View>
-                )}
-                {pay?.totalInterest > 0 && (
-                  <View style={[styles.interestRow, { marginTop: 2 }]}>
-                    <Text style={styles.interestLabel}>Intereses totales</Text>
-                    <Text style={styles.interestValue}>U$D {fmt(pay.totalInterest)}</Text>
-                  </View>
-                )}
-                {pay?.totalPaid > 0 && (
-                  <View style={styles.totalBox}>
-                    <Text style={styles.totalLabel}>Total financiado</Text>
-                    <Text style={styles.totalValue}>U$D {fmt(pay.totalPaid)}</Text>
-                  </View>
-                )}
-                {pay?.notes && (
-                  <View style={[styles.paymentRow, { marginTop: 6 }]}>
-                    <Text style={styles.paymentLabel}>Notas</Text>
-                    <Text style={styles.paymentValue}>{pay.notes}</Text>
-                  </View>
-                )}
-                {!pay?.totalPaid && (
-                  <View style={styles.totalBox}>
-                    <Text style={styles.totalLabel}>Valor total</Text>
-                    <Text style={styles.totalValue}>U$D {fmt(quotation.totalValue)}</Text>
-                  </View>
-                )}
+                <SectionHeading title="Descripción" />
+                <Text style={s.descText}>{prop.description}</Text>
               </>
-            ) : (
+            )}
+
+            {/* If no description, show highlights or note */}
+            {!hasDescription && (
               <>
-                <View style={styles.contadoBox}>
-                  <Text style={styles.contadoLabel}>Pago de contado</Text>
-                  <Text style={styles.contadoValue}>U$D {fmt(quotation.totalValue)}</Text>
-                </View>
-                {pay?.notes && (
-                  <View style={styles.paymentRow}>
-                    <Text style={styles.paymentLabel}>Notas</Text>
-                    <Text style={styles.paymentValue}>{pay.notes}</Text>
-                  </View>
-                )}
+                <SectionHeading title="Propiedad" />
+                <Text style={s.descText}>{prop?.title || ''}</Text>
               </>
             )}
           </View>
 
-          {/* Información Adicional */}
-          {(prop?.coveredArea != null || prop?.garage != null || (prop?.services && prop?.services.length > 0) || prop?.titlesStatus) && (
-            <View style={styles.sectionCard}>
-              <SectionTitle text="Información Adicional" styles={styles} />
-              {prop?.coveredArea != null && (
-                <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>Sup. Total</Text>
-                  <Text style={styles.infoValue}>{fmt(prop.coveredArea)} m²</Text>
+          {/* RIGHT: Características */}
+          <View style={s.col35}>
+            <SectionHeading title="Características" />
+            <View style={s.featureGrid}>
+              <View style={s.featureCell}>
+                <Text style={s.featureLabel}>Precio</Text>
+                <Text style={s.featureValue}>U$D {fmt(prop?.price)}</Text>
+              </View>
+              {prop?.surface != null && (
+                <View style={s.featureCell}>
+                  <Text style={s.featureLabel}>Área Total</Text>
+                  <Text style={s.featureValue}>{fmt(prop.surface)} m²</Text>
+                </View>
+              )}
+              {prop?.bedrooms != null && (
+                <View style={s.featureCell}>
+                  <Text style={s.featureLabel}>Dormitorios</Text>
+                  <Text style={s.featureValue}>{prop.bedrooms}</Text>
+                </View>
+              )}
+              {prop?.bathrooms != null && (
+                <View style={s.featureCell}>
+                  <Text style={s.featureLabel}>Baños</Text>
+                  <Text style={s.featureValue}>{prop.bathrooms}</Text>
                 </View>
               )}
               {prop?.garage != null && (
-                <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>Cochera</Text>
-                  <Text style={styles.infoValue}>{prop.garage} {prop.garage === 1 ? 'lugar' : 'lugares'}</Text>
+                <View style={s.featureCell}>
+                  <Text style={s.featureLabel}>Cochera</Text>
+                  <Text style={s.featureValue}>{prop.garage} {prop.garage === 1 ? 'lugar' : 'lugares'}</Text>
                 </View>
               )}
-              {prop?.titlesStatus && (
-                <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>Estado de Títulos</Text>
-                  <Text style={styles.infoValue}>{prop.titlesStatus}</Text>
-                </View>
-              )}
-              {prop?.services && prop?.services.length > 0 && (
-                <View style={{ marginTop: 6 }}>
-                  <Text style={styles.infoLabel}>Servicios</Text>
-                  <View style={styles.servicesBlock}>
-                    {prop.services.map((s, i) => (
-                      <View key={i} style={styles.serviceTag}>
-                        <Text style={styles.serviceTagText}>{s}</Text>
-                      </View>
-                    ))}
-                  </View>
-                </View>
-              )}
-            </View>
-          )}
-
-          {/* Observaciones */}
-          {quotation.customization.agentNotes && (
-            <View style={styles.sectionCard}>
-              <SectionTitle text="Observaciones" styles={styles} />
-              <Text style={styles.notesText}>{quotation.customization.agentNotes}</Text>
-            </View>
-          )}
-
-          {/* AI Description */}
-          {quotation.customization.showAIDescription && quotation.customization.aiDescription && (
-            <View style={styles.sectionCard}>
-              <SectionTitle text="Nuestra Recomendación" styles={styles} />
-              <View style={styles.aiBox}>
-                <Text style={styles.aiText}>{quotation.customization.aiDescription}</Text>
+              <View style={s.featureCell}>
+                <Text style={s.featureLabel}>Tipo</Text>
+                <Text style={s.featureValue}>{prop?.type || ''}</Text>
               </View>
-            </View>
-          )}
-
-          {/* Vencimiento */}
-          {quotation.customization.validUntil && (
-            <View style={styles.sectionCard}>
-              <View style={styles.validBox}>
-                <Text style={styles.validLabel}>Oferta válida hasta</Text>
-                <Text style={styles.validDate}>
-                  {new Date(quotation.customization.validUntil).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' })}
-                </Text>
+              <View style={s.featureCell}>
+                <Text style={s.featureLabel}>Operación</Text>
+                <Text style={s.featureValue}>{opLabel(prop?.operation)}</Text>
               </View>
+              {prop?.status && STATUS_COLORS[prop.status] && (
+                <View style={s.featureCell}>
+                  <Text style={s.featureLabel}>Estado</Text>
+                  <StatusPill status={prop.status} />
+                </View>
+              )}
             </View>
-          )}
-
-          {/* Firma digital */}
-          {hasSignature && (
-            <View style={styles.signatureContainer}>
-              <Image style={styles.signatureImg} src={branding.signatureBase64} />
-              <View style={styles.signatureLine} />
-              <Text style={styles.signatureLabel}>{branding.name}</Text>
-              <Text style={{ ...styles.signatureLabel, marginTop: 1 }}>Agente Inmobiliario</Text>
-            </View>
-          )}
+          </View>
         </View>
 
-        {/* Footer */}
-        <View style={styles.footer} fixed>
-          <Text>{branding.name || 'Roggero & Roma Inmobiliaria'}</Text>
-          <Text>Generado el {new Date().toLocaleDateString('es-AR')}</Text>
+        {/* Información Adicional (full width, below) */}
+        {hasAdditionalInfo && (
+          <View style={{ marginTop: 20 }}>
+            <SectionHeading title="Información Adicional" />
+            {prop?.coveredArea != null && (
+              <View style={s.infoRow}>
+                <Text style={s.infoLabel}>Sup. Cubierta</Text>
+                <Text style={s.infoValue}>{fmt(prop.coveredArea)} m²</Text>
+              </View>
+            )}
+            {prop?.titlesStatus && (
+              <View style={s.infoRow}>
+                <Text style={s.infoLabel}>Estado de Títulos</Text>
+                <Text style={s.infoValue}>{prop.titlesStatus}</Text>
+              </View>
+            )}
+            {prop?.services && prop.services.length > 0 && (
+              <View style={{ marginTop: 6 }}>
+                <Text style={s.infoLabel}>Servicios</Text>
+                <View style={s.servicesWrap}>
+                  {prop.services.map((svc, i) => (
+                    <View key={i} style={s.serviceTag}>
+                      <Text style={s.serviceTagText}>{svc}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+          </View>
+        )}
+      </View>
+
+      {/* Footer */}
+      <View style={s.footer} fixed>
+        <Text>{branding.name || 'Roggero & Roma Inmobiliaria'}</Text>
+        <Text>Página 2</Text>
+      </View>
+    </Page>
+  );
+}
+
+// ── Page 3: Investment Terms ──
+function FinancingPage({ quotation, branding }) {
+  const pay = quotation.payment;
+  const isFinanced = pay?.type === 'financiado';
+
+  return (
+    <Page size="A4" style={s.page}>
+      <PageHeader branding={branding} quotation={quotation} />
+
+      <View style={s.contentWrap}>
+        <SectionHeading title="Condiciones de Pago" />
+
+        {isFinanced ? (
+          <>
+            {/* Financiado: 2-col grid for initial + installments */}
+            <View style={s.finGrid2}>
+              {pay?.downPayment > 0 && (
+                <View style={[s.finCard, s.finGrid2Col]}>
+                  <Text style={s.finCardLabel}>Seña / Anticipo</Text>
+                  <Text style={s.finCardValueLarge}>U$D {fmt(pay.downPayment)}</Text>
+                  <Text style={s.finCardSub}>{pay.downPaymentPct}% del valor</Text>
+                </View>
+              )}
+              {pay?.installments > 0 && (
+                <View style={[s.finCard, s.finGrid2Col]}>
+                  <Text style={s.finCardLabel}>Cuotas</Text>
+                  <Text style={s.finCardValueLarge}>{pay.installments}</Text>
+                  <Text style={s.finCardSub}>U$D {fmt(pay.installmentAmount)} c/u</Text>
+                </View>
+              )}
+            </View>
+
+            {pay?.interestRate > 0 && (
+              <View style={s.finCard}>
+                <Text style={s.finCardLabel}>Tasa de Interés</Text>
+                <Text style={s.finCardValue}>{pay.interestRate}% anual</Text>
+              </View>
+            )}
+
+            {pay?.totalInterest > 0 && (
+              <View style={s.finCard}>
+                <Text style={s.finCardLabel}>Intereses Totales</Text>
+                <Text style={s.finCardValue}>U$D {fmt(pay.totalInterest)}</Text>
+              </View>
+            )}
+
+            {pay?.totalPaid > 0 && (
+              <View style={s.finHighlightCard}>
+                <Text style={s.finHighlightLabel}>Total Financiado</Text>
+                <Text style={s.finHighlightValue}>U$D {fmt(pay.totalPaid)}</Text>
+              </View>
+            )}
+
+            {!pay?.totalPaid && (
+              <View style={s.finHighlightCard}>
+                <Text style={s.finHighlightLabel}>Valor Total</Text>
+                <Text style={s.finHighlightValue}>U$D {fmt(quotation.totalValue)}</Text>
+              </View>
+            )}
+          </>
+        ) : (
+          <>
+            {/* Contado: single elegant card */}
+            <View style={s.finHighlightCard}>
+              <Text style={s.finHighlightLabel}>Pago de Contado</Text>
+              <Text style={s.finHighlightValue}>U$D {fmt(quotation.totalValue)}</Text>
+            </View>
+          </>
+        )}
+
+        {pay?.notes && (
+          <Text style={s.finNotes}>{pay.notes}</Text>
+        )}
+      </View>
+
+      {/* Footer */}
+      <View style={s.footer} fixed>
+        <Text>{branding.name || 'Roggero & Roma Inmobiliaria'}</Text>
+        <Text>Página 3</Text>
+      </View>
+    </Page>
+  );
+}
+
+// ── Page 4: Contact ──
+function ContactPage({ quotation, branding }) {
+  const hasSignature = !!branding.signatureBase64;
+
+  return (
+    <Page size="A4" style={s.page}>
+      <PageHeader branding={branding} quotation={quotation} />
+
+      <View style={s.contentWrap}>
+        <SectionHeading title="Contacto" />
+
+        <Text style={s.contactCtaText}>¿Preguntas o quieres agendar una visita?</Text>
+
+        <Text style={s.contactLabel}>Asesoría Inmobiliaria</Text>
+        <Text style={s.contactValue}>{branding.name || 'Roggero & Roma'}</Text>
+
+        <Text style={s.contactLabel}>WhatsApp</Text>
+        <Text style={s.contactValue}>+54 9 3547 563911</Text>
+
+        <Text style={s.contactLabel}>Email</Text>
+        <Text style={s.contactValue}>info@roggeroyroma.com.ar</Text>
+
+        {/* CTA Button */}
+        <View style={s.contactButton}>
+          <Text style={s.contactButtonText}>Contáctanos</Text>
         </View>
-      </Page>
+
+        {/* Digital Signature */}
+        {hasSignature && (
+          <View style={s.signatureBlock}>
+            <Image style={s.signatureImg} src={branding.signatureBase64} />
+            <View style={s.signatureLine} />
+            <Text style={s.signatureName}>{branding.name}</Text>
+            <Text style={s.signatureRole}>Agente Inmobiliario</Text>
+          </View>
+        )}
+
+        {/* Validity */}
+        {quotation.customization?.validUntil && (
+          <View style={s.validityBox}>
+            <Text style={s.contactLabel}>Oferta válida hasta</Text>
+            <Text style={s.contactValue}>{fmtDate(quotation.customization.validUntil)}</Text>
+          </View>
+        )}
+      </View>
+
+      {/* Footer */}
+      <View style={s.footer} fixed>
+        <Text>{branding.name || 'Roggero & Roma Inmobiliaria'}</Text>
+        <Text>Página 4</Text>
+      </View>
+    </Page>
+  );
+}
+
+// ── Main Export ──
+export function ModernTemplate({ quotation, branding = {}, forceHelvetica = false }) {
+  const prop = quotation.properties?.[0] || {};
+
+  return (
+    <Document title={`Propuesta ${quotation.quoteNumber}`} author={branding.name || 'Roggero & Roma'}>
+      <CoverPage prop={prop} quotation={quotation} branding={branding} />
+      <DetailsPage prop={prop} quotation={quotation} branding={branding} />
+      <FinancingPage quotation={quotation} branding={branding} />
+      <ContactPage quotation={quotation} branding={branding} />
     </Document>
   );
 }
