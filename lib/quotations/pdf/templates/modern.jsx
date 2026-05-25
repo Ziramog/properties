@@ -86,10 +86,8 @@ const s = StyleSheet.create({
   signatureBlock: { alignItems: 'center' },
   signatureImg: { height: 28, maxWidth: 120, objectFit: 'contain', marginBottom: 3 },
   signatureName: { fontFamily: BODY, fontSize: 9, fontWeight: 700, color: INK, textAlign: 'center' },
-  signatureRole: { fontFamily: BODY, fontSize: 7.5, color: INK3, textAlign: 'center' },
-
-  // Footer
-  footer: { borderTop: `0.5 solid ${BORDER}`, paddingTop: 8, paddingBottom: 8, paddingLeft: PAD_X, paddingRight: PAD_X, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: INK3, fontFamily: BODY },
+  signatureAgency: { fontFamily: BODY, fontSize: 7.5, fontWeight: 700, color: INK3, textAlign: 'center', marginTop: 1 },
+  signatureQuote: { fontFamily: BODY, fontSize: 7.5, color: INK3, textAlign: 'center', marginTop: 1 },
 });
 
 function fmt(n) { return n?.toLocaleString('es-AR') || '0'; }
@@ -330,16 +328,11 @@ export function ModernTemplate({ quotation, branding = {} }) {
             <View style={s.signatureBlock}>
               <Image style={s.signatureImg} src={branding.signatureBase64} />
               <Text style={s.signatureName}>{branding.name || 'Roggero & Roma'}</Text>
-              <Text style={s.signatureRole}>Roggero & Roma · Agente Inmobiliario</Text>
+              <Text style={s.signatureAgency}>Roggero & Roma</Text>
+              <Text style={s.signatureQuote}>Propuesta N° {quotation.quoteNumber}</Text>
             </View>
           </View>
         )}
-
-        {/* ═════ FOOTER ═════ */}
-        <View style={s.footer} fixed>
-          <Text>{branding.name || 'Roggero & Roma Inmobiliaria'}</Text>
-          <Text>Propuesta N° {quotation.quoteNumber}</Text>
-        </View>
       </Page>
     </Document>
   );
