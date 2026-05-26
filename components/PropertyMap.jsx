@@ -42,11 +42,11 @@ function MapHintOverlay() {
     if (!container) return;
 
     const handler = (e) => {
-      if (isMobile && e.touches && e.touches.length >= 2) setDismissed(true);
-      if (!isMobile && e.ctrlKey) setDismissed(true);
+      if (!isMobile && e.ctrlKey) { setDismissed(true); return; }
+      if (isMobile && e.touches && e.touches.length >= 2) { setDismissed(true); }
     };
 
-    container.addEventListener(isMobile ? 'touchstart' : 'wheel', handler, { once: true, passive: true });
+    container.addEventListener(isMobile ? 'touchstart' : 'wheel', handler);
     return () => {
       container.removeEventListener(isMobile ? 'touchstart' : 'wheel', handler);
     };
@@ -234,7 +234,7 @@ const PropertyMap = ({ property }) => {
         style={{ width: '100%', height: 500 }}
         mapStyle='mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7'
         onError={(e) => console.error('[PropertyMap] Map load ERROR:', e?.error?.message || e)}
-        scrollZoom={true}
+        scrollZoom={false}
         dragPan={true}
         dragRotate={false}
         doubleClickZoom={true}
