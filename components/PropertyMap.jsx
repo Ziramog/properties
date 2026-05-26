@@ -153,18 +153,19 @@ const PropertyMap = ({ property }) => {
     const wheelHandler = (e) => {
       if (e.ctrlKey || e.metaKey) {
         e.preventDefault();
-        map.scrollZoom.enable();
+        e.stopPropagation();
+        const delta = e.deltaY || e.wheelDelta;
+        if (delta < 0) {
+          map.zoomIn({ duration: 0 });
+        } else {
+          map.zoomOut({ duration: 0 });
+        }
       }
     };
-    const keyUpHandler = (e) => {
-      if (e.key === 'Control') map.scrollZoom.disable();
-    };
     container.addEventListener('wheel', wheelHandler, { passive: false });
-    window.addEventListener('keyup', keyUpHandler);
 
     disposed.current = () => {
       container.removeEventListener('wheel', wheelHandler);
-      window.removeEventListener('keyup', keyUpHandler);
     };
 
     if ('ontouchstart' in window) {
