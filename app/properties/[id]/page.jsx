@@ -82,7 +82,7 @@ const PropertyPage = async ({ params }) => {
             {property.images && property.images.length > 0 && (
               <div className="mt-8" id="full-gallery">
                 <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
-                  <div className="max-w-[1430px] mx-auto py-[30px] md:py-[80px] px-[15px] md:pb-[35px]">
+                  <div className="mx-auto py-[30px] md:py-[80px] px-5 md:pb-[35px]">
                     <div className="pb-[30px] js-animate">
                       <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center"
                           style={{ fontFamily: 'var(--font-heading)' }}>
