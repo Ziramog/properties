@@ -63,7 +63,7 @@ const PropertyDetails = ({ property }) => {
     <main className="space-y-0">
       {/* Features — Senada .listing-feature */}
       {featureItems.length > 0 && (
-        <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-8 md:mb-8">
+        <div className="bg-white rounded-none overflow-hidden mb-8 md:mb-8">
           <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[30px]">
             <div className="pb-[30px] js-animate">
               <SectionTitle>Características</SectionTitle>
@@ -95,7 +95,7 @@ const PropertyDetails = ({ property }) => {
         {/* Left: Description — 70% */}
         <div className="w-full md:w-[70%]">
           {property.description && (
-            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden h-full">
+            <div className="bg-white rounded-none overflow-hidden h-full">
               <div className="px-4 md:px-[50px] pt-[40px] pb-0 flex flex-col h-full">
                 <div className="js-animate">
                   <SectionTitle>Descripción</SectionTitle>
@@ -122,7 +122,7 @@ const PropertyDetails = ({ property }) => {
         <div className="w-full md:w-[30%] flex flex-col gap-[20px]">
           {/* Additional Info */}
           {(property.square_feet || property.operation || coveredArea || property.garage != null || property.titles_status) && (
-            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
+            <div className="bg-white rounded-none overflow-hidden">
               <div className="px-4 md:px-[50px] pt-[40px] pb-[40px]">
                 <div className="js-animate">
                   <SectionTitle>Información Adicional</SectionTitle>
@@ -130,31 +130,31 @@ const PropertyDetails = ({ property }) => {
                 <ScrollReveal>
                   <ul>
                   {property.square_feet && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Sup. Cubierta</span>
                       <span className="text-[14px] font-semibold text-[#0F172A]">{property.square_feet.toLocaleString('es-AR')} m²</span>
                     </li>
                   )}
                   {coveredArea && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Sup. Total</span>
                       <span className="text-[14px] font-semibold text-[#0F172A]">{coveredArea.toLocaleString('es-AR')} m²</span>
                     </li>
                   )}
                   {property.garage != null && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Cochera</span>
                       <span className="text-[14px] font-semibold text-[#0F172A]">{property.garage} {property.garage === 1 ? 'lugar' : 'lugares'}</span>
                     </li>
                   )}
                   {property.operation && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Operación</span>
                       <span className="text-[14px] font-semibold text-[#0F172A]">{operationLabel}</span>
                     </li>
                   )}
                   {property.titles_status && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Estado de Títulos</span>
                       <span className="text-[14px] font-semibold text-[#0F172A]">{property.titles_status}</span>
                     </li>
@@ -167,7 +167,7 @@ const PropertyDetails = ({ property }) => {
 
           {/* Community Info */}
           {(property.location?.city || property.location?.state) && (
-            <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
+            <div className="bg-white rounded-none overflow-hidden">
               <div className="px-4 md:px-[50px] pt-[40px] pb-[40px]">
                 <div className="js-animate">
                   <SectionTitle>Información de la Zona</SectionTitle>
@@ -175,19 +175,19 @@ const PropertyDetails = ({ property }) => {
                 <ScrollReveal>
                   <ol className="list-none">
                   {property.location?.state && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Provincia</span>
                       <span className="text-[14px] font-semibold text-[#0F172A]">{property.location.state}</span>
                     </li>
                   )}
                   {property.location?.city && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Ciudad</span>
                       <span className="text-[14px] font-semibold text-[#0F172A]">{property.location.city}</span>
                     </li>
                   )}
                   {property.location?.street && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-[6px] odd:bg-[#f6f6f6]">
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Dirección</span>
                       <span className="text-[14px] font-semibold text-[#0F172A] text-right max-w-[180px]">{property.location.street}</span>
                     </li>

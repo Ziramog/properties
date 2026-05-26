@@ -81,7 +81,7 @@ const PropertyPage = async ({ params }) => {
             <PropertyDetails property={property} />
             {property.images && property.images.length > 0 && (
               <div className="mt-8" id="full-gallery">
-                <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
+                <div className="bg-white rounded-none overflow-hidden">
                   <div className="mx-auto py-[30px] md:py-[80px] px-4 md:px-[50px] md:pb-[35px]">
                     <div className="pb-[30px] js-animate">
                       <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center"
@@ -102,7 +102,7 @@ const PropertyPage = async ({ params }) => {
 
             {/* View on Map */}
             <div className="mt-8">
-              <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
+              <div className="bg-white rounded-none overflow-hidden">
                 <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[40px]">
                   <div className="pb-[30px] flex items-center justify-between js-animate">
                     <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
@@ -122,7 +122,7 @@ const PropertyPage = async ({ params }) => {
                     </Link>
                   </div>
                   <ScrollReveal>
-                    <div className="rounded-none md:rounded-[30px] overflow-hidden">
+                    <div className="rounded-none overflow-hidden">
                       <PropertyMap property={property} />
                     </div>
                   </ScrollReveal>
