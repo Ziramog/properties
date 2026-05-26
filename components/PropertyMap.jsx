@@ -106,6 +106,9 @@ const PropertyMap = ({ property }) => {
           map.zoomOut({ duration: 0 });
         }
         setHintDismissed(true);
+      } else {
+        // Show hint again when scrolling without Ctrl
+        setHintDismissed(false);
       }
     };
 
