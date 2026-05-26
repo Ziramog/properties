@@ -50,7 +50,8 @@
       "WebFetch(domain:www.senadaadzem.com)",
       "mcp__claude_ai_Figma__get_screenshot",
       "WebFetch(domain:www.ruattaautomotores.com.ar)",
-      "WebFetch(domain:autocity.com.ar)"
+      "WebFetch(domain:autocity.com.ar)",
+      "WebFetch(domain:docs.mapbox.com)"
     ]
   },
   "enableAllProjectMcpServers": true,

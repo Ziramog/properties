@@ -96,7 +96,7 @@ const PropertyDetails = ({ property }) => {
         <div className="w-full md:w-[70%]">
           {property.description && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden h-full">
-              <div className="px-[15px] md:pr-[130px] md:pl-[190px] pt-[40px] pb-0 flex flex-col h-full">
+              <div className="px-4 md:px-[50px] pt-[40px] pb-0 flex flex-col h-full">
                 <div className="js-animate">
                   <SectionTitle>Descripción</SectionTitle>
                 </div>
@@ -123,7 +123,7 @@ const PropertyDetails = ({ property }) => {
           {/* Additional Info */}
           {(property.square_feet || property.operation || coveredArea || property.garage != null || property.titles_status) && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
-              <div className="px-[15px] md:pr-[170px] md:pl-[50px] pt-[40px] pb-[40px]">
+              <div className="px-4 md:px-[50px] pt-[40px] pb-[40px]">
                 <div className="js-animate">
                   <SectionTitle>Información Adicional</SectionTitle>
                 </div>
@@ -168,7 +168,7 @@ const PropertyDetails = ({ property }) => {
           {/* Community Info */}
           {(property.location?.city || property.location?.state) && (
             <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
-              <div className="px-[15px] md:pr-[170px] md:pl-[50px] pt-[40px] pb-[40px]">
+              <div className="px-4 md:px-[50px] pt-[40px] pb-[40px]">
                 <div className="js-animate">
                   <SectionTitle>Información de la Zona</SectionTitle>
                 </div>

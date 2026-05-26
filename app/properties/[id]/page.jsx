@@ -66,7 +66,7 @@ const PropertyPage = async ({ params }) => {
       <div className="min-h-screen" style={{ background: '#F6F6F6' }}>
         <PropertyGallery images={property.images} property={property} />
         <section className="pb-16">
-          <div className="mx-auto px-4 md:px-[50px]">
+          <div className="mx-auto">
             <div className="py-4 px-4 md:px-0">
               <Link
                 href='/properties'
@@ -82,7 +82,7 @@ const PropertyPage = async ({ params }) => {
             {property.images && property.images.length > 0 && (
               <div className="mt-8" id="full-gallery">
                 <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
-                  <div className="mx-auto py-[30px] md:py-[80px] px-5 md:pb-[35px]">
+                  <div className="mx-auto py-[30px] md:py-[80px] px-4 md:px-[50px] md:pb-[35px]">
                     <div className="pb-[30px] js-animate">
                       <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center"
                           style={{ fontFamily: 'var(--font-heading)' }}>
@@ -103,7 +103,7 @@ const PropertyPage = async ({ params }) => {
             {/* View on Map */}
             <div className="mt-8">
               <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
-                <div className="max-w-[1430px] mx-auto px-[15px] py-[30px] md:py-[40px]">
+                <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[40px]">
                   <div className="pb-[30px] flex items-center justify-between js-animate">
                     <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
                       Ver en el Mapa
