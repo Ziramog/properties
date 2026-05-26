@@ -19,7 +19,7 @@ const AdminPropertiesPage = async ({ searchParams }) => {
         Volver al Panel de Control
       </Link>
 
-      <h1 className="text-[24px] md:text-[36px] font-normal text-[#0F172A] mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+      <h1 className="text-[24px] md:text-[36px] font-normal text-white mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
         Propiedades
       </h1>
 

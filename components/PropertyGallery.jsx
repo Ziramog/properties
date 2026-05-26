@@ -33,7 +33,8 @@ const PropertyGallery = ({ images = [], property }) => {
 
   return (
     <Gallery>
-      <section className="bg-[#000] pt-[90px] md:pt-[150px] pb-[30px] px-4 md:px-[50px]">
+      <section className="bg-[#000] pt-[90px] md:pt-[150px] pb-[30px]">
+        <div className="max-w-[1820px] mx-auto px-4 md:px-[50px]">
         {/* Gallery row — grid on desktop, stacked on mobile */}
           <div className="flex flex-col md:grid md:grid-cols-[2fr_3fr] md:gap-[5px] md:rounded-[30px] md:overflow-hidden">
 
@@ -110,7 +111,7 @@ const PropertyGallery = ({ images = [], property }) => {
         </div>
 
           {/* Dark info bar */}
-        <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-[25px] md:gap-[50px] px-4 md:px-[170px] pt-[30px] pb-0 text-white">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-[25px] md:gap-[50px] pt-[30px] pb-0 text-white">
           {/* Left */}
           <div itemScope itemType="https://schema.org/Place">
             <h1 className="text-[24px] leading-[28px] md:text-[36px] md:leading-[42px] font-normal text-white mb-[10px]"
@@ -202,6 +203,7 @@ const PropertyGallery = ({ images = [], property }) => {
               </a>
             </div>
           </div>
+        </div>
         </div>
       </section>
     </Gallery>

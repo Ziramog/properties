@@ -2,6 +2,7 @@
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 import SignatureCanvas from 'react-signature-canvas';
+import AgentNameForm from '@/components/AgentNameForm';
 
 export default function ProfileClient({ user, totalProps, payments, config: initialConfig }) {
   const [config, setConfig] = useState(initialConfig || {});
@@ -54,39 +55,18 @@ export default function ProfileClient({ user, totalProps, payments, config: init
   const saveSignature = async () => {
     setSavingSig(true);
     try {
-      // Get canvas data regardless of isEmpty state
       const dataUrl = sigRef.current?.toDataURL?.('image/png');
-
-      // Check if canvas is effectively empty
-      // isEmpty() can be unreliable, so we check if dataUrl is a blank canvas
       const isEmpty = !dataUrl || dataUrl === 'data:image/png;base64,';
-
-      if (isEmpty) {
-        // Clear signature
-        const res = await fetch('/api/site-config', {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ signatureBase64: null }),
-        });
-        if (res.ok) {
-          setConfig(prev => ({ ...prev, signatureBase64: null }));
-        } else {
-          const errData = await res.json();
-          alert('Error al limpiar firma: ' + (errData.error || res.status));
-        }
+      const res = await fetch('/api/site-config', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ signatureBase64: isEmpty ? null : dataUrl }),
+      });
+      if (res.ok) {
+        setConfig(prev => ({ ...prev, signatureBase64: isEmpty ? null : dataUrl }));
       } else {
-        // Save signature
-        const res = await fetch('/api/site-config', {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ signatureBase64: dataUrl }),
-        });
-        if (res.ok) {
-          setConfig(prev => ({ ...prev, signatureBase64: dataUrl }));
-        } else {
-          const errData = await res.json();
-          alert('Error al guardar firma: ' + (errData.error || res.status));
-        }
+        const errData = await res.json();
+        alert('Error al guardar firma: ' + (errData.error || res.status));
       }
     } catch (err) {
       alert('Error: ' + err.message);
@@ -96,196 +76,193 @@ export default function ProfileClient({ user, totalProps, payments, config: init
   };
 
   const clearSignaturePad = () => {
-    if (sigRef.current) {
-      sigRef.current.clear();
-    }
+    if (sigRef.current) sigRef.current.clear();
   };
 
+  const cardCls = 'bg-[#161616] border border-[#222] rounded-sm p-5';
+  const labelCls = 'text-[11px] font-bold uppercase tracking-wider text-[#888] mb-1 block';
+  const inputCls = 'w-full bg-[#0a0a0a] border border-[#333] rounded-sm px-3 py-2 text-sm text-white outline-none focus:border-[var(--color-brand)] transition-colors placeholder:text-[#555]';
+  const btnPrimary = 'bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-xs font-bold px-4 py-2 rounded-sm transition-colors uppercase tracking-wider disabled:opacity-40';
+  const btnSecondary = 'text-xs text-[#999] hover:text-white border border-[#333] px-3 py-2 rounded-sm transition-colors';
+
   return (
-    <div className="p-4 md:p-6 max-w-4xl">
-      <h1 className="text-[28px] md:text-[36px] font-normal text-[#0F172A] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
+    <div className="p-4 md:p-6 max-w-[1600px]">
+      <h1 className="text-[24px] md:text-[30px] font-normal text-white mb-5" style={{ fontFamily: 'var(--font-heading)' }}>
         Perfil
       </h1>
 
-      {/* Plan card */}
-      <div className="bg-gradient-to-br from-[#1C1C1A] to-[#2A2A27] rounded-2xl p-6 md:p-8 mb-6 text-white">
-        <div className="flex items-start justify-between flex-wrap gap-4">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] mb-2">Plan Actual</p>
-            <h2 className="text-[32px] font-bold leading-tight mb-1" style={{ fontFamily: 'var(--font-heading)' }}>Pro</h2>
-            <p className="text-white/50 text-sm">Propiedades: {totalProps} activas</p>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        {/* LEFT — Plan + User */}
+        <div className="md:col-span-3 space-y-4">
+          {/* Plan */}
+          <div className={`${cardCls} bg-gradient-to-br from-[#1C1C1A] to-[#2A2A27]`}>
+            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] mb-1">Plan Actual</p>
+            <h2 className="text-[28px] font-bold leading-tight mb-1" style={{ fontFamily: 'var(--font-heading)' }}>Pro</h2>
+            <p className="text-white/50 text-xs">Propiedades: {totalProps} activas</p>
+            <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
+              <p className="text-[20px] font-bold">U$D 25<span className="text-xs font-normal text-white/50">/mes</span></p>
+              <a href="https://mpago.la/ejemplo" target="_blank" rel="noopener noreferrer" className={btnPrimary}>
+                Renovar
+              </a>
+            </div>
           </div>
-          <div className="text-right">
-            <p className="text-[24px] font-bold">U$D 25<span className="text-sm font-normal text-white/50">/mes</span></p>
-            <p className="text-white/50 text-xs">Sin vencimiento</p>
-          </div>
-        </div>
-        <div className="mt-6 pt-4 border-t border-white/10">
-          <a href="https://mpago.la/ejemplo" target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-sm font-bold px-6 py-3 rounded-lg transition-colors uppercase tracking-wider">
-            Suscribir / Renovar
-          </a>
-        </div>
-      </div>
 
-      {/* User info */}
-      <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm mb-6">
-        <div className="flex items-center gap-5">
-          <Image
-            src={user?.image || '/images/profile.png'}
-            alt="Avatar"
-            width={64}
-            height={64}
-            className="rounded-full object-cover w-16 h-16"
-          />
-          <div>
-            <h3 className="text-[18px] font-semibold text-[#0F172A]">{user?.name || 'Admin'}</h3>
-            <p className="text-[13px] text-[#666]">{user?.email || ''}</p>
+          {/* User */}
+          <div className={cardCls}>
+            <div className="flex items-center gap-3">
+              <Image
+                src={user?.image || '/images/profile.png'}
+                alt="Avatar"
+                width={48}
+                height={48}
+                className="rounded-full object-cover w-12 h-12"
+              />
+              <div>
+                <h3 className="text-[15px] font-semibold text-white">{user?.name || 'Admin'}</h3>
+                <p className="text-[12px] text-[#888]">{user?.email || ''}</p>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-[#222]">
+              <AgentNameForm initialName={user?.agentName} />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Logo de la inmobiliaria */}
-      <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm mb-6">
-        <h3 className="text-[18px] font-semibold text-[#0F172A] mb-4">Logo de la Inmobiliaria</h3>
-        <p className="text-[13px] text-[#666] mb-4">Este logo aparecerá en las propuestas PDF.</p>
-        <div className="flex items-center gap-6">
-          <div className="w-24 h-24 rounded-xl border border-[#eee] flex items-center justify-center overflow-hidden bg-[#f9f9f9]">
-            {config.logoUrl ? (
-              <img src={config.logoUrl} alt="Logo" className="object-contain w-full h-full" />
-            ) : (
-              <span className="text-[#ccc] text-[11px] text-center px-2">Sin logo</span>
+        {/* CENTER — Logo + Rate + Signature */}
+        <div className="md:col-span-5 space-y-4">
+          {/* Logo */}
+          <div className={cardCls}>
+            <p className={labelCls}>Logo de la Inmobiliaria</p>
+            <p className="text-[12px] text-[#666] mb-3">Aparece en las propuestas PDF.</p>
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-sm border border-[#333] flex items-center justify-center overflow-hidden bg-[#0a0a0a]">
+                {config.logoUrl ? (
+                  <img src={config.logoUrl} alt="Logo" className="object-contain w-full h-full" />
+                ) : (
+                  <span className="text-[#555] text-[10px] text-center px-1">Sin logo</span>
+                )}
+              </div>
+              <div>
+                <label className={`${btnPrimary} cursor-pointer inline-block`}>
+                  {uploading ? 'Subiendo...' : 'Seleccionar'}
+                  <input type="file" accept="image/png,image/jpeg" className="hidden" onChange={handleLogoUpload} disabled={uploading} />
+                </label>
+                <p className="text-[10px] text-[#555] mt-1">PNG o JPG ideal</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Exchange rate */}
+          <div className={cardCls}>
+            <p className={labelCls}>Tipo de Cambio ARS/USD</p>
+            <p className="text-[12px] text-[#666] mb-3">Para precios en ARS en propuestas.</p>
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[12px] text-[#666]">$</span>
+                <input type="number" value={rateValue} onChange={(e) => setRateValue(e.target.value)}
+                  className={`${inputCls} w-32 pl-5`} placeholder="1200" min="0" step="1" />
+              </div>
+              <span className="text-[12px] text-[#666]">ARS / USD</span>
+              <button onClick={saveExchangeRate} disabled={savingRate} className={btnPrimary}>
+                {savingRate ? 'Guardando...' : 'Guardar'}
+              </button>
+            </div>
+            {config.exchangeRateARS && (
+              <p className="text-[11px] text-[#555] mt-2">Actual: $ {parseFloat(config.exchangeRateARS).toLocaleString('es-AR')} ARS/USD</p>
             )}
           </div>
-          <div>
-            <label className="inline-block bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-sm font-bold px-5 py-2.5 rounded-lg transition-colors cursor-pointer uppercase tracking-wider">
-              {uploading ? 'Subiendo...' : 'Seleccionar archivo'}
-              <input type="file" accept="image/png,image/jpeg" className="hidden" onChange={handleLogoUpload} disabled={uploading} />
-            </label>
-            <p className="text-[11px] text-[#999] mt-2">PNG o JPG, fondo transparente ideal</p>
+
+          {/* Signature */}
+          <div className={cardCls}>
+            <div className="flex items-center justify-between mb-2">
+              <p className={labelCls + ' mb-0'}>Firma Digital</p>
+              {config.signatureBase64 && (
+                <span className="text-[10px] text-green-400 font-bold uppercase tracking-wider">Guardada</span>
+              )}
+            </div>
+            <p className="text-[12px] text-[#666] mb-2">Aparece automáticamente en propuestas PDF.</p>
+            <div className="border border-[#333] rounded-sm overflow-hidden mb-2 bg-white">
+              <SignatureCanvas
+                ref={sigRef}
+                penColor="#1a1a1a"
+                canvasProps={{ className: 'w-full', style: { width: '100%', height: 80 } }}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <button onClick={clearSignaturePad} className={btnSecondary}>Limpiar</button>
+              <button onClick={saveSignature} disabled={savingSig} className={btnPrimary}>
+                {savingSig ? 'Guardando...' : 'Guardar Firma'}
+              </button>
+            </div>
+            {config.signatureBase64 && (
+              <div className="mt-2 p-2 bg-[#0a0a0a] border border-[#222] rounded-sm inline-block">
+                <img src={config.signatureBase64} alt="Firma" className="h-6" />
+              </div>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Tipo de cambio */}
-      <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm mb-6">
-        <h3 className="text-[18px] font-semibold text-[#0F172A] mb-4">Tipo de Cambio ARS/USD</h3>
-        <p className="text-[13px] text-[#666] mb-4">Se usa para mostrar el precio en ARS en las propuestas.</p>
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[13px] text-[#666] font-medium">$</span>
-            <input type="number" value={rateValue} onChange={(e) => setRateValue(e.target.value)}
-              className="w-40 border border-[#ddd] rounded-lg pl-7 pr-4 py-2.5 text-sm outline-none focus:border-[var(--color-brand)]"
-              placeholder="Ej: 1200" min="0" step="1" />
-          </div>
-          <span className="text-[13px] text-[#666]">ARS por 1 USD</span>
-          <button onClick={saveExchangeRate} disabled={savingRate}
-            className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-sm font-bold px-5 py-2.5 rounded-lg transition-colors uppercase tracking-wider disabled:opacity-40">
-            {savingRate ? 'Guardando...' : 'Guardar'}
-          </button>
-        </div>
-        {config.exchangeRateARS && (
-          <p className="text-[12px] text-[#999] mt-2">Tipo de cambio actual: $ {parseFloat(config.exchangeRateARS).toLocaleString('es-AR')} ARS/USD</p>
-        )}
-      </div>
-
-      {/* Firma digital */}
-      <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm mb-6">
-        <h3 className="text-[18px] font-semibold text-[#0F172A] mb-4">Firma Digital del Agente</h3>
-        <p className="text-[13px] text-[#666] mb-4">Firmá una vez y la firma aparecerá automáticamente en todas las propuestas PDF.</p>
-        <div className="border border-[#ddd] rounded-lg overflow-hidden mb-3">
-          <SignatureCanvas
-            ref={sigRef}
-            penColor="#1a1a1a"
-            canvasProps={{ className: 'w-full h-28', style: { width: '100%', height: 112 } }}
-          />
-        </div>
-        <div className="flex items-center gap-3">
-          <button onClick={clearSignaturePad}
-            className="text-sm text-[#666] hover:text-[#333] border border-[#ddd] px-4 py-2 rounded-lg transition-colors">
-            Limpiar
-          </button>
-          <button onClick={saveSignature} disabled={savingSig}
-            className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-sm font-bold px-5 py-2 rounded-lg transition-colors uppercase tracking-wider disabled:opacity-40">
-            {savingSig ? 'Guardando...' : 'Guardar Firma'}
-          </button>
-        </div>
-        {config.signatureBase64 && (
-          <div className="mt-4 p-4 bg-[#f0faf0] border border-[#b8e6b8] rounded-lg">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center text-white text-[11px] font-bold">✓</span>
-              <span className="text-[12px] font-bold text-green-700 uppercase tracking-wider">Firma guardada y en uso</span>
-            </div>
-            <p className="text-[11px] text-[#666] mb-2">Esta firma se incluirá automáticamente al pie de todas las propuestas PDF.</p>
-            <div className="bg-white rounded-lg border border-[#e0e0e0] p-3 inline-block">
-              <img src={config.signatureBase64} alt="Firma guardada" className="h-10" />
-            </div>
-            <div className="mt-3 flex items-center gap-2 text-[11px] text-[#666] bg-white/50 rounded px-3 py-2">
-              <span className="text-green-600 font-bold">→</span>
-              <span>Aparecerá en: <span className="font-medium text-[#333]">Propuestas &gt; Generar PDF &gt; Pie de página</span></span>
+        {/* RIGHT — Site config */}
+        <div className="md:col-span-4 space-y-4">
+          <div className={cardCls}>
+            <p className={labelCls}>Configuración del Sitio</p>
+            <div className="space-y-2 text-[13px]">
+              <div className="flex justify-between border-b border-[#222] pb-2">
+                <span className="text-[#888]">Email</span>
+                <span className="text-white">info@roggeroyroma.com.ar</span>
+              </div>
+              <div className="flex justify-between border-b border-[#222] pb-2">
+                <span className="text-[#888]">WhatsApp</span>
+                <span className="text-white">+54 9 3547 563911</span>
+              </div>
+              <div className="flex justify-between border-b border-[#222] pb-2">
+                <span className="text-[#888]">Dirección</span>
+                <span className="text-white text-right">Blvd. Carlos Pellegrini 710, Alta Gracia</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#888]">Dominio</span>
+                <span className="text-white">properties-srs5.vercel.app</span>
+              </div>
             </div>
           </div>
-        )}
-      </div>
 
-      {/* Configuración del Sitio */}
-      <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm mb-6">
-        <h3 className="text-[18px] font-semibold text-[#0F172A] mb-4">Configuración del Sitio</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Email de contacto</label>
-            <p className="text-[14px] text-[#333]">info@roggeroyroma.com.ar</p>
-          </div>
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">WhatsApp</label>
-            <p className="text-[14px] text-[#333]">+54 9 3547 563911</p>
-          </div>
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Dirección</label>
-            <p className="text-[14px] text-[#333]">Blvd. Carlos Pellegrini 710, Alta Gracia</p>
-          </div>
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Dominio</label>
-            <p className="text-[14px] text-[#333]">properties-srs5.vercel.app</p>
+          {/* Payments — compact with internal scroll */}
+          <div className={`${cardCls} flex flex-col`} style={{ maxHeight: 340 }}>
+            <p className={labelCls}>Historial de Pagos</p>
+            <div className="overflow-auto mt-2 -mx-5 px-5 flex-1" style={{ maxHeight: 260 }}>
+              {payments.length === 0 ? (
+                <p className="text-[12px] text-[#666] text-center py-4">No hay pagos registrados.</p>
+              ) : (
+                <table className="w-full text-[12px]">
+                  <thead>
+                    <tr className="border-b border-[#333] text-[#888] uppercase tracking-wider text-[10px]">
+                      <th className="text-left py-1.5">Fecha</th>
+                      <th className="text-left py-1.5">Plan</th>
+                      <th className="text-right py-1.5">Monto</th>
+                      <th className="text-right py-1.5">Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#222]">
+                    {payments.map((p) => (
+                      <tr key={p._id}>
+                        <td className="py-2 text-[#999]">{new Date(p.createdAt).toLocaleDateString('es-AR')}</td>
+                        <td className="py-2 text-white capitalize">{p.plan}</td>
+                        <td className="py-2 text-right text-white font-medium">{p.currency || 'U$D'} {p.amount?.toLocaleString('es-AR')}</td>
+                        <td className="py-2 text-right">
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider text-white ${
+                            p.status === 'paid' ? 'bg-green-600' : p.status === 'pending' ? 'bg-yellow-600' : 'bg-red-600'
+                          }`}>
+                            {p.status === 'paid' ? 'Pagado' : p.status === 'pending' ? 'Pendiente' : 'Vencido'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* Historial de pagos */}
-      <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm">
-        <h3 className="text-[18px] font-semibold text-[#0F172A] mb-4">Historial de Pagos</h3>
-        {payments.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-[13px] text-[#999]">No hay pagos registrados.</p>
-          </div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[#eee]">
-                <th className="text-left py-2 font-semibold text-[#333]">Fecha</th>
-                <th className="text-left py-2 font-semibold text-[#333]">Plan</th>
-                <th className="text-right py-2 font-semibold text-[#333]">Monto</th>
-                <th className="text-right py-2 font-semibold text-[#333]">Estado</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#eee]">
-              {payments.map((p) => (
-                <tr key={p._id}>
-                  <td className="py-2.5 text-[#666]">{new Date(p.createdAt).toLocaleDateString('es-AR')}</td>
-                  <td className="py-2.5 text-[#333] font-medium capitalize">{p.plan}</td>
-                  <td className="py-2.5 text-right font-medium text-[#0F172A]">{p.currency || 'U$D'} {p.amount?.toLocaleString('es-AR')}</td>
-                  <td className="py-2.5 text-right">
-                    <span className={`text-[11px] font-bold px-2 py-1 rounded uppercase tracking-wider text-white ${
-                      p.status === 'paid' ? 'bg-green-500' : p.status === 'pending' ? 'bg-yellow-500' : 'bg-red-500'
-                    }`}>
-                      {p.status === 'paid' ? 'Pagado' : p.status === 'pending' ? 'Pendiente' : 'Vencido'}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
       </div>
     </div>
   );

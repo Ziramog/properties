@@ -27,7 +27,7 @@ const AdminLayout = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen flex bg-[#F6F6F6]">
+    <div className="min-h-screen flex bg-[#0a0a0a]">
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 bg-black z-[60] h-[60px] flex items-center px-4 shadow-lg">
         <Link href="/" className="min-w-[44px] min-h-[44px] flex items-center justify-center text-white/60 hover:text-white" title="Volver al sitio">
@@ -71,7 +71,7 @@ const AdminLayout = ({ children }) => {
       </div>
 
       {/* Content */}
-      <main className="flex-1 pt-[60px] md:pt-[78px] min-h-screen">
+      <main className="flex-1 pt-[60px] md:pt-[78px] min-h-screen text-white">
         {children}
       </main>
     </div>

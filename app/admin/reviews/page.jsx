@@ -10,6 +10,8 @@ import toggleReviewFeatured from '@/app/actions/toggleReviewFeatured';
 import toggleReviewHidden from '@/app/actions/toggleReviewHidden';
 import updateReviewPriority from '@/app/actions/updateReviewPriority';
 
+const inputCls = 'w-full bg-[#0a0a0a] border border-[#333] rounded-sm px-4 py-2.5 text-sm text-white outline-none focus:border-[var(--color-brand)] transition-colors placeholder:text-[#555]';
+
 const AdminReviewsPage = async ({ searchParams }) => {
   await connectDB();
 
@@ -42,21 +44,21 @@ const AdminReviewsPage = async ({ searchParams }) => {
       </Link>
 
       <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
-        <h1 className="text-[24px] md:text-[36px] font-normal text-[#0F172A]" style={{ fontFamily: 'var(--font-heading)' }}>
+        <h1 className="text-[24px] md:text-[36px] font-normal text-white" style={{ fontFamily: 'var(--font-heading)' }}>
           Reseñas Google
         </h1>
         <div className="flex gap-2">
-          <a href={showAdd ? '/admin/reviews' : '/admin/reviews?add=1'} className="text-[12px] font-bold uppercase tracking-wider px-4 py-2.5 rounded-lg border border-[var(--color-brand)] text-[var(--color-brand)] hover:bg-[var(--color-brand)] hover:text-white transition-colors">
+          <a href={showAdd ? '/admin/reviews' : '/admin/reviews?add=1'} className="text-[12px] font-bold uppercase tracking-wider px-4 py-2.5 rounded-sm border border-[var(--color-brand)] text-[var(--color-brand)] hover:bg-[var(--color-brand)] hover:text-white transition-colors">
             {showAdd ? 'Volver' : '+ Agregar'}
           </a>
-          <a href="/admin/reviews?sync=1" className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[12px] md:text-[13px] font-bold uppercase tracking-wider px-4 md:px-5 py-2.5 rounded-lg transition-colors">
+          <a href="/admin/reviews?sync=1" className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[12px] md:text-[13px] font-bold uppercase tracking-wider px-4 md:px-5 py-2.5 rounded-sm transition-colors">
             Sincronizar
           </a>
         </div>
       </div>
 
       {syncResult && (
-        <div className={`mb-4 p-4 rounded-xl text-sm ${syncResult.success ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+        <div className={`mb-4 p-4 rounded-sm text-sm ${syncResult.success ? 'bg-green-900/30 text-green-400 border border-green-800' : 'bg-red-900/30 text-red-400 border border-red-800'}`}>
           {syncResult.success
             ? `✅ Sync Google — ${syncResult.inserted} nuevas, ${syncResult.updated} actualizadas${syncResult.duplicatesRemoved > 0 ? `, ${syncResult.duplicatesRemoved} duplicadas eliminadas` : ''} (${syncResult.durationMs}ms). Tenés ${stats.total} reseñas en total. ${syncResult.overallRating ? `★ ${syncResult.overallRating} en Google (${syncResult.totalRatings} reseñas).` : ''}`
             : `❌ Error: ${syncResult.error}`}
@@ -65,33 +67,33 @@ const AdminReviewsPage = async ({ searchParams }) => {
 
       {/* Manual add form */}
       {showAdd && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
-          <h2 className="text-[18px] font-semibold text-[#0F172A] mb-4">Agregar reseña manual</h2>
+        <div className="bg-[#161616] border border-[#222] rounded-sm p-6 mb-6">
+          <h2 className="text-[18px] font-semibold text-white mb-4">Agregar reseña manual</h2>
           <form action={addManualReview} className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
             <div className="md:col-span-2">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Nombre del autor</label>
-              <input type="text" name="authorName" required className="w-full border border-[#ddd] rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[var(--color-brand)]" />
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#888] mb-1">Nombre del autor</label>
+              <input type="text" name="authorName" required className={inputCls} />
             </div>
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Rating (1-5)</label>
-              <select name="rating" required className="w-full border border-[#ddd] rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[var(--color-brand)]">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#888] mb-1">Rating (1-5)</label>
+              <select name="rating" required className={inputCls}>
                 {[5,4,3,2,1].map(n => <option key={n} value={n}>{n} ★</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Fecha</label>
-              <input type="date" name="publishDate" className="w-full border border-[#ddd] rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[var(--color-brand)]" />
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#888] mb-1">Fecha</label>
+              <input type="date" name="publishDate" className={inputCls} />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Texto de la reseña</label>
-              <textarea name="text" rows={3} className="w-full border border-[#ddd] rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[var(--color-brand)]" />
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#888] mb-1">Texto de la reseña</label>
+              <textarea name="text" rows={3} className={inputCls} />
             </div>
             <div className="flex items-center gap-2">
-              <input type="checkbox" name="featured" id="featured" className="w-4 h-4" />
-              <label htmlFor="featured" className="text-sm text-[#333]">Destacada</label>
+              <input type="checkbox" name="featured" id="featured" className="w-4 h-4 accent-[var(--color-brand)]" />
+              <label htmlFor="featured" className="text-sm text-[#ccc]">Destacada</label>
             </div>
             <div className="md:col-span-2">
-              <button type="submit" className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-sm font-bold px-6 py-2.5 rounded-lg transition-colors uppercase tracking-wider">
+              <button type="submit" className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-sm font-bold px-6 py-2.5 rounded-sm transition-colors uppercase tracking-wider">
                 Guardar reseña
               </button>
             </div>
@@ -104,24 +106,24 @@ const AdminReviewsPage = async ({ searchParams }) => {
         <>
           <div className="grid grid-cols-4 gap-3 mb-6">
             {[
-              { value: stats.total, label: 'Total', color: '#0F172A' },
+              { value: stats.total, label: 'Total', color: '#fff' },
               { value: stats.featured, label: 'Destacadas', color: '#F26B2E' },
-              { value: stats.hidden, label: 'Ocultas', color: '#999' },
+              { value: stats.hidden, label: 'Ocultas', color: '#888' },
               { value: stats.avgRating, label: `★ Google${stats.totalUserRatings ? ` (${stats.totalUserRatings})` : ''}`, color: '#F59E0B' },
             ].map(stat => (
-              <div key={stat.label} className="bg-white rounded-xl p-3 md:p-4 shadow-sm text-center">
+              <div key={stat.label} className="bg-[#161616] border border-[#222] rounded-sm p-3 md:p-4 text-center">
                 <p className="text-[20px] md:text-[28px] font-bold leading-none mb-1" style={{ color: stat.color }}>{stat.value}</p>
-                <p className="text-[10px] font-medium text-[#666] uppercase tracking-wider">{stat.label}</p>
+                <p className="text-[10px] font-medium text-[#888] uppercase tracking-wider">{stat.label}</p>
               </div>
             ))}
           </div>
 
           {/* Reviews table */}
-          <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
+          <div className="bg-[#161616] border border-[#222] rounded-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="border-b border-[#eee] text-[10px] font-bold uppercase tracking-wider text-[#999]">
+                  <tr className="border-b border-[#222] text-[10px] font-bold uppercase tracking-wider text-[#888]">
                     <th className="px-3 md:px-4 py-3">Autor</th>
                     <th className="px-2 md:px-3 py-3">★</th>
                     <th className="px-2 md:px-3 py-3 hidden md:table-cell">Reseña</th>
@@ -131,18 +133,18 @@ const AdminReviewsPage = async ({ searchParams }) => {
                     <th className="px-3 md:px-4 py-3 text-right">Prior.</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#f5f5f5]">
+                <tbody className="divide-y divide-[#222]">
                   {reviews.map(r => (
-                    <tr key={r._id.toString()} className="hover:bg-[#fafafa] transition-colors text-[13px]">
-                      <td className="px-3 md:px-4 py-3"><p className="font-medium text-[#0F172A] truncate max-w-[120px]">{r.authorName}</p></td>
-                      <td className="px-2 md:px-3 py-3 text-amber-500">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</td>
-                      <td className="px-2 md:px-3 py-3 text-[#666] hidden md:table-cell truncate max-w-[300px]">{r.text || '—'}</td>
-                      <td className="px-2 md:px-3 py-3 text-[#999] hidden md:table-cell text-[12px]">{r.relativeTimeDescription || r.publishTime?.toISOString().split('T')[0]}</td>
+                    <tr key={r._id.toString()} className="hover:bg-[#1a1a1a] transition-colors text-[13px]">
+                      <td className="px-3 md:px-4 py-3"><p className="font-medium text-white truncate max-w-[120px]">{r.authorName}</p></td>
+                      <td className="px-2 md:px-3 py-3 text-amber-400">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</td>
+                      <td className="px-2 md:px-3 py-3 text-[#bbb] hidden md:table-cell truncate max-w-[300px]">{r.text || '—'}</td>
+                      <td className="px-2 md:px-3 py-3 text-[#888] hidden md:table-cell text-[12px]">{r.relativeTimeDescription || r.publishTime?.toISOString().split('T')[0]}</td>
                       <td className="px-2 md:px-3 py-3 text-center">
                         <form action={toggleReviewFeatured}>
                           <input type="hidden" name="reviewId" value={r._id.toString()} />
                           <input type="hidden" name="current" value={r.featured ? 'true' : 'false'} />
-                          <button type="submit" className={`inline-block w-6 h-6 rounded-full text-[12px] leading-6 font-bold cursor-pointer transition-colors ${r.featured ? 'bg-[var(--color-brand)] text-white' : 'bg-[#eee] text-[#999] hover:bg-[#ddd]'}`}>★</button>
+                          <button type="submit" className={`inline-block w-6 h-6 rounded-full text-[12px] leading-6 font-bold cursor-pointer transition-colors ${r.featured ? 'bg-[var(--color-brand)] text-white' : 'bg-[#333] text-[#888] hover:bg-[#444]'}`}>★</button>
                         </form>
                       </td>
                       <td className="px-2 md:px-3 py-3 text-center">
@@ -157,13 +159,13 @@ const AdminReviewsPage = async ({ searchParams }) => {
                           <form action={updateReviewPriority}>
                             <input type="hidden" name="reviewId" value={r._id.toString()} />
                             <input type="hidden" name="delta" value="-1" />
-                            <button type="submit" className="text-[#999] hover:text-[var(--color-brand)] text-xs leading-none px-1 cursor-pointer">−</button>
+                            <button type="submit" className="text-[#888] hover:text-[var(--color-brand)] text-xs leading-none px-1 cursor-pointer">−</button>
                           </form>
-                          <span className="text-[12px] text-[#999] w-4 text-center leading-none">{r.priority}</span>
+                          <span className="text-[12px] text-[#888] w-4 text-center leading-none">{r.priority}</span>
                           <form action={updateReviewPriority}>
                             <input type="hidden" name="reviewId" value={r._id.toString()} />
                             <input type="hidden" name="delta" value="1" />
-                            <button type="submit" className="text-[#999] hover:text-[var(--color-brand)] text-xs leading-none px-1 cursor-pointer">+</button>
+                            <button type="submit" className="text-[#888] hover:text-[var(--color-brand)] text-xs leading-none px-1 cursor-pointer">+</button>
                           </form>
                         </div>
                       </td>
@@ -171,7 +173,7 @@ const AdminReviewsPage = async ({ searchParams }) => {
                   ))}
                   {reviews.length === 0 && (
                     <tr>
-                      <td colSpan={7} className="px-4 py-12 text-center text-[#999] text-[14px]">
+                      <td colSpan={7} className="px-4 py-12 text-center text-[#888] text-[14px]">
                         No hay reseñas. Hacé clic en "Sincronizar" para traerlas desde Google.
                       </td>
                     </tr>

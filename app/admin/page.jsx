@@ -31,7 +31,7 @@ const AdminPage = async () => {
 
   return (
     <div className="p-4 md:p-6">
-      <h1 className="text-[28px] md:text-[36px] font-normal text-[#0F172A] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
+      <h1 className="text-[28px] md:text-[36px] font-normal text-white mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
         Panel de Control
       </h1>
 
@@ -43,11 +43,11 @@ const AdminPage = async () => {
           { value: featured, label: 'Destacadas', color: '#652660', href: '/admin/properties?is_featured=true' },
           { value: quotes, label: 'Presupuestos', color: '#0F172A', href: '/admin/quotes' },
         ].map(stat => (
-          <Link key={stat.label} href={stat.href} className="bg-white rounded-[20px] p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
+          <Link key={stat.label} href={stat.href} className="bg-[#161616] border border-[#222] rounded-sm p-5 md:p-6 hover:border-[#333] transition-colors">
             <p className="text-[32px] md:text-[40px] font-bold leading-none mb-1" style={{ fontFamily: 'var(--font-heading)', color: stat.color }}>
               {stat.value}
             </p>
-            <p className="text-[11px] md:text-[13px] font-medium text-[#666] uppercase tracking-wider">{stat.label}</p>
+            <p className="text-[11px] md:text-[13px] font-medium text-[#888] uppercase tracking-wider">{stat.label}</p>
           </Link>
         ))}
       </div>
@@ -60,13 +60,13 @@ const AdminPage = async () => {
             <Link
               key={cat.type}
               href={`/admin/properties?type=${cat.type}`}
-              className="bg-white rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow text-center"
+              className="bg-[#161616] border border-[#222] rounded-sm p-5 hover:border-[#333] transition-colors text-center"
             >
               <p className="text-3xl mb-2">{cat.icon}</p>
               <p className="text-[24px] font-bold leading-none mb-1" style={{ color: cat.color }}>
                 {count}
               </p>
-              <p className="text-[11px] font-medium text-[#666] uppercase tracking-wider">{cat.type}</p>
+              <p className="text-[11px] font-medium text-[#888] uppercase tracking-wider">{cat.type}</p>
             </Link>
           );
         })}

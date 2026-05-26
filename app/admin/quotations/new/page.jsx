@@ -8,7 +8,7 @@ export default function NewQuotationPage() {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
         Volver a Presupuestos
       </Link>
-      <h1 className="text-[24px] md:text-[36px] font-normal text-[#0F172A] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
+      <h1 className="text-[24px] md:text-[36px] font-normal text-white mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
         Nueva Propuesta
       </h1>
       <QuotationWizard />
