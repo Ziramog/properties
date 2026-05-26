@@ -162,9 +162,6 @@ const PropertyMap = ({ property }) => {
 
     let lastTouchDist = null;
     const touchStartHandler = (e) => {
-      if (e.touches.length === 1) {
-        e.preventDefault();
-      }
       if (e.touches.length === 2) {
         const dx = e.touches[0].clientX - e.touches[1].clientX;
         const dy = e.touches[0].clientY - e.touches[1].clientY;
@@ -264,7 +261,7 @@ const PropertyMap = ({ property }) => {
         mapStyle='mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7'
         onError={(e) => console.error('[PropertyMap] Map load ERROR:', e?.error?.message || e)}
         scrollZoom={false}
-        dragPan={true}
+        dragPan={false}
         dragRotate={false}
         doubleClickZoom={true}
         touchZoomRotate={false}
