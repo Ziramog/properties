@@ -162,6 +162,9 @@ const PropertyMap = ({ property }) => {
 
     let lastTouchDist = null;
     const touchStartHandler = (e) => {
+      if (e.touches.length === 1) {
+        e.preventDefault();
+      }
       if (e.touches.length === 2) {
         const dx = e.touches[0].clientX - e.touches[1].clientX;
         const dy = e.touches[0].clientY - e.touches[1].clientY;
@@ -175,8 +178,8 @@ const PropertyMap = ({ property }) => {
         const dy = e.touches[0].clientY - e.touches[1].clientY;
         const dist = Math.hypot(dx, dy);
         const delta = dist - lastTouchDist;
-        if (delta > 10) { map.zoomIn({ duration: 0 }); lastTouchDist = dist; }
-        else if (delta < -10) { map.zoomOut({ duration: 0 }); lastTouchDist = dist; }
+        if (delta > 8) { map.zoomIn({ duration: 0 }); lastTouchDist = dist; }
+        else if (delta < -8) { map.zoomOut({ duration: 0 }); lastTouchDist = dist; }
       }
     };
     const touchEndHandler = () => { lastTouchDist = null; };
@@ -264,6 +267,8 @@ const PropertyMap = ({ property }) => {
         dragPan={true}
         dragRotate={false}
         doubleClickZoom={true}
+        touchZoomRotate={false}
+        touchPitch={false}
         keyboard={true}
       >
         <Marker longitude={lng} latitude={lat} anchor='bottom'>
