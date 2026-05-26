@@ -8,6 +8,7 @@ import { generateWhatsAppLink } from '@/utils/whatsapp';
 import { getPriceDisplay } from '@/utils/propertyDisplay';
 import { FaBed, FaBath, FaWhatsapp, FaExpand, FaTimes } from 'react-icons/fa';
 import { TrendingUp, MapPin } from 'lucide-react';
+import Link from 'next/link';
 
 const MapView = dynamic(() => import('./MapView'), {
   ssr: false,
@@ -301,6 +302,19 @@ const MapProperties = ({ initialProperties = [] }) => {
                 selectedId={selectedPropertyId}
               />
             </div>
+
+            {/* Map all link — mobile */}
+            <Link
+              href="/properties/map-all"
+              className="absolute top-4 right-4 z-20 flex items-center gap-1.5 bg-white/90 backdrop-blur-md border border-white/40 rounded-full px-3 py-1.5 text-[11px] font-semibold text-[#1A1A18] shadow-lg hover:bg-white transition-all lg:hidden"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
+                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+                <line x1="8" y1="2" x2="8" y2="18"/>
+                <line x1="16" y1="6" x2="16" y2="22"/>
+              </svg>
+              Ver todas en mapa
+            </Link>
 
             <div
               className={`absolute inset-x-0 bottom-0 z-20 bg-white rounded-t-3xl transition-transform duration-300 overflow-hidden ${snapPoints[sheetPosition]}`}
