@@ -152,11 +152,12 @@ const PropertyMap = ({ property }) => {
 
     const wheelHandler = (e) => {
       if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
         map.scrollZoom.enable();
         requestAnimationFrame(() => map.scrollZoom.disable());
       }
     };
-    container.addEventListener('wheel', wheelHandler, { passive: true });
+    container.addEventListener('wheel', wheelHandler, { passive: false });
 
     disposed.current = () => {
       container.removeEventListener('wheel', wheelHandler);
