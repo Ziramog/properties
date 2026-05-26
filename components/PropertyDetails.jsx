@@ -64,7 +64,7 @@ const PropertyDetails = ({ property }) => {
       {/* Features — Senada .listing-feature */}
       {featureItems.length > 0 && (
         <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden mb-8 md:mb-8">
-          <div className="max-w-[1430px] mx-auto px-[15px] py-[30px] md:py-[30px]">
+          <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[30px]">
             <div className="pb-[30px] js-animate">
               <SectionTitle>Características</SectionTitle>
             </div>
