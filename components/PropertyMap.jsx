@@ -161,25 +161,52 @@ const PropertyMap = ({ property }) => {
     };
 
     let lastTouchDist = null;
+    let lastTouchCenter = null;
     const touchStartHandler = (e) => {
       if (e.touches.length === 2) {
         const dx = e.touches[0].clientX - e.touches[1].clientX;
         const dy = e.touches[0].clientY - e.touches[1].clientY;
         lastTouchDist = Math.hypot(dx, dy);
+        lastTouchCenter = {
+          x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+          y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+        };
       }
     };
     const touchMoveHandler = (e) => {
       if (e.touches.length === 2 && lastTouchDist !== null) {
         e.preventDefault();
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        const dist = Math.hypot(dx, dy);
+
+        const tdx = e.touches[0].clientX - e.touches[1].clientX;
+        const tdy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.hypot(tdx, tdy);
         const delta = dist - lastTouchDist;
+
+        // Pinch zoom
         if (delta > 8) { map.zoomIn({ duration: 0 }); lastTouchDist = dist; }
         else if (delta < -8) { map.zoomOut({ duration: 0 }); lastTouchDist = dist; }
+
+        // Two-finger pan
+        if (lastTouchCenter) {
+          const center = {
+            x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+            y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+          };
+          const pdx = center.x - lastTouchCenter.x;
+          const pdy = center.y - lastTouchCenter.y;
+          if (Math.abs(pdx) > 5 || Math.abs(pdy) > 5) {
+            map.panBy([-pdx, -pdy], { duration: 0 });
+            lastTouchCenter = center;
+          }
+        }
       }
     };
-    const touchEndHandler = () => { lastTouchDist = null; };
+    const touchEndHandler = (e) => {
+      if (e.touches.length < 2) {
+        lastTouchDist = null;
+        lastTouchCenter = null;
+      }
+    };
 
     container.addEventListener('wheel', wheelHandler, { passive: false });
     container.addEventListener('touchstart', touchStartHandler, { passive: false });
