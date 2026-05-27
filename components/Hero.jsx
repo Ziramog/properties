@@ -80,6 +80,9 @@ const Hero = () => {
       setTimeout(() => {
         if (window.innerWidth < 768 && filtersRef.current) {
           filtersRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          setTimeout(() => {
+            window.scrollBy({ top: 70, behavior: 'smooth' });
+          }, 300);
         }
       }, 100);
     }
@@ -112,7 +115,7 @@ const Hero = () => {
           left: 0,
           width: '100%',
           height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, .8)',
+          backgroundColor: 'rgba(0, 0, 0, .92)',
           zIndex: 10,
           transition: 'opacity 0.4s ease',
           opacity: overlayVisible ? 1 : 0,
