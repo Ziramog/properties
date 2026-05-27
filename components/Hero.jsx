@@ -76,6 +76,12 @@ const Hero = () => {
       }
       setOverlayVisible(true);
       setShowMore(true);
+      // Scroll down on mobile to reveal expanded filters
+      setTimeout(() => {
+        if (window.innerWidth < 768 && filtersRef.current) {
+          filtersRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }, 100);
     }
   };
 
@@ -154,7 +160,7 @@ const Hero = () => {
         </div>
 
         {!scrolled && (
-          <div className='absolute left-1/2 -translate-x-1/2 z-10 bottom-[15px] md:hidden scroll-indicator-container'>
+          <div className='absolute left-0 right-0 z-10 bottom-[15px] md:hidden flex justify-center scroll-indicator-container'>
             <img
               src='/senada/images/icons/ico_arrow-down.svg'
               alt='scroll'
