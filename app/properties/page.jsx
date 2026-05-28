@@ -138,9 +138,12 @@ const PropertiesPage = async ({ searchParams }) => {
     ? `Búsqueda en ${term.toUpperCase()}`
     : 'Búsqueda de Propiedades';
 
+  const isFiltered = !!(type && type !== 'Todos') || !!(term && term !== 'Ciudad');
+
   const currentFilters = {
     term: searchParams.term || '',
     address: searchParams.address || '',
+    tipo: type || '',
     operation: operation || 'venta',
     area: area || '',
     price: searchParams.price || '',
@@ -160,16 +163,18 @@ const PropertiesPage = async ({ searchParams }) => {
       {/* Header + Filters — full dark band */}
       <section className="bg-black px-3 md:px-8 pt-24 md:pt-28 pb-6">
         {/* Search */}
-        <PropertiesSearch currentFilters={currentFilters} title={title} />
+        <PropertiesSearch currentFilters={currentFilters} title={title} isFiltered={isFiltered} />
       </section>
 
       {/* Sort Bar */}
       <div id="resultados" className="bg-white px-3 md:px-8">
         <div className="pt-6 pb-2 js-animate">
-          <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-            {subtitle}
-          </h2>
-          <div className="w-16 h-1 bg-[var(--color-brand)] rounded-full" />
+          <div className="flex items-center gap-3">
+            <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+              {subtitle}
+            </h2>
+            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
+          </div>
         </div>
         <SortBar
           total={total}
