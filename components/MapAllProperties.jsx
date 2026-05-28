@@ -235,7 +235,11 @@ export default function MapAllProperties({ initialProperties = [] }) {
   return (
     <div className="min-h-screen bg-[#F6F6F6]">
       {/* Search bar — idéntico a /properties */}
-      <PropertiesSearch onFilter={setActiveFilters} />
+      <section className="bg-black px-4 pt-4 pb-6">
+        <div className="max-w-7xl mx-auto">
+          <PropertiesSearch onFilter={setActiveFilters} />
+        </div>
+      </section>
 
       {/* Map in white container */}
       <div className="max-w-[1820px] mx-auto px-4 md:px-[50px] py-[12px]">
