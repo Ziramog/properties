@@ -148,27 +148,22 @@ const PropertiesPage = async ({ searchParams }) => {
     <div className="min-h-screen bg-white">
       <ScrollToTop searchParams={searchParams} />
       {/* Header + Filters — full dark band */}
-      <section className="bg-black px-4 md:px-8 lg:px-10 xl:px-12 2xl:px-20 pt-24 md:pt-28 pb-6">
-        <div className="max-w-[1820px] mx-auto">
-          {/* Search */}
-          <PropertiesSearch currentFilters={currentFilters} />
-        </div>
+      <section className="bg-black px-3 md:px-8 pt-24 md:pt-28 pb-6">
+        {/* Search */}
+        <PropertiesSearch currentFilters={currentFilters} />
       </section>
 
       {/* Sort Bar */}
-      <div id="resultados" className="bg-white px-4 md:px-8 lg:px-10 xl:px-12 2xl:px-20">
-        <div className="max-w-[1820px] mx-auto">
-          <SortBar
-            total={total}
-            activeSort={sort}
-            searchParams={searchParams}
-          />
-        </div>
+      <div id="resultados" className="bg-white px-3 md:px-8">
+        <SortBar
+          total={total}
+          activeSort={sort}
+          searchParams={searchParams}
+        />
       </div>
 
       {/* Results */}
-      <section className="bg-white px-4 md:px-8 lg:px-10 xl:px-12 2xl:px-20 pb-12">
-        <div className="max-w-[1820px] mx-auto">
+      <section className="bg-white px-3 md:px-8 pb-12">
           {filteredProperties.length === 0 ? (
             <div className="text-center py-20 js-animate">
               <div className="w-16 h-16 rounded-full bg-[#f5f5f5] flex items-center justify-center mx-auto mb-4 shadow-sm">
@@ -194,7 +189,6 @@ const PropertiesPage = async ({ searchParams }) => {
               ))}
             </div>
           )}
-        </div>
       </section>
     </div>
   );
