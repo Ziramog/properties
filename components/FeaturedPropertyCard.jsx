@@ -49,7 +49,7 @@ const FeaturedPropertyCard = ({ property }) => {
     <article className="group">
       <Link href={`/properties/${property._id}`} className="block">
         {/* Card image area */}
-        <div className="relative overflow-hidden" style={{ aspectRatio: '3/2' }}>
+        <div className="relative overflow-hidden rounded-xl" style={{ aspectRatio: '3/2' }}>
           <Image
             src={image}
             alt={property.name}
@@ -65,7 +65,7 @@ const FeaturedPropertyCard = ({ property }) => {
 
           {/* Status badge — top left */}
           {badge && (
-            <span className="absolute top-0 left-0 z-10 bg-[var(--color-brand)] text-white text-[11px] font-bold px-2.5 py-1 uppercase tracking-wider shadow-md">
+            <span className="absolute top-3 left-3 z-10 bg-[var(--color-brand)] text-white text-[11px] font-bold px-2.5 py-1 rounded uppercase tracking-wider shadow-md">
               {badge.label}
             </span>
           )}

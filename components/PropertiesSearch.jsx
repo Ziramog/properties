@@ -203,14 +203,14 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter }) {
   return (
     <div className="search-form" style={{ background: '#000' }}>
       <div className="js-animate">
-        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', lineHeight: '1.2', color: '#fff', padding: '20px 20px 0', margin: 0, fontWeight: 400 }}>
+        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', lineHeight: '1.2', color: '#fff', padding: '20px 0 0', margin: 0, fontWeight: 400 }}>
           Búsqueda de Propiedades
         </h1>
       </div>
       <form onSubmit={handleSubmit} className="searchForm" style={{ border: '1px solid #2a2626', borderRadius: '8px', background: '#000', position: 'relative', zIndex: 1 }}>
-        <div className="top-part p-3 min-[651px]:p-5" style={{
+        <div className="top-part py-3 min-[651px]:py-5" style={{
           borderRadius: '12px', background: '#000',
-          display: 'flex', flexWrap: 'wrap', gap: 0, marginTop: '16px', marginLeft: '20px', marginRight: '20px',
+          display: 'flex', flexWrap: 'wrap', gap: 0, marginTop: '16px',
         }}>
           {/* City / term — elatus-autocomplete */}
           <div className="form-group elatus-autocomplete w-full min-[651px]:w-full min-[992px]:w-1/2 xl:w-[22%] border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626]" style={{
@@ -316,10 +316,9 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter }) {
           opacity: expanded ? 1 : 0,
           overflow: 'hidden',
           transition: 'max-height 500ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease',
-          marginLeft: '20px', marginRight: '20px',
         }}>
           <div className="bottom-part" style={{
-            background: '#000', borderRadius: '12px', padding: '20px',
+            background: '#000', borderRadius: '12px', padding: '20px 0',
             marginTop: '1px',
           }}>
           <div className="inner grid-cols-1 min-[601px]:grid-cols-[2fr_3fr]" style={{ gap: '20px', display: 'grid' }}>
@@ -387,7 +386,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter }) {
       </form>
 
       {/* Toggle + Reset */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 20px 20px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0 20px' }}>
         <button type="button" onClick={handleReset}
           style={{ background: 'none', border: 'none', color: '#919191', fontSize: '12px', cursor: 'pointer', textTransform: 'uppercase', padding: 0 }}
           onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}

@@ -148,7 +148,7 @@ const PropertiesPage = async ({ searchParams }) => {
     <div className="min-h-screen bg-white">
       <ScrollToTop searchParams={searchParams} />
       {/* Header + Filters — full dark band */}
-      <section className="bg-black px-4 pt-24 md:pt-28 pb-6">
+      <section className="bg-black px-4 md:px-8 lg:px-10 xl:px-12 2xl:px-20 pt-24 md:pt-28 pb-6">
         <div className="max-w-[1820px] mx-auto">
           {/* Search */}
           <PropertiesSearch currentFilters={currentFilters} />
@@ -156,7 +156,7 @@ const PropertiesPage = async ({ searchParams }) => {
       </section>
 
       {/* Sort Bar */}
-      <div id="resultados" className="bg-white px-4 md:px-[50px]">
+      <div id="resultados" className="bg-white px-4 md:px-8 lg:px-10 xl:px-12 2xl:px-20">
         <div className="max-w-[1820px] mx-auto">
           <SortBar
             total={total}
@@ -167,7 +167,7 @@ const PropertiesPage = async ({ searchParams }) => {
       </div>
 
       {/* Results */}
-      <section className="bg-white px-4 md:px-[50px] pb-12">
+      <section className="bg-white px-4 md:px-8 lg:px-10 xl:px-12 2xl:px-20 pb-12">
         <div className="max-w-[1820px] mx-auto">
           {filteredProperties.length === 0 ? (
             <div className="text-center py-20 js-animate">
