@@ -174,11 +174,6 @@ const Footer = () => {
                   <img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-[20px] h-[20px]" style={{ filter: 'brightness(0) invert(1)' }} />
                 </a>
               </li>
-              <li>
-                <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="LinkedIn">
-                  <img src="/senada/images/icons/ico_linked.svg" alt="linkedin" className="w-[20px] h-[20px]" style={{ filter: 'brightness(0) invert(1)' }} />
-                </a>
-              </li>
             </ul>
             <p className="text-white/50 text-[14px] uppercase font-bold">
               Powered by{' '}
@@ -319,11 +314,6 @@ const Footer = () => {
               <li>
                 <a href="https://www.instagram.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Instagram">
                   <img src="/senada/images/icons/ico_instagram.svg" alt="instagram" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
-                </a>
-              </li>
-              <li>
-                <a href="https://www.linkedin.com/company/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="LinkedIn">
-                  <img src="/senada/images/icons/ico_linked.svg" alt="linkedin" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
                 </a>
               </li>
             </ul>

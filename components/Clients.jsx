@@ -39,7 +39,7 @@ const Clients = () => {
               className={`flex-shrink-0 w-[160px] md:w-auto transition-all duration-500 ease-in-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'}`}
               style={{ transitionDelay: `${i * 150}ms` }}
             >
-              <div className="bg-white rounded-[20px] p-5 md:p-6 flex items-center justify-center min-h-[100px] md:min-h-[120px]">
+              <div className="bg-white rounded-[20px] py-[12px] px-5 md:px-6 flex items-center justify-center min-h-[100px] md:min-h-[120px]">
                 <Image
                   src={client.logo}
                   alt={client.name}
