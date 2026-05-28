@@ -43,14 +43,13 @@ const STATUS_CHECKBOXES = [
   { value: 'UNICO EN SU TIPO', label: 'Único en su Tipo' },
 ];
 
-export default function PropertiesSearch({ currentFilters = {}, onFilter, title = 'Búsqueda de Propiedades', isFiltered = false }) {
+export default function PropertiesSearch({ currentFilters = {}, onFilter, title = 'Búsqueda de Propiedades' }) {
   const router = useRouter();
   const [expanded, setExpanded] = useState(false);
   const [showCityDropdown, setShowCityDropdown] = useState(false);
   const [citySearch, setCitySearch] = useState(currentFilters.term || '');
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchVisible, setSearchVisible] = useState(!isFiltered);
   const cityInputRef = useRef(null);
   const suggestionTimerRef = useRef(null);
 
@@ -208,19 +207,6 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
           {title}
         </h1>
       </div>
-      {!searchVisible && (
-        <div className="text-center pb-4">
-          <button
-            type="button"
-            onClick={() => setSearchVisible(true)}
-            className="text-[#a29696] text-[12px] uppercase tracking-wider hover:text-white transition-colors"
-            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-          >
-            Mostrar búsqueda
-          </button>
-        </div>
-      )}
-      {searchVisible && (
       <form onSubmit={handleSubmit} className="searchForm" style={{ border: '1px solid #2a2626', borderRadius: '8px', background: '#000', position: 'relative', zIndex: 1 }}>
         <div className="top-part py-3 min-[651px]:py-5" style={{
           borderRadius: '12px', background: '#000',
@@ -398,9 +384,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
         </div>
       </div>
       </form>
-      )}
 
-      {searchVisible && (
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0 20px' }}>
         <button type="button" onClick={handleReset}
           style={{ background: 'none', border: 'none', color: '#919191', fontSize: '12px', cursor: 'pointer', textTransform: 'uppercase', padding: 0 }}
@@ -425,7 +409,6 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
           {expanded ? 'Búsqueda Simple' : 'Búsqueda Avanzada'}
         </button>
       </div>
-      )}
     </div>
   );
 }

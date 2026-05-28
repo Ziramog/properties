@@ -160,14 +160,16 @@ const PropertiesPage = async ({ searchParams }) => {
   return (
     <div className="min-h-screen bg-white">
       <ScrollToTop searchParams={searchParams} />
-      {/* Header + Filters — full dark band */}
+      {/* Header + Filters — full dark band (hidden when filtered from navbar) */}
+      {!isFiltered && (
       <section className="bg-black px-3 md:px-8 pt-24 md:pt-28 pb-6">
         {/* Search */}
-        <PropertiesSearch currentFilters={currentFilters} title={title} isFiltered={isFiltered} />
+        <PropertiesSearch currentFilters={currentFilters} title={title} />
       </section>
+      )}
 
       {/* Sort Bar */}
-      <div id="resultados" className="bg-white px-3 md:px-8">
+      <div id="resultados" className={`bg-white px-3 md:px-8 ${isFiltered ? 'pt-24 md:pt-28' : ''}`}>
         <div className="pt-6 pb-2 js-animate">
           <div className="flex items-center gap-3">
             <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
