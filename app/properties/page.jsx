@@ -132,6 +132,12 @@ const PropertiesPage = async ({ searchParams }) => {
     ? `Propiedades en ${term}`
     : 'Nuestras Propiedades';
 
+  const subtitle = type && type !== 'Todos'
+    ? `Búsqueda en ${type === 'Inmueble Comercial' ? 'INMUEBLES COMERCIALES' : type.toUpperCase() + 'S'}`
+    : term && term !== 'Ciudad'
+    ? `Búsqueda en ${term.toUpperCase()}`
+    : 'Búsqueda de Propiedades';
+
   const currentFilters = {
     term: searchParams.term || '',
     address: searchParams.address || '',
@@ -159,6 +165,12 @@ const PropertiesPage = async ({ searchParams }) => {
 
       {/* Sort Bar */}
       <div id="resultados" className="bg-white px-3 md:px-8">
+        <div className="pt-6 pb-2 js-animate">
+          <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
+            {subtitle}
+          </h2>
+          <div className="w-16 h-1 bg-[var(--color-brand)] rounded-full" />
+        </div>
         <SortBar
           total={total}
           activeSort={sort}

@@ -202,7 +202,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
 
   return (
     <div className="search-form" style={{ background: '#000' }}>
-      <div className="js-animate pb-4">
+      <div className="js-animate pb-4 text-center">
         <h1 className="text-[28px] md:text-[40px] font-normal text-white leading-tight" style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>
           {title}
         </h1>
