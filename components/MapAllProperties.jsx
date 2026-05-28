@@ -4,8 +4,9 @@ import Map, { Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { getPropertyImage } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
-import { FaArrowLeft, FaSearch, FaTimes } from 'react-icons/fa';
+import { FaArrowLeft } from 'react-icons/fa';
 import Link from 'next/link';
+import PropertiesSearch from '@/components/PropertiesSearch';
 
 const knownCities = {
   'Alta Gracia': [-31.6525, -64.4397],
@@ -96,43 +97,12 @@ function PropertyHoverCard({ property }) {
   );
 }
 
-const TYPE_OPTIONS = [
-  { value: '', label: 'Todos' },
-  { value: 'Casa', label: 'Casas' },
-  { value: 'Departamento', label: 'Deptos' },
-  { value: 'Terreno', label: 'Terrenos' },
-  { value: 'Campo', label: 'Campos' },
-  { value: 'Inmueble Comercial', label: 'Comercial' },
-];
-
-const PRICE_OPTIONS = [
-  { value: '', label: 'Cualquier precio' },
-  { value: '0-150000', label: 'Hasta U$S 150k' },
-  { value: '150000-300000', label: 'U$S 150k – 300k' },
-  { value: '300000-500000', label: 'U$S 300k – 500k' },
-  { value: '500000-1000000', label: 'U$S 500k – 1M' },
-  { value: '1000000-0', label: '+ U$S 1M' },
-];
-
-const BEDS_OPTIONS = [
-  { value: '', label: 'Dormitorios' },
-  { value: '1', label: '1+' },
-  { value: '2', label: '2+' },
-  { value: '3', label: '3+' },
-  { value: '4', label: '4+' },
-];
-
 export default function MapAllProperties({ initialProperties = [] }) {
   const [allProps, setAllProps] = useState([]);
   const [hoveredId, setHoveredId] = useState(null);
   const [popupProperty, setPopupProperty] = useState(null);
   const mapRef = useRef(null);
-
-  // Filters
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState('');
-  const [filterPrice, setFilterPrice] = useState('');
-  const [filterBeds, setFilterBeds] = useState('');
+  const [activeFilters, setActiveFilters] = useState(null);
 
   useEffect(() => {
     const geo = initialProperties
@@ -142,10 +112,13 @@ export default function MapAllProperties({ initialProperties = [] }) {
   }, [initialProperties]);
 
   const filteredProps = useMemo(() => {
+    if (!activeFilters) return allProps;
+
     let result = allProps;
 
-    if (searchTerm.trim()) {
-      const q = searchTerm.toLowerCase();
+    // City / name search
+    if (activeFilters.term) {
+      const q = activeFilters.term.toLowerCase();
       result = result.filter(p =>
         p.name?.toLowerCase().includes(q) ||
         p.location?.city?.toLowerCase().includes(q) ||
@@ -153,12 +126,14 @@ export default function MapAllProperties({ initialProperties = [] }) {
       );
     }
 
-    if (filterType) {
-      result = result.filter(p => p.type === filterType);
+    // Property type (from dropdown)
+    if (activeFilters.tipo) {
+      result = result.filter(p => p.type === activeFilters.tipo);
     }
 
-    if (filterPrice) {
-      const [min, max] = filterPrice.split('-').map(Number);
+    // Price range
+    if (activeFilters.price) {
+      const [min, max] = activeFilters.price.split('-').map(Number);
       result = result.filter(p => {
         const price = parsePrice(p.price);
         if (price === 0) return false;
@@ -167,16 +142,72 @@ export default function MapAllProperties({ initialProperties = [] }) {
       });
     }
 
-    if (filterBeds) {
-      const minBeds = parseInt(filterBeds, 10);
+    // Min price
+    if (activeFilters.minPrice) {
+      const min = parseInt(activeFilters.minPrice, 10);
+      result = result.filter(p => parsePrice(p.price) >= min);
+    }
+
+    // Max price
+    if (activeFilters.maxPrice) {
+      const max = parseInt(activeFilters.maxPrice, 10);
+      result = result.filter(p => {
+        const price = parsePrice(p.price);
+        return price > 0 && price <= max;
+      });
+    }
+
+    // Bedrooms
+    if (activeFilters.bedrooms) {
+      const minBeds = parseInt(activeFilters.bedrooms, 10);
       result = result.filter(p => {
         const beds = parseInt(p.beds, 10);
         return !isNaN(beds) && beds >= minBeds;
       });
     }
 
+    // Baths
+    if (activeFilters.baths) {
+      const minBaths = parseInt(activeFilters.baths, 10);
+      result = result.filter(p => {
+        const baths = parseInt(p.baths, 10);
+        return !isNaN(baths) && baths >= minBaths;
+      });
+    }
+
+    // Area range
+    if (activeFilters.area) {
+      const [minArea, maxArea] = activeFilters.area.split('-').map(Number);
+      result = result.filter(p => {
+        const area = parseInt(p.square_feet || p.covered_area, 10);
+        if (isNaN(area) || area === 0) return false;
+        if (maxArea === 0) return area >= minArea;
+        return area >= minArea && area <= maxArea;
+      });
+    }
+
+    // Property type checkboxes
+    if (activeFilters['property-type']?.length) {
+      const typeMap = {
+        residential: ['Casa', 'Departamento'],
+        multi_family: ['Departamento'],
+        land: ['Terreno', 'Campo'],
+        commercial: ['Inmueble Comercial'],
+        industrial: ['Inmueble Comercial'],
+      };
+      const allowedTypes = activeFilters['property-type'].flatMap(t => typeMap[t] || []);
+      if (allowedTypes.length > 0) {
+        result = result.filter(p => allowedTypes.includes(p.type));
+      }
+    }
+
+    // Status checkboxes
+    if (activeFilters.status?.length) {
+      result = result.filter(p => activeFilters.status.includes(p.status));
+    }
+
     return result;
-  }, [allProps, searchTerm, filterType, filterPrice, filterBeds]);
+  }, [allProps, activeFilters]);
 
   useEffect(() => {
     const mapInstance = mapRef.current?.getMap();
@@ -193,215 +224,139 @@ export default function MapAllProperties({ initialProperties = [] }) {
     mapInstance.fitBounds(bounds, { padding: 80, duration: 1000, maxZoom: 13 });
   }, [filteredProps]);
 
-  const hasFilters = searchTerm || filterType || filterPrice || filterBeds;
-
-  const clearFilters = () => {
-    setSearchTerm('');
-    setFilterType('');
-    setFilterPrice('');
-    setFilterBeds('');
-  };
-
   if (allProps.length === 0) {
     return (
-      <div className="h-screen flex items-center justify-center bg-[#E8E6E0]">
+      <div className="h-screen flex items-center justify-center bg-[#F6F6F6]">
         <p className="text-gray-500">Cargando mapa...</p>
       </div>
     );
   }
 
   return (
-    <div className="h-screen w-screen relative overflow-hidden bg-[#E8E6E0]">
-      {/* Search Bar — Senada style */}
-      <div className="absolute top-0 left-0 right-0 z-30 bg-black/90 backdrop-blur-md">
-        <div className="max-w-[1400px] mx-auto px-4 py-3">
-          {/* Top row: back + search input + count */}
-          <div className="flex items-center gap-3">
-            <Link
-              href="/properties"
-              className="flex items-center justify-center w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors flex-shrink-0"
-            >
-              <FaArrowLeft className="w-4 h-4" />
-            </Link>
+    <div className="min-h-screen bg-[#F6F6F6]">
+      {/* Search bar — idéntico a /properties */}
+      <PropertiesSearch onFilter={setActiveFilters} />
 
-            <div className="flex-1 relative">
-              <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-              <input
-                type="text"
-                placeholder="Buscar por nombre o ciudad..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full h-10 pl-9 pr-4 bg-white/10 border border-white/10 rounded-lg text-white text-[13px] outline-none focus:border-[var(--color-brand)] transition-colors placeholder:text-white/40"
-              />
-              {searchTerm && (
-                <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white">
-                  <FaTimes className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
+      {/* Map in white container */}
+      <div className="max-w-[1820px] mx-auto px-4 md:px-[50px] py-[12px]">
+        <div className="bg-white rounded-none overflow-hidden relative" style={{ height: 'calc(100vh - 280px)', minHeight: '500px' }}>
+          {/* Back button */}
+          <Link
+            href="/properties"
+            className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-white/90 backdrop-blur-md border border-white/40 rounded-full px-4 py-2 text-[13px] font-semibold text-[#1A1A18] shadow-lg hover:bg-white transition-all"
+          >
+            <FaArrowLeft className="w-4 h-4" />
+            Volver
+          </Link>
 
-            <div className="hidden sm:flex items-center gap-1.5 bg-white/10 rounded-lg px-3 py-2 flex-shrink-0">
-              <span className="text-white text-[13px] font-semibold">{filteredProps.length}</span>
-              <span className="text-white/50 text-[11px]">propiedades</span>
-            </div>
+          {/* Property count badge */}
+          <div className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-md rounded-full px-4 py-2 text-[12px] font-semibold text-[#1A1A18] shadow-lg">
+            {filteredProps.length} propiedades
           </div>
 
-          {/* Filter row */}
-          <div className="flex items-center gap-2 mt-2 overflow-x-auto scrollbar-hide">
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              className="h-8 px-3 bg-white/10 border border-white/10 rounded-lg text-white text-[12px] outline-none focus:border-[var(--color-brand)] appearance-none cursor-pointer min-w-[100px]"
-            >
-              {TYPE_OPTIONS.map(o => (
-                <option key={o.value} value={o.value} className="bg-black text-white">{o.label}</option>
-              ))}
-            </select>
+          <Map
+            ref={mapRef}
+            mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+            mapLib={import('mapbox-gl')}
+            initialViewState={{ longitude: -64.4397, latitude: -31.6525, zoom: 12 }}
+            style={{ width: '100%', height: '100%' }}
+            mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
+            scrollZoom={true}
+            attributionControl={false}
+          >
+            {filteredProps.map((property) => {
+              const isHovered = hoveredId === property._id;
 
-            <select
-              value={filterPrice}
-              onChange={(e) => setFilterPrice(e.target.value)}
-              className="h-8 px-3 bg-white/10 border border-white/10 rounded-lg text-white text-[12px] outline-none focus:border-[var(--color-brand)] appearance-none cursor-pointer min-w-[120px]"
-            >
-              {PRICE_OPTIONS.map(o => (
-                <option key={o.value} value={o.value} className="bg-black text-white">{o.label}</option>
-              ))}
-            </select>
-
-            <select
-              value={filterBeds}
-              onChange={(e) => setFilterBeds(e.target.value)}
-              className="h-8 px-3 bg-white/10 border border-white/10 rounded-lg text-white text-[12px] outline-none focus:border-[var(--color-brand)] appearance-none cursor-pointer min-w-[100px]"
-            >
-              {BEDS_OPTIONS.map(o => (
-                <option key={o.value} value={o.value} className="bg-black text-white">{o.label}</option>
-              ))}
-            </select>
-
-            {hasFilters && (
-              <button
-                onClick={clearFilters}
-                className="h-8 px-3 text-[var(--color-brand)] text-[12px] font-semibold uppercase tracking-wider hover:text-white transition-colors flex-shrink-0"
-              >
-                Limpiar
-              </button>
-            )}
-
-            {/* Mobile count */}
-            <div className="sm:hidden flex items-center gap-1.5 ml-auto flex-shrink-0">
-              <span className="text-white text-[13px] font-semibold">{filteredProps.length}</span>
-              <span className="text-white/50 text-[11px]">props</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <Map
-        ref={mapRef}
-        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-        mapLib={import('mapbox-gl')}
-        initialViewState={{ longitude: -64.4397, latitude: -31.6525, zoom: 12 }}
-        style={{ width: '100%', height: '100%' }}
-        mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
-        scrollZoom={true}
-        attributionControl={false}
-      >
-        {filteredProps.map((property) => {
-          const isHovered = hoveredId === property._id;
-
-          return (
-            <Marker
-              key={property._id}
-              longitude={property.coords.lng}
-              latitude={property.coords.lat}
-              anchor="bottom"
-              onClick={(e) => {
-                e.originalEvent.stopPropagation();
-                setPopupProperty(property);
-              }}
-            >
-              <div
-                className="relative"
-                onMouseEnter={() => setHoveredId(property._id)}
-                onMouseLeave={() => setHoveredId(null)}
-              >
-                {isHovered && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 pointer-events-none">
-                    <PropertyHoverCard property={property} />
-                  </div>
-                )}
-
-                <div
-                  style={{
-                    background: isHovered ? '#E94560' : '#C93E15',
-                    borderRadius: '10px',
-                    padding: '4px 8px',
-                    boxShadow: isHovered
-                      ? '0 0 0 3px rgba(233,69,96,0.4), 0 8px 24px rgba(0,0,0,0.35)'
-                      : '0 4px 16px rgba(0,0,0,0.3)',
-                    transform: isHovered ? 'scale(1.15)' : 'scale(1)',
-                    transition: 'all 0.2s ease',
+              return (
+                <Marker
+                  key={property._id}
+                  longitude={property.coords.lng}
+                  latitude={property.coords.lat}
+                  anchor="bottom"
+                  onClick={(e) => {
+                    e.originalEvent.stopPropagation();
+                    setPopupProperty(property);
                   }}
                 >
-                  <span style={{ color: '#fff', fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' }}>
-                    {formatPrice(property)}
-                  </span>
-                </div>
-              </div>
-            </Marker>
-          );
-        })}
+                  <div
+                    className="relative"
+                    onMouseEnter={() => setHoveredId(property._id)}
+                    onMouseLeave={() => setHoveredId(null)}
+                  >
+                    {isHovered && (
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 pointer-events-none">
+                        <PropertyHoverCard property={property} />
+                      </div>
+                    )}
 
-        {popupProperty && (
-          <Popup
-            longitude={popupProperty.coords.lng}
-            latitude={popupProperty.coords.lat}
-            anchor="top"
-            onClose={() => setPopupProperty(null)}
-            closeButton={true}
-            closeOnClick={false}
-            maxWidth="280px"
-          >
-            <div className="min-w-[220px] max-w-[260px]">
-              <img
-                src={getPropertyImage(popupProperty)}
-                alt={popupProperty.name}
-                className="w-full h-32 object-cover rounded-md mb-2"
-              />
-              <h3 className="font-semibold text-sm text-gray-900 line-clamp-1">{popupProperty.name}</h3>
-              <p className="text-xs text-gray-500 mt-0.5">
-                {popupProperty.location?.city}
-              </p>
-              <p className="font-bold mt-1 text-base" style={{ color: '#C93E15' }}>
-                {popupProperty.price || 'Consultar'}
-              </p>
-              <a
-                href={generateWhatsAppLink({ property: popupProperty })}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 flex items-center justify-center gap-1.5 w-full py-1.5 bg-whatsapp text-white text-xs font-semibold rounded-md hover:bg-whatsapp-hover transition-colors"
+                    <div
+                      style={{
+                        background: isHovered ? '#E94560' : '#C93E15',
+                        borderRadius: '10px',
+                        padding: '4px 8px',
+                        boxShadow: isHovered
+                          ? '0 0 0 3px rgba(233,69,96,0.4), 0 8px 24px rgba(0,0,0,0.35)'
+                          : '0 4px 16px rgba(0,0,0,0.3)',
+                        transform: isHovered ? 'scale(1.15)' : 'scale(1)',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      <span style={{ color: '#fff', fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' }}>
+                        {formatPrice(property)}
+                      </span>
+                    </div>
+                  </div>
+                </Marker>
+              );
+            })}
+
+            {popupProperty && (
+              <Popup
+                longitude={popupProperty.coords.lng}
+                latitude={popupProperty.coords.lat}
+                anchor="top"
+                onClose={() => setPopupProperty(null)}
+                closeButton={true}
+                closeOnClick={false}
+                maxWidth="280px"
               >
-                WhatsApp
-              </a>
-            </div>
-          </Popup>
-        )}
-      </Map>
-
-      {/* No results overlay */}
-      {filteredProps.length === 0 && allProps.length > 0 && (
-        <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none" style={{ top: 120 }}>
-          <div className="bg-black/80 backdrop-blur-md rounded-xl px-6 py-4 text-center">
-            <p className="text-white font-semibold text-[15px]">No se encontraron propiedades</p>
-            <p className="text-white/50 text-[12px] mt-1">Probá con otros filtros</p>
-            {hasFilters && (
-              <button onClick={clearFilters} className="mt-2 text-[var(--color-brand)] text-[12px] font-bold uppercase tracking-wider hover:text-white transition-colors">
-                Limpiar filtros
-              </button>
+                <div className="min-w-[220px] max-w-[260px]">
+                  <img
+                    src={getPropertyImage(popupProperty)}
+                    alt={popupProperty.name}
+                    className="w-full h-32 object-cover rounded-md mb-2"
+                  />
+                  <h3 className="font-semibold text-sm text-gray-900 line-clamp-1">{popupProperty.name}</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {popupProperty.location?.city}
+                  </p>
+                  <p className="font-bold mt-1 text-base" style={{ color: '#C93E15' }}>
+                    {popupProperty.price || 'Consultar'}
+                  </p>
+                  <a
+                    href={generateWhatsAppLink({ property: popupProperty })}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 flex items-center justify-center gap-1.5 w-full py-1.5 bg-whatsapp text-white text-xs font-semibold rounded-md hover:bg-whatsapp-hover transition-colors"
+                  >
+                    WhatsApp
+                  </a>
+                </div>
+              </Popup>
             )}
-          </div>
+          </Map>
+
+          {/* No results overlay */}
+          {filteredProps.length === 0 && allProps.length > 0 && (
+            <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+              <div className="bg-black/80 backdrop-blur-md rounded-xl px-6 py-4 text-center">
+                <p className="text-white font-semibold text-[15px]">No se encontraron propiedades</p>
+                <p className="text-white/50 text-[12px] mt-1">Probá con otros filtros</p>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

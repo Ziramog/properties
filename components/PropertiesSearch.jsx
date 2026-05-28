@@ -43,7 +43,7 @@ const STATUS_CHECKBOXES = [
   { value: 'UNICO EN SU TIPO', label: 'Único en su Tipo' },
 ];
 
-export default function PropertiesSearch({ currentFilters = {} }) {
+export default function PropertiesSearch({ currentFilters = {}, onFilter }) {
   const router = useRouter();
   const [expanded, setExpanded] = useState(false);
   const [showCityDropdown, setShowCityDropdown] = useState(false);
@@ -180,7 +180,11 @@ export default function PropertiesSearch({ currentFilters = {} }) {
     if (filters.status?.length) params.set('status', filters.status.join('|'));
     if (filters.sort) params.set('sort', filters.sort);
     const query = params.toString();
-    window.location.href = `/properties${query ? `?${query}` : ''}`;
+    if (onFilter) {
+      onFilter(filters);
+    } else {
+      window.location.href = `/properties${query ? `?${query}` : ''}`;
+    }
   };
 
   const handleReset = () => {
@@ -189,7 +193,11 @@ export default function PropertiesSearch({ currentFilters = {} }) {
       price: '', bedrooms: '', baths: '', 'property-type': [], status: [], sort: 'price-desc',
     });
     setCitySearch('');
-    router.push('/properties');
+    if (onFilter) {
+      onFilter(null);
+    } else {
+      router.push('/properties');
+    }
   };
 
   return (
