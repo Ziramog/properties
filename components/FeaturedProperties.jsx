@@ -19,7 +19,7 @@ const FeaturedProperties = ({ properties = [] }) => {
   if (properties.length === 0) return null;
 
   return (
-    <section className="pt-[15px] pb-[15px]" ref={ref}>
+    <section className="pt-[12px] pb-[12px]" ref={ref}>
       <SectionBox className="px-3 md:px-8 py-16 md:py-24">
         {/* Section Header */}
         <div className="text-center mb-10 md:mb-14 js-animate">

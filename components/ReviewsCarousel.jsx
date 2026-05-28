@@ -121,7 +121,7 @@ export default function ReviewsCarousel({ reviews, googleRating, totalRatings })
   if (totalCards === 0) return null;
 
   return (
-    <section className="pt-[15px] pb-[15px]">
+    <section className="pt-[12px] pb-[12px]">
       <div className="bg-white w-full pt-[30px] pb-[30px] md:pt-[40px] md:pb-[40px]">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
 

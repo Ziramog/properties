@@ -16,7 +16,7 @@ const Agents = () => {
   }, []);
 
   return (
-    <section className="pt-[15px] pb-[15px]" id="equipo" ref={ref}>
+    <section className="pt-[12px] pb-[12px]" id="equipo" ref={ref}>
       <SectionBox className="px-4 md:px-8 py-16 md:py-24">
         {/* Section Header — same pattern as Featured Properties */}
         <div className="text-center mb-10 md:mb-14 js-animate">
