@@ -1,10 +1,10 @@
 'use client';
-import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import Map, { Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { getPropertyImage } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaSearch, FaTimes } from 'react-icons/fa';
 import Link from 'next/link';
 
 const knownCities = {
@@ -66,6 +66,12 @@ function formatPrice(property) {
   return `USD $${num}`;
 }
 
+function parsePrice(priceStr) {
+  if (!priceStr) return 0;
+  const cleaned = priceStr.replace(/[^0-9]/g, '');
+  return parseInt(cleaned, 10) || 0;
+}
+
 function PropertyHoverCard({ property }) {
   const price = property.price || 'Consultar';
   const image = property.images?.[0]?.url || '/images/property-placeholder.jpg';
@@ -90,24 +96,93 @@ function PropertyHoverCard({ property }) {
   );
 }
 
+const TYPE_OPTIONS = [
+  { value: '', label: 'Todos' },
+  { value: 'Casa', label: 'Casas' },
+  { value: 'Departamento', label: 'Deptos' },
+  { value: 'Terreno', label: 'Terrenos' },
+  { value: 'Campo', label: 'Campos' },
+  { value: 'Inmueble Comercial', label: 'Comercial' },
+];
+
+const PRICE_OPTIONS = [
+  { value: '', label: 'Cualquier precio' },
+  { value: '0-150000', label: 'Hasta U$S 150k' },
+  { value: '150000-300000', label: 'U$S 150k – 300k' },
+  { value: '300000-500000', label: 'U$S 300k – 500k' },
+  { value: '500000-1000000', label: 'U$S 500k – 1M' },
+  { value: '1000000-0', label: '+ U$S 1M' },
+];
+
+const BEDS_OPTIONS = [
+  { value: '', label: 'Dormitorios' },
+  { value: '1', label: '1+' },
+  { value: '2', label: '2+' },
+  { value: '3', label: '3+' },
+  { value: '4', label: '4+' },
+];
+
 export default function MapAllProperties({ initialProperties = [] }) {
-  const [geocodedProps, setGeocodedProps] = useState([]);
+  const [allProps, setAllProps] = useState([]);
   const [hoveredId, setHoveredId] = useState(null);
   const [popupProperty, setPopupProperty] = useState(null);
   const mapRef = useRef(null);
+
+  // Filters
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState('');
+  const [filterPrice, setFilterPrice] = useState('');
+  const [filterBeds, setFilterBeds] = useState('');
 
   useEffect(() => {
     const geo = initialProperties
       .map((p) => ({ ...p, coords: geocode(p) }))
       .filter((p) => p.coords != null);
-    setGeocodedProps(geo);
+    setAllProps(geo);
   }, [initialProperties]);
+
+  const filteredProps = useMemo(() => {
+    let result = allProps;
+
+    if (searchTerm.trim()) {
+      const q = searchTerm.toLowerCase();
+      result = result.filter(p =>
+        p.name?.toLowerCase().includes(q) ||
+        p.location?.city?.toLowerCase().includes(q) ||
+        p.location?.street?.toLowerCase().includes(q)
+      );
+    }
+
+    if (filterType) {
+      result = result.filter(p => p.type === filterType);
+    }
+
+    if (filterPrice) {
+      const [min, max] = filterPrice.split('-').map(Number);
+      result = result.filter(p => {
+        const price = parsePrice(p.price);
+        if (price === 0) return false;
+        if (max === 0) return price >= min;
+        return price >= min && price <= max;
+      });
+    }
+
+    if (filterBeds) {
+      const minBeds = parseInt(filterBeds, 10);
+      result = result.filter(p => {
+        const beds = parseInt(p.beds, 10);
+        return !isNaN(beds) && beds >= minBeds;
+      });
+    }
+
+    return result;
+  }, [allProps, searchTerm, filterType, filterPrice, filterBeds]);
 
   useEffect(() => {
     const mapInstance = mapRef.current?.getMap();
-    if (!mapInstance || geocodedProps.length === 0) return;
+    if (!mapInstance || filteredProps.length === 0) return;
 
-    const bounds = geocodedProps.reduce(
+    const bounds = filteredProps.reduce(
       (acc, p) => [
         [Math.min(acc[0][0], p.coords.lng), Math.min(acc[0][1], p.coords.lat)],
         [Math.max(acc[1][0], p.coords.lng), Math.max(acc[1][1], p.coords.lat)],
@@ -116,9 +191,18 @@ export default function MapAllProperties({ initialProperties = [] }) {
     );
 
     mapInstance.fitBounds(bounds, { padding: 80, duration: 1000, maxZoom: 13 });
-  }, [geocodedProps]);
+  }, [filteredProps]);
 
-  if (geocodedProps.length === 0) {
+  const hasFilters = searchTerm || filterType || filterPrice || filterBeds;
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setFilterType('');
+    setFilterPrice('');
+    setFilterBeds('');
+  };
+
+  if (allProps.length === 0) {
     return (
       <div className="h-screen flex items-center justify-center bg-[#E8E6E0]">
         <p className="text-gray-500">Cargando mapa...</p>
@@ -128,18 +212,88 @@ export default function MapAllProperties({ initialProperties = [] }) {
 
   return (
     <div className="h-screen w-screen relative overflow-hidden bg-[#E8E6E0]">
-      {/* Back button */}
-      <Link
-        href="/properties"
-        className="absolute top-4 left-4 z-30 flex items-center gap-2 bg-white/90 backdrop-blur-md border border-white/40 rounded-full px-4 py-2 text-[13px] font-semibold text-[#1A1A18] shadow-lg hover:bg-white transition-all"
-      >
-        <FaArrowLeft className="w-4 h-4" />
-        Volver
-      </Link>
+      {/* Search Bar — Senada style */}
+      <div className="absolute top-0 left-0 right-0 z-30 bg-black/90 backdrop-blur-md">
+        <div className="max-w-[1400px] mx-auto px-4 py-3">
+          {/* Top row: back + search input + count */}
+          <div className="flex items-center gap-3">
+            <Link
+              href="/properties"
+              className="flex items-center justify-center w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors flex-shrink-0"
+            >
+              <FaArrowLeft className="w-4 h-4" />
+            </Link>
 
-      {/* Property count badge */}
-      <div className="absolute top-4 right-4 z-30 bg-white/90 backdrop-blur-md rounded-full px-4 py-2 text-[12px] font-semibold text-[#1A1A18] shadow-lg">
-        {geocodedProps.length} propiedades
+            <div className="flex-1 relative">
+              <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+              <input
+                type="text"
+                placeholder="Buscar por nombre o ciudad..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full h-10 pl-9 pr-4 bg-white/10 border border-white/10 rounded-lg text-white text-[13px] outline-none focus:border-[var(--color-brand)] transition-colors placeholder:text-white/40"
+              />
+              {searchTerm && (
+                <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white">
+                  <FaTimes className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
+            <div className="hidden sm:flex items-center gap-1.5 bg-white/10 rounded-lg px-3 py-2 flex-shrink-0">
+              <span className="text-white text-[13px] font-semibold">{filteredProps.length}</span>
+              <span className="text-white/50 text-[11px]">propiedades</span>
+            </div>
+          </div>
+
+          {/* Filter row */}
+          <div className="flex items-center gap-2 mt-2 overflow-x-auto scrollbar-hide">
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              className="h-8 px-3 bg-white/10 border border-white/10 rounded-lg text-white text-[12px] outline-none focus:border-[var(--color-brand)] appearance-none cursor-pointer min-w-[100px]"
+            >
+              {TYPE_OPTIONS.map(o => (
+                <option key={o.value} value={o.value} className="bg-black text-white">{o.label}</option>
+              ))}
+            </select>
+
+            <select
+              value={filterPrice}
+              onChange={(e) => setFilterPrice(e.target.value)}
+              className="h-8 px-3 bg-white/10 border border-white/10 rounded-lg text-white text-[12px] outline-none focus:border-[var(--color-brand)] appearance-none cursor-pointer min-w-[120px]"
+            >
+              {PRICE_OPTIONS.map(o => (
+                <option key={o.value} value={o.value} className="bg-black text-white">{o.label}</option>
+              ))}
+            </select>
+
+            <select
+              value={filterBeds}
+              onChange={(e) => setFilterBeds(e.target.value)}
+              className="h-8 px-3 bg-white/10 border border-white/10 rounded-lg text-white text-[12px] outline-none focus:border-[var(--color-brand)] appearance-none cursor-pointer min-w-[100px]"
+            >
+              {BEDS_OPTIONS.map(o => (
+                <option key={o.value} value={o.value} className="bg-black text-white">{o.label}</option>
+              ))}
+            </select>
+
+            {hasFilters && (
+              <button
+                onClick={clearFilters}
+                className="h-8 px-3 text-[var(--color-brand)] text-[12px] font-semibold uppercase tracking-wider hover:text-white transition-colors flex-shrink-0"
+              >
+                Limpiar
+              </button>
+            )}
+
+            {/* Mobile count */}
+            <div className="sm:hidden flex items-center gap-1.5 ml-auto flex-shrink-0">
+              <span className="text-white text-[13px] font-semibold">{filteredProps.length}</span>
+              <span className="text-white/50 text-[11px]">props</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <Map
@@ -152,7 +306,7 @@ export default function MapAllProperties({ initialProperties = [] }) {
         scrollZoom={true}
         attributionControl={false}
       >
-        {geocodedProps.map((property) => {
+        {filteredProps.map((property) => {
           const isHovered = hoveredId === property._id;
 
           return (
@@ -171,14 +325,12 @@ export default function MapAllProperties({ initialProperties = [] }) {
                 onMouseEnter={() => setHoveredId(property._id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
-                {/* Hover card */}
                 {isHovered && (
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 pointer-events-none">
                     <PropertyHoverCard property={property} />
                   </div>
                 )}
 
-                {/* Pin */}
                 <div
                   style={{
                     background: isHovered ? '#E94560' : '#C93E15',
@@ -235,6 +387,21 @@ export default function MapAllProperties({ initialProperties = [] }) {
           </Popup>
         )}
       </Map>
+
+      {/* No results overlay */}
+      {filteredProps.length === 0 && allProps.length > 0 && (
+        <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none" style={{ top: 120 }}>
+          <div className="bg-black/80 backdrop-blur-md rounded-xl px-6 py-4 text-center">
+            <p className="text-white font-semibold text-[15px]">No se encontraron propiedades</p>
+            <p className="text-white/50 text-[12px] mt-1">Probá con otros filtros</p>
+            {hasFilters && (
+              <button onClick={clearFilters} className="mt-2 text-[var(--color-brand)] text-[12px] font-bold uppercase tracking-wider hover:text-white transition-colors">
+                Limpiar filtros
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
