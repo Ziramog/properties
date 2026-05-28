@@ -149,7 +149,7 @@ const PropertiesPage = async ({ searchParams }) => {
       <ScrollToTop searchParams={searchParams} />
       {/* Header + Filters — full dark band */}
       <section className="bg-black px-4 pt-24 md:pt-28 pb-6">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1820px] mx-auto">
           {/* Search */}
           <PropertiesSearch currentFilters={currentFilters} />
         </div>
@@ -166,7 +166,7 @@ const PropertiesPage = async ({ searchParams }) => {
 
       {/* Results */}
       <section className="px-4 pb-12">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1820px] mx-auto">
           <div className="bg-white rounded-2xl border border-[#eee] shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
           {filteredProperties.length === 0 ? (
             <div className="text-center py-20 js-animate">
