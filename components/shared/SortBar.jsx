@@ -17,10 +17,7 @@ const SortBar = ({ total, activeSort, searchParams }) => {
   };
 
   return (
-    <div className="flex items-center justify-between py-3 bg-white border-b border-gray-100 js-animate">
-      <p className="text-sm text-[#666]">
-        <span className="font-semibold text-[#0F172A]">{total}</span> {total === 1 ? 'propiedad' : 'propiedades'} encontradas
-      </p>
+    <div className="flex items-center justify-end py-3 bg-white border-b border-gray-100 js-animate">
       <div className="flex items-center gap-2">
         <span className="text-xs font-bold uppercase tracking-wider text-[#999]">Ordenar por</span>
         <select

@@ -43,7 +43,7 @@ const STATUS_CHECKBOXES = [
   { value: 'UNICO EN SU TIPO', label: 'Único en su Tipo' },
 ];
 
-export default function PropertiesSearch({ currentFilters = {}, onFilter }) {
+export default function PropertiesSearch({ currentFilters = {}, onFilter, title = 'Búsqueda de Propiedades' }) {
   const router = useRouter();
   const [expanded, setExpanded] = useState(false);
   const [showCityDropdown, setShowCityDropdown] = useState(false);
@@ -202,9 +202,9 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter }) {
 
   return (
     <div className="search-form" style={{ background: '#000' }}>
-      <div className="js-animate">
-        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', lineHeight: '1.2', color: '#fff', padding: '20px 0 0', margin: 0, fontWeight: 400 }}>
-          Búsqueda de Propiedades
+      <div className="js-animate pb-4">
+        <h1 className="text-[28px] md:text-[40px] font-normal text-white leading-tight" style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>
+          {title}
         </h1>
       </div>
       <form onSubmit={handleSubmit} className="searchForm" style={{ border: '1px solid #2a2626', borderRadius: '8px', background: '#000', position: 'relative', zIndex: 1 }}>

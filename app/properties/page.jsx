@@ -126,7 +126,11 @@ const PropertiesPage = async ({ searchParams }) => {
     ? 'Mis Favoritos'
     : granInversion === 'true'
     ? 'Grandes Inversiones'
-    : total > 0 ? `${total} propiedades encontradas` : 'Nuestras Propiedades';
+    : type && type !== 'Todos'
+    ? type === 'Inmueble Comercial' ? 'Inmuebles Comerciales' : `${type}s`
+    : term && term !== 'Ciudad'
+    ? `Propiedades en ${term}`
+    : 'Nuestras Propiedades';
 
   const currentFilters = {
     term: searchParams.term || '',
@@ -150,7 +154,7 @@ const PropertiesPage = async ({ searchParams }) => {
       {/* Header + Filters — full dark band */}
       <section className="bg-black px-3 md:px-8 pt-24 md:pt-28 pb-6">
         {/* Search */}
-        <PropertiesSearch currentFilters={currentFilters} />
+        <PropertiesSearch currentFilters={currentFilters} title={title} />
       </section>
 
       {/* Sort Bar */}
