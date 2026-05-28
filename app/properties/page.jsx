@@ -156,18 +156,19 @@ const PropertiesPage = async ({ searchParams }) => {
       </section>
 
       {/* Sort Bar */}
-      <div id="resultados">
-        <SortBar
-          total={total}
-          activeSort={sort}
-          searchParams={searchParams}
-        />
+      <div id="resultados" className="bg-white px-4 md:px-[50px]">
+        <div className="max-w-[1820px] mx-auto">
+          <SortBar
+            total={total}
+            activeSort={sort}
+            searchParams={searchParams}
+          />
+        </div>
       </div>
 
       {/* Results */}
-      <section className="px-4 pb-12">
+      <section className="bg-white px-4 md:px-[50px] pb-12">
         <div className="max-w-[1820px] mx-auto">
-          <div className="bg-white rounded-2xl border border-[#eee] shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
           {filteredProperties.length === 0 ? (
             <div className="text-center py-20 js-animate">
               <div className="w-16 h-16 rounded-full bg-[#f5f5f5] flex items-center justify-center mx-auto mb-4 shadow-sm">
@@ -185,7 +186,7 @@ const PropertiesPage = async ({ searchParams }) => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 p-4 md:p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
               {filteredProperties.map((property, i) => (
                 <ScrollReveal key={property._id} delay={i * 80}>
                   <FeaturedPropertyCard property={property} />
@@ -193,7 +194,6 @@ const PropertiesPage = async ({ searchParams }) => {
               ))}
             </div>
           )}
-          </div>
         </div>
       </section>
     </div>
