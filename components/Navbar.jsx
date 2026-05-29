@@ -30,8 +30,7 @@ const Navbar = () => {
     dropdownTimeout.current = setTimeout(() => setDesktopDropdown(null), 200);
   };
 
-  const isHeroPage = pathname === '/';
-  const isGlassMode = !isHeroPage || isScrolled || isMobileMenuOpen;
+  const isGlassMode = isScrolled || isMobileMenuOpen;
 
   useEffect(() => {
     const setAuthProviders = async () => {
@@ -88,11 +87,11 @@ const Navbar = () => {
           <Link className="flex items-center flex-shrink-0 group" href="/">
             <Image
               className="brightness-0 invert transition-all duration-300 group-hover:opacity-70"
-              src={isHeroPage && !isScrolled ? '/images/LOGO R&R 2023.png' : '/images/ISOTIPO R&R-Photoroom.png'}
+              src={!isScrolled ? '/images/LOGO R&R 2023.png' : '/images/ISOTIPO R&R-Photoroom.png'}
               alt="Roggero & Roma"
-              width={isHeroPage && !isScrolled ? 277 : 120}
-              height={isHeroPage && !isScrolled ? 92 : 40}
-              style={{ height: isHeroPage && !isScrolled ? '92px' : '40px', width: 'auto' }}
+              width={!isScrolled ? 277 : 120}
+              height={!isScrolled ? 92 : 40}
+              style={{ height: !isScrolled ? '92px' : '40px', width: 'auto' }}
             />
           </Link>
 
