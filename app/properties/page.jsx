@@ -27,8 +27,19 @@ const PropertiesPage = async ({ searchParams }) => {
   if (granInversion !== 'true') {
     if (type && type !== 'Todos') filter.type = type;
   }
-  // term = city search from PropertiesSearch
-  if (term && term !== 'Ciudad') filter['location.city'] = { $regex: term, $options: 'i' };
+  // term = search across all fields
+  if (term && term !== 'Ciudad') {
+    const termRegex = new RegExp(term, 'i');
+    filter.$or = [
+      { name: termRegex },
+      { description: termRegex },
+      { 'location.city': termRegex },
+      { 'location.street': termRegex },
+      { 'location.state': termRegex },
+      { 'location.zipcode': termRegex },
+      { type: termRegex },
+    ];
+  }
   if (bedrooms) {
     const num = parseInt(bedrooms.replace('+', ''));
     filter.beds = { $gte: num };

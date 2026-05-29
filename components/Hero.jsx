@@ -92,14 +92,21 @@ const Hero = () => {
     e.preventDefault();
     const params = new URLSearchParams();
     if (filters.term && filters.term.trim()) {
-      params.set('city', filters.term.trim());
+      params.set('term', filters.term.trim());
       logSearch(filters.term.trim());
     }
-    if (filters.type && filters.type !== 'Todos') params.set('type', filters.type);
+    if (filters.type && filters.type !== 'Todos') {
+      const typeMap = { 'Casas': 'Casa', 'Departamentos': 'Departamento', 'Terrenos': 'Terreno', 'Campos': 'Campo', 'Inmuebles Comerciales': 'Inmueble Comercial', 'Grandes Inversiones': 'Gran Inversión' };
+      params.set('type', typeMap[filters.type] || filters.type);
+    }
     if (filters.bedrooms) params.set('bedrooms', filters.bedrooms);
     if (filters.baths) params.set('baths', filters.baths);
-    if (filters.price && filters.price !== 'Cualquiera') params.set('price', filters.price);
-    if (filters.operation && filters.operation !== 'Todos') params.set('operation', filters.operation);
+    if (filters.price && filters.price !== 'Cualquiera') {
+      const priceMap = { 'Hasta 150k': { min: 0, max: 150000 }, '150k-300k': { min: 150000, max: 300000 }, '+300k': { min: 300000, max: 999999999 } };
+      const range = priceMap[filters.price];
+      if (range) { params.set('minPrice', range.min); params.set('maxPrice', range.max); }
+    }
+    if (filters.operation && filters.operation !== 'Todos') params.set('operation', filters.operation === 'Venta' ? 'venta' : filters.operation === 'Alquiler' ? 'alquiler' : filters.operation);
     router.push(`/properties${params.toString() ? `?${params.toString()}` : ''}`);
   };
 
@@ -280,8 +287,19 @@ const Hero = () => {
               <button
                 type='button'
                 onClick={() => {
-                  if (mobileValue.trim()) logSearch(mobileValue.trim());
-                  router.push('/properties');
+                  const params = new URLSearchParams();
+                  if (mobileValue.trim()) { params.set('term', mobileValue.trim()); logSearch(mobileValue.trim()); }
+                  if (filters.type && filters.type !== 'Todos') {
+                    const typeMap = { 'Casas': 'Casa', 'Departamentos': 'Departamento', 'Terrenos': 'Terreno', 'Campos': 'Campo', 'Inmuebles Comerciales': 'Inmueble Comercial', 'Grandes Inversiones': 'Gran Inversión' };
+                    params.set('type', typeMap[filters.type] || filters.type);
+                  }
+                  if (filters.price && filters.price !== 'Cualquiera') {
+                    const priceMap = { 'Hasta 150k': { min: 0, max: 150000 }, '150k-300k': { min: 150000, max: 300000 }, '+300k': { min: 300000, max: 999999999 } };
+                    const range = priceMap[filters.price];
+                    if (range) { params.set('minPrice', range.min); params.set('maxPrice', range.max); }
+                  }
+                  if (filters.operation && filters.operation !== 'Todos') params.set('operation', filters.operation === 'Venta' ? 'venta' : filters.operation === 'Alquiler' ? 'alquiler' : filters.operation);
+                  router.push(`/properties${params.toString() ? `?${params.toString()}` : ''}`);
                 }}
                 className='w-full bg-primary hover:bg-[#e05a23] text-white font-bold text-sm uppercase tracking-wider rounded-xl h-12 flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/30 mt-3'
               >
