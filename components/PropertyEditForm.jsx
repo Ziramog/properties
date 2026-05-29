@@ -151,6 +151,12 @@ const PropertyEditForm = ({ property }) => {
       </div>
 
       <div className='mb-4'>
+        <label className='block text-gray-700 font-bold mb-2'>Precio</label>
+        <input type='text' id='price' name='price' className='border rounded w-full py-2 px-3'
+          placeholder='Ej: USD 502,000 o Consultar' defaultValue={property.price} />
+      </div>
+
+      <div className='mb-4'>
         <label className='block text-gray-700 font-bold mb-2'>Comodidades</label>
         <div className='grid grid-cols-2 md:grid-cols-3 gap-2'>
           {[
