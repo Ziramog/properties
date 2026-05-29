@@ -28,7 +28,7 @@ const CategoryCards = () => {
 
   return (
     <section className="pb-[30px] pt-[30px] px-4">
-      <SectionBox className="max-w-[92vw] mx-auto px-4 md:px-8 py-16 md:py-24">
+      <SectionBox className="max-w-[92vw] mx-auto px-4 md:px-[50px] py-16 md:py-24">
         {/* Header */}
         <div className="text-center mb-10 md:mb-14">
           <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--color-brand)] block mb-3">

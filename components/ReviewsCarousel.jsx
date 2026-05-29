@@ -123,7 +123,7 @@ export default function ReviewsCarousel({ reviews, googleRating, totalRatings })
   return (
     <section className="pt-[12px] pb-[12px]">
       <div className="bg-white w-full pt-[30px] pb-[30px] md:pt-[40px] md:pb-[40px]">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-[50px]">
 
           <div className="text-center mb-8 md:mb-10 js-animate">
             <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>

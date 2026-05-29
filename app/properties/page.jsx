@@ -161,13 +161,13 @@ const PropertiesPage = async ({ searchParams }) => {
     <div className="min-h-screen bg-white">
       <ScrollToTop searchParams={searchParams} isFiltered={isFiltered} />
       {/* Header + Filters — full dark band */}
-      <section className="bg-black px-3 md:px-8 pt-24 md:pt-28 pb-6">
+      <section className="bg-black px-4 md:px-[50px] pt-24 md:pt-28 pb-6">
         {/* Search */}
         <PropertiesSearch currentFilters={currentFilters} title={title} />
       </section>
 
       {/* Sort Bar */}
-      <div id="resultados" className="bg-white px-3 md:px-8">
+      <div id="resultados" className="bg-white px-4 md:px-[50px]">
         <div className="pt-6 pb-2 js-animate">
           <div className="flex items-center gap-3">
             <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
@@ -184,7 +184,7 @@ const PropertiesPage = async ({ searchParams }) => {
       </div>
 
       {/* Results */}
-      <section className="bg-white px-3 md:px-8 pb-12">
+      <section className="bg-white px-4 md:px-[50px] pb-12">
           {filteredProperties.length === 0 ? (
             <div className="text-center py-20 js-animate">
               <div className="w-16 h-16 rounded-full bg-[#f5f5f5] flex items-center justify-center mx-auto mb-4 shadow-sm">

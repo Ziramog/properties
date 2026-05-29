@@ -82,7 +82,7 @@ const Navbar = () => {
         }`}
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 8px) + 15px)', paddingBottom: '15px' }}
       >
-        <div className="max-w-[1820px] mx-auto flex items-center px-3 md:px-8 h-full">
+        <div className="flex items-center px-4 md:px-[50px] h-full w-full">
           {/* Logo */}
           <Link className="flex items-center flex-shrink-0 group" href="/">
             <Image
@@ -229,7 +229,7 @@ const Navbar = () => {
         }`}
         style={{ height: 'calc(env(safe-area-inset-top, 8px) + 60px)' }}
       >
-        <div className="flex items-center justify-between px-3 h-full">
+        <div className="flex items-center justify-between px-4 h-full">
           {/* Logo — isotipo */}
           <Link className="flex items-center flex-shrink-0" href="/">
             <Image
