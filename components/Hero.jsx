@@ -195,7 +195,7 @@ const Hero = () => {
                     <label className={`absolute left-12 pointer-events-none transition-all duration-300 ${desktopFocus || filters.term ? '-top-2 text-[12px] text-white font-medium' : 'top-1/2 -translate-y-1/2 text-sm text-white/40'}`}>
                       {'Buscar > Ciudad, Precio, Tipo Inmueble, Palabra Clave'}
                     </label>
-                    <input type='text' name='term' className='w-full h-[54px] pl-12 pr-4 rounded-md bg-transparent text-white text-sm outline-none pt-4' value={filters.term || ''} onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))} onFocus={() => setDesktopFocus(true)} onBlur={() => setDesktopFocus(false)} required />
+                    <input type='text' name='term' className='w-full h-[54px] pl-12 pr-4 rounded-md bg-transparent text-white text-sm outline-none pt-4' value={filters.term || ''} onChange={(e) => setFilters(prev => ({ ...prev, term: e.target.value }))} onFocus={() => setDesktopFocus(true)} onBlur={() => setDesktopFocus(false)} />
                   </div>
                 </div>
                 <button type='button' onClick={() => setShowMore(!showMore)} className='h-[54px] text-white/55 text-xs font-normal uppercase tracking-wider hover:text-white transition-colors flex-shrink-0 self-end pb-0.5'>
