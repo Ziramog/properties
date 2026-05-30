@@ -66,7 +66,7 @@ const PropertyPage = async ({ params }) => {
       <div className="min-h-screen" style={{ background: '#F6F6F6' }}>
         <PropertyGallery images={property.images} property={property} />
         <section className="pb-16">
-          <div className="max-w-[1820px] mx-auto">
+          <div className="mx-auto">
             <div className="py-4 px-4 md:px-0">
               <Link
                 href='/properties'
