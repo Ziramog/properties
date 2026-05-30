@@ -53,17 +53,6 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
   const cityInputRef = useRef(null);
   const suggestionTimerRef = useRef(null);
 
-  const [openDropdown, setOpenDropdown] = useState(null);
-
-  useEffect(() => {
-    if (!openDropdown) return;
-    const handleClick = (e) => {
-      if (!e.target.closest('[data-dropdown]')) setOpenDropdown(null);
-    };
-    document.addEventListener('click', handleClick);
-    return () => document.removeEventListener('click', handleClick);
-  }, [openDropdown]);
-
   const [filters, setFilters] = useState({
     term: currentFilters.term || '',
     address: currentFilters.address || '',
@@ -80,11 +69,13 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     sort: currentFilters.sort || 'price-desc',
   });
 
-  const [focused, setFocused] = useState({ term: false });
+  const [focused, setFocused] = useState({
+    term: false, tipo: false, area: false, price: false, bedrooms: false, baths: false,
+  });
 
   const labelActive = (field) => {
     if (field === 'term') return focused.term || filters.term !== '';
-    if (field === 'type') return focused.type || filters.tipo !== '';
+    if (field === 'tipo') return focused.tipo || filters.tipo !== '';
     if (field === 'area') return focused.area || filters.area !== '';
     if (field === 'price') return focused.price || filters.price !== '';
     if (field === 'bedrooms') return focused.bedrooms || filters.bedrooms !== '';
@@ -200,6 +191,61 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     }
   };
 
+  const FIELD_HEIGHT = '56px';
+
+  const getLabelStyle = (isActive, left = '15px') => ({
+    position: 'absolute',
+    left,
+    zIndex: 9,
+    pointerEvents: 'none',
+    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+    top: isActive ? '6px' : '50%',
+    transform: isActive ? 'none' : 'translateY(-50%)',
+    fontSize: isActive ? '10px' : '16px',
+    fontWeight: isActive ? '500' : '400',
+    textTransform: isActive ? 'uppercase' : 'none',
+    letterSpacing: isActive ? '0.06em' : '0',
+    color: isActive ? '#fff' : '#a29696',
+    lineHeight: 1.2,
+  });
+
+  const getInputStyle = (isActive, extra = {}) => ({
+    height: '100%',
+    width: '100%',
+    background: 'transparent',
+    border: '1px solid transparent',
+    color: isActive ? '#fff' : 'transparent',
+    fontSize: '16px',
+    fontWeight: 400,
+    outline: 'none',
+    paddingLeft: '15px',
+    paddingTop: isActive ? '18px' : '0',
+    paddingRight: '16px',
+    ...extra,
+  });
+
+  const getSelectStyle = (isActive) => ({
+    height: '100%',
+    width: '100%',
+    background: 'transparent',
+    border: '1px solid transparent',
+    color: isActive ? '#fff' : 'transparent',
+    fontSize: '16px',
+    fontWeight: 400,
+    outline: 'none',
+    paddingLeft: '15px',
+    paddingRight: '30px',
+    appearance: 'none',
+    cursor: 'pointer',
+  });
+
+  const getWrapperStyle = () => ({
+    position: 'relative',
+    height: FIELD_HEIGHT,
+    display: 'flex',
+    alignItems: 'center',
+  });
+
   return (
     <div className="search-form" style={{ background: '#000' }}>
       <div className="js-animate text-center">
@@ -208,34 +254,29 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
         </h1>
       </div>
       <form onSubmit={handleSubmit} className="searchForm" style={{ border: '1px solid #2a2626', borderRadius: '8px', background: '#000', position: 'relative', zIndex: 1 }}>
-        <div className="top-part py-3 min-[651px]:py-5" style={{
+        <div className="top-part" style={{
           borderRadius: '12px', background: '#000',
           display: 'flex', flexWrap: 'wrap', gap: 0, marginTop: '0', alignItems: 'center',
         }}>
-          {/* City / term — elatus-autocomplete */}
-          <div className="form-group elatus-autocomplete w-full min-[651px]:w-full min-[992px]:w-1/2 xl:w-[22%] border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626]" style={{
-            position: 'relative',
-          }} onFocus={() => setFocused((p) => ({ ...p, term: true }))} onBlur={() => setFocused((p) => ({ ...p, term: false }))}>
+          {/* City / term */}
+          <div className="form-group elatus-autocomplete w-full min-[651px]:w-full min-[992px]:w-1/2 xl:w-[22%] border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626]"
+            style={getWrapperStyle()}
+            onFocus={() => setFocused((p) => ({ ...p, term: true }))}
+            onBlur={() => setFocused((p) => ({ ...p, term: false }))}>
             <svg style={{
               position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)',
               width: '19px', height: '19px', zIndex: 9, filter: 'brightness(0) invert(1)',
             }} viewBox="0 0 24 24" fill="currentColor"><path d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z"/></svg>
-            <label className={`animated-label ${focused.term || filters.term ? 'active' : ''}`} style={{
-              position: 'absolute', color: focused.term || filters.term ? '#fff' : '#a29696', fontSize: focused.term || filters.term ? '12px' : '16px',
-              fontWeight: focused.term || filters.term ? '500' : '400', zIndex: 9, left: '50px', top: focused.term || filters.term ? '5px' : '20px',
-              pointerEvents: 'none', transition: 'all 0.3s ease-in-out',
-            }}>Ciudad o código</label>
-            <div className="input-wrap" style={{ display: 'flex', gap: '15px' }}>
-              <input
-                ref={cityInputRef}
-                type="text" name="term" autoComplete="off"
-                value={citySearch}
-                onChange={(e) => { setCitySearch(e.target.value); handleChange(e); }}
-                onFocus={() => { setShowCityDropdown(true); setFocused((p) => ({ ...p, term: true })); }}
-                onBlur={() => { setTimeout(() => setShowCityDropdown(false), 200); setFocused((p) => ({ ...p, term: false })); }}
-                style={{ color: '#a29696', background: 'transparent', fontSize: '16px', fontWeight: 400, border: '1px solid transparent', paddingLeft: '50px', width: '100%', outline: 'none' }}
-              />
-            </div>
+            <label style={getLabelStyle(labelActive('term'), '50px')}>Ciudad o código</label>
+            <input
+              ref={cityInputRef}
+              type="text" name="term" autoComplete="off"
+              value={citySearch}
+              onChange={(e) => { setCitySearch(e.target.value); handleChange(e); }}
+              onFocus={() => { setShowCityDropdown(true); setFocused((p) => ({ ...p, term: true })); }}
+              onBlur={() => { setTimeout(() => setShowCityDropdown(false), 200); setFocused((p) => ({ ...p, term: false })); }}
+              style={getInputStyle(labelActive('term'), { paddingLeft: '50px' })}
+            />
             {showCityDropdown && suggestions.length > 0 && (
               <div style={{ position: 'absolute', zIndex: 50, top: '100%', left: 0, right: 0, marginTop: '1px', background: '#000', border: '1px solid #2a2626', borderRadius: '8px', overflow: 'hidden' }}>
                 <ul style={{ maxHeight: '240px', overflowY: 'auto', margin: 0, padding: 0, listStyle: 'none' }}>
@@ -256,43 +297,34 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
             )}
           </div>
 
-          {/* Filter dropdowns (Tipo, Superficie, Precio, Dormitorios, Baños) */}
+          {/* Filter selects */}
           {FILTER_CONFIG.map((f) => {
-            const isOpen = openDropdown === f.name;
-            const hasValue = filters[f.name] !== '';
-            const currentLabel = f.options.find((o) => o.value === filters[f.name])?.label || f.label;
+            const isActive = labelActive(f.name);
             return (
-              <div key={f.name} data-dropdown={f.name}
+              <div key={f.name}
                 className={`form-group notranslate ${f.name}-group ${f.className} border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626]`}
-                style={{ position: 'relative', marginBottom: 0, padding: 0, outline: 'none' }}>
-                <label className={`animated-label ${isOpen || hasValue ? 'active' : ''}`} style={{
-                  position: 'absolute', color: isOpen || hasValue ? '#fff' : '#a29696',
-                  fontSize: isOpen || hasValue ? '12px' : '16px',
-                  fontWeight: isOpen || hasValue ? '500' : '400', zIndex: 9, left: '15px',
-                  top: isOpen || hasValue ? '5px' : '20px',
-                  pointerEvents: 'none', transition: 'all 0.3s ease-in-out',
-                }}>{f.label}</label>
-                <div onClick={() => setOpenDropdown(isOpen ? null : f.name)}
-                  className="w-full h-10 flex items-center justify-between cursor-pointer px-3"
-                  style={{ color: hasValue ? '#fff' : '#a29696', fontSize: '16px' }}>
-                  <span>{hasValue ? currentLabel : ''}</span>
-                  <svg className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: '#888', flexShrink: 0 }}>
-                    <path d="M6 9l6 6 6-6"/>
-                  </svg>
-                </div>
-                {isOpen && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-black border border-[#2a2626] rounded-xl py-2 z-50 shadow-xl max-h-[250px] overflow-y-auto">
-                    {f.options.map((o) => (
-                      <div key={o.value}
-                        onClick={() => { handleChange({ target: { name: f.name, value: o.value } }); setOpenDropdown(null); }}
-                        className="h-12 px-4 flex items-center cursor-pointer hover:bg-white/5 transition-colors">
-                        <span className={`text-sm px-3 py-1.5 rounded-lg ${filters[f.name] === o.value ? 'bg-[var(--color-brand)] text-white font-semibold' : 'text-white/70'}`}>
-                          {o.label}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                style={getWrapperStyle()}>
+                <label style={getLabelStyle(isActive)}>{f.label}</label>
+                <select
+                  name={f.name}
+                  value={filters[f.name]}
+                  onChange={handleChange}
+                  onFocus={() => setFocused((p) => ({ ...p, [f.name]: true }))}
+                  onBlur={() => setFocused((p) => ({ ...p, [f.name]: false }))}
+                  style={getSelectStyle(isActive)}
+                >
+                  <option value="" disabled hidden></option>
+                  {f.options.map((o) => (
+                    <option key={o.value} value={o.value} style={{ backgroundColor: '#000', color: '#fff' }}>{o.label}</option>
+                  ))}
+                </select>
+                <svg style={{
+                  position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
+                  width: '12px', height: '12px', zIndex: 2, pointerEvents: 'none',
+                  color: '#888',
+                }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
               </div>
             );
           })}
@@ -301,7 +333,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
           <button type="submit" className="btn btn-primary btnSubmit" style={{
             background: 'var(--color-brand)', color: '#fff', border: 'none',
             fontSize: '15px', fontWeight: 400, textTransform: 'uppercase',
-            padding: '15px 30px', borderRadius: '8px', cursor: 'pointer',
+            height: FIELD_HEIGHT, padding: '0 30px', borderRadius: '8px', cursor: 'pointer',
             whiteSpace: 'nowrap', alignSelf: 'center', flexShrink: 0,
             letterSpacing: '0.06em', transition: 'opacity 0.2s',
           }} onMouseEnter={(e) => e.target.style.opacity = '0.85'} onMouseLeave={(e) => e.target.style.opacity = '1'}>
@@ -309,7 +341,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
           </button>
         </div>
 
-        {/* Bottom-part expandable filters — slide animation */}
+        {/* Bottom-part expandable filters */}
         <div style={{
           maxHeight: expanded ? '450px' : '0',
           opacity: expanded ? 1 : 0,
