@@ -244,7 +244,6 @@ const PropertyMap = ({ property }) => {
         ref={mapRef}
         onLoad={onMapLoad}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-        mapLib={import('mapbox-gl')}
         initialViewState={{
           longitude: lng,
           latitude: lat,

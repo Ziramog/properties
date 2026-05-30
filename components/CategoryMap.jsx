@@ -263,7 +263,6 @@ const CategoryMap = ({ properties = [] }) => {
         ref={mapRef}
         onLoad={onMapLoad}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-        mapLib={import('mapbox-gl')}
         initialViewState={{
           longitude: markers[0]?.lng || -64.4397,
           latitude: markers[0]?.lat || -31.6525,

@@ -261,7 +261,6 @@ export default function MapAllProperties({ initialProperties = [] }) {
           <Map
             ref={mapRef}
             mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-            mapLib={import('mapbox-gl')}
             initialViewState={{ longitude: -64.4397, latitude: -31.6525, zoom: 12 }}
             style={{ width: '100%', height: '100%' }}
             mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
