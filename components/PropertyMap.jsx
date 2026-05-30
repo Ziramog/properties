@@ -23,6 +23,7 @@ const knownCities = {
   'Villa Allende': [-31.3, -64.3],
   'La Calera': [-31.35, -64.34],
   Malagueño: [-31.46, -64.36],
+  'Santa Ana': [-31.574, -64.343],
 };
 
 function geocodeCity(city) {
@@ -191,17 +192,27 @@ const PropertyMap = ({ property }) => {
         return;
       }
 
-      // 3. Nominatim geocoding fallback
-      const query = [property.location?.street, property.location?.city, property.location?.state, 'Argentina']
+      // 3. Nominatim geocoding fallback (full address)
+      const fullQuery = [property.location?.street, property.location?.city, property.location?.state, 'Argentina']
         .filter(Boolean)
         .join(', ');
 
       try {
         const res = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`,
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullQuery)}`,
           { headers: { 'User-Agent': 'property-pulse-app' } }
         );
-        const data = await res.json();
+        let data = await res.json();
+
+        // Fallback: try city + state + Argentina without street
+        if (data.length === 0 && property.location?.city && property.location?.state) {
+          const fallbackQuery = `${property.location.city}, ${property.location.state}, Argentina`;
+          const fallbackRes = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fallbackQuery)}`,
+            { headers: { 'User-Agent': 'property-pulse-app' } }
+          );
+          data = await fallbackRes.json();
+        }
 
         if (data.length === 0) {
           setGeocodeError(true);

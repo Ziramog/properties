@@ -21,6 +21,7 @@ const knownCities = {
   'Villa Allende': [-31.3, -64.3],
   'La Calera': [-31.35, -64.34],
   Malagueño: [-31.46, -64.36],
+  'Santa Ana': [-31.574, -64.343],
 };
 
 function geocodeCity(city) {
@@ -29,13 +30,16 @@ function geocodeCity(city) {
   return coords ? { lat: coords[0], lng: coords[1] } : null;
 }
 
-async function fetchCityCoords(city) {
+async function fetchCityCoords(city, state) {
   const cached = knownCities[city];
   if (cached) return { lat: cached[0], lng: cached[1] };
 
   try {
+    const query = state
+      ? `${city}, ${state}, Argentina`
+      : `${city}, Argentina`;
     const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city + ', Argentina')}`,
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`,
       { headers: { 'User-Agent': 'property-pulse-app' } }
     );
     const data = await res.json();
@@ -101,19 +105,20 @@ const CategoryMap = ({ properties = [] }) => {
 
   // Geocode unknown cities once
   useEffect(() => {
-    const unknownCities = [...new Set(
+    const unknown = [...new Map(
       properties
-        .map((p) => p.location?.city)
-        .filter((city) => city && !knownCities[city] && !geocodedCities[city])
-    )];
+        .map((p) => ({ city: p.location?.city, state: p.location?.state }))
+        .filter((entry) => entry.city && !knownCities[entry.city] && !geocodedCities[entry.city])
+        .map((entry) => [entry.city, entry])
+    ).values()];
 
-    if (unknownCities.length === 0) return;
+    if (unknown.length === 0) return;
 
     let cancelled = false;
     (async () => {
       const results = {};
-      for (const city of unknownCities) {
-        const coords = await fetchCityCoords(city);
+      for (const { city, state } of unknown) {
+        const coords = await fetchCityCoords(city, state);
         if (coords) results[city] = coords;
       }
       if (!cancelled) {
