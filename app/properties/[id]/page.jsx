@@ -67,17 +67,6 @@ const PropertyPage = async ({ params }) => {
         <PropertyGallery images={property.images} property={property} />
         <section className="pb-16">
           <div className="mx-auto">
-            <div className="py-4 px-4 md:px-0">
-              <Link
-                href='/properties'
-                className='text-[var(--color-brand)] hover:text-[#0F172A] inline-flex items-center font-medium transition-colors text-[13px]'
-              >
-                <svg className='mr-1.5 w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 16 16'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M10 3 6 8l4 5' />
-                </svg>
-                Volver a Propiedades
-              </Link>
-            </div>
             <PropertyDetails property={property} />
             {property.images && property.images.length > 0 && (
               <div className="mt-8" id="full-gallery">
@@ -102,7 +91,7 @@ const PropertyPage = async ({ params }) => {
 
             {/* View on Map */}
             <div className="mt-8">
-              <div className="bg-white rounded-none overflow-hidden">
+              <div className="bg-white rounded-[30px] overflow-hidden">
                 <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[40px]">
                   <div className="pb-[30px] flex items-center justify-between js-animate">
                     <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
@@ -122,7 +111,7 @@ const PropertyPage = async ({ params }) => {
                     </Link>
                   </div>
                   <ScrollReveal>
-                    <div className="rounded-none overflow-hidden">
+                    <div className="rounded-[30px] overflow-hidden">
                       <PropertyMap property={property} />
                     </div>
                   </ScrollReveal>

@@ -241,7 +241,11 @@ const PropertyMap = ({ property }) => {
         keyboard={true}
       >
         <Marker longitude={lng} latitude={lat} anchor='bottom'>
-          <Image src={pin} alt='location' width={40} height={40} />
+          <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <path d="m32 0a24.028 24.028 0 0 0 -24 24c0 16.228 22.342 38.756 23.293 39.707a1 1 0 0 0 1.414 0c.951-.951 23.293-23.479 23.293-39.707a24.028 24.028 0 0 0 -24-24z" fill="#E94560"/>
+            <circle cx="32" cy="24" fill="#c41e3a" r="13"/>
+            <circle cx="32" cy="24" fill="#fff" opacity="0.25" r="6"/>
+          </svg>
         </Marker>
       </Map>
       <MapHintOverlay dismissed={hintDismissed} onDismiss={() => setHintDismissed(true)} />

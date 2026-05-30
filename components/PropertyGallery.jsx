@@ -128,7 +128,7 @@ const PropertyGallery = ({ images = [], property }) => {
                  target="_blank" rel="noopener noreferrer"
                  className="inline-flex items-center gap-2 text-[#b8b8b8] hover:text-white transition-colors text-[16px] mb-4"
                  itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="var(--color-brand)" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                 </svg>
