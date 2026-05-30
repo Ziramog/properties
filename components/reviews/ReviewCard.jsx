@@ -22,15 +22,14 @@ function AuthorAvatar({ name, photo }) {
 export default function ReviewCard({ review, variant = 'default' }) {
   if (variant === 'minimal') {
     return (
-      <article className="relative flex flex-col h-full bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-6 md:p-8 transition-shadow duration-300 hover:shadow-[0_8px_32px_rgba(0,0,0,0.10)]" aria-label={`Reseña de ${review.authorName}`}>
-        {/* Decorative quote mark */}
-        <div className="mb-3 md:mb-4 select-none" style={{ fontFamily: 'var(--font-heading)', fontSize: '56px', lineHeight: 0.8, color: 'var(--color-brand)' }}>
-          &ldquo;
-        </div>
-        <p className="text-[15px] md:text-[16px] text-[#444] leading-[1.7] mb-5 md:mb-6 flex-1" style={{ fontFamily: 'var(--font-body)' }}>
+      <article className="relative flex flex-col h-full bg-[#f9f9f9] shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-6 md:p-8 transition-shadow duration-300 hover:shadow-[0_8px_32px_rgba(0,0,0,0.10)]" aria-label={`Reseña de ${review.authorName}`}>
+        <p className="text-[15px] md:text-[16px] text-[#444] leading-[1.7] mb-5 md:mb-6 flex-1 italic line-clamp-4" style={{ fontFamily: 'var(--font-body)' }}>
           {review.text}
         </p>
-        <div className="pt-4 border-t border-[#eee]">
+        <div className="flex items-center gap-3 mt-auto">
+          <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 rounded-md" style={{ backgroundColor: 'var(--color-brand)' }}>
+            <span className="text-white text-2xl leading-none font-serif">&ldquo;</span>
+          </div>
           <p className="text-sm font-semibold text-[#1a1a1a] tracking-wide">{review.authorName}</p>
         </div>
       </article>
