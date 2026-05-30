@@ -37,7 +37,8 @@ const Footer = () => {
                 />
               </Link>
                   <ul>
-                    <li className="text-[13px] text-white/70 font-light py-[5px] block">Blvd. Carlos Pellegrini 710, X5186 Alta Gracia, Córdoba</li>
+                    <li className="text-[13px] text-white/70 font-light py-[5px] block">Blvd. Carlos Pellegrini 710</li>
+                    <li className="text-[13px] text-white/70 font-light py-[5px] block">X5186 Alta Gracia, Córdoba</li>
                   </ul>
               <a href={`mailto:${EMAIL}`} className="flex items-center gap-[5px] text-[13px] text-white font-light py-[5px] hover:text-white/70 transition-colors">
                 <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
@@ -72,6 +73,11 @@ const Footer = () => {
                           </Link>
                         </li>
                       ))}
+                      <li>
+                        <Link href="/properties" className="block text-[13px] text-white/70 font-light py-[5px] pr-[10px] hover:text-white transition-colors">
+                          Ver todas
+                        </Link>
+                      </li>
                     </ul>
                   </li>
                   {/* EMPRESA */}
@@ -100,12 +106,7 @@ const Footer = () => {
                     <ul>
                       <li>
                         <Link href="/#propiedades-destacadas" className="block text-[13px] text-white/70 font-light py-[5px] pr-[10px] hover:text-white transition-colors">
-                          Propiedades Destacadas
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/properties?type=Casa" className="block text-[13px] text-white/70 font-light py-[5px] pr-[10px] hover:text-white transition-colors">
-                          Ver todas
+                          Nuestra Seleccion
                         </Link>
                       </li>
                     </ul>
@@ -148,11 +149,6 @@ const Footer = () => {
                 Ingresar
               </button>
             ))}
-            {session && (
-              <button onClick={() => signOut()} className="text-white/30 text-[13px] uppercase font-bold hover:text-white/60 transition-colors">
-                Salir
-              </button>
-            )}
             <ul className="flex items-center gap-[25px]">
               <li>
                 <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Email">
@@ -207,8 +203,8 @@ const Footer = () => {
                 className="brightness-0 invert"
               />
             </Link>
-            <p className="text-[13px] text-white/60 font-light mt-3">Alta Gracia</p>
-            <p className="text-[13px] text-white/60 font-light">Córdoba, Argentina</p>
+            <p className="text-[13px] text-white/60 font-light mt-3">Blvd. Carlos Pellegrini 710</p>
+            <p className="text-[13px] text-white/60 font-light">X5186 Alta Gracia, Córdoba</p>
             <a href={`mailto:${EMAIL}`} className="flex items-center gap-2 text-[13px] text-white font-light">
               <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
               {EMAIL}
@@ -235,6 +231,9 @@ const Footer = () => {
                     {l.label}
                   </Link>
                 ))}
+                <Link href="/properties" className="text-[13px] text-white/60 font-light py-[3px] hover:text-white transition-colors">
+                  Ver todas
+                </Link>
               </div>
             </div>
             {/* Empresa */}
@@ -255,7 +254,7 @@ const Footer = () => {
             <div>
               <span className="block text-[15px] text-white uppercase font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>Listado Premium</span>
               <Link href="/#propiedades-destacadas" className="text-[13px] text-white/60 font-light py-[3px] hover:text-white transition-colors">
-                Propiedades Destacadas
+                Nuestra Seleccion
               </Link>
             </div>
             {/* Newsletter */}
@@ -290,11 +289,6 @@ const Footer = () => {
                 Ingresar
               </button>
             ))}
-            {session && (
-              <button onClick={() => signOut()} className="text-white/30 text-[13px] uppercase font-bold hover:text-white/60 transition-colors">
-                Salir
-              </button>
-            )}
             <ul className="flex items-center gap-[25px]">
               <li>
                 <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Email">
