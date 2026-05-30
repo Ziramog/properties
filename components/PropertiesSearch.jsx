@@ -302,9 +302,8 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
             background: 'var(--color-brand)', color: '#fff', border: 'none',
             fontSize: '15px', fontWeight: 400, textTransform: 'uppercase',
             padding: '15px 30px', borderRadius: '8px', cursor: 'pointer',
-            whiteSpace: 'nowrap', alignSelf: 'center',
+            whiteSpace: 'nowrap', alignSelf: 'center', flexShrink: 0,
             letterSpacing: '0.06em', transition: 'opacity 0.2s',
-            marginLeft: '10px', flexShrink: 0,
           }} onMouseEnter={(e) => e.target.style.opacity = '0.85'} onMouseLeave={(e) => e.target.style.opacity = '1'}>
             Buscar
           </button>
