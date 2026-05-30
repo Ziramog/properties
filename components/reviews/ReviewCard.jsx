@@ -22,7 +22,7 @@ function AuthorAvatar({ name, photo }) {
 export default function ReviewCard({ review, variant = 'default' }) {
   if (variant === 'minimal') {
     return (
-      <article className="relative flex flex-col h-full bg-[#f9f9f9] shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-6 md:p-8 transition-shadow duration-300 hover:shadow-[0_8px_32px_rgba(0,0,0,0.10)]" aria-label={`Reseña de ${review.authorName}`}>
+      <article className="relative flex flex-col h-full bg-[#f2f2f2] p-6 md:p-8" aria-label={`Reseña de ${review.authorName}`}>
         <p className="text-[15px] md:text-[16px] text-[#444] leading-[1.7] mb-5 md:mb-6 flex-1 italic line-clamp-4" style={{ fontFamily: 'var(--font-body)' }}>
           {review.text}
         </p>
