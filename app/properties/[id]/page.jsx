@@ -5,6 +5,7 @@ import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import PropertyGallery from '@/components/PropertyGallery';
 import PropertyMap from '@/components/PropertyMap';
+import MapErrorBoundary from '@/components/shared/MapErrorBoundary';
 import FullGallery from '@/components/FullGallery';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
@@ -112,7 +113,9 @@ const PropertyPage = async ({ params }) => {
                   </div>
                   <ScrollReveal>
                     <div className="rounded-[30px] overflow-hidden">
-                      <PropertyMap property={property} />
+                      <MapErrorBoundary>
+                        <PropertyMap property={property} />
+                      </MapErrorBoundary>
                     </div>
                   </ScrollReveal>
                 </div>

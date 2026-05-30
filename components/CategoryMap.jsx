@@ -10,47 +10,42 @@ const knownCities = {
   'Córdoba': [-31.4201, -64.1888],
   Cordoba: [-31.4201, -64.1888],
   'Villa Carlos Paz': [-31.4247, -64.4977],
+  'Carlos Paz': [-31.4247, -64.4977],
   'San Francisco': [-31.4279, -62.0857],
   'Rio Tercero': [-32.0278, -64.1055],
   'Jesús María': [-30.9815, -64.0932],
+  'Jesus Maria': [-30.9815, -64.0932],
   'La Falda': [-31.0833, -64.4833],
+  'Falda del Carmen': [-31.6333, -64.4500],
   'Villa General Belgrano': [-31.9667, -64.55],
-  Cosquín: [-31.24, -64.47],
+  Anisacate: [-31.7, -64.4167],
+  Despeñaderos: [-32.15, -64.3],
+  'Huerta Grande': [-31.0667, -64.5],
+  'La Paisanita': [-31.72, -64.48],
+  'La Serranita': [-31.7167, -64.4],
+  'Los Aromos': [-31.6833, -64.3833],
+  'Los Gigantes': [-31.4, -64.8],
+  'Los Molinos': [-31.7667, -64.3667],
+  'Potrero de Garay': [-31.75, -64.45],
+  'San Clemente': [-31.8833, -64.4667],
+  'Santa Ana': [-31.6333, -64.3667],
   Mendiolaza: [-31.3, -64.3],
   Unquillo: [-31.23, -64.32],
+  'Rio Ceballos': [-31.17, -64.32],
   'Río Ceballos': [-31.17, -64.32],
   'Villa Allende': [-31.3, -64.3],
+  Cosquin: [-31.24, -64.47],
+  Cosquín: [-31.24, -64.47],
   'La Calera': [-31.35, -64.34],
+  Saldan: [-31.31, -64.31],
   Malagueño: [-31.46, -64.36],
-  'Santa Ana': [-31.574, -64.343],
+  Toledo: [-31.55, -64.01],
 };
 
 function geocodeCity(city) {
   if (!city) return null;
   const coords = knownCities[city];
   return coords ? { lat: coords[0], lng: coords[1] } : null;
-}
-
-async function fetchCityCoords(city, state) {
-  const cached = knownCities[city];
-  if (cached) return { lat: cached[0], lng: cached[1] };
-
-  try {
-    const query = state
-      ? `${city}, ${state}, Argentina`
-      : `${city}, Argentina`;
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`,
-      { headers: { 'User-Agent': 'property-pulse-app' } }
-    );
-    const data = await res.json();
-    if (data.length > 0) {
-      return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
-    }
-  } catch {
-    // silently fail for unknown cities
-  }
-  return null;
 }
 
 function MapHintOverlay({ dismissed, onDismiss }) {
@@ -101,34 +96,7 @@ function MapHintOverlay({ dismissed, onDismiss }) {
 
 const CategoryMap = ({ properties = [] }) => {
   const [hintDismissed, setHintDismissed] = useState(false);
-  const [geocodedCities, setGeocodedCities] = useState({});
   const mapRef = useRef();
-
-  // Geocode unknown cities once
-  useEffect(() => {
-    const unknown = [...new Map(
-      properties
-        .map((p) => ({ city: p.location?.city, state: p.location?.state }))
-        .filter((entry) => entry.city && !knownCities[entry.city] && !geocodedCities[entry.city])
-        .map((entry) => [entry.city, entry])
-    ).values()];
-
-    if (unknown.length === 0) return;
-
-    let cancelled = false;
-    (async () => {
-      const results = {};
-      for (const { city, state } of unknown) {
-        const coords = await fetchCityCoords(city, state);
-        if (coords) results[city] = coords;
-      }
-      if (!cancelled) {
-        setGeocodedCities((prev) => ({ ...prev, ...results }));
-      }
-    })();
-
-    return () => { cancelled = true; };
-  }, [properties, geocodedCities]);
 
   const markers = useMemo(() => {
     const list = [];
@@ -143,10 +111,6 @@ const CategoryMap = ({ properties = [] }) => {
       else if (p.location?.city) {
         coords = geocodeCity(p.location.city);
       }
-      // 3. Geocoded cities cache
-      if (!coords && p.location?.city && geocodedCities[p.location.city]) {
-        coords = geocodedCities[p.location.city];
-      }
 
       if (coords && coords.lat != null && coords.lng != null) {
         list.push({
@@ -158,7 +122,7 @@ const CategoryMap = ({ properties = [] }) => {
       }
     });
     return list;
-  }, [properties, geocodedCities]);
+  }, [properties]);
 
   const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap();

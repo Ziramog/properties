@@ -16,6 +16,7 @@ import PropertiesSearch from '@/components/PropertiesSearch';
 import { getSessionUser } from '@/utils/getSessionUser';
 import ScrollToTop from '@/components/ScrollToTop';
 import CategoryMap from '@/components/CategoryMap';
+import MapErrorBoundary from '@/components/shared/MapErrorBoundary';
 
 const PropertiesPage = async ({ searchParams }) => {
   await connectDB();
@@ -235,7 +236,9 @@ const PropertiesPage = async ({ searchParams }) => {
                   <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
                 </h2>
               </div>
-              <CategoryMap properties={filteredProperties} />
+              <MapErrorBoundary>
+                <CategoryMap properties={filteredProperties} />
+              </MapErrorBoundary>
             </div>
           </div>
         </section>
