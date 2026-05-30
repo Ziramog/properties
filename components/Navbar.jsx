@@ -43,7 +43,7 @@ const Navbar = () => {
     window.addEventListener('resize', handleResize);
 
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > window.innerHeight * 0.4);
+      setIsScrolled(window.scrollY > window.innerHeight * 0.1);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
