@@ -111,7 +111,7 @@ const CategoryMap = ({ properties = [] }) => {
 
   const { markers, initialViewState } = useMemo(() => {
     const list = [];
-    const cityTracker = new Map();
+    const cityTracker = {};
 
     properties.forEach((p) => {
       let coords = null;
@@ -127,8 +127,8 @@ const CategoryMap = ({ properties = [] }) => {
 
       if (coords && coords.lat != null && coords.lng != null) {
         const cityKey = p.location?.city || 'unknown';
-        const count = cityTracker.get(cityKey) || 0;
-        cityTracker.set(cityKey, count + 1);
+        const count = cityTracker[cityKey] || 0;
+        cityTracker[cityKey] = count + 1;
 
         const off = getOffset(p._id);
         list.push({
