@@ -98,7 +98,7 @@ const Navbar = () => {
           {/* Main Nav — Senada .mainMenu */}
           <nav className="desktop-dropdown flex items-center gap-8 lg:gap-10 ml-auto">
             <Link href="/#propiedades-destacadas" className="text-white hover:text-[var(--color-brand)] transition-colors text-[15px] font-normal tracking-[0.02em] uppercase">
-              NUESTRA SELECCION
+              DESTACADAS
             </Link>
 
               <div className="relative" onMouseEnter={() => openDropdown('props')} onMouseLeave={closeDropdown}>
@@ -279,9 +279,9 @@ const Navbar = () => {
           }}
         >
           <nav className="flex-1 flex flex-col px-0">
-            {/* NUESTRA SELECCION */}
+            {/* DESTACADAS */}
             <Link href="/properties" className={`block text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.2s' }} onClick={() => setIsMobileMenuOpen(false)}>
-              NUESTRA SELECCION
+              DESTACADAS
             </Link>
 
             {/* Propiedades — expandable */}

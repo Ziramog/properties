@@ -92,10 +92,10 @@ const Footer = () => {
                       ))}
                     </ul>
                   </li>
-                  {/* NUESTRA SELECCION */}
+                  {/* DESTACADAS */}
                   <li>
                     <span className="block text-[15px] text-white uppercase font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                      NUESTRA SELECCION
+                      DESTACADAS
                     </span>
                     <ul>
                       <li>
