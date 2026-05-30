@@ -28,7 +28,7 @@ export default function ReviewCard({ review, variant = 'default' }) {
         </p>
         <div className="flex items-center gap-3 mt-auto">
           <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 rounded-md" style={{ backgroundColor: 'var(--color-brand)' }}>
-            <span className="text-white text-2xl leading-none font-serif">&ldquo;</span>
+            <span className="text-white leading-none" style={{ fontSize: '40px', lineHeight: 1, marginTop: '-4px' }}>&ldquo;</span>
           </div>
           <p className="text-sm font-semibold text-[#1a1a1a] tracking-wide">{review.authorName}</p>
         </div>
