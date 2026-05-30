@@ -202,15 +202,15 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
 
   return (
     <div className="search-form" style={{ background: '#000' }}>
-      <div className="js-animate pb-4 text-center">
-        <h1 className="text-[28px] md:text-[40px] font-normal text-white leading-tight" style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>
+      <div className="js-animate text-center">
+        <h1 className="text-[28px] md:text-[40px] font-normal text-white leading-tight" style={{ fontFamily: 'var(--font-heading)', margin: 0, marginBottom: '40px' }}>
           {title}
         </h1>
       </div>
       <form onSubmit={handleSubmit} className="searchForm" style={{ border: '1px solid #2a2626', borderRadius: '8px', background: '#000', position: 'relative', zIndex: 1 }}>
         <div className="top-part py-3 min-[651px]:py-5" style={{
           borderRadius: '12px', background: '#000',
-          display: 'flex', flexWrap: 'wrap', gap: 0, marginTop: '16px',
+          display: 'flex', flexWrap: 'wrap', gap: '20px', marginTop: '0', alignItems: 'center',
         }}>
           {/* City / term — elatus-autocomplete */}
           <div className="form-group elatus-autocomplete w-full min-[651px]:w-full min-[992px]:w-1/2 xl:w-[22%] border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626]" style={{
@@ -222,7 +222,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
             }} viewBox="0 0 24 24" fill="currentColor"><path d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z"/></svg>
             <label className={`animated-label ${focused.term || filters.term ? 'active' : ''}`} style={{
               position: 'absolute', color: focused.term || filters.term ? '#fff' : '#a29696', fontSize: focused.term || filters.term ? '12px' : '16px',
-              fontWeight: focused.term || filters.term ? '500' : '400', zIndex: 9, left: '50px', top: focused.term || filters.term ? '-15px' : '10px',
+              fontWeight: focused.term || filters.term ? '500' : '400', zIndex: 9, left: '50px', top: focused.term || filters.term ? '5px' : '20px',
               pointerEvents: 'none', transition: 'all 0.3s ease-in-out',
             }}>Ciudad o código</label>
             <div className="input-wrap" style={{ display: 'flex', gap: '15px' }}>
@@ -269,7 +269,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
                   position: 'absolute', color: isOpen || hasValue ? '#fff' : '#a29696',
                   fontSize: isOpen || hasValue ? '12px' : '16px',
                   fontWeight: isOpen || hasValue ? '500' : '400', zIndex: 9, left: '15px',
-                  top: isOpen || hasValue ? '-15px' : '10px',
+                  top: isOpen || hasValue ? '5px' : '20px',
                   pointerEvents: 'none', transition: 'all 0.3s ease-in-out',
                 }}>{f.label}</label>
                 <div onClick={() => setOpenDropdown(isOpen ? null : f.name)}
@@ -300,9 +300,9 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
           {/* Search button */}
           <button type="submit" className="btn btn-primary btnSubmit" style={{
             background: 'var(--color-brand)', color: '#fff', border: 'none',
-            fontSize: '13px', fontWeight: 700, textTransform: 'uppercase',
-            padding: '0 24px', borderRadius: '4px', cursor: 'pointer',
-            whiteSpace: 'nowrap', height: '40px', alignSelf: 'center',
+            fontSize: '15px', fontWeight: 400, textTransform: 'uppercase',
+            padding: '15px 30px', borderRadius: '8px', cursor: 'pointer',
+            whiteSpace: 'nowrap', alignSelf: 'center',
             letterSpacing: '0.06em', transition: 'opacity 0.2s',
             marginLeft: '10px', flexShrink: 0,
           }} onMouseEnter={(e) => e.target.style.opacity = '0.85'} onMouseLeave={(e) => e.target.style.opacity = '1'}>
