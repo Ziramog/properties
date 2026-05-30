@@ -199,12 +199,12 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     zIndex: 9,
     pointerEvents: 'none',
     transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-    top: isActive ? '6px' : '50%',
+    top: isActive ? '4px' : '50%',
     transform: isActive ? 'none' : 'translateY(-50%)',
     fontSize: isActive ? '10px' : '16px',
-    fontWeight: isActive ? '500' : '400',
+    fontWeight: isActive ? '400' : '400',
     textTransform: isActive ? 'uppercase' : 'none',
-    letterSpacing: isActive ? '0.06em' : '0',
+    letterSpacing: isActive ? '0.08em' : '0',
     color: isActive ? '#fff' : '#a29696',
     lineHeight: 1.2,
   });
@@ -235,6 +235,8 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     outline: 'none',
     paddingLeft: '15px',
     paddingRight: '30px',
+    paddingTop: isActive ? '20px' : '0',
+    textIndent: isActive ? '0' : '-9999px',
     appearance: 'none',
     cursor: 'pointer',
   });
@@ -259,7 +261,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
           display: 'flex', flexWrap: 'wrap', gap: 0, marginTop: '0', alignItems: 'center',
         }}>
           {/* City / term */}
-          <div className="form-group elatus-autocomplete w-full min-[651px]:w-full min-[992px]:w-1/2 xl:w-[22%] border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626]"
+          <div className="form-group elatus-autocomplete w-full min-[651px]:w-full min-[992px]:w-1/2 xl:w-[22%] border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626] hover:bg-[#0d0d0d] transition-colors duration-200"
             style={getWrapperStyle()}
             onFocus={() => setFocused((p) => ({ ...p, term: true }))}
             onBlur={() => setFocused((p) => ({ ...p, term: false }))}>
@@ -302,7 +304,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
             const isActive = labelActive(f.name);
             return (
               <div key={f.name}
-                className={`form-group notranslate ${f.name}-group ${f.className} border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626]`}
+                className={`form-group notranslate ${f.name}-group ${f.className} border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626] hover:bg-[#0d0d0d] transition-colors duration-200`}
                 style={getWrapperStyle()}>
                 <label style={getLabelStyle(isActive)}>{f.label}</label>
                 <select
@@ -319,10 +321,10 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
                   ))}
                 </select>
                 <svg style={{
-                  position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
-                  width: '12px', height: '12px', zIndex: 2, pointerEvents: 'none',
-                  color: '#888',
-                }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',
+                  width: '10px', height: '10px', zIndex: 2, pointerEvents: 'none',
+                  color: '#666',
+                }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M6 9l6 6 6-6"/>
                 </svg>
               </div>
