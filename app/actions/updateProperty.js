@@ -83,7 +83,7 @@ async function updateProperty(prevState, formData) {
       type: formData.get('type'),
       name: formData.get('name'),
       description: formData.get('description'),
-      price: formData.get('price'),
+      price: formData.get('price') === 'Consultar' ? 'Consultar' : `${formData.get('price_currency') || 'USD'} ${formData.get('price')}`,
       location: {
         street: formData.get('location.street'),
         city: formData.get('location.city'),

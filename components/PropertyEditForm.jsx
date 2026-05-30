@@ -152,8 +152,19 @@ const PropertyEditForm = ({ property }) => {
 
       <div className='mb-4'>
         <label className='block text-gray-700 font-bold mb-2'>Precio</label>
-        <input type='text' id='price' name='price' className='border rounded w-full py-2 px-3'
-          placeholder='Ej: USD 502,000 o Consultar' defaultValue={property.price} />
+        <div className='flex gap-2 items-start'>
+          <select name='price_currency' className='border rounded py-2 px-3 w-[110px] flex-shrink-0'
+            defaultValue={(() => { const p = property.price || ''; if (p.startsWith('$')) return '$'; if (p.startsWith('ARS')) return 'ARS'; return 'USD'; })()}>
+            <option value='USD'>U$D</option>
+            <option value='$'>$</option>
+            <option value='ARS'>ARS</option>
+          </select>
+          <div className='flex-1'>
+            <input type='text' name='price' className='border rounded w-full py-2 px-3'
+              placeholder='Ej: 502,000' defaultValue={String(property.price || '').replace(/^[A-Z$]+\s*/i, '')} />
+            <p className='text-[11px] text-gray-400 mt-1'>Ej: <strong>502,000</strong> — sin letras ni símbolos. Usá coma para miles. Escribí <strong>Consultar</strong> si no tiene precio.</p>
+          </div>
+        </div>
       </div>
 
       <div className='mb-4'>
