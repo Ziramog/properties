@@ -15,6 +15,7 @@ import User from '@/models/User';
 import PropertiesSearch from '@/components/PropertiesSearch';
 import { getSessionUser } from '@/utils/getSessionUser';
 import ScrollToTop from '@/components/ScrollToTop';
+import CategoryMap from '@/components/CategoryMap';
 
 const PropertiesPage = async ({ searchParams }) => {
   await connectDB();
@@ -222,6 +223,23 @@ const PropertiesPage = async ({ searchParams }) => {
             </div>
           )}
       </section>
+
+      {/* Category Map */}
+      {filteredProperties.length > 0 && (
+        <section className="bg-white px-4 md:px-[50px] pb-12">
+          <div className="bg-white rounded-[30px] overflow-hidden">
+            <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[40px]">
+              <div className="pb-[30px] js-animate">
+                <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
+                  Ver en el Mapa
+                  <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
+                </h2>
+              </div>
+              <CategoryMap properties={filteredProperties} />
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 };
