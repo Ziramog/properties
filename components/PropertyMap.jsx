@@ -174,6 +174,15 @@ const PropertyMap = ({ property }) => {
 
   useEffect(() => {
     const fetchCoords = async () => {
+      // 1. Exact coordinates from DB
+      if (property.coordinates?.lat != null && property.coordinates?.lng != null) {
+        setLat(property.coordinates.lat);
+        setLng(property.coordinates.lng);
+        setLoading(false);
+        return;
+      }
+
+      // 2. Known cities dictionary
       const cityCoords = geocodeCity(property.location?.city);
       if (cityCoords) {
         setLat(cityCoords.lat);
@@ -182,6 +191,7 @@ const PropertyMap = ({ property }) => {
         return;
       }
 
+      // 3. Nominatim geocoding fallback
       const query = [property.location?.street, property.location?.city, property.location?.state, 'Argentina']
         .filter(Boolean)
         .join(', ');
@@ -209,7 +219,7 @@ const PropertyMap = ({ property }) => {
     };
 
     fetchCoords();
-  }, [property.location]);
+  }, [property.coordinates, property.location]);
 
   if (loading) return <Spinner loading={loading} />;
 

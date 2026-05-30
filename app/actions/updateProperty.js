@@ -79,6 +79,9 @@ async function updateProperty(prevState, formData) {
       return { error: 'Es necesario mantener al menos una foto de la propiedad.' };
     }
 
+    const lat = formData.get('coordinates.lat');
+    const lng = formData.get('coordinates.lng');
+
     prop.set({
       type: formData.get('type'),
       name: formData.get('name'),
@@ -90,6 +93,10 @@ async function updateProperty(prevState, formData) {
         state: formData.get('location.state'),
         zipcode: formData.get('location.zipcode'),
       },
+      coordinates: (lat && lng) ? {
+        lat: parseFloat(lat),
+        lng: parseFloat(lng),
+      } : undefined,
       beds: cleanNumber(formData.get('beds')),
       baths: cleanNumber(formData.get('baths')),
       square_feet: cleanNumber(formData.get('square_feet')),

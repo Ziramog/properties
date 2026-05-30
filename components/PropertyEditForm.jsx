@@ -130,6 +130,12 @@ const PropertyEditForm = ({ property }) => {
           placeholder='Provincia' required defaultValue={property.location?.state} />
         <input type='text' id='zipcode' name='location.zipcode' className='border rounded w-full py-2 px-3 mb-2'
           placeholder='Código Postal' defaultValue={property.location?.zipcode} />
+        <div className='flex gap-2'>
+          <input type='number' step='any' id='lat' name='coordinates.lat' className='border rounded w-full py-2 px-3 mb-2'
+            placeholder='Latitud' defaultValue={property.coordinates?.lat} />
+          <input type='number' step='any' id='lng' name='coordinates.lng' className='border rounded w-full py-2 px-3 mb-2'
+            placeholder='Longitud' defaultValue={property.coordinates?.lng} />
+        </div>
       </div>
 
       <div className='mb-4 flex flex-wrap'>

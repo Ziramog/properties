@@ -28,35 +28,42 @@ async function addProperty(formData) {
     throw new Error('Máximo 10 imágenes por propiedad.');
   }
 
-  // Create the propertyData object with embedded seller_info
-  const propertyData = {
-    type: formData.get('type'),
-    name: formData.get('name'),
-    description: formData.get('description'),
-    location: {
-      street: formData.get('location.street'),
-      city: formData.get('location.city'),
-      state: formData.get('location.state'),
-      zipcode: formData.get('location.zipcode'),
-    },
-    beds: formData.get('beds') || undefined,
-    baths: formData.get('baths') || undefined,
-    square_feet: formData.get('square_feet') || undefined,
-    amenities,
-    rates: {
-      weekly: formData.get('rates.weekly') || undefined,
-      monthly: formData.get('rates.monthly') || undefined,
-      nightly: formData.get('rates.nightly') || undefined,
-    },
-    seller_info: {
-      name: formData.get('seller_info.name'),
-      email: formData.get('seller_info.email'),
-      phone: formData.get('seller_info.phone'),
-    },
-    owner: userId,
-    operation: formData.get('operation') || 'venta',
-    status: formData.get('status') || 'active',
-  };
+    const lat = formData.get('coordinates.lat');
+    const lng = formData.get('coordinates.lng');
+
+    // Create the propertyData object with embedded seller_info
+    const propertyData = {
+      type: formData.get('type'),
+      name: formData.get('name'),
+      description: formData.get('description'),
+      location: {
+        street: formData.get('location.street'),
+        city: formData.get('location.city'),
+        state: formData.get('location.state'),
+        zipcode: formData.get('location.zipcode'),
+      },
+      coordinates: (lat && lng) ? {
+        lat: parseFloat(lat),
+        lng: parseFloat(lng),
+      } : undefined,
+      beds: formData.get('beds') || undefined,
+      baths: formData.get('baths') || undefined,
+      square_feet: formData.get('square_feet') || undefined,
+      amenities,
+      rates: {
+        weekly: formData.get('rates.weekly') || undefined,
+        monthly: formData.get('rates.monthly') || undefined,
+        nightly: formData.get('rates.nightly') || undefined,
+      },
+      seller_info: {
+        name: formData.get('seller_info.name'),
+        email: formData.get('seller_info.email'),
+        phone: formData.get('seller_info.phone'),
+      },
+      owner: userId,
+      operation: formData.get('operation') || 'venta',
+      status: formData.get('status') || 'active',
+    };
 
   const imageUrls = [];
 

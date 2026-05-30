@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Map, { Marker } from 'react-map-gl';
 import Link from 'next/link';
@@ -29,8 +29,41 @@ function geocodeCity(city) {
   return coords ? { lat: coords[0], lng: coords[1] } : null;
 }
 
+async function fetchCityCoords(city) {
+  const cached = knownCities[city];
+  if (cached) return { lat: cached[0], lng: cached[1] };
+
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city + ', Argentina')}`,
+      { headers: { 'User-Agent': 'property-pulse-app' } }
+    );
+    const data = await res.json();
+    if (data.length > 0) {
+      return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+    }
+  } catch {
+    // silently fail for unknown cities
+  }
+  return null;
+}
+
 function MapHintOverlay({ dismissed, onDismiss }) {
   const isMobile = typeof window !== 'undefined' && 'ontouchstart' in window;
+
+  useEffect(() => {
+    if (dismissed) return;
+    const container = document.querySelector('.mapboxgl-map');
+    if (!container) return;
+
+    const handler = (e) => {
+      if (!isMobile && e.ctrlKey) { onDismiss(); return; }
+      if (isMobile && e.touches && e.touches.length >= 2) { onDismiss(); }
+    };
+
+    container.addEventListener(isMobile ? 'touchstart' : 'wheel', handler);
+    return () => container.removeEventListener(isMobile ? 'touchstart' : 'wheel', handler);
+  }, [dismissed, isMobile, onDismiss]);
 
   if (dismissed) return null;
 
@@ -63,13 +96,52 @@ function MapHintOverlay({ dismissed, onDismiss }) {
 
 const CategoryMap = ({ properties = [] }) => {
   const [hintDismissed, setHintDismissed] = useState(false);
+  const [geocodedCities, setGeocodedCities] = useState({});
   const mapRef = useRef();
+
+  // Geocode unknown cities once
+  useEffect(() => {
+    const unknownCities = [...new Set(
+      properties
+        .map((p) => p.location?.city)
+        .filter((city) => city && !knownCities[city] && !geocodedCities[city])
+    )];
+
+    if (unknownCities.length === 0) return;
+
+    let cancelled = false;
+    (async () => {
+      const results = {};
+      for (const city of unknownCities) {
+        const coords = await fetchCityCoords(city);
+        if (coords) results[city] = coords;
+      }
+      if (!cancelled) {
+        setGeocodedCities((prev) => ({ ...prev, ...results }));
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [properties, geocodedCities]);
 
   const markers = useMemo(() => {
     const list = [];
     properties.forEach((p) => {
-      const city = p.location?.city;
-      const coords = geocodeCity(city);
+      let coords = null;
+
+      // 1. Exact coordinates from DB
+      if (p.coordinates?.lat != null && p.coordinates?.lng != null) {
+        coords = { lat: p.coordinates.lat, lng: p.coordinates.lng };
+      }
+      // 2. Known cities dictionary
+      else if (p.location?.city) {
+        coords = geocodeCity(p.location.city);
+      }
+      // 3. Geocoded cities cache
+      if (!coords && p.location?.city && geocodedCities[p.location.city]) {
+        coords = geocodedCities[p.location.city];
+      }
+
       if (coords && coords.lat != null && coords.lng != null) {
         list.push({
           id: p._id,
@@ -80,18 +152,13 @@ const CategoryMap = ({ properties = [] }) => {
       }
     });
     return list;
-  }, [properties]);
+  }, [properties, geocodedCities]);
 
   const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap();
     if (!map) return;
 
     map.scrollZoom.disable();
-
-    if (markers.length > 0) {
-      const bounds = markers.map((m) => [m.lng, m.lat]);
-      map.fitBounds(bounds, { padding: 60, maxZoom: 14, duration: 0 });
-    }
 
     const container = map.getContainer();
 
@@ -167,6 +234,14 @@ const CategoryMap = ({ properties = [] }) => {
       container.removeEventListener('touchmove', touchMoveHandler);
       container.removeEventListener('touchend', touchEndHandler);
     };
+  }, []);
+
+  // fitBounds when markers change
+  useEffect(() => {
+    const map = mapRef.current?.getMap();
+    if (!map || markers.length === 0) return;
+    const bounds = markers.map((m) => [m.lng, m.lat]);
+    map.fitBounds(bounds, { padding: 60, maxZoom: 14, duration: 500 });
   }, [markers]);
 
   if (markers.length === 0) {
@@ -178,7 +253,7 @@ const CategoryMap = ({ properties = [] }) => {
   }
 
   return (
-    <div className="relative">
+    <div className="relative rounded-[30px] overflow-hidden">
       <Map
         ref={mapRef}
         onLoad={onMapLoad}
