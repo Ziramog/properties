@@ -211,18 +211,25 @@ export default function MapAllProperties({ initialProperties = [] }) {
   }, [allProps, activeFilters]);
 
   useEffect(() => {
-    const mapInstance = mapRef.current?.getMap();
-    if (!mapInstance || filteredProps.length === 0) return;
+    const map = mapRef.current?.getMap();
+    if (!map || filteredProps.length === 0) return;
 
-    const bounds = filteredProps.reduce(
-      (acc, p) => [
-        [Math.min(acc[0][0], p.coords.lng), Math.min(acc[0][1], p.coords.lat)],
-        [Math.max(acc[1][0], p.coords.lng), Math.max(acc[1][1], p.coords.lat)],
-      ],
-      [[Infinity, Infinity], [-Infinity, -Infinity]]
-    );
+    const doFit = () => {
+      const bounds = filteredProps.reduce(
+        (acc, p) => [
+          [Math.min(acc[0][0], p.coords.lng), Math.min(acc[0][1], p.coords.lat)],
+          [Math.max(acc[1][0], p.coords.lng), Math.max(acc[1][1], p.coords.lat)],
+        ],
+        [[Infinity, Infinity], [-Infinity, -Infinity]]
+      );
+      map.fitBounds(bounds, { padding: 80, duration: 1000, maxZoom: 13 });
+    };
 
-    mapInstance.fitBounds(bounds, { padding: 80, duration: 1000, maxZoom: 13 });
+    if (map.isStyleLoaded()) {
+      doFit();
+    } else {
+      map.once('style.load', doFit);
+    }
   }, [filteredProps]);
 
   if (allProps.length === 0) {

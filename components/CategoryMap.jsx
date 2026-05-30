@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 import Map, { Marker } from 'react-map-gl';
@@ -48,10 +48,20 @@ function geocodeCity(city) {
   return coords ? { lat: coords[0], lng: coords[1] } : null;
 }
 
+/* Deterministic offset so multiple pins in the same city don't stack perfectly,
+   but the offset never changes between renders. */
+function getOffset(id) {
+  const num = parseInt(String(id).slice(-6), 16) || 0;
+  return {
+    lat: ((num % 1000) / 1000 - 0.5) * 0.008,
+    lng: ((num % 997) / 997 - 0.5) * 0.008,
+  };
+}
+
 function MapHintOverlay({ dismissed, onDismiss }) {
   const isMobile = typeof window !== 'undefined' && 'ontouchstart' in window;
 
-  useEffect(() => {
+  useMemo(() => {
     if (dismissed) return;
     const container = document.querySelector('.mapboxgl-map');
     if (!container) return;
@@ -99,10 +109,10 @@ const CategoryMap = ({ properties = [] }) => {
   const mapRef = useRef();
   const router = useRouter();
 
-  const markers = useMemo(() => {
+  const { markers, initialViewState } = useMemo(() => {
     const list = [];
-    // Track how many times each city was used to add jitter and avoid perfect overlap
-    const cityCount = new Map();
+    const cityTracker = new Map();
+
     properties.forEach((p) => {
       let coords = null;
 
@@ -117,28 +127,67 @@ const CategoryMap = ({ properties = [] }) => {
 
       if (coords && coords.lat != null && coords.lng != null) {
         const cityKey = p.location?.city || 'unknown';
-        const count = cityCount.get(cityKey) || 0;
-        cityCount.set(cityKey, count + 1);
+        const count = cityTracker.get(cityKey) || 0;
+        cityTracker.set(cityKey, count + 1);
 
-        // Add small random offset so multiple pins in same city don't stack perfectly
-        const offset = () => (Math.random() - 0.5) * 0.008;
+        const off = getOffset(p._id);
         list.push({
           id: p._id,
           name: p.name,
-          lat: coords.lat + (count > 0 ? offset() : 0),
-          lng: coords.lng + (count > 0 ? offset() : 0),
+          lat: coords.lat + (count > 0 ? off.lat : 0),
+          lng: coords.lng + (count > 0 ? off.lng : 0),
         });
       }
     });
-    return list;
+
+    if (list.length === 0) {
+      return { markers: [], initialViewState: null };
+    }
+
+    if (list.length === 1) {
+      return {
+        markers: list,
+        initialViewState: { longitude: list[0].lng, latitude: list[0].lat, zoom: 14 },
+      };
+    }
+
+    const lats = list.map((m) => m.lat);
+    const lngs = list.map((m) => m.lng);
+    const minLat = Math.min(...lats);
+    const maxLat = Math.max(...lats);
+    const minLng = Math.min(...lngs);
+    const maxLng = Math.max(...lngs);
+
+    return {
+      markers: list,
+      initialViewState: {
+        longitude: (minLng + maxLng) / 2,
+        latitude: (minLat + maxLat) / 2,
+        zoom: 11,
+      },
+    };
   }, [properties]);
 
   const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap();
-    if (!map) return;
+    if (!map || markers.length === 0) return;
 
+    // Fit bounds only after the style has fully loaded
+    if (markers.length === 1) {
+      map.flyTo({ center: [markers[0].lng, markers[0].lat], zoom: 14, duration: 500 });
+    } else {
+      const bounds = markers.reduce(
+        (acc, m) => [
+          [Math.min(acc[0][0], m.lng), Math.min(acc[0][1], m.lat)],
+          [Math.max(acc[1][0], m.lng), Math.max(acc[1][1], m.lat)],
+        ],
+        [[Infinity, Infinity], [-Infinity, -Infinity]]
+      );
+      map.fitBounds(bounds, { padding: 60, maxZoom: 14, duration: 500 });
+    }
+
+    // Custom zoom interaction
     map.scrollZoom.disable();
-
     const container = map.getContainer();
 
     const wheelHandler = (e) => {
@@ -146,11 +195,8 @@ const CategoryMap = ({ properties = [] }) => {
         e.preventDefault();
         e.stopPropagation();
         const delta = e.deltaY || e.wheelDelta;
-        if (delta < 0) {
-          map.zoomIn({ duration: 0 });
-        } else {
-          map.zoomOut({ duration: 0 });
-        }
+        if (delta < 0) map.zoomIn({ duration: 0 });
+        else map.zoomOut({ duration: 0 });
         setHintDismissed(true);
       } else {
         setHintDismissed(false);
@@ -213,27 +259,6 @@ const CategoryMap = ({ properties = [] }) => {
       container.removeEventListener('touchmove', touchMoveHandler);
       container.removeEventListener('touchend', touchEndHandler);
     };
-  }, []);
-
-  // fitBounds when markers change
-  useEffect(() => {
-    const map = mapRef.current?.getMap();
-    if (!map || markers.length === 0) return;
-
-    if (markers.length === 1) {
-      map.flyTo({ center: [markers[0].lng, markers[0].lat], zoom: 14, duration: 500 });
-      return;
-    }
-
-    const bounds = markers.reduce(
-      (acc, m) => [
-        [Math.min(acc[0][0], m.lng), Math.min(acc[0][1], m.lat)],
-        [Math.max(acc[1][0], m.lng), Math.max(acc[1][1], m.lat)],
-      ],
-      [[Infinity, Infinity], [-Infinity, -Infinity]]
-    );
-
-    map.fitBounds(bounds, { padding: 60, maxZoom: 14, duration: 500 });
   }, [markers]);
 
   if (markers.length === 0) {
@@ -251,11 +276,7 @@ const CategoryMap = ({ properties = [] }) => {
         onLoad={onMapLoad}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
         mapLib={mapboxgl}
-        initialViewState={{
-          longitude: markers[0]?.lng || -64.4397,
-          latitude: markers[0]?.lat || -31.6525,
-          zoom: 12,
-        }}
+        initialViewState={initialViewState}
         style={{ width: '100%', height: 500 }}
         mapStyle='mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7'
         scrollZoom={false}
