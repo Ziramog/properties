@@ -3,7 +3,7 @@ import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 import Map, { Marker } from 'react-map-gl';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const knownCities = {
   'Alta Gracia': [-31.6525, -64.4397],
@@ -97,9 +97,12 @@ function MapHintOverlay({ dismissed, onDismiss }) {
 const CategoryMap = ({ properties = [] }) => {
   const [hintDismissed, setHintDismissed] = useState(false);
   const mapRef = useRef();
+  const router = useRouter();
 
   const markers = useMemo(() => {
     const list = [];
+    // Track how many times each city was used to add jitter and avoid perfect overlap
+    const cityCount = new Map();
     properties.forEach((p) => {
       let coords = null;
 
@@ -113,11 +116,17 @@ const CategoryMap = ({ properties = [] }) => {
       }
 
       if (coords && coords.lat != null && coords.lng != null) {
+        const cityKey = p.location?.city || 'unknown';
+        const count = cityCount.get(cityKey) || 0;
+        cityCount.set(cityKey, count + 1);
+
+        // Add small random offset so multiple pins in same city don't stack perfectly
+        const offset = () => (Math.random() - 0.5) * 0.008;
         list.push({
           id: p._id,
           name: p.name,
-          lat: coords.lat,
-          lng: coords.lng,
+          lat: coords.lat + (count > 0 ? offset() : 0),
+          lng: coords.lng + (count > 0 ? offset() : 0),
         });
       }
     });
@@ -210,7 +219,20 @@ const CategoryMap = ({ properties = [] }) => {
   useEffect(() => {
     const map = mapRef.current?.getMap();
     if (!map || markers.length === 0) return;
-    const bounds = markers.map((m) => [m.lng, m.lat]);
+
+    if (markers.length === 1) {
+      map.flyTo({ center: [markers[0].lng, markers[0].lat], zoom: 14, duration: 500 });
+      return;
+    }
+
+    const bounds = markers.reduce(
+      (acc, m) => [
+        [Math.min(acc[0][0], m.lng), Math.min(acc[0][1], m.lat)],
+        [Math.max(acc[1][0], m.lng), Math.max(acc[1][1], m.lat)],
+      ],
+      [[Infinity, Infinity], [-Infinity, -Infinity]]
+    );
+
     map.fitBounds(bounds, { padding: 60, maxZoom: 14, duration: 500 });
   }, [markers]);
 
@@ -246,13 +268,18 @@ const CategoryMap = ({ properties = [] }) => {
       >
         {markers.map((m) => (
           <Marker key={m.id} longitude={m.lng} latitude={m.lat} anchor='bottom'>
-            <Link href={`/properties/${m.id}`} className="block cursor-pointer hover:scale-110 transition-transform">
+            <div
+              onClick={() => router.push(`/properties/${m.id}`)}
+              className="block cursor-pointer hover:scale-110 transition-transform"
+              role="button"
+              tabIndex={0}
+            >
               <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
                 <path d="m32 0a24.028 24.028 0 0 0 -24 24c0 16.228 22.342 38.756 23.293 39.707a1 1 0 0 0 1.414 0c.951-.951 23.293-23.479 23.293-39.707a24.028 24.028 0 0 0 -24-24z" fill="#db7340"/>
                 <circle cx="32" cy="24" fill="#c06030" r="13"/>
                 <circle cx="32" cy="24" fill="#fff" opacity="0.25" r="6"/>
               </svg>
-            </Link>
+            </div>
           </Marker>
         ))}
       </Map>
