@@ -34,9 +34,9 @@ const PropertyGallery = ({ images = [], property }) => {
   return (
     <Gallery>
       <section className="bg-[#000] pt-[90px] md:pt-[150px] pb-[30px]">
-        <div className="max-w-[1820px] mx-auto px-4 md:px-[50px]">
-        {/* Gallery row — grid on desktop, stacked on mobile */}
-          <div className="flex flex-col md:grid md:grid-cols-[2fr_3fr] md:gap-[5px] md:rounded-[30px] md:overflow-hidden">
+        {/* Mosaic: full width with navbar padding, no max-w */}
+        <div className="px-4 md:px-[50px]">
+          <div className="flex flex-col md:grid md:grid-cols-[2fr_3fr] md:gap-[5px] rounded-[30px] overflow-hidden">
 
             {/* Big image — 40% width on desktop */}
             <div className="relative group cursor-pointer overflow-hidden bg-[#111] md:aspect-[16/9]"
@@ -109,101 +109,103 @@ const PropertyGallery = ({ images = [], property }) => {
             </div>
           )}
         </div>
-
-          {/* Dark info bar */}
-        <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-[25px] md:gap-[50px] pt-[30px] pb-0 text-white">
-          {/* Left */}
-          <div itemScope itemType="https://schema.org/Place">
-            <h1 className="text-[24px] leading-[28px] md:text-[36px] md:leading-[42px] font-normal text-white mb-[10px]"
-                style={{ fontFamily: 'var(--font-heading)' }}
-                itemProp="name">
-              {property?.name}
-            </h1>
-
-            <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-              `${property?.location?.street || ''}, ${property?.location?.city || ''}, ${property?.location?.state || ''}`
-            )}`}
-               target="_blank" rel="noopener noreferrer"
-               className="inline-flex items-center gap-2 text-[#b8b8b8] hover:text-white transition-colors text-[16px] mb-4"
-               itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-              </svg>
-              <span itemProp="streetAddress">
-                {property?.location?.street}{property?.location?.street && property?.location?.city ? ', ' : ''}
-                {property?.location?.city}{property?.location?.city && property?.location?.state ? ', ' : ''}
-                {property?.location?.state}
-              </span>
-            </a>
-
-            {/* Features row */}
-            <div className="flex gap-[20px] md:gap-[40px] flex-wrap items-center">
-              {beds != null && (
-                <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-bold text-[16px] md:text-[22px]">
-                  <img src="/senada/images/icons/ico_bed.svg" alt="" className="w-5 h-5 md:w-[30px] md:h-[25px]" />
-                  {beds}
-                </span>
-              )}
-              {baths != null && (
-                <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-bold text-[16px] md:text-[22px]">
-                  <img src="/senada/images/icons/ico_bath.svg" alt="" className="w-5 h-5 md:w-[30px] md:h-[25px]" />
-                  {baths}
-                </span>
-              )}
-              {area && (
-                <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-bold text-[16px] md:text-[22px]">
-                  <img src="/senada/images/icons/ico_sqfoot.svg" alt="" className="w-5 h-5 md:w-[30px] md:h-[25px]" />
-                  {area.toLocaleString('es-AR')} m²
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Right — Status + Price + CTA */}
-          <div className="flex flex-col md:flex-row md:items-end gap-[30px] flex-shrink-0">
-            {/* Status — left within right column */}
-            <div className="text-left">
-              {operationLabel && (
-                <p className="text-[#b8b8b8] text-[14px] md:text-[16px] leading-[19px]">
-                  Operación <span className="text-white">{operationLabel}</span>
-                </p>
-              )}
-              {statusLabel && (
-                <p className="text-[#b8b8b8] text-[14px] md:text-[16px] leading-[19px]">
-                  Estado <span className="text-white">{statusLabel}</span>
-                </p>
-              )}
-            </div>
-
-            {/* Price + CTA — right within right column */}
-            <div className="text-left md:text-right">
-              <h2 className="text-[28px] md:text-[40px] text-white font-normal mb-[20px]"
-                  style={{ fontFamily: 'var(--font-heading)' }}
-                  itemProp="offers" itemScope itemType="https://schema.org/Offer">
-                <meta itemProp="priceCurrency" content="USD" />
-                <span itemProp="price" content={numericPrice}>
-                  {numericPrice
-                    ? `U$D ${numericPrice.toLocaleString('es-AR')}`
-                    : 'Consultar'}
-                </span>
-              </h2>
-
-              <a
-                href={`https://api.whatsapp.com/send?phone=5493547563911&text=${encodeURIComponent(`Hola, me interesa la propiedad: ${property?.name || ''}`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full text-white text-[15px] font-normal uppercase tracking-wider text-center py-3 px-[24px] rounded-[8px] transition-colors"
-                style={{
-                  backgroundImage: 'linear-gradient(135deg, var(--color-brand), var(--color-brand), var(--color-brand-dark), var(--color-brand-dark))',
-                  backgroundSize: '400% 100%',
-                }}
-              >
-                Contáctanos
-              </a>
-            </div>
-          </div>
         </div>
+
+        {/* Dark info bar: back to max-w container for alignment */}
+        <div className="max-w-[1820px] mx-auto px-4 md:px-[50px] mt-[30px]">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-[25px] md:gap-[50px] pt-[30px] pb-0 text-white">
+            {/* Left */}
+            <div itemScope itemType="https://schema.org/Place">
+              <h1 className="text-[24px] leading-[28px] md:text-[36px] md:leading-[42px] font-normal text-white mb-[10px]"
+                  style={{ fontFamily: 'var(--font-heading)' }}
+                  itemProp="name">
+                {property?.name}
+              </h1>
+
+              <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                `${property?.location?.street || ''}, ${property?.location?.city || ''}, ${property?.location?.state || ''}`
+              )}`}
+                 target="_blank" rel="noopener noreferrer"
+                 className="inline-flex items-center gap-2 text-[#b8b8b8] hover:text-white transition-colors text-[16px] mb-4"
+                 itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                </svg>
+                <span itemProp="streetAddress">
+                  {property?.location?.street}{property?.location?.street && property?.location?.city ? ', ' : ''}
+                  {property?.location?.city}{property?.location?.city && property?.location?.state ? ', ' : ''}
+                  {property?.location?.state}
+                </span>
+              </a>
+
+              {/* Features row */}
+              <div className="flex gap-[20px] md:gap-[40px] flex-wrap items-center">
+                {beds != null && (
+                  <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-bold text-[16px] md:text-[22px]">
+                    <img src="/senada/images/icons/ico_bed.svg" alt="" className="w-5 h-5 md:w-[30px] md:h-[25px]" />
+                    {beds}
+                  </span>
+                )}
+                {baths != null && (
+                  <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-bold text-[16px] md:text-[22px]">
+                    <img src="/senada/images/icons/ico_bath.svg" alt="" className="w-5 h-5 md:w-[30px] md:h-[25px]" />
+                    {baths}
+                  </span>
+                )}
+                {area && (
+                  <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-bold text-[16px] md:text-[22px]">
+                    <img src="/senada/images/icons/ico_sqfoot.svg" alt="" className="w-5 h-5 md:w-[30px] md:h-[25px]" />
+                    {area.toLocaleString('es-AR')} m²
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Right — Status + Price + CTA */}
+            <div className="flex flex-col md:flex-row md:items-end gap-[30px] flex-shrink-0">
+              {/* Status — left within right column */}
+              <div className="text-left">
+                {operationLabel && (
+                  <p className="text-[#b8b8b8] text-[14px] md:text-[16px] leading-[19px]">
+                    Operación <span className="text-white">{operationLabel}</span>
+                  </p>
+                )}
+                {statusLabel && (
+                  <p className="text-[#b8b8b8] text-[14px] md:text-[16px] leading-[19px]">
+                    Estado <span className="text-white">{statusLabel}</span>
+                  </p>
+                )}
+              </div>
+
+              {/* Price + CTA — right within right column */}
+              <div className="text-left md:text-right">
+                <h2 className="text-[28px] md:text-[40px] text-white font-normal mb-[20px]"
+                    style={{ fontFamily: 'var(--font-heading)' }}
+                    itemProp="offers" itemScope itemType="https://schema.org/Offer">
+                  <meta itemProp="priceCurrency" content="USD" />
+                  <span itemProp="price" content={numericPrice}>
+                    {numericPrice
+                      ? `U$D ${numericPrice.toLocaleString('es-AR')}`
+                      : 'Consultar'}
+                  </span>
+                </h2>
+
+                <a
+                  href={`https://api.whatsapp.com/send?phone=5493547563911&text=${encodeURIComponent(`Hola, me interesa la propiedad: ${property?.name || ''}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full text-white text-[15px] font-normal uppercase tracking-wider text-center py-3 px-[24px] rounded-[8px] transition-colors"
+                  style={{
+                    backgroundImage: 'linear-gradient(135deg, var(--color-brand), var(--color-brand), var(--color-brand-dark), var(--color-brand-dark))',
+                    backgroundSize: '400% 100%',
+                  }}
+                >
+                  Contáctanos
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </Gallery>
