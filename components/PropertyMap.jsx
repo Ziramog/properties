@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import mapboxgl from 'mapbox-gl';
 import Map, { Marker } from 'react-map-gl';
 import Image from 'next/image';
 import pin from '@/assets/images/pin.svg';
@@ -244,6 +245,7 @@ const PropertyMap = ({ property }) => {
         ref={mapRef}
         onLoad={onMapLoad}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+        mapLib={mapboxgl}
         initialViewState={{
           longitude: lng,
           latitude: lat,

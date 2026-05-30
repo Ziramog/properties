@@ -1,6 +1,7 @@
 'use client';
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import mapboxgl from 'mapbox-gl';
 import Map, { Marker } from 'react-map-gl';
 import Link from 'next/link';
 
@@ -263,6 +264,7 @@ const CategoryMap = ({ properties = [] }) => {
         ref={mapRef}
         onLoad={onMapLoad}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+        mapLib={mapboxgl}
         initialViewState={{
           longitude: markers[0]?.lng || -64.4397,
           latitude: markers[0]?.lat || -31.6525,

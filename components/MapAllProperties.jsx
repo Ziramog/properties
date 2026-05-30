@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import Map, { Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import mapboxgl from 'mapbox-gl';
 import { getPropertyImage } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
 import { FaArrowLeft } from 'react-icons/fa';
@@ -261,6 +262,7 @@ export default function MapAllProperties({ initialProperties = [] }) {
           <Map
             ref={mapRef}
             mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+            mapLib={mapboxgl}
             initialViewState={{ longitude: -64.4397, latitude: -31.6525, zoom: 12 }}
             style={{ width: '100%', height: '100%' }}
             mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
