@@ -2,23 +2,7 @@
 import { useMemo, useCallback } from 'react';
 import { Source, Layer } from 'react-map-gl';
 
-const PIN_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 64 64"><path d="m32 0a24.028 24.028 0 0 0 -24 24c0 16.228 22.342 38.756 23.293 39.707a1 1 0 0 0 1.414 0c.951-.951 23.293-23.479 23.293-39.707a24.028 24.028 0 0 0 -24-24z" fill="#db7340"/><circle cx="32" cy="24" fill="#c06030" r="13"/><circle cx="32" cy="24" fill="#fff" opacity="0.25" r="6"/></svg>`;
-
-export function addPinImage(map) {
-  if (map.hasImage('custom-pin')) return Promise.resolve();
-  const url = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(PIN_SVG)}`;
-  return new Promise((resolve, reject) => {
-    map.loadImage(url, (error, image) => {
-      if (error) { reject(error); return; }
-      if (!map.hasImage('custom-pin')) {
-        map.addImage('custom-pin', image);
-      }
-      resolve();
-    });
-  });
-}
-
-export default function MapClusterLayer({ properties, mapRef, onSelect }) {
+export default function MapClusterLayer({ properties, onSelect }) {
   const geojson = useMemo(() => {
     return {
       type: 'FeatureCollection',
@@ -46,14 +30,9 @@ export default function MapClusterLayer({ properties, mapRef, onSelect }) {
 
   const onClick = useCallback(
     (event) => {
-      const map = mapRef?.current?.getMap?.() || event.target;
-      if (!map) return;
-
-      const features = map.queryRenderedFeatures(event.point, {
-        layers: ['clusters', 'unclustered-point'],
-      });
-
-      if (!features || features.length === 0) return;
+      const map = event.target;
+      const features = event.features || [];
+      if (features.length === 0) return;
 
       const feature = features[0];
       const clusterId = feature.properties.cluster_id;
@@ -75,18 +54,16 @@ export default function MapClusterLayer({ properties, mapRef, onSelect }) {
         if (prop && onSelect) onSelect(prop);
       }
     },
-    [mapRef, properties, onSelect]
+    [properties, onSelect]
   );
 
-  const onMouseEnter = useCallback(() => {
-    const map = mapRef?.current?.getMap?.();
-    if (map) map.getCanvas().style.cursor = 'pointer';
-  }, [mapRef]);
+  const onMouseEnter = useCallback((event) => {
+    if (event.target) event.target.getCanvas().style.cursor = 'pointer';
+  }, []);
 
-  const onMouseLeave = useCallback(() => {
-    const map = mapRef?.current?.getMap?.();
-    if (map) map.getCanvas().style.cursor = '';
-  }, [mapRef]);
+  const onMouseLeave = useCallback((event) => {
+    if (event.target) event.target.getCanvas().style.cursor = '';
+  }, []);
 
   return (
     <Source
@@ -133,12 +110,13 @@ export default function MapClusterLayer({ properties, mapRef, onSelect }) {
       />
       <Layer
         id="unclustered-point"
-        type="symbol"
+        type="circle"
         filter={['!', ['has', 'point_count']]}
-        layout={{
-          'icon-image': 'custom-pin',
-          'icon-size': 0.8,
-          'icon-anchor': 'bottom',
+        paint={{
+          'circle-radius': 10,
+          'circle-color': 'transparent',
+          'circle-stroke-width': 3,
+          'circle-stroke-color': '#db7340',
         }}
         onClick={onClick}
         onMouseEnter={onMouseEnter}

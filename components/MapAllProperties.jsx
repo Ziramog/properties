@@ -9,7 +9,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import Link from 'next/link';
 import PropertiesSearch from '@/components/PropertiesSearch';
 import ScrollReveal from '@/components/shared/ScrollReveal';
-import MapClusterLayer, { addPinImage } from '@/components/MapClusterLayer';
+import MapClusterLayer from '@/components/MapClusterLayer';
 import MapPropertySidebar from '@/components/MapPropertySidebar';
 
 const knownCities = {
@@ -176,8 +176,7 @@ export default function MapAllProperties({ initialProperties = [] }) {
   }, [allProps, activeFilters]);
 
   const onMapLoad = useCallback((evt) => {
-    const map = evt.target;
-    addPinImage(map).catch(() => {});
+    // Map loaded successfully
   }, []);
 
   const onMapClick = useCallback((event) => {
@@ -248,7 +247,6 @@ export default function MapAllProperties({ initialProperties = [] }) {
                 >
                   <MapClusterLayer
                     properties={filteredProps}
-                    mapRef={mapRef}
                     onSelect={setSelectedProperty}
                   />
                 </Map>

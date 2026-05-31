@@ -4,7 +4,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 import Map from 'react-map-gl';
 import { useRouter } from 'next/navigation';
-import MapClusterLayer, { addPinImage } from '@/components/MapClusterLayer';
+import MapClusterLayer from '@/components/MapClusterLayer';
 import MapPropertySidebar from '@/components/MapPropertySidebar';
 
 const knownCities = {
@@ -122,7 +122,6 @@ const CategoryMap = ({ properties = [] }) => {
 
   const onMapLoad = useCallback((evt) => {
     const map = evt.target;
-    addPinImage(map).catch(() => {});
 
     if (markers.length > 1) {
       const bounds = markers.reduce(
