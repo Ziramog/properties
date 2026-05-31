@@ -235,7 +235,6 @@ export default function MapAllProperties({ initialProperties = [] }) {
 
                 <Map
                   ref={mapRef}
-                  onLoad={onMapLoad}
                   onClick={handleClick}
                   onMouseMove={handleMouseMove}
                   interactiveLayerIds={['clusters', 'unclustered-point']}
