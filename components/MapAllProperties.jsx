@@ -11,6 +11,7 @@ import PropertiesSearch from '@/components/PropertiesSearch';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import MapClusterLayer from '@/components/MapClusterLayer';
 import MapPropertySidebar from '@/components/MapPropertySidebar';
+import { useClusterClick } from '@/hooks/useClusterClick';
 
 const knownCities = {
   'Alta Gracia': [-31.6525, -64.4397],
@@ -175,13 +176,11 @@ export default function MapAllProperties({ initialProperties = [] }) {
     return result;
   }, [allProps, activeFilters]);
 
-  const onMapLoad = useCallback((evt) => {
-    // Map loaded successfully
-  }, []);
-
-  const onMapClick = useCallback((event) => {
-    // Handled by MapClusterLayer internally
-  }, []);
+  const { handleClick, handleMouseMove } = useClusterClick({
+    mapRef,
+    markers: filteredProps,
+    onSelect: setSelectedProperty,
+  });
 
   if (allProps.length === 0) {
     return (
@@ -237,6 +236,9 @@ export default function MapAllProperties({ initialProperties = [] }) {
                 <Map
                   ref={mapRef}
                   onLoad={onMapLoad}
+                  onClick={handleClick}
+                  onMouseMove={handleMouseMove}
+                  interactiveLayerIds={['clusters', 'unclustered-point']}
                   mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
                   mapLib={mapboxgl}
                   initialViewState={{ longitude: -64.4397, latitude: -31.6525, zoom: 11 }}
@@ -245,10 +247,7 @@ export default function MapAllProperties({ initialProperties = [] }) {
                   scrollZoom={true}
                   attributionControl={false}
                 >
-                  <MapClusterLayer
-                    properties={filteredProps}
-                    onSelect={setSelectedProperty}
-                  />
+                  <MapClusterLayer properties={filteredProps} />
                 </Map>
 
                 {/* No results overlay */}

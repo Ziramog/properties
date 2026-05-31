@@ -1,8 +1,8 @@
 'use client';
-import { useMemo, useCallback } from 'react';
+import { useMemo } from 'react';
 import { Source, Layer } from 'react-map-gl';
 
-export default function MapClusterLayer({ properties, onSelect }) {
+export default function MapClusterLayer({ properties }) {
   const geojson = useMemo(() => {
     return {
       type: 'FeatureCollection',
@@ -27,43 +27,6 @@ export default function MapClusterLayer({ properties, onSelect }) {
         })),
     };
   }, [properties]);
-
-  const onClick = useCallback(
-    (event) => {
-      const map = event.target;
-      const features = event.features || [];
-      if (features.length === 0) return;
-
-      const feature = features[0];
-      const clusterId = feature.properties.cluster_id;
-
-      if (clusterId != null) {
-        const source = map.getSource('properties');
-        if (!source) return;
-        source.getClusterExpansionZoom(clusterId, (err, zoom) => {
-          if (err) return;
-          map.flyTo({
-            center: feature.geometry.coordinates,
-            zoom: Math.min(zoom, 16),
-            duration: 500,
-          });
-        });
-      } else {
-        const id = feature.properties.id;
-        const prop = properties.find((p) => p._id === id);
-        if (prop && onSelect) onSelect(prop);
-      }
-    },
-    [properties, onSelect]
-  );
-
-  const onMouseEnter = useCallback((event) => {
-    if (event.target) event.target.getCanvas().style.cursor = 'pointer';
-  }, []);
-
-  const onMouseLeave = useCallback((event) => {
-    if (event.target) event.target.getCanvas().style.cursor = '';
-  }, []);
 
   return (
     <Source
@@ -91,9 +54,6 @@ export default function MapClusterLayer({ properties, onSelect }) {
           'circle-stroke-width': 2,
           'circle-stroke-color': '#ffffff',
         }}
-        onClick={onClick}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
       />
       <Layer
         id="cluster-count"
@@ -118,9 +78,6 @@ export default function MapClusterLayer({ properties, onSelect }) {
           'circle-stroke-width': 3,
           'circle-stroke-color': '#db7340',
         }}
-        onClick={onClick}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
       />
     </Source>
   );

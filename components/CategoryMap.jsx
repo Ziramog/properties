@@ -6,6 +6,7 @@ import Map from 'react-map-gl';
 import { useRouter } from 'next/navigation';
 import MapClusterLayer from '@/components/MapClusterLayer';
 import MapPropertySidebar from '@/components/MapPropertySidebar';
+import { useClusterClick } from '@/hooks/useClusterClick';
 
 const knownCities = {
   'Alta Gracia': [-31.6525, -64.4397],
@@ -120,6 +121,12 @@ const CategoryMap = ({ properties = [] }) => {
     };
   }, [properties]);
 
+  const { handleClick, handleMouseMove } = useClusterClick({
+    mapRef,
+    markers,
+    onSelect: setSelectedProperty,
+  });
+
   const onMapLoad = useCallback((evt) => {
     const map = evt.target;
 
@@ -148,27 +155,26 @@ const CategoryMap = ({ properties = [] }) => {
   return (
     <>
       <div className="relative rounded-[30px] overflow-hidden">
-        <Map
-          ref={mapRef}
-          onLoad={onMapLoad}
-          mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-          mapLib={mapboxgl}
-          initialViewState={initialViewState}
-          style={{ width: '100%', height: 500 }}
-          mapStyle='mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7'
-          scrollZoom={false}
-          dragPan={true}
-          dragRotate={false}
-          doubleClickZoom={true}
-          touchZoomRotate={false}
-          touchPitch={false}
-          keyboard={true}
-        >
-          <MapClusterLayer
-            properties={markers}
-            mapRef={mapRef}
-            onSelect={setSelectedProperty}
-          />
+          <Map
+            ref={mapRef}
+            onLoad={onMapLoad}
+            onClick={handleClick}
+            onMouseMove={handleMouseMove}
+            interactiveLayerIds={['clusters', 'unclustered-point']}
+            mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+            mapLib={mapboxgl}
+            initialViewState={initialViewState}
+            style={{ width: '100%', height: 500 }}
+            mapStyle='mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7'
+            scrollZoom={false}
+            dragPan={true}
+            dragRotate={false}
+            doubleClickZoom={true}
+            touchZoomRotate={false}
+            touchPitch={false}
+            keyboard={true}
+          >
+          <MapClusterLayer properties={markers} />
         </Map>
       </div>
       {selectedProperty && (
