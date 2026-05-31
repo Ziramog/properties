@@ -1,9 +1,11 @@
 'use client';
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useMemo, useCallback } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
-import Map, { Marker } from 'react-map-gl';
+import Map from 'react-map-gl';
 import { useRouter } from 'next/navigation';
+import MapClusterLayer, { addPinImage } from '@/components/MapClusterLayer';
+import MapPropertySidebar from '@/components/MapPropertySidebar';
 
 const knownCities = {
   'Alta Gracia': [-31.6525, -64.4397],
@@ -48,8 +50,6 @@ function geocodeCity(city) {
   return coords ? { lat: coords[0], lng: coords[1] } : null;
 }
 
-/* Deterministic offset so multiple pins in the same city don't stack perfectly,
-   but the offset never changes between renders. */
 function getOffset(id) {
   const num = parseInt(String(id).slice(-6), 16) || 0;
   return {
@@ -58,54 +58,8 @@ function getOffset(id) {
   };
 }
 
-function MapHintOverlay({ dismissed, onDismiss }) {
-  const isMobile = typeof window !== 'undefined' && 'ontouchstart' in window;
-
-  useMemo(() => {
-    if (dismissed) return;
-    const container = document.querySelector('.mapboxgl-map');
-    if (!container) return;
-
-    const handler = (e) => {
-      if (!isMobile && e.ctrlKey) { onDismiss(); return; }
-      if (isMobile && e.touches && e.touches.length >= 2) { onDismiss(); }
-    };
-
-    container.addEventListener(isMobile ? 'touchstart' : 'wheel', handler);
-    return () => container.removeEventListener(isMobile ? 'touchstart' : 'wheel', handler);
-  }, [dismissed, isMobile, onDismiss]);
-
-  if (dismissed) return null;
-
-  return (
-    <div
-      className="absolute z-20 pointer-events-none select-none"
-      style={{ bottom: 16, left: '50%', transform: 'translateX(-50%)' }}
-    >
-      <div className="flex items-center gap-2 bg-black/70 backdrop-blur-sm text-white text-[11px] px-3 py-1.5 rounded-full shadow-lg">
-        {isMobile ? (
-          <>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 flex-shrink-0">
-              <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/>
-            </svg>
-            <span>Usa dos dedos para hacer zoom</span>
-          </>
-        ) : (
-          <>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 flex-shrink-0">
-              <rect x="5" y="2" width="14" height="20" rx="3"/>
-              <path d="M12 6v4"/>
-            </svg>
-            <span>Ctrl + scroll para hacer zoom</span>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
-
 const CategoryMap = ({ properties = [] }) => {
-  const [hintDismissed, setHintDismissed] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState(null);
   const mapRef = useRef();
   const router = useRouter();
 
@@ -116,12 +70,9 @@ const CategoryMap = ({ properties = [] }) => {
     properties.forEach((p) => {
       let coords = null;
 
-      // 1. Exact coordinates from DB
       if (p.coordinates?.lat != null && p.coordinates?.lng != null) {
         coords = { lat: p.coordinates.lat, lng: p.coordinates.lng };
-      }
-      // 2. Known cities dictionary
-      else if (p.location?.city) {
+      } else if (p.location?.city) {
         coords = geocodeCity(p.location.city);
       }
 
@@ -132,10 +83,11 @@ const CategoryMap = ({ properties = [] }) => {
 
         const off = getOffset(p._id);
         list.push({
-          id: p._id,
-          name: p.name,
-          lat: coords.lat + (count > 0 ? off.lat : 0),
-          lng: coords.lng + (count > 0 ? off.lng : 0),
+          ...p,
+          coords: {
+            lat: coords.lat + (count > 0 ? off.lat : 0),
+            lng: coords.lng + (count > 0 ? off.lng : 0),
+          },
         });
       }
     });
@@ -147,12 +99,12 @@ const CategoryMap = ({ properties = [] }) => {
     if (list.length === 1) {
       return {
         markers: list,
-        initialViewState: { longitude: list[0].lng, latitude: list[0].lat, zoom: 14 },
+        initialViewState: { longitude: list[0].coords.lng, latitude: list[0].coords.lat, zoom: 14 },
       };
     }
 
-    const lats = list.map((m) => m.lat);
-    const lngs = list.map((m) => m.lng);
+    const lats = list.map((m) => m.coords.lat);
+    const lngs = list.map((m) => m.coords.lng);
     const minLat = Math.min(...lats);
     const maxLat = Math.max(...lats);
     const minLng = Math.min(...lngs);
@@ -168,97 +120,22 @@ const CategoryMap = ({ properties = [] }) => {
     };
   }, [properties]);
 
-  const onMapLoad = useCallback(() => {
-    const map = mapRef.current?.getMap();
-    if (!map || markers.length === 0) return;
+  const onMapLoad = useCallback((evt) => {
+    const map = evt.target;
+    addPinImage(map).catch(() => {});
 
-    // Fit bounds only after the style has fully loaded
-    if (markers.length === 1) {
-      map.flyTo({ center: [markers[0].lng, markers[0].lat], zoom: 14, duration: 500 });
-    } else {
+    if (markers.length > 1) {
       const bounds = markers.reduce(
         (acc, m) => [
-          [Math.min(acc[0][0], m.lng), Math.min(acc[0][1], m.lat)],
-          [Math.max(acc[1][0], m.lng), Math.max(acc[1][1], m.lat)],
+          [Math.min(acc[0][0], m.coords.lng), Math.min(acc[0][1], m.coords.lat)],
+          [Math.max(acc[1][0], m.coords.lng), Math.max(acc[1][1], m.coords.lat)],
         ],
         [[Infinity, Infinity], [-Infinity, -Infinity]]
       );
       map.fitBounds(bounds, { padding: 60, maxZoom: 14, duration: 500 });
+    } else if (markers.length === 1) {
+      map.flyTo({ center: [markers[0].coords.lng, markers[0].coords.lat], zoom: 14, duration: 500 });
     }
-
-    // Custom zoom interaction
-    map.scrollZoom.disable();
-    const container = map.getContainer();
-
-    const wheelHandler = (e) => {
-      if (e.ctrlKey || e.metaKey) {
-        e.preventDefault();
-        e.stopPropagation();
-        const delta = e.deltaY || e.wheelDelta;
-        if (delta < 0) map.zoomIn({ duration: 0 });
-        else map.zoomOut({ duration: 0 });
-        setHintDismissed(true);
-      } else {
-        setHintDismissed(false);
-      }
-    };
-
-    let lastTouchDist = null;
-    let lastTouchCenter = null;
-    const touchStartHandler = (e) => {
-      if (e.touches.length === 2) {
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        lastTouchDist = Math.hypot(dx, dy);
-        lastTouchCenter = {
-          x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
-          y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
-        };
-        setHintDismissed(true);
-      }
-    };
-    const touchMoveHandler = (e) => {
-      if (e.touches.length === 2 && lastTouchDist !== null) {
-        e.preventDefault();
-        const tdx = e.touches[0].clientX - e.touches[1].clientX;
-        const tdy = e.touches[0].clientY - e.touches[1].clientY;
-        const dist = Math.hypot(tdx, tdy);
-        const delta = dist - lastTouchDist;
-        if (delta > 8) { map.zoomIn({ duration: 0 }); lastTouchDist = dist; }
-        else if (delta < -8) { map.zoomOut({ duration: 0 }); lastTouchDist = dist; }
-
-        if (lastTouchCenter) {
-          const center = {
-            x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
-            y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
-          };
-          const pdx = center.x - lastTouchCenter.x;
-          const pdy = center.y - lastTouchCenter.y;
-          if (Math.abs(pdx) > 5 || Math.abs(pdy) > 5) {
-            map.panBy([-pdx, -pdy], { duration: 0 });
-            lastTouchCenter = center;
-          }
-        }
-      }
-    };
-    const touchEndHandler = (e) => {
-      if (e.touches.length < 2) {
-        lastTouchDist = null;
-        lastTouchCenter = null;
-      }
-    };
-
-    container.addEventListener('wheel', wheelHandler, { passive: false });
-    container.addEventListener('touchstart', touchStartHandler, { passive: false });
-    container.addEventListener('touchmove', touchMoveHandler, { passive: false });
-    container.addEventListener('touchend', touchEndHandler, { passive: false });
-
-    return () => {
-      container.removeEventListener('wheel', wheelHandler);
-      container.removeEventListener('touchstart', touchStartHandler);
-      container.removeEventListener('touchmove', touchMoveHandler);
-      container.removeEventListener('touchend', touchEndHandler);
-    };
   }, [markers]);
 
   if (markers.length === 0) {
@@ -270,42 +147,38 @@ const CategoryMap = ({ properties = [] }) => {
   }
 
   return (
-    <div className="relative rounded-[30px] overflow-hidden">
-      <Map
-        ref={mapRef}
-        onLoad={onMapLoad}
-        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-        mapLib={mapboxgl}
-        initialViewState={initialViewState}
-        style={{ width: '100%', height: 500 }}
-        mapStyle='mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7'
-        scrollZoom={false}
-        dragPan={true}
-        dragRotate={false}
-        doubleClickZoom={true}
-        touchZoomRotate={false}
-        touchPitch={false}
-        keyboard={true}
-      >
-        {markers.map((m) => (
-          <Marker key={m.id} longitude={m.lng} latitude={m.lat} anchor='bottom'>
-            <div
-              onClick={() => router.push(`/properties/${m.id}`)}
-              className="block cursor-pointer hover:scale-110 transition-transform"
-              role="button"
-              tabIndex={0}
-            >
-              <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                <path d="m32 0a24.028 24.028 0 0 0 -24 24c0 16.228 22.342 38.756 23.293 39.707a1 1 0 0 0 1.414 0c.951-.951 23.293-23.479 23.293-39.707a24.028 24.028 0 0 0 -24-24z" fill="#db7340"/>
-                <circle cx="32" cy="24" fill="#c06030" r="13"/>
-                <circle cx="32" cy="24" fill="#fff" opacity="0.25" r="6"/>
-              </svg>
-            </div>
-          </Marker>
-        ))}
-      </Map>
-      <MapHintOverlay dismissed={hintDismissed} onDismiss={() => setHintDismissed(true)} />
-    </div>
+    <>
+      <div className="relative rounded-[30px] overflow-hidden">
+        <Map
+          ref={mapRef}
+          onLoad={onMapLoad}
+          mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+          mapLib={mapboxgl}
+          initialViewState={initialViewState}
+          style={{ width: '100%', height: 500 }}
+          mapStyle='mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7'
+          scrollZoom={false}
+          dragPan={true}
+          dragRotate={false}
+          doubleClickZoom={true}
+          touchZoomRotate={false}
+          touchPitch={false}
+          keyboard={true}
+        >
+          <MapClusterLayer
+            properties={markers}
+            mapRef={mapRef}
+            onSelect={setSelectedProperty}
+          />
+        </Map>
+      </div>
+      {selectedProperty && (
+        <MapPropertySidebar
+          property={selectedProperty}
+          onClose={() => setSelectedProperty(null)}
+        />
+      )}
+    </>
   );
 };
 

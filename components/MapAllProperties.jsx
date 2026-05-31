@@ -1,6 +1,6 @@
 'use client';
-import { useEffect, useState, useRef, useMemo } from 'react';
-import Map, { Marker, Popup } from 'react-map-gl';
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import Map from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 import { getPropertyImage } from '@/utils/propertyDisplay';
@@ -9,6 +9,8 @@ import { FaArrowLeft } from 'react-icons/fa';
 import Link from 'next/link';
 import PropertiesSearch from '@/components/PropertiesSearch';
 import ScrollReveal from '@/components/shared/ScrollReveal';
+import MapClusterLayer, { addPinImage } from '@/components/MapClusterLayer';
+import MapPropertySidebar from '@/components/MapPropertySidebar';
 
 const knownCities = {
   'Alta Gracia': [-31.6525, -64.4397],
@@ -66,51 +68,15 @@ function geocode(property) {
   return null;
 }
 
-function formatPrice(property) {
-  const priceStr = property.price;
-  if (!priceStr) return '?';
-  const cleaned = priceStr.replace(/[^0-9]/g, '');
-  const num = parseInt(cleaned, 10);
-  if (isNaN(num)) return '?';
-  if (num >= 1000000) return `USD $${(num / 1000000).toFixed(1)}M`;
-  if (num >= 1000) return `USD ${Math.round(num / 1000)}k`;
-  return `USD $${num}`;
-}
-
 function parsePrice(priceStr) {
   if (!priceStr) return 0;
   const cleaned = priceStr.replace(/[^0-9]/g, '');
   return parseInt(cleaned, 10) || 0;
 }
 
-function PropertyHoverCard({ property }) {
-  const price = property.price || 'Consultar';
-  const image = property.images?.[0]?.url || '/images/property-placeholder.jpg';
-
-  return (
-    <Link
-      href={`/properties/${property._id}`}
-      className="flex items-center gap-3 bg-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-200 cursor-pointer"
-      style={{ width: 260 }}
-    >
-      <img
-        src={image}
-        alt={property.name}
-        className="w-20 h-20 object-cover flex-shrink-0"
-      />
-      <div className="flex-1 min-w-0 py-2 pr-3">
-        <p className="text-[13px] font-bold truncate" style={{ color: 'var(--color-brand)' }}>{price}</p>
-        <p className="text-[12px] font-medium text-gray-800 truncate">{property.name || 'Propiedad'}</p>
-        <p className="text-[11px] text-gray-500 truncate">{property.location?.city}</p>
-      </div>
-    </Link>
-  );
-}
-
 export default function MapAllProperties({ initialProperties = [] }) {
   const [allProps, setAllProps] = useState([]);
-  const [hoveredId, setHoveredId] = useState(null);
-  const [popupProperty, setPopupProperty] = useState(null);
+  const [selectedProperty, setSelectedProperty] = useState(null);
   const mapRef = useRef(null);
   const [activeFilters, setActiveFilters] = useState(null);
 
@@ -209,27 +175,14 @@ export default function MapAllProperties({ initialProperties = [] }) {
     return result;
   }, [allProps, activeFilters]);
 
-  useEffect(() => {
-    const map = mapRef.current?.getMap();
-    if (!map || filteredProps.length === 0) return;
+  const onMapLoad = useCallback((evt) => {
+    const map = evt.target;
+    addPinImage(map).catch(() => {});
+  }, []);
 
-    const doFit = () => {
-      const bounds = filteredProps.reduce(
-        (acc, p) => [
-          [Math.min(acc[0][0], p.coords.lng), Math.min(acc[0][1], p.coords.lat)],
-          [Math.max(acc[1][0], p.coords.lng), Math.max(acc[1][1], p.coords.lat)],
-        ],
-        [[Infinity, Infinity], [-Infinity, -Infinity]]
-      );
-      map.fitBounds(bounds, { padding: 80, duration: 1000, maxZoom: 13 });
-    };
-
-    if (map.isStyleLoaded()) {
-      doFit();
-    } else {
-      map.once('style.load', doFit);
-    }
-  }, [filteredProps]);
+  const onMapClick = useCallback((event) => {
+    // Handled by MapClusterLayer internally
+  }, []);
 
   if (allProps.length === 0) {
     return (
@@ -241,14 +194,14 @@ export default function MapAllProperties({ initialProperties = [] }) {
 
   return (
     <div className="min-h-screen bg-[#F6F6F6]">
-      {/* Search bar — full dark band */}
+      {/* Search bar */}
       <section className="bg-black px-4 md:px-[50px] pt-4 pb-6">
         <div className="max-w-7xl mx-auto">
           <PropertiesSearch onFilter={setActiveFilters} />
         </div>
       </section>
 
-      {/* Map section — white container matching property detail style */}
+      {/* Map section */}
       <section className="px-4 md:px-[50px] pb-12 pt-[12px]">
         <div className="bg-white rounded-[30px] overflow-hidden">
           <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[40px]">
@@ -276,7 +229,7 @@ export default function MapAllProperties({ initialProperties = [] }) {
 
             {/* Map */}
             <ScrollReveal>
-              <div className="rounded-[30px] overflow-hidden relative" style={{ height: 'calc(100vh - 400px)', minHeight: '500px' }}>
+              <div className="relative rounded-[30px] overflow-hidden" style={{ height: 'calc(100vh - 380px)', minHeight: '500px' }}>
                 {/* Property count badge */}
                 <div className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-md rounded-full px-4 py-2 text-[12px] font-semibold text-[#1A1A18] shadow-lg">
                   {filteredProps.length} propiedades
@@ -284,94 +237,20 @@ export default function MapAllProperties({ initialProperties = [] }) {
 
                 <Map
                   ref={mapRef}
+                  onLoad={onMapLoad}
                   mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
                   mapLib={mapboxgl}
-                  initialViewState={{ longitude: -64.4397, latitude: -31.6525, zoom: 12 }}
+                  initialViewState={{ longitude: -64.4397, latitude: -31.6525, zoom: 11 }}
                   style={{ width: '100%', height: '100%' }}
                   mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
                   scrollZoom={true}
                   attributionControl={false}
                 >
-                  {filteredProps.map((property) => {
-                    const isHovered = hoveredId === property._id;
-
-                    return (
-                      <Marker
-                        key={property._id}
-                        longitude={property.coords.lng}
-                        latitude={property.coords.lat}
-                        anchor="bottom"
-                        onClick={(e) => {
-                          e.originalEvent.stopPropagation();
-                          setPopupProperty(property);
-                        }}
-                      >
-                        <div
-                          className="relative"
-                          onMouseEnter={() => setHoveredId(property._id)}
-                          onMouseLeave={() => setHoveredId(null)}
-                        >
-                          {isHovered && (
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 pointer-events-none">
-                              <PropertyHoverCard property={property} />
-                            </div>
-                          )}
-
-                          <div
-                            style={{
-                              background: isHovered ? 'var(--color-brand)' : '#db7340',
-                              borderRadius: '10px',
-                              padding: '4px 8px',
-                              boxShadow: isHovered
-                                ? '0 0 0 3px rgba(233,69,96,0.4), 0 8px 24px rgba(0,0,0,0.35)'
-                                : '0 4px 16px rgba(0,0,0,0.3)',
-                              transform: isHovered ? 'scale(1.15)' : 'scale(1)',
-                              transition: 'all 0.2s ease',
-                            }}
-                          >
-                            <span style={{ color: '#fff', fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' }}>
-                              {formatPrice(property)}
-                            </span>
-                          </div>
-                        </div>
-                      </Marker>
-                    );
-                  })}
-
-                  {popupProperty && (
-                    <Popup
-                      longitude={popupProperty.coords.lng}
-                      latitude={popupProperty.coords.lat}
-                      anchor="top"
-                      onClose={() => setPopupProperty(null)}
-                      closeButton={true}
-                      closeOnClick={false}
-                      maxWidth="280px"
-                    >
-                      <div className="min-w-[220px] max-w-[260px]">
-                        <img
-                          src={getPropertyImage(popupProperty)}
-                          alt={popupProperty.name}
-                          className="w-full h-32 object-cover rounded-md mb-2"
-                        />
-                        <h3 className="font-semibold text-sm text-gray-900 line-clamp-1">{popupProperty.name}</h3>
-                        <p className="text-xs text-gray-500 mt-0.5">
-                          {popupProperty.location?.city}
-                        </p>
-                        <p className="font-bold mt-1 text-base" style={{ color: 'var(--color-brand)' }}>
-                          {popupProperty.price || 'Consultar'}
-                        </p>
-                        <a
-                          href={generateWhatsAppLink({ property: popupProperty })}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-2 flex items-center justify-center gap-1.5 w-full py-1.5 bg-whatsapp text-white text-xs font-semibold rounded-md hover:bg-whatsapp-hover transition-colors"
-                        >
-                          WhatsApp
-                        </a>
-                      </div>
-                    </Popup>
-                  )}
+                  <MapClusterLayer
+                    properties={filteredProps}
+                    mapRef={mapRef}
+                    onSelect={setSelectedProperty}
+                  />
                 </Map>
 
                 {/* No results overlay */}
@@ -388,6 +267,14 @@ export default function MapAllProperties({ initialProperties = [] }) {
           </div>
         </div>
       </section>
+
+      {/* Sidebar */}
+      {selectedProperty && (
+        <MapPropertySidebar
+          property={selectedProperty}
+          onClose={() => setSelectedProperty(null)}
+        />
+      )}
     </div>
   );
 }
