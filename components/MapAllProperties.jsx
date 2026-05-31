@@ -258,19 +258,19 @@ export default function MapAllProperties({ initialProperties = [] }) {
                     </div>
                   </div>
                 )}
+
+                {/* Sidebar inside map container */}
+                {selectedProperty && (
+                  <MapPropertySidebar
+                    property={selectedProperty}
+                    onClose={() => setSelectedProperty(null)}
+                  />
+                )}
               </div>
             </ScrollReveal>
           </div>
         </div>
       </section>
-
-      {/* Sidebar */}
-      {selectedProperty && (
-        <MapPropertySidebar
-          property={selectedProperty}
-          onClose={() => setSelectedProperty(null)}
-        />
-      )}
     </div>
   );
 }
