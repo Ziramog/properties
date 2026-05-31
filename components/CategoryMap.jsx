@@ -177,14 +177,15 @@ const CategoryMap = ({ properties = [] }) => {
           <MapClusterLayer properties={markers} />
         </Map>
 
-        {/* Sidebar inside map container */}
-        {selectedProperty && (
-          <MapPropertySidebar
-            property={selectedProperty}
-            onClose={() => setSelectedProperty(null)}
-          />
-        )}
       </div>
+
+      {/* Sidebar — outside all overflow-hidden containers */}
+      {selectedProperty && (
+        <MapPropertySidebar
+          property={selectedProperty}
+          onClose={() => setSelectedProperty(null)}
+        />
+      )}
     </>
   );
 };
