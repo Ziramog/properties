@@ -29,8 +29,8 @@ const Clients = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="bg-[#F6F6F6] pt-8 md:pt-12 pb-10 md:pb-16">
-      <div className="max-w-[1430px] mx-auto px-[15px]">
+    <section ref={sectionRef} className="bg-[#F6F6F6] pt-4 md:pt-6 pb-5 md:pb-8">
+      <div className="px-4 md:px-[50px]">
         {/* Client logo cards — horizontal scroll on mobile, grid on desktop */}
         <div className="flex md:grid overflow-x-auto md:overflow-visible gap-[15px] md:gap-[20px] scrollbar-hide md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {CLIENTS.map((client, i) => (
