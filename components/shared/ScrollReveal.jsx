@@ -11,11 +11,11 @@ const variantClasses = {
     visible: 'opacity-100 translate-y-0 scale-100',
   },
   fadeLeft: {
-    hidden: 'opacity-0 -translate-x-8',
+    hidden: 'opacity-0 -translate-x-[50px] md:-translate-x-[100px]',
     visible: 'opacity-100 translate-x-0',
   },
   fadeRight: {
-    hidden: 'opacity-0 translate-x-8',
+    hidden: 'opacity-0 translate-x-[50px] md:translate-x-[100px]',
     visible: 'opacity-100 translate-x-0',
   },
   fadeIn: {
@@ -27,8 +27,8 @@ const variantClasses = {
 const variantDurations = {
   fadeUp: 700,
   fadeScale: 800,
-  fadeLeft: 700,
-  fadeRight: 700,
+  fadeLeft: 500,
+    fadeRight: 500,
   fadeIn: 600,
 };
 

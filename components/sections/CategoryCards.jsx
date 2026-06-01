@@ -35,7 +35,7 @@ const CategoryCards = () => {
           <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--color-brand)] block mb-3">
             CATEGORÍAS
           </span>
-          <ScrollReveal variant="fadeRight">
+          <ScrollReveal variant="fadeLeft">
             <h2 className="text-2xl md:text-[32px] font-medium text-[#0F172A] leading-tight tracking-[-0.01em] mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
               Explorá por categoría
             </h2>
