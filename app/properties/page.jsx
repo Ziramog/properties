@@ -174,20 +174,18 @@ const PropertiesPage = async ({ searchParams }) => {
     <div className="min-h-screen bg-white">
       <ScrollToTop searchParams={searchParams} isFiltered={isFiltered} />
       {/* Header + Filters — full dark band */}
-      <section className="bg-black px-4 md:px-[50px] pt-24 md:pt-28 pb-6">
+      <section className="bg-black px-4 md:px-[50px] pt-24 md:pt-28 pb-3">
         {/* Search */}
         <PropertiesSearch currentFilters={currentFilters} title={title} />
       </section>
 
       {/* Sort Bar */}
-      <div id="resultados" className="bg-white px-4 md:px-[50px]">
-        <div className="pt-6 pb-2 js-animate">
-          <div className="flex items-center gap-3">
-            <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
-              {subtitle}
-            </h2>
-            <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
-          </div>
+      <div id="resultados" className="bg-white px-4 md:px-[50px] pt-3">
+        <div className="pt-2 pb-2">
+          <h2 className="text-[22px] md:text-[28px] font-normal text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
+            {subtitle}
+            <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
+          </h2>
         </div>
         <SortBar
           total={total}
@@ -227,12 +225,12 @@ const PropertiesPage = async ({ searchParams }) => {
 
       {/* Category Map */}
       {filteredProperties.length > 0 && (
-        <section className="bg-white px-4 md:px-[50px] pb-12">
+      <section className="relative z-0 bg-white px-4 md:px-[50px] pb-12">
           <div className="bg-white rounded-[30px] overflow-hidden">
             <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[40px]">
-              <div className="pb-[30px] js-animate">
-                <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Ver en el Mapa
+              <div className="pb-[30px]">
+                <h2 className="text-[22px] md:text-[28px] font-normal text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
+                  Vista en Mapa
                   <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
                 </h2>
               </div>

@@ -24,24 +24,31 @@ export default function MapPropertySidebar({ property, onClose }) {
     return () => clearTimeout(t);
   }, [property?._id]);
 
-  // Lock body scroll when sidebar is open — no scroll anywhere (Option B)
+  // Lock body scroll when sidebar is open — desktop no internal scroll, mobile allows internal scroll
   useEffect(() => {
+    const isMobileNow = window.innerWidth < 768;
     const originalHtml = document.documentElement.style.overflow;
     const originalBody = document.body.style.overflow;
     const originalTouchAction = document.documentElement.style.touchAction;
 
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
-    document.documentElement.style.touchAction = 'none';
-
-    const preventTouch = (e) => e.preventDefault();
-    window.addEventListener('touchmove', preventTouch, { passive: false });
+    if (!isMobileNow) {
+      document.documentElement.style.touchAction = 'none';
+      const preventTouch = (e) => e.preventDefault();
+      window.addEventListener('touchmove', preventTouch, { passive: false });
+      return () => {
+        document.documentElement.style.overflow = originalHtml;
+        document.body.style.overflow = originalBody;
+        document.documentElement.style.touchAction = originalTouchAction;
+        window.removeEventListener('touchmove', preventTouch, { passive: false });
+      };
+    }
 
     return () => {
       document.documentElement.style.overflow = originalHtml;
       document.body.style.overflow = originalBody;
       document.documentElement.style.touchAction = originalTouchAction;
-      window.removeEventListener('touchmove', preventTouch, { passive: false });
     };
   }, []);
 
@@ -96,8 +103,8 @@ export default function MapPropertySidebar({ property, onClose }) {
           transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
-        {/* Content — no internal scroll (Option B: Senada-style) */}
-        <div className="flex-1 overflow-hidden px-[50px] pt-[30px] md:pt-[100px] pb-[50px]">
+        {/* Content — mobile allows internal scroll, desktop no scroll (Senada-style) */}
+        <div className="flex-1 overflow-y-auto md:overflow-hidden px-[50px] pt-[30px] md:pt-[100px] pb-[50px]">
           <div className="group">
             {/* Photo */}
             <div className="relative rounded-xl overflow-hidden" style={{ aspectRatio: '16/9' }}>

@@ -58,7 +58,7 @@ const Testimonials = () => {
       <div className="bg-white w-full pt-[30px] pb-[30px]">
       <div className="max-w-7xl mx-auto">
         {/* Section Header — match homepage standard */}
-        <div className="text-center mb-10 md:mb-14 js-animate">
+        <div className="text-center mb-10 md:mb-14">
           <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
             Lo que dicen nuestros clientes
           </h2>

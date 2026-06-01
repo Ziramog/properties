@@ -317,3 +317,19 @@
   from { transform: translateY(40px); }
   to { transform: translateY(0); }
 }
+
+/* ============================================
+   MAPBOX COOPERATIVE GESTURES OVERLAY
+   Custom styling for the native hint UI
+   ============================================ */
+.mapboxgl-cooperative-gesture-ui {
+  background-color: rgba(10, 8, 6, 0.85) !important;
+  color: var(--color-brand) !important;
+  font-family: var(--font-body) !important;
+  backdrop-filter: blur(4px) !important;
+  border-radius: 8px !important;
+}
+.mapboxgl-cooperative-gesture-ui .mapboxgl-cg-text {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}

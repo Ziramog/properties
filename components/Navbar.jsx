@@ -77,7 +77,7 @@ const Navbar = () => {
     <>
       {/* Desktop Nav — Senada-style */}
       <header
-        className={`hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`hidden md:block fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
           isGlassMode ? 'bg-black shadow-lg shadow-black/20' : 'bg-transparent'
         }`}
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 8px) + 15px)', paddingBottom: '15px' }}
@@ -224,7 +224,7 @@ const Navbar = () => {
 
       {/* Mobile Nav */}
       <div
-        className={`md:hidden fixed top-0 left-0 right-0 z-[60] transition-all duration-300 ${
+        className={`md:hidden fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
           isGlassMode ? 'bg-black' : 'bg-transparent'
         }`}
         style={{ height: 'calc(env(safe-area-inset-top, 8px) + 60px)' }}
@@ -265,7 +265,7 @@ const Navbar = () => {
 
         {/* Mobile fullscreen overlay — Senada style */}
         <div
-          className="md:hidden fixed inset-x-0 z-[61] bg-black flex flex-col overflow-x-hidden"
+          className="md:hidden fixed inset-x-0 z-[110] bg-black flex flex-col overflow-x-hidden"
           style={{
             top: 'calc(env(safe-area-inset-top, 8px) + 60px)',
             height: 'calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top, 8px) - 60px)',

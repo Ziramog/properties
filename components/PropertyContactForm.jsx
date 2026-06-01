@@ -42,7 +42,7 @@ const PropertyContactForm = ({ property }) => {
       <div className="px-6 py-6 md:p-8">
         <div className="pb-6 md:pb-7 flex items-center justify-between">
           <h2
-            className="text-[22px] md:text-[28px] font-semibold text-[#0F172A] flex items-center"
+            className="text-[22px] md:text-[28px] font-normal text-[#0F172A] flex items-center"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
             Contactanos

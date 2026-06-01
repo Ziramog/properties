@@ -7,15 +7,15 @@ const FullGallery = ({ images = [], propertyName }) => {
 
   return (
     <Gallery>
-      <section className="rounded-none md:rounded-[30px] overflow-hidden">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[5px]">
+      <section className="rounded-none md:rounded-[30px] overflow-hidden mx-[-16px] md:mx-0">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-[5px]">
             {images.map((image, index) => (
               <Item key={index} original={image?.url} thumbnail={image?.url} width="1200" height="800">
                 {({ ref, open }) => (
                   <div
                     ref={ref}
                     onClick={open}
-                    className="relative group cursor-pointer overflow-hidden bg-[#f0f0f0] aspect-[4/3]"
+                    className="relative group cursor-pointer overflow-hidden bg-[#f0f0f0] h-[150px] sm:h-[200px]"
                   >
                     <Image
                       src={image?.url}

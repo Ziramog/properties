@@ -11,7 +11,7 @@ import PropertiesSearch from '@/components/PropertiesSearch';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import MapClusterLayer from '@/components/MapClusterLayer';
 import MapPropertySidebar from '@/components/MapPropertySidebar';
-import { useClusterClick } from '@/hooks/useClusterClick';
+
 
 const knownCities = {
   'Alta Gracia': [-31.6525, -64.4397],
@@ -176,12 +176,6 @@ export default function MapAllProperties({ initialProperties = [] }) {
     return result;
   }, [allProps, activeFilters]);
 
-  const { handleClick, handleMouseMove } = useClusterClick({
-    mapRef,
-    markers: filteredProps,
-    onSelect: setSelectedProperty,
-  });
-
   if (allProps.length === 0) {
     return (
       <div className="h-screen flex items-center justify-center bg-[#F6F6F6]">
@@ -204,9 +198,9 @@ export default function MapAllProperties({ initialProperties = [] }) {
         <div className="bg-white rounded-[30px] overflow-hidden">
           <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[40px]">
             {/* Title */}
-            <div className="pb-[30px] flex items-center justify-between js-animate">
+            <div className="pb-[30px] flex items-center justify-between">
               <h2
-                className="text-[28px] font-semibold text-[#0F172A] flex items-center"
+                className="text-[22px] md:text-[28px] font-normal text-[#0F172A] flex items-center"
                 style={{ fontFamily: 'var(--font-heading)' }}
               >
                 Todas las Propiedades
@@ -235,18 +229,16 @@ export default function MapAllProperties({ initialProperties = [] }) {
 
                 <Map
                   ref={mapRef}
-                  onClick={handleClick}
-                  onMouseMove={handleMouseMove}
-                  interactiveLayerIds={['clusters', 'unclustered-point']}
                   mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
                   mapLib={mapboxgl}
                   initialViewState={{ longitude: -64.4397, latitude: -31.6525, zoom: 11 }}
                   style={{ width: '100%', height: '100%' }}
                   mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
                   scrollZoom={true}
+                  cooperativeGestures={true}
                   attributionControl={false}
                 >
-                  <MapClusterLayer properties={filteredProps} />
+                  <MapClusterLayer properties={filteredProps} onSelect={setSelectedProperty} />
                 </Map>
 
                 {/* No results overlay */}

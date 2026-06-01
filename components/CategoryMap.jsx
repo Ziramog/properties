@@ -6,7 +6,7 @@ import Map from 'react-map-gl';
 import { useRouter } from 'next/navigation';
 import MapClusterLayer from '@/components/MapClusterLayer';
 import MapPropertySidebar from '@/components/MapPropertySidebar';
-import { useClusterClick } from '@/hooks/useClusterClick';
+
 
 const knownCities = {
   'Alta Gracia': [-31.6525, -64.4397],
@@ -121,12 +121,6 @@ const CategoryMap = ({ properties = [] }) => {
     };
   }, [properties]);
 
-  const { handleClick, handleMouseMove } = useClusterClick({
-    mapRef,
-    markers,
-    onSelect: setSelectedProperty,
-  });
-
   const onMapLoad = useCallback((evt) => {
     const map = evt.target;
 
@@ -158,9 +152,6 @@ const CategoryMap = ({ properties = [] }) => {
           <Map
             ref={mapRef}
             onLoad={onMapLoad}
-            onClick={handleClick}
-            onMouseMove={handleMouseMove}
-            interactiveLayerIds={['clusters', 'unclustered-point']}
             mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
             mapLib={mapboxgl}
             initialViewState={initialViewState}
@@ -173,8 +164,9 @@ const CategoryMap = ({ properties = [] }) => {
             touchZoomRotate={false}
             touchPitch={false}
             keyboard={true}
+            cooperativeGestures={true}
           >
-          <MapClusterLayer properties={markers} />
+          <MapClusterLayer properties={markers} onSelect={setSelectedProperty} />
         </Map>
 
       </div>

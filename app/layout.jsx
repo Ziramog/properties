@@ -65,7 +65,7 @@ const MainLayout = ({ children }) => {
         <html lang='es' className={`${lato.variable} ${ptSerif.variable} ${cormorantGaramond.variable}`}>
           <body className='font-sans antialiased text-body'>
             <Navbar />
-            <main>{children}</main>
+            <main className="relative z-[1]">{children}</main>
             <Footer />
             <ToastContainer />
             <ScrollAnimation />

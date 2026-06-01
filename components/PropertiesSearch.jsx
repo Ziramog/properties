@@ -29,13 +29,6 @@ const AREA_RANGES = [
 ];
 const BEDROOM_OPTS = ['', '1', '2', '3', '4', '5+'];
 const BATH_OPTS = ['', '1', '2', '3', '4', '5+'];
-const PROPERTY_TYPES_CHECKBOXES = [
-  { value: 'residential', label: 'Residencial' },
-  { value: 'multi_family', label: 'Multi Familiar' },
-  { value: 'land', label: 'Terreno' },
-  { value: 'commercial', label: 'Comercial' },
-  { value: 'industrial', label: 'Industrial' },
-];
 const STATUS_CHECKBOXES = [
   { value: 'NUEVA', label: 'Nueva' },
   { value: 'PRECIO MEJORADO', label: 'Precio Mejorado' },
@@ -52,6 +45,8 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
   const [isLoading, setIsLoading] = useState(false);
   const cityInputRef = useRef(null);
   const suggestionTimerRef = useRef(null);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const dropdownRefs = useRef({});
 
   const [filters, setFilters] = useState({
     term: currentFilters.term || '',
@@ -70,11 +65,12 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
   });
 
   const [focused, setFocused] = useState({
-    term: false, tipo: false, area: false, price: false, bedrooms: false, baths: false,
+    term: false, address: false, tipo: false, area: false, price: false, bedrooms: false, baths: false,
   });
 
   const labelActive = (field) => {
     if (field === 'term') return focused.term || filters.term !== '';
+    if (field === 'address') return focused.address || filters.address !== '';
     if (field === 'tipo') return focused.tipo || filters.tipo !== '';
     if (field === 'area') return focused.area || filters.area !== '';
     if (field === 'price') return focused.price || filters.price !== '';
@@ -88,20 +84,34 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
   const FILTER_CONFIG = [
     { name: 'tipo', label: 'Tipo',
       options: TIPO_OPTIONS.filter((t) => t.value).map((t) => ({ value: t.value, label: t.label })),
-      className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/6 xl:w-[13%]' },
+      className: 'flex-1 min-[992px]:w-1/6 xl:w-[12%]' },
     { name: 'area', label: 'Superficie',
       options: AREA_RANGES.filter((r) => r.value).map((r) => ({ value: r.value, label: r.label })),
-      className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[12%]' },
+      className: 'flex-1 min-[992px]:w-1/3 xl:w-[11%]' },
     { name: 'price', label: 'Precio',
       options: PRECIO_RANGES.filter((r) => r.value).map((r) => ({ value: r.value, label: r.label })),
-      className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[15%]' },
+      className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[14%]' },
     { name: 'bedrooms', label: 'Dormitorios',
       options: BEDROOM_OPTS.filter((o) => o).map((o) => ({ value: o, label: o + '+' })),
-      className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[11%]' },
+      className: 'flex-1 min-[992px]:w-1/3 xl:w-[10%]' },
     { name: 'baths', label: 'Baños',
       options: BATH_OPTS.filter((o) => o).map((o) => ({ value: o, label: o + '+' })),
-      className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[11%]' },
+      className: 'flex-1 min-[992px]:w-1/3 xl:w-[10%]' },
   ];
+
+  // Click outside to close custom dropdowns
+  useEffect(() => {
+    function handleDocClick(e) {
+      if (!openDropdown) return;
+      const ref = dropdownRefs.current[openDropdown];
+      if (ref && !ref.contains(e.target)) {
+        setOpenDropdown(null);
+        setFocused((p) => ({ ...p, [openDropdown]: false }));
+      }
+    }
+    document.addEventListener('mousedown', handleDocClick);
+    return () => document.removeEventListener('mousedown', handleDocClick);
+  }, [openDropdown]);
 
   const fetchCitySuggestions = useCallback(async (query) => {
     if (query.length < 2) { setSuggestions([]); return; }
@@ -141,6 +151,12 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     }
   };
 
+  const handleSelect = (name, value) => {
+    setFilters((prev) => ({ ...prev, [name]: value }));
+    setOpenDropdown(null);
+    setFocused((p) => ({ ...p, [name]: false }));
+  };
+
   const handleCitySelect = (city) => {
     setFilters((prev) => ({ ...prev, term: city }));
     setCitySearch(city);
@@ -150,7 +166,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!filters.term && !filters.tipo && !filters.price && !filters.area && !filters.bedrooms && !filters.baths && !filters.status) {
+    if (!filters.term && !filters.address && !filters.tipo && !filters.price && !filters.area && !filters.bedrooms && !filters.baths && !filters.status) {
       alert('Por favor, selecioná al menos un filtro para buscar.');
       return;
     }
@@ -191,7 +207,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     }
   };
 
-  const FIELD_HEIGHT = '56px';
+  const FIELD_HEIGHT = '45px';
 
   const getLabelStyle = (isActive, left = '15px') => ({
     position: 'absolute',
@@ -199,12 +215,11 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     zIndex: 9,
     pointerEvents: 'none',
     transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-    top: isActive ? '4px' : '50%',
-    transform: isActive ? 'none' : 'translateY(-50%)',
-    fontSize: isActive ? '10px' : '16px',
-    fontWeight: isActive ? '400' : '400',
-    textTransform: isActive ? 'uppercase' : 'none',
-    letterSpacing: isActive ? '0.08em' : '0',
+    top: isActive ? '-7.5px' : '10px',
+    fontSize: isActive ? '10px' : '12px',
+    fontWeight: 400,
+    textTransform: 'uppercase',
+    letterSpacing: isActive ? '0.08em' : '0.03em',
     color: isActive ? '#fff' : '#a29696',
     lineHeight: 1.2,
   });
@@ -214,31 +229,13 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     width: '100%',
     background: 'transparent',
     border: '1px solid transparent',
-    color: isActive ? '#fff' : 'transparent',
+    color: isActive ? '#fff' : '#a29696',
     fontSize: '16px',
     fontWeight: 400,
     outline: 'none',
     paddingLeft: '15px',
-    paddingTop: isActive ? '18px' : '0',
     paddingRight: '16px',
     ...extra,
-  });
-
-  const getSelectStyle = (isActive) => ({
-    height: '100%',
-    width: '100%',
-    background: 'transparent',
-    border: '1px solid transparent',
-    color: isActive ? '#fff' : 'transparent',
-    fontSize: '16px',
-    fontWeight: 400,
-    outline: 'none',
-    paddingLeft: '15px',
-    paddingRight: '30px',
-    paddingTop: isActive ? '20px' : '0',
-    textIndent: isActive ? '0' : '-9999px',
-    appearance: 'none',
-    cursor: 'pointer',
   });
 
   const getWrapperStyle = () => ({
@@ -249,19 +246,19 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
   });
 
   return (
-    <div className="search-form" style={{ background: '#000' }}>
-      <div className="js-animate text-center">
+    <div className="search-form" style={{ background: '#000', maxWidth: '1200px', margin: '0 auto' }}>
+      <div className="text-center">
         <h1 className="text-[28px] md:text-[40px] font-normal text-white leading-tight" style={{ fontFamily: 'var(--font-heading)', margin: 0, marginBottom: '40px' }}>
           {title}
         </h1>
       </div>
       <form onSubmit={handleSubmit} className="searchForm" style={{ border: '1px solid #2a2626', borderRadius: '8px', background: '#000', position: 'relative', zIndex: 1 }}>
-        <div className="top-part" style={{
+        <div className="top-part p-[15px] gap-[10px] md:p-5 md:gap-5" style={{
           borderRadius: '12px', background: '#000',
-          display: 'flex', flexWrap: 'wrap', gap: 0, marginTop: '0', alignItems: 'center',
+          display: 'flex', flexWrap: 'wrap', marginTop: '0', alignItems: 'center',
         }}>
           {/* City / term */}
-          <div className="form-group elatus-autocomplete w-full min-[651px]:w-full min-[992px]:w-1/2 xl:w-[22%] border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626] hover:bg-[#0d0d0d] transition-colors duration-200"
+          <div className="form-group elatus-autocomplete w-full min-[992px]:w-1/2 xl:w-[20%] border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626] hover:bg-[#0d0d0d] transition-colors duration-200"
             style={getWrapperStyle()}
             onFocus={() => setFocused((p) => ({ ...p, term: true }))}
             onBlur={() => setFocused((p) => ({ ...p, term: false }))}>
@@ -299,27 +296,36 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
             )}
           </div>
 
-          {/* Filter selects */}
+          {/* Custom Dropdown selects */}
           {FILTER_CONFIG.map((f) => {
             const isActive = labelActive(f.name);
+            const isOpen = openDropdown === f.name;
+            const selectedLabel = f.options.find((o) => o.value === filters[f.name])?.label || '';
             return (
               <div key={f.name}
+                ref={(el) => { dropdownRefs.current[f.name] = el; }}
                 className={`form-group notranslate ${f.name}-group ${f.className} border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626] hover:bg-[#0d0d0d] transition-colors duration-200`}
-                style={getWrapperStyle()}>
+                style={{ ...getWrapperStyle(), cursor: 'pointer' }}
+                onClick={() => {
+                  const isClosing = openDropdown === f.name;
+                  setOpenDropdown(isClosing ? null : f.name);
+                  setFocused((p) => ({ ...p, [f.name]: !isClosing || filters[f.name] !== '' }));
+                }}>
                 <label style={getLabelStyle(isActive)}>{f.label}</label>
-                <select
-                  name={f.name}
-                  value={filters[f.name]}
-                  onChange={handleChange}
-                  onFocus={() => setFocused((p) => ({ ...p, [f.name]: true }))}
-                  onBlur={() => setFocused((p) => ({ ...p, [f.name]: false }))}
-                  style={getSelectStyle(isActive)}
-                >
-                  <option value="" disabled hidden></option>
-                  {f.options.map((o) => (
-                    <option key={o.value} value={o.value} style={{ backgroundColor: '#000', color: '#fff' }}>{o.label}</option>
-                  ))}
-                </select>
+                <div style={{
+                  height: '100%',
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  paddingLeft: '15px',
+                  paddingRight: '30px',
+                  color: isActive ? '#fff' : '#a29696',
+                  fontSize: '16px',
+                  fontWeight: 400,
+                  userSelect: 'none',
+                }}>
+                  {selectedLabel}
+                </div>
                 <svg style={{
                   position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',
                   width: '10px', height: '10px', zIndex: 2, pointerEvents: 'none',
@@ -327,23 +333,56 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
                 }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M6 9l6 6 6-6"/>
                 </svg>
+                {isOpen && (
+                  <div style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 4px)',
+                    left: 0,
+                    right: 0,
+                    zIndex: 60,
+                    background: '#000',
+                    borderRadius: '6px',
+                    padding: '10px',
+                    boxShadow: '0 .8px 1.1px rgba(0,0,0,.039), 0 2.5px 2.5px rgba(0,0,0,.057), 0 4.6px 4.8px rgba(0,0,0,.07), 0 8.3px 8.5px rgba(0,0,0,.083), 0 15.5px 15.9px rgba(0,0,0,.101), 0 37px 38px rgba(0,0,0,.14)',
+                  }}>
+                    {f.options.map((o) => (
+                      <div
+                        key={o.value}
+                        onClick={(e) => { e.stopPropagation(); handleSelect(f.name, o.value); }}
+                        style={{
+                          padding: '10px',
+                          fontSize: '13px',
+                          color: '#fff',
+                          borderRadius: '5px',
+                          cursor: 'pointer',
+                          background: filters[f.name] === o.value ? 'var(--color-brand)' : 'transparent',
+                        }}
+                        onMouseEnter={(e) => { if (filters[f.name] !== o.value) e.target.style.background = 'var(--color-brand)'; }}
+                        onMouseLeave={(e) => { if (filters[f.name] !== o.value) e.target.style.background = 'transparent'; }}
+                      >
+                        {o.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}
 
           {/* Search button */}
-          <button type="submit" className="btn btn-primary btnSubmit" style={{
+          <button type="submit" className="btn btn-primary btnSubmit w-full md:w-auto order-1 min-[651px]:order-0" style={{
             background: 'var(--color-brand)', color: '#fff', border: 'none',
             fontSize: '15px', fontWeight: 400, textTransform: 'uppercase',
-            height: FIELD_HEIGHT, padding: '0 30px', borderRadius: '8px', cursor: 'pointer',
+            height: FIELD_HEIGHT, padding: '0 20px', borderRadius: '8px', cursor: 'pointer',
             whiteSpace: 'nowrap', alignSelf: 'center', flexShrink: 0,
             letterSpacing: '0.06em', transition: 'opacity 0.2s',
+            marginLeft: 'auto',
           }} onMouseEnter={(e) => e.target.style.opacity = '0.85'} onMouseLeave={(e) => e.target.style.opacity = '1'}>
             Buscar
           </button>
         </div>
 
-        {/* Bottom-part expandable filters */}
+        {/* Bottom-part expandable filters — Estado only */}
         <div style={{
           maxHeight: expanded ? '450px' : '0',
           opacity: expanded ? 1 : 0,
@@ -354,41 +393,11 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
             background: '#000', borderRadius: '12px', padding: '20px 0',
             marginTop: '1px',
           }}>
-          <div className="inner grid-cols-1 min-[601px]:grid-cols-[2fr_3fr]" style={{ gap: '20px', display: 'grid' }}>
-            <div className="left">
-              <p style={{ color: '#a29696', fontSize: '14px', textTransform: 'uppercase', margin: '0 0 15px' }}>Tipo de Propiedad</p>
-              <div className="filter-wrapper" style={{ display: 'grid', columnGap: '20px', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))' }}>
-                {PROPERTY_TYPES_CHECKBOXES.map((pt) => (
-                  <div key={pt.value} className="custom-checkbox-wrapper" style={{ marginBottom: '10px' }}>
-                    <label style={{
-                      color: '#fff', fontSize: '13px', paddingLeft: '25px',
-                      position: 'relative', cursor: 'pointer', display: 'inline-block',
-                    }}>
-                      <input type="checkbox" name="property-type" value={pt.value}
-                        checked={(filters['property-type'] || []).includes(pt.value)}
-                        onChange={handleChange}
-                        style={{ position: 'absolute', opacity: 0, cursor: 'pointer' }}
-                      />
-                      <span style={{
-                        position: 'absolute', left: 0, top: '1px', width: '14px', height: '14px',
-                        background: '#403941', borderRadius: '2px',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      }}>
-                        {(filters['property-type'] || []).includes(pt.value) && (
-                          <svg viewBox="0 0 12 12" width="10" height="10" fill="#fff"><path d="M10 2L4.5 7.5 2 5" stroke="#fff" strokeWidth="2" fill="none"/></svg>
-                        )}
-                      </span>
-                      {pt.label}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="right">
+            <div style={{ padding: '0 20px' }}>
               <p style={{ color: '#a29696', fontSize: '14px', textTransform: 'uppercase', margin: '0 0 15px' }}>Estado</p>
-              <div className="filter-wrapper" style={{ display: 'grid', columnGap: '20px', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))' }}>
+              <div className="filter-wrapper flex flex-wrap" style={{ columnGap: '20px' }}>
                 {STATUS_CHECKBOXES.map((st) => (
-                  <div key={st.value} className="custom-checkbox-wrapper" style={{ marginBottom: '10px' }}>
+                  <div key={st.value} className="custom-checkbox-wrapper w-full min-[430px]:w-1/2 md:w-auto" style={{ marginBottom: '10px' }}>
                     <label style={{
                       color: '#fff', fontSize: '13px', paddingLeft: '25px',
                       position: 'relative', cursor: 'pointer', display: 'inline-block',
@@ -415,10 +424,9 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
             </div>
           </div>
         </div>
-      </div>
       </form>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0 20px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 20px 20px' }}>
         <button type="button" onClick={handleReset}
           style={{ background: 'none', border: 'none', color: '#919191', fontSize: '12px', cursor: 'pointer', textTransform: 'uppercase', padding: 0 }}
           onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
@@ -430,15 +438,16 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
             cursor: 'pointer', textTransform: 'uppercase', padding: 0,
             display: 'flex', alignItems: 'center', gap: '5px',
           }}
-          onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
-          onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
         >
           <span style={{
-            display: 'inline-block', width: '10px', height: '10px',
-            background: expanded
-              ? "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23919191'%3E%3Cpath d='M19 13H5v-2h14v2z'/%3E%3C/svg%3E\") center/contain no-repeat"
-              : "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23919191'%3E%3Cpath d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'/%3E%3C/svg%3E\") center/contain no-repeat",
-          }} />
+            color: 'var(--color-brand)',
+            fontSize: '16px',
+            fontWeight: 300,
+            lineHeight: 1,
+            width: '14px',
+            textAlign: 'center',
+            display: 'inline-block',
+          }}>{expanded ? '−' : '+'}</span>
           {expanded ? 'Búsqueda Simple' : 'Búsqueda Avanzada'}
         </button>
       </div>

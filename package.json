@@ -34,7 +34,8 @@
     "react-share": "^5.1.0",
     "react-signature-canvas": "^1.1.0-alpha.2",
     "react-spinners": "^0.14.1",
-    "react-toastify": "^10.0.5"
+    "react-toastify": "^10.0.5",
+    "use-supercluster": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "20.14.10",

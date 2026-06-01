@@ -25,7 +25,7 @@ const ReadMoreText = ({ text, maxChars = 400 }) => {
 const SectionTitle = ({ children }) => (
   <div className="pb-[30px] flex items-center justify-between">
     <h2
-      className="text-[28px] font-semibold text-[#0F172A] flex items-center"
+      className="text-[22px] md:text-[28px] font-normal text-[#0F172A] flex items-center"
       style={{ fontFamily: 'var(--font-heading)' }}
     >
       {children}
@@ -65,7 +65,7 @@ const PropertyDetails = ({ property }) => {
       {featureItems.length > 0 && (
         <div className="bg-white rounded-none overflow-hidden mb-8 md:mb-8">
           <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[30px]">
-            <div className="pb-[30px] js-animate">
+            <div className="pb-[30px]">
               <SectionTitle>Características</SectionTitle>
             </div>
             <ScrollReveal>
@@ -76,7 +76,7 @@ const PropertyDetails = ({ property }) => {
                     className={`flex-1 min-w-[50%] md:min-w-0 flex justify-center py-[30px] px-[20px] md:px-[40px] border-r border-b md:border-b-0 border-[#e9e9e9] ${i === featureItems.length - 1 ? 'border-r-0' : ''} md:[&:nth-last-child(-n+2)]:border-b-0`}
                   >
                     <div>
-                      <h5 className="text-[22px] font-semibold text-[#0F172A] mb-[5px]"
+                      <h5 className="text-[22px] font-normal text-[#0F172A] mb-[5px]"
                           style={{ fontFamily: 'var(--font-heading)' }}>
                         {typeof value === 'number' ? value.toLocaleString('es-AR') : value}
                       </h5>
@@ -97,7 +97,7 @@ const PropertyDetails = ({ property }) => {
           {property.description && (
             <div className="bg-white rounded-none overflow-hidden h-full">
               <div className="px-4 md:px-[50px] pt-[40px] pb-0 flex flex-col h-full">
-                <div className="js-animate">
+                <div>
                   <SectionTitle>Descripción</SectionTitle>
                 </div>
                 <ScrollReveal>
@@ -124,7 +124,7 @@ const PropertyDetails = ({ property }) => {
           {(property.square_feet || property.operation || coveredArea || property.garage != null || property.titles_status) && (
             <div className="bg-white rounded-none overflow-hidden">
               <div className="px-4 md:px-[50px] pt-[40px] pb-[40px]">
-                <div className="js-animate">
+                <div>
                   <SectionTitle>Información Adicional</SectionTitle>
                 </div>
                 <ScrollReveal>
@@ -132,31 +132,31 @@ const PropertyDetails = ({ property }) => {
                   {property.square_feet && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Sup. Cubierta</span>
-                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.square_feet.toLocaleString('es-AR')} m²</span>
+                      <span className="text-[14px] font-normal text-[#0F172A]">{property.square_feet.toLocaleString('es-AR')} m²</span>
                     </li>
                   )}
                   {coveredArea && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Sup. Total</span>
-                      <span className="text-[14px] font-semibold text-[#0F172A]">{coveredArea.toLocaleString('es-AR')} m²</span>
+                      <span className="text-[14px] font-normal text-[#0F172A]">{coveredArea.toLocaleString('es-AR')} m²</span>
                     </li>
                   )}
                   {property.garage != null && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Cochera</span>
-                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.garage} {property.garage === 1 ? 'lugar' : 'lugares'}</span>
+                      <span className="text-[14px] font-normal text-[#0F172A]">{property.garage} {property.garage === 1 ? 'lugar' : 'lugares'}</span>
                     </li>
                   )}
                   {property.operation && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Operación</span>
-                      <span className="text-[14px] font-semibold text-[#0F172A]">{operationLabel}</span>
+                      <span className="text-[14px] font-normal text-[#0F172A]">{operationLabel}</span>
                     </li>
                   )}
                   {property.titles_status && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Estado de Títulos</span>
-                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.titles_status}</span>
+                      <span className="text-[14px] font-normal text-[#0F172A]">{property.titles_status}</span>
                     </li>
                   )}
                   </ul>
@@ -169,7 +169,7 @@ const PropertyDetails = ({ property }) => {
           {(property.location?.city || property.location?.state) && (
             <div className="bg-white rounded-none overflow-hidden">
               <div className="px-4 md:px-[50px] pt-[40px] pb-[40px]">
-                <div className="js-animate">
+                <div>
                   <SectionTitle>Información de la Zona</SectionTitle>
                 </div>
                 <ScrollReveal>
@@ -177,19 +177,19 @@ const PropertyDetails = ({ property }) => {
                   {property.location?.state && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Provincia</span>
-                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.location.state}</span>
+                      <span className="text-[14px] font-normal text-[#0F172A]">{property.location.state}</span>
                     </li>
                   )}
                   {property.location?.city && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Ciudad</span>
-                      <span className="text-[14px] font-semibold text-[#0F172A]">{property.location.city}</span>
+                      <span className="text-[14px] font-normal text-[#0F172A]">{property.location.city}</span>
                     </li>
                   )}
                   {property.location?.street && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Dirección</span>
-                      <span className="text-[14px] font-semibold text-[#0F172A] text-right max-w-[180px]">{property.location.street}</span>
+                      <span className="text-[14px] font-normal text-[#0F172A] text-right max-w-[180px]">{property.location.street}</span>
                     </li>
                   )}
                   </ol>

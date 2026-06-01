@@ -73,8 +73,8 @@ const PropertyPage = async ({ params }) => {
               <div className="mt-8" id="full-gallery">
                 <div className="bg-white rounded-none overflow-hidden">
                   <div className="mx-auto py-[30px] md:py-[80px] px-4 md:px-[50px] md:pb-[35px]">
-                    <div className="pb-[30px] js-animate">
-                      <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center"
+                    <div className="pb-[30px]">
+                      <h2 className="text-[22px] md:text-[28px] font-normal text-[#0F172A] flex items-center"
                           style={{ fontFamily: 'var(--font-heading)' }}>
                         {property.name
                           ? property.name.split(' ').slice(0, 4).join(' ') + (property.name.split(' ').length > 4 ? '...' : '')
@@ -92,16 +92,29 @@ const PropertyPage = async ({ params }) => {
 
             {/* View on Map */}
             <div className="mt-8">
-              <div className="bg-white rounded-[30px] overflow-hidden">
+              <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
                 <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[40px]">
-                  <div className="pb-[30px] flex items-center justify-between js-animate">
-                    <h2 className="text-[28px] font-semibold text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
-                      Ver en el Mapa
-                      <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
-                    </h2>
+                  <div className="pb-[30px]">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-[22px] md:text-[28px] font-normal text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
+                        Vista en Mapa
+                        <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
+                      </h2>
+                      <Link
+                        href="/properties/map-all"
+                        className="hidden md:inline-flex items-center gap-2 text-[var(--color-brand)] text-[13px] font-bold uppercase tracking-wider transition-colors hover:text-[#0F172A]"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                          <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+                          <line x1="8" y1="2" x2="8" y2="18"/>
+                          <line x1="16" y1="6" x2="16" y2="22"/>
+                        </svg>
+                        Ver todas las propiedades en el mapa
+                      </Link>
+                    </div>
                     <Link
                       href="/properties/map-all"
-                      className="inline-flex items-center gap-2 text-[var(--color-brand)] text-[13px] font-bold uppercase tracking-wider transition-colors hover:text-[#0F172A]"
+                      className="md:hidden mt-4 w-full flex items-center justify-center gap-2 text-[13px] font-bold uppercase tracking-wider text-[var(--color-brand)] bg-white border border-[var(--color-brand)] rounded-[8px] py-3 px-6 transition-colors hover:bg-[var(--color-brand)] hover:text-white"
                     >
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
                         <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>

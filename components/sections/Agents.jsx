@@ -19,7 +19,7 @@ const Agents = () => {
     <section className="pt-[12px] pb-[12px]" id="equipo" ref={ref}>
       <SectionBox className="px-4 md:px-[50px] py-16 md:py-24">
         {/* Section Header — same pattern as Featured Properties */}
-        <div className="text-center mb-10 md:mb-14 js-animate">
+        <div className="text-center mb-10 md:mb-14">
           <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
             Roggero & Roma
           </h2>

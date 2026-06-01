@@ -4,16 +4,17 @@ import { useEffect } from 'react';
 export default function ScrollToTop({ searchParams, isFiltered = false }) {
   useEffect(() => {
     if (isFiltered) {
-      // Scroll to results section (hiding search bar above, but accessible by scrolling up)
+      // Scroll to results section with navbar offset
       const el = document.getElementById('resultados');
-      if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const scrollTop = window.pageYOffset + rect.top - 70; // 70px navbar offset
+        window.scrollTo({ top: Math.max(0, scrollTop), behavior: 'instant' });
+      }
     } else {
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
-  }, [isFiltered]);
+  }, [isFiltered, JSON.stringify(searchParams)]);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [JSON.stringify(searchParams)]);
   return null;
 }

@@ -129,6 +129,7 @@ const PropertyLocationTabs = ({ property }) => {
             initialViewState={{ longitude: lng, latitude: lat, zoom: 15 }}
             style={{ width: '100%', height: '100%' }}
             mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
+            cooperativeGestures={true}
           >
             <Marker longitude={lng} latitude={lat} anchor='bottom'>
               <Image src={pin} alt='location' width={40} height={40} />

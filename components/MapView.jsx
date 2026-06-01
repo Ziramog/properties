@@ -146,6 +146,7 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
       mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
       scrollZoom={true}
       attributionControl={false}
+      cooperativeGestures={true}
     >
       <MapViewControls mapRef={mapRef} geocodedProps={geocodedProps} />
       {geocodedProps.map((property) => {
