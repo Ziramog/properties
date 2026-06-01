@@ -1,21 +1,63 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 
-const ScrollReveal = ({ children, className = '', delay = 0 }) => {
+const variantClasses = {
+  fadeUp: {
+    hidden: 'opacity-0 translate-y-8',
+    visible: 'opacity-100 translate-y-0',
+  },
+  fadeScale: {
+    hidden: 'opacity-0 translate-y-6 scale-95',
+    visible: 'opacity-100 translate-y-0 scale-100',
+  },
+  fadeLeft: {
+    hidden: 'opacity-0 -translate-x-8',
+    visible: 'opacity-100 translate-x-0',
+  },
+  fadeRight: {
+    hidden: 'opacity-0 translate-x-8',
+    visible: 'opacity-100 translate-x-0',
+  },
+  fadeIn: {
+    hidden: 'opacity-0',
+    visible: 'opacity-100',
+  },
+};
+
+const variantDurations = {
+  fadeUp: 700,
+  fadeScale: 800,
+  fadeLeft: 700,
+  fadeRight: 700,
+  fadeIn: 600,
+};
+
+const ScrollReveal = ({
+  children,
+  className = '',
+  delay = 0,
+  variant = 'fadeUp',
+  distance,
+  duration,
+  once = true,
+}) => {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
+
+  const v = variantClasses[variant] || variantClasses.fadeUp;
+  const dur = duration || variantDurations[variant] || 700;
 
   useEffect(() => {
     let timeout;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // Delay reveal so the transition is always visible,
-          // even for elements already in the viewport on load
           timeout = setTimeout(() => {
             setIsVisible(true);
           }, 150);
-          observer.disconnect();
+          if (once) observer.disconnect();
+        } else if (!once) {
+          setIsVisible(false);
         }
       },
       { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
@@ -26,17 +68,21 @@ const ScrollReveal = ({ children, className = '', delay = 0 }) => {
       observer.disconnect();
       if (timeout) clearTimeout(timeout);
     };
-  }, []);
+  }, [once]);
+
+  const distanceStyle = distance
+    ? { transform: isVisible ? undefined : `translateY(${distance}px)` }
+    : {};
 
   return (
     <div
       ref={ref}
-      className={`transition-all duration-700 ease-out ${
-        isVisible
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 translate-y-8'
-      } ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
+      className={`transition ease-out ${isVisible ? v.visible : v.hidden} ${className}`}
+      style={{
+        transitionDuration: `${dur}ms`,
+        transitionDelay: `${delay}ms`,
+        ...distanceStyle,
+      }}
     >
       {children}
     </div>

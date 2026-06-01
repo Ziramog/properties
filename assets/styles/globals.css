@@ -260,63 +260,7 @@
   }
 }
 
-/* ============================================
-   SCROLL ANIMATIONS — Senada style
-   IntersectionObserver triggers fade-right + opacity
-   ============================================ */
-.js-animate {
-  opacity: 0;
-  transform: translateX(-50px);
-  transition: none;
-}
 
-.js-animate.active {
-  animation: fade-right 0.5s ease-out forwards, opacity-anim 0.4s ease-out forwards;
-}
-
-/* Stagger delays */
-.js-animate.active h2,
-.js-animate.active .animate-title {
-  animation-delay: 0.1s, 0.15s;
-}
-
-.js-animate.active h3,
-.js-animate.active .animate-subtitle {
-  animation-delay: 0.2s, 0.25s;
-}
-
-.js-animate.active p,
-.js-animate.active .animate-text {
-  animation-delay: 0.3s, 0.35s;
-}
-
-.js-animate.active span:not(.swiper-pagination-bullet):not(.select2):not(.select2-selection__arrow),
-.js-animate.active .animate-label {
-  animation-delay: 0.4s, 0.45s;
-}
-
-@keyframes fade-right {
-  from { transform: translateX(-50px); }
-  to { transform: translateX(0); }
-}
-
-@keyframes opacity-anim {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.js-animate.from-bottom {
-  transform: translateY(40px);
-}
-
-.js-animate.from-bottom.active {
-  animation: translate-up 0.5s ease-out forwards, opacity-anim 0.4s ease-out forwards;
-}
-
-@keyframes translate-up {
-  from { transform: translateY(40px); }
-  to { transform: translateY(0); }
-}
 
 /* ============================================
    MAPBOX COOPERATIVE GESTURES OVERLAY

@@ -197,21 +197,23 @@ const PropertiesPage = async ({ searchParams }) => {
       {/* Results */}
       <section className="bg-white px-4 md:px-[50px] pb-12">
           {filteredProperties.length === 0 ? (
-            <div className="text-center py-20 js-animate">
-              <div className="w-16 h-16 rounded-full bg-[#f5f5f5] flex items-center justify-center mx-auto mb-4 shadow-sm">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 text-[#999]">
-                  <circle cx="11" cy="11" r="8"/>
-                  <path d="m21 21-4.35-4.35"/>
-                </svg>
+            <ScrollReveal variant="fadeScale">
+              <div className="text-center py-20">
+                <div className="w-16 h-16 rounded-full bg-[#f5f5f5] flex items-center justify-center mx-auto mb-4 shadow-sm">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 text-[#999]">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                  </svg>
+                </div>
+                <p className="text-[15px] font-semibold text-[#333] mb-2">
+                  No se encontraron propiedades
+                </p>
+                <p className="text-[13px] text-[#999]">
+                  Probá cambiando los filtros o{' '}
+                  <a href="/properties" className="text-[#652660] hover:underline font-medium">ver todas</a>
+                </p>
               </div>
-              <p className="text-[15px] font-semibold text-[#333] mb-2">
-                No se encontraron propiedades
-              </p>
-              <p className="text-[13px] text-[#999]">
-                Probá cambiando los filtros o{' '}
-                <a href="/properties" className="text-[#652660] hover:underline font-medium">ver todas</a>
-              </p>
-            </div>
+            </ScrollReveal>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
               {filteredProperties.map((property, i) => (
