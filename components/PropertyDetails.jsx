@@ -8,10 +8,10 @@ import SectionTitle from '@/components/shared/SectionTitle';
 const ReadMoreText = ({ text, maxChars = 400 }) => {
   const [expanded, setExpanded] = useState(false);
   if (!text || text.length <= maxChars) {
-    return <div className="text-[#555] leading-[1.8] whitespace-pre-line text-[15px]">{text}</div>;
+    return <div className="text-[#555] leading-[1.8] whitespace-pre-line text-[15px] text-justify">{text}</div>;
   }
   return (
-    <div className="text-[#555] leading-[1.8] whitespace-pre-line text-[15px]">
+    <div className="text-[#555] leading-[1.8] whitespace-pre-line text-[15px] text-justify">
       {expanded ? text : text.slice(0, maxChars).trimEnd() + '…'}
       <button
         onClick={() => setExpanded(!expanded)}
