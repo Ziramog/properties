@@ -1,5 +1,6 @@
 'use client';
 import { useState, useRef, useMemo, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 import Map from 'react-map-gl';
@@ -169,12 +170,13 @@ const CategoryMap = ({ properties = [] }) => {
 
       </div>
 
-      {/* Sidebar — outside all overflow-hidden containers */}
-      {selectedProperty && (
+      {/* Sidebar — portal to body so it escapes overflow-hidden ancestors */}
+      {selectedProperty && typeof document !== 'undefined' && createPortal(
         <MapPropertySidebar
           property={selectedProperty}
           onClose={() => setSelectedProperty(null)}
-        />
+        />,
+        document.body
       )}
     </>
   );
