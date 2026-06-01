@@ -6,6 +6,7 @@ import Agents from '@/components/sections/Agents';
 import ReviewsSection from '@/components/ReviewsSection';
 import Clients from '@/components/Clients';
 import ScrollReveal from '@/components/shared/ScrollReveal';
+import JsonLd from '@/components/JsonLd';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 
@@ -29,8 +30,77 @@ const HomePage = async () => {
     updatedAt: p.updatedAt?.toISOString(),
   }));
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': 'https://properties-srs5.vercel.app/#organization',
+        name: 'Roggero & Roma',
+        url: 'https://properties-srs5.vercel.app',
+        logo: 'https://properties-srs5.vercel.app/images/ISOTIPO%20R&R-Photoroom.png',
+        sameAs: [
+          'https://www.facebook.com/roggeroyroma',
+          'https://www.instagram.com/roggeroyroma',
+        ],
+        contactPoint: {
+          '@type': 'ContactPoint',
+          telephone: '+54-9-3547-563911',
+          contactType: 'sales',
+          areaServed: 'AR',
+          availableLanguage: 'Spanish',
+        },
+      },
+      {
+        '@type': 'RealEstateAgent',
+        '@id': 'https://properties-srs5.vercel.app/#realestateagent',
+        name: 'Roggero & Roma',
+        image: 'https://properties-srs5.vercel.app/images/ISOTIPO%20R&R-Photoroom.png',
+        url: 'https://properties-srs5.vercel.app',
+        telephone: '+54 9 9354 7563911',
+        email: 'info@roggeroyroma.com.ar',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Blvd. Carlos Pellegrini 710',
+          addressLocality: 'Alta Gracia',
+          addressRegion: 'Córdoba',
+          postalCode: 'X5186',
+          addressCountry: 'AR',
+        },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: -31.6529,
+          longitude: -64.4286,
+        },
+        openingHoursSpecification: {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+          opens: '09:00',
+          closes: '18:00',
+        },
+        priceRange: '$$$',
+      },
+      {
+        '@type': 'WebSite',
+        '@id': 'https://properties-srs5.vercel.app/#website',
+        url: 'https://properties-srs5.vercel.app',
+        name: 'Roggero & Roma Inmobiliaria',
+        publisher: { '@id': 'https://properties-srs5.vercel.app/#organization' },
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: {
+            '@type': 'EntryPoint',
+            urlTemplate: 'https://properties-srs5.vercel.app/properties?term={search_term_string}',
+          },
+          'query-input': 'required name=search_term_string',
+        },
+      },
+    ],
+  };
+
   return (
     <div>
+      <JsonLd data={jsonLd} />
       {/* 1. Hero — emotional hook + search + trust strip */}
       <Hero />
 

@@ -7,8 +7,8 @@ import MapErrorBoundary from '@/components/shared/MapErrorBoundary';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 
 export const metadata = {
-  title: 'Mapa de Propiedades — Roggero & Roma',
-  description: 'Explorá todas las propiedades en el mapa',
+  title: 'Mapa de Propiedades',
+  description: 'Explorá todas las propiedades de Roggero & Roma Inmobiliaria en el mapa interactivo. Casas, departamentos, campos y terrenos en Alta Gracia y toda Córdoba.',
 };
 
 export default async function MapAllPage() {

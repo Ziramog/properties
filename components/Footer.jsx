@@ -80,7 +80,6 @@ const Footer = () => {
                     <ul>
                       {[
                         { href: '/#nuestra-historia', label: 'Nuestra Historia' },
-                        { href: '/contact', label: 'Contacto' },
                       ].map(l => (
                         <li key={l.href}>
                           <Link href={l.href} className="block text-[13px] text-white/70 font-light py-[5px] pr-[10px] hover:text-white transition-colors">
@@ -229,7 +228,6 @@ const Footer = () => {
               <div className="grid grid-cols-2 gap-y-1">
                 {[
                   { href: '/#nuestra-historia', label: 'Nuestra Historia' },
-                  { href: '/contact', label: 'Contacto' },
                 ].map(l => (
                   <Link key={l.href} href={l.href} className="text-[13px] text-white/60 font-light py-[3px] hover:text-white transition-colors">
                     {l.label}

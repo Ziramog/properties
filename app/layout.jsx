@@ -46,7 +46,14 @@ export const metadata = {
     type: 'website',
     locale: 'es_AR',
     siteName: 'Roggero & Roma Inmobiliaria',
-    images: ['/images/og-default.jpg'],
+    images: [
+      {
+        url: '/images/og-default.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Roggero & Roma Inmobiliaria — Alta Gracia, Córdoba',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
@@ -54,6 +61,21 @@ export const metadata = {
   },
   alternates: {
     canonical: '/',
+  },
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/senada/favicon/favicon-32x32.png',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 

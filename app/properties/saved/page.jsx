@@ -1,5 +1,10 @@
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: 'Mis Favoritos',
+  robots: { index: false, follow: false },
+};
+
 import PropertyCard from '@/components/PropertyCard';
 import connectDB from '@/config/database';
 import User from '@/models/User';

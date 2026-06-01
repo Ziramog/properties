@@ -39,3 +39,8 @@ next-env.d.ts
 
 # cinematic captures (large video files)
 cinematic-capture/
+
+# temporary audit files
+audit-*.js
+audit-*.mjs
+legacy-*

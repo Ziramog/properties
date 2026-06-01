@@ -9,6 +9,7 @@ import MapErrorBoundary from '@/components/shared/MapErrorBoundary';
 import FullGallery from '@/components/FullGallery';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import SectionTitle from '@/components/shared/SectionTitle';
+import JsonLd from '@/components/JsonLd';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 import Link from 'next/link';
 
@@ -64,8 +65,88 @@ const PropertyPage = async ({ params }) => {
 
     const property = convertToSerializeableObject(propertyDoc);
 
+    const parsePrice = (priceStr) => {
+      if (!priceStr) return null;
+      const cleaned = priceStr.replace(/[^0-9]/g, '');
+      return cleaned ? parseInt(cleaned, 10) : null;
+    };
+
+    const propertyImage = property.images?.[0]?.url || 'https://properties-srs5.vercel.app/images/og-default.jpg';
+    const propertyPrice = parsePrice(property.price);
+
+    const realEstateJsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'RealEstateListing',
+      name: property.name || 'Propiedad',
+      description: property.description || '',
+      url: `https://properties-srs5.vercel.app/properties/${property._id}`,
+      image: propertyImage,
+      datePosted: property.createdAt,
+      offers: {
+        '@type': 'Offer',
+        price: propertyPrice,
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
+        businessFunction:
+          property.operation === 'alquiler'
+            ? 'http://purl.org/goodrelations/v1#LeaseOut'
+            : 'http://purl.org/goodrelations/v1#Sell',
+      },
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: property.location?.street || '',
+        addressLocality: property.location?.city || 'Alta Gracia',
+        addressRegion: property.location?.state || 'Córdoba',
+        addressCountry: 'AR',
+      },
+      geo:
+        property.coordinates?.lat && property.coordinates?.lng
+          ? {
+              '@type': 'GeoCoordinates',
+              latitude: property.coordinates.lat,
+              longitude: property.coordinates.lng,
+            }
+          : undefined,
+      numberOfRooms: property.beds || undefined,
+      numberOfBathroomsTotal: property.baths || undefined,
+      floorSize: property.square_feet
+        ? {
+            '@type': 'QuantitativeValue',
+            value: property.square_feet,
+            unitCode: 'MTK',
+          }
+        : undefined,
+    };
+
+    const breadcrumbJsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Inicio',
+          item: 'https://properties-srs5.vercel.app/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Propiedades',
+          item: 'https://properties-srs5.vercel.app/properties',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: property.name || 'Propiedad',
+          item: `https://properties-srs5.vercel.app/properties/${property._id}`,
+        },
+      ],
+    };
+
     return (
       <div className="min-h-screen" style={{ background: '#F6F6F6' }}>
+        <JsonLd data={realEstateJsonLd} />
+        <JsonLd data={breadcrumbJsonLd} />
         <ScrollReveal variant="fadeScale">
           <PropertyGallery images={property.images} property={property} />
         </ScrollReveal>

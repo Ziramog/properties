@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Agregar Propiedad',
+  robots: { index: false, follow: false },
+};
+
 import PropertyAddForm from '@/components/PropertyAddForm';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 

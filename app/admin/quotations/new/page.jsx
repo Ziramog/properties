@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Admin — Nueva Propuesta',
+  robots: { index: false, follow: false },
+};
+
 import Link from 'next/link';
 import QuotationWizard from '@/components/admin/quotations/QuotationWizard';
 

@@ -1,5 +1,10 @@
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: 'Admin — Presupuesto',
+  robots: { index: false, follow: false },
+};
+
 import Link from 'next/link';
 import connectDB from '@/config/database';
 import Quote from '@/models/Quote';

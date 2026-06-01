@@ -1,5 +1,10 @@
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: 'Admin — Perfil',
+  robots: { index: false, follow: false },
+};
+
 import Image from 'next/image';
 import profileDefault from '@/assets/images/profile.png';
 import connectDB from '@/config/database';

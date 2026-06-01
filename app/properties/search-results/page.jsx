@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Resultados de Búsqueda',
+  robots: { index: false, follow: false },
+};
+
 import Link from 'next/link';
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
 import PropertyCard from '@/components/PropertyCard';

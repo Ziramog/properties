@@ -1,5 +1,10 @@
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: 'Mensajes',
+  robots: { index: false, follow: false },
+};
+
 import connectDB from '@/config/database';
 import Message from '@/models/Message';
 import MessageCard from '@/components/MessageCard';
