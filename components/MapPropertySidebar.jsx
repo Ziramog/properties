@@ -78,18 +78,18 @@ export default function MapPropertySidebar({ property, onClose }) {
 
   return (
     <>
-      {/* Fixed dark overlay — z-30 so navbar (z-50) stays on top */}
+      {/* Fixed dark overlay — desktop goes above navbar (z-[100]) */}
       <div
-        className={`fixed inset-0 z-30 bg-black/80 transition-opacity duration-300 ${
-          isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
+        className={`fixed inset-0 transition-opacity duration-300 ${
+          isMobile ? 'z-30' : 'z-[105]'
+        } ${isVisible ? 'opacity-100' : 'opacity-0'}`}
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Sidebar — z-40 so navbar (z-50) stays on top; starts below navbar on desktop */}
+      {/* Sidebar — desktop goes above navbar (z-[100]) */}
       <div
-        className={`fixed z-40 bg-white shadow-xl overflow-hidden flex flex-col ${
+        className={`fixed ${isMobile ? 'z-40' : 'z-[110]'} bg-white shadow-xl overflow-hidden flex-col ${
           isMobile
             ? 'top-[calc(env(safe-area-inset-top,8px)+60px)] left-0 right-0 bottom-0 rounded-none'
             : 'top-0 right-0 h-screen w-[760px]'
