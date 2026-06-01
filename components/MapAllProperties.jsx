@@ -5,8 +5,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 import { getPropertyImage } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
-import { FaArrowLeft } from 'react-icons/fa';
-import Link from 'next/link';
 import PropertiesSearch from '@/components/PropertiesSearch';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import MapClusterLayer from '@/components/MapClusterLayer';
@@ -210,13 +208,6 @@ export default function MapAllProperties({ initialProperties = [] }) {
                   style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }}
                 />
               </h2>
-              <Link
-                href="/properties"
-                className="inline-flex items-center gap-2 text-[var(--color-brand)] text-[13px] font-bold uppercase tracking-wider transition-colors hover:text-[#0F172A]"
-              >
-                <FaArrowLeft className="w-4 h-4" />
-                Volver
-              </Link>
             </div>
 
             {/* Map */}
