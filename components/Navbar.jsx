@@ -30,7 +30,8 @@ const Navbar = () => {
     dropdownTimeout.current = setTimeout(() => setDesktopDropdown(null), 200);
   };
 
-  const isGlassMode = isScrolled || isMobileMenuOpen;
+  const isHomepage = pathname === '/';
+  const isGlassMode = isHomepage ? (isScrolled || isMobileMenuOpen) : true;
 
   useEffect(() => {
     const setAuthProviders = async () => {

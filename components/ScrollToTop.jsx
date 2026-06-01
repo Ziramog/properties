@@ -8,7 +8,7 @@ export default function ScrollToTop({ searchParams, isFiltered = false }) {
       const el = document.getElementById('resultados');
       if (el) {
         const rect = el.getBoundingClientRect();
-        const scrollTop = window.pageYOffset + rect.top - 70; // 70px navbar offset
+        const scrollTop = window.pageYOffset + rect.top - 96; // 96px navbar offset
         window.scrollTo({ top: Math.max(0, scrollTop), behavior: 'instant' });
       }
     } else {

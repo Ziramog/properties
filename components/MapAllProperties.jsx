@@ -185,9 +185,9 @@ export default function MapAllProperties({ initialProperties = [] }) {
   return (
     <div className="min-h-screen bg-[#F6F6F6]">
       {/* Search bar */}
-      <section className="bg-black px-4 md:px-[50px] pt-4 pb-6">
+      <section className="bg-black px-4 md:px-[50px] pt-20 md:pt-28 pb-6">
         <div className="max-w-7xl mx-auto">
-          <PropertiesSearch onFilter={setActiveFilters} />
+          <PropertiesSearch onFilter={setActiveFilters} title="Mapa de Propiedades" />
         </div>
       </section>
 

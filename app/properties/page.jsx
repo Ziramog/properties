@@ -174,13 +174,13 @@ const PropertiesPage = async ({ searchParams }) => {
     <div className="min-h-screen bg-white">
       <ScrollToTop searchParams={searchParams} isFiltered={isFiltered} />
       {/* Header + Filters — full dark band */}
-      <section className="bg-black px-4 md:px-[50px] pt-24 md:pt-28 pb-3">
+      <section className="bg-black px-4 md:px-[50px] pt-32 md:pt-36 pb-6">
         {/* Search */}
         <PropertiesSearch currentFilters={currentFilters} title={title} />
       </section>
 
       {/* Sort Bar */}
-      <div id="resultados" className="bg-white px-4 md:px-[50px] pt-3">
+      <div id="resultados" className="bg-white px-4 md:px-[50px] pt-8 md:pt-10">
         <div className="pt-2 pb-2">
           <h2 className="text-[22px] md:text-[28px] font-normal text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
             {subtitle}
