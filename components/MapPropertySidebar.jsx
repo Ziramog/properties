@@ -104,11 +104,11 @@ export default function MapPropertySidebar({ property, onClose }) {
         }}
       >
         {/* Content — mobile allows internal scroll, desktop no scroll (Senada-style) */}
-        <div className="flex-1 overflow-y-auto md:overflow-hidden px-[50px] pt-[30px] md:pt-[100px] pb-[50px]">
+        <div className="flex-1 overflow-y-auto md:overflow-hidden px-[50px] pt-[calc(env(safe-area-inset-top,8px)+68px)] md:pt-[100px] pb-[50px]">
           {/* Mobile close button */}
           <button
             onClick={onClose}
-            className="md:hidden fixed top-4 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm hover:bg-black/70 transition-colors"
+            className="md:hidden fixed top-[calc(env(safe-area-inset-top,8px)+72px)] right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm hover:bg-black/70 transition-colors"
             aria-label="Cerrar"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-5 h-5">
