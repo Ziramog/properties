@@ -7,7 +7,7 @@ const SellerCTA = () => {
   return (
     <section className="pt-[12px] pb-[12px]">
       <div className="bg-white w-full">
-        <div className="px-6 md:px-12 py-12 md:py-20">
+        <div className="px-4 md:px-[50px] py-16 md:py-24">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Sell CTA */}
           <ScrollReveal delay={100}>
