@@ -7,6 +7,7 @@ import Map from 'react-map-gl';
 import { useRouter } from 'next/navigation';
 import MapClusterLayer from '@/components/MapClusterLayer';
 import MapPropertySidebar from '@/components/MapPropertySidebar';
+import { MAP_DEFAULT_PROPS, MAP_STYLE } from '@/components/shared/MapConfig';
 
 
 const knownCities = {
@@ -150,24 +151,18 @@ const CategoryMap = ({ properties = [] }) => {
   return (
     <>
       <div className="relative rounded-[30px] overflow-hidden">
-          <Map
-            ref={mapRef}
-            onLoad={onMapLoad}
-            mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-            mapLib={mapboxgl}
-            initialViewState={initialViewState}
-            style={{ width: '100%', height: 500 }}
-            mapStyle='mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7'
-            scrollZoom={false}
-            dragPan={true}
-            dragRotate={false}
-            doubleClickZoom={true}
-            keyboard={true}
-            cooperativeGestures={true}
-          >
+        <Map
+          ref={mapRef}
+          onLoad={onMapLoad}
+          mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+          mapLib={mapboxgl}
+          initialViewState={initialViewState}
+          style={{ width: '100%', height: 500 }}
+          mapStyle={MAP_STYLE}
+          {...MAP_DEFAULT_PROPS}
+        >
           <MapClusterLayer properties={markers} onSelect={setSelectedProperty} selectedId={selectedProperty?._id} />
         </Map>
-
       </div>
 
       {/* Sidebar — portal to body so it escapes overflow-hidden ancestors */}

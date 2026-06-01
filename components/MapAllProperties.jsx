@@ -9,6 +9,7 @@ import PropertiesSearch from '@/components/PropertiesSearch';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import MapClusterLayer from '@/components/MapClusterLayer';
 import MapPropertySidebar from '@/components/MapPropertySidebar';
+import { MAP_DEFAULT_PROPS, MAP_STYLE } from '@/components/shared/MapConfig';
 import SectionTitle from '@/components/shared/SectionTitle';
 
 
@@ -215,10 +216,8 @@ export default function MapAllProperties({ initialProperties = [] }) {
                   mapLib={mapboxgl}
                   initialViewState={{ longitude: -64.4397, latitude: -31.6525, zoom: 11 }}
                   style={{ width: '100%', height: '100%' }}
-                  mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
-                  scrollZoom={true}
-                  cooperativeGestures={true}
-                  attributionControl={false}
+                  mapStyle={MAP_STYLE}
+                  {...MAP_DEFAULT_PROPS}
                 >
                   <MapClusterLayer properties={filteredProps} onSelect={setSelectedProperty} selectedId={selectedProperty?._id} />
                 </Map>

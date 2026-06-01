@@ -3,8 +3,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 import Map, { Marker } from 'react-map-gl';
-import Image from 'next/image';
-import pin from '@/assets/images/pin.svg';
+import { MAP_DEFAULT_PROPS, MAP_STYLE } from '@/components/shared/MapConfig';
 import Spinner from './Spinner';
 
 const knownCities = {
@@ -139,14 +138,9 @@ const PropertyMap = ({ property }) => {
           zoom: 15,
         }}
         style={{ width: '100%', height: 500 }}
-        mapStyle='mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7'
+        mapStyle={MAP_STYLE}
         onError={(e) => console.error('[PropertyMap] Map load ERROR:', e?.error?.message || e)}
-        scrollZoom={false}
-        dragPan={true}
-        dragRotate={false}
-        doubleClickZoom={true}
-        keyboard={true}
-        cooperativeGestures={true}
+        {...MAP_DEFAULT_PROPS}
       >
         <Marker longitude={lng} latitude={lat} anchor='bottom'>
           <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
