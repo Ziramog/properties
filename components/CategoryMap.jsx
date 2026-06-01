@@ -161,12 +161,10 @@ const CategoryMap = ({ properties = [] }) => {
             dragPan={true}
             dragRotate={false}
             doubleClickZoom={true}
-            touchZoomRotate={false}
-            touchPitch={false}
             keyboard={true}
             cooperativeGestures={true}
           >
-          <MapClusterLayer properties={markers} onSelect={setSelectedProperty} />
+          <MapClusterLayer properties={markers} onSelect={setSelectedProperty} selectedId={selectedProperty?._id} />
         </Map>
 
       </div>

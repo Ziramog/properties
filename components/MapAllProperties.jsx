@@ -238,7 +238,7 @@ export default function MapAllProperties({ initialProperties = [] }) {
                   cooperativeGestures={true}
                   attributionControl={false}
                 >
-                  <MapClusterLayer properties={filteredProps} onSelect={setSelectedProperty} />
+                  <MapClusterLayer properties={filteredProps} onSelect={setSelectedProperty} selectedId={selectedProperty?._id} />
                 </Map>
 
                 {/* No results overlay */}

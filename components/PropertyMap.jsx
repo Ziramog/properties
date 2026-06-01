@@ -145,8 +145,6 @@ const PropertyMap = ({ property }) => {
         dragPan={true}
         dragRotate={false}
         doubleClickZoom={true}
-        touchZoomRotate={false}
-        touchPitch={false}
         keyboard={true}
         cooperativeGestures={true}
       >
