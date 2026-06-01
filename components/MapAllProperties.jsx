@@ -9,6 +9,7 @@ import PropertiesSearch from '@/components/PropertiesSearch';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import MapClusterLayer from '@/components/MapClusterLayer';
 import MapPropertySidebar from '@/components/MapPropertySidebar';
+import SectionTitle from '@/components/shared/SectionTitle';
 
 
 const knownCities = {
@@ -197,17 +198,7 @@ export default function MapAllProperties({ initialProperties = [] }) {
           <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[40px]">
             {/* Title */}
             <div className="pb-[30px] flex items-center justify-between">
-              <h2
-                className="text-[22px] md:text-[28px] font-normal text-[#0F172A] flex items-center"
-                style={{ fontFamily: 'var(--font-heading)' }}
-              >
-                Todas las Propiedades
-                <span
-                  aria-hidden="true"
-                  className="inline-block ml-5"
-                  style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }}
-                />
-              </h2>
+              <SectionTitle size="normal">Todas las Propiedades</SectionTitle>
             </div>
 
             {/* Map */}

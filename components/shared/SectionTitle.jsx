@@ -1,26 +1,29 @@
-const SectionTitle = ({ children, size = 'normal' }) => {
+import ScrollReveal from '@/components/shared/ScrollReveal';
+
+const SectionTitle = ({ children, size = 'normal', delay = 0, className = '' }) => {
   const headingStyle = size === 'large'
-    ? 'text-[32px] md:text-lg'
-    : 'text-[28px] md:text-[22px]';
+    ? 'text-[28px] md:text-[40px]'
+    : 'text-[22px] md:text-[28px]';
 
   return (
-    <h2
-      className={`${headingStyle} font-semibold text-[#0F172A] flex items-center`}
-      style={{ fontFamily: 'var(--font-heading)' }}
-    >
-      {children}
-      <span
-        aria-hidden="true"
-        className="inline-block ml-4"
-        style={{
-          display: 'inline-block',
-          width: '55px',
-          height: '3px',
-          background: '#E94560',
-          alignSelf: 'center',
-        }}
-      />
-    </h2>
+    <ScrollReveal variant="fadeRight" delay={delay}>
+      <h2
+        className={`${headingStyle} font-normal text-[#0F172A] flex items-center ${className}`}
+        style={{ fontFamily: 'var(--font-heading)' }}
+      >
+        {children}
+        <span
+          aria-hidden="true"
+          className="inline-block ml-5"
+          style={{
+            width: '70px',
+            height: '3px',
+            background: 'var(--color-brand)',
+            alignSelf: 'center',
+          }}
+        />
+      </h2>
+    </ScrollReveal>
   );
 };
 

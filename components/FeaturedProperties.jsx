@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import FeaturedPropertyCard from '@/components/FeaturedPropertyCard';
 import SectionBox from '@/components/sections/SectionBox';
+import ScrollReveal from '@/components/shared/ScrollReveal';
 
 const FeaturedProperties = ({ properties = [] }) => {
   const [visible, setVisible] = useState(false);
@@ -23,9 +24,11 @@ const FeaturedProperties = ({ properties = [] }) => {
       <SectionBox className="px-4 md:px-[50px] py-16 md:py-24">
         {/* Section Header */}
         <div className="text-center mb-10 md:mb-14">
-          <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-            Propiedades Destacadas
-          </h2>
+          <ScrollReveal variant="fadeRight">
+            <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+              Propiedades Destacadas
+            </h2>
+          </ScrollReveal>
           <div className="flex items-center justify-center gap-3">
             <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
             <p className="text-[13px] md:text-[15px] font-medium text-[var(--color-brand)] uppercase tracking-[0.15em]">

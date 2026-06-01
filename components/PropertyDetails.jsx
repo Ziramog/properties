@@ -3,6 +3,7 @@ import { useState } from 'react';
 import CheckIcon from './icons/CheckIcon';
 import ShareButtons from './ShareButtons';
 import ScrollReveal from '@/components/shared/ScrollReveal';
+import SectionTitle from '@/components/shared/SectionTitle';
 
 const ReadMoreText = ({ text, maxChars = 400 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -22,21 +23,7 @@ const ReadMoreText = ({ text, maxChars = 400 }) => {
   );
 };
 
-const SectionTitle = ({ children }) => (
-  <div className="pb-[30px] flex items-center justify-between">
-    <h2
-      className="text-[22px] md:text-[28px] font-normal text-[#0F172A] flex items-center"
-      style={{ fontFamily: 'var(--font-heading)' }}
-    >
-      {children}
-      <span
-        aria-hidden="true"
-        className="inline-block ml-5"
-        style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }}
-      />
-    </h2>
-  </div>
-);
+
 
 const PropertyDetails = ({ property }) => {
   const coveredArea = property.covered_area;

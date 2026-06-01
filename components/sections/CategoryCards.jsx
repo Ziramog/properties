@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Home, Building2, Mountain, Sprout, Store, TrendingUp } from 'lucide-react';
 import SectionBox from '@/components/sections/SectionBox';
+import ScrollReveal from '@/components/shared/ScrollReveal';
 
 const CATEGORIES = [
   { type: 'Casa', icon: Home, label: 'Casas' },
@@ -34,9 +35,11 @@ const CategoryCards = () => {
           <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--color-brand)] block mb-3">
             CATEGORÍAS
           </span>
-          <h2 className="text-2xl md:text-[32px] font-medium text-[#0F172A] leading-tight tracking-[-0.01em] mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-            Explorá por categoría
-          </h2>
+          <ScrollReveal variant="fadeRight">
+            <h2 className="text-2xl md:text-[32px] font-medium text-[#0F172A] leading-tight tracking-[-0.01em] mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
+              Explorá por categoría
+            </h2>
+          </ScrollReveal>
           <p className="text-[14px] md:text-[17px] font-light text-[#475569] leading-[1.7]">
             Encontrá el tipo de propiedad que mejor se adapta a vos
           </p>

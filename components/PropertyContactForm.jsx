@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import addMessage from '@/app/actions/addMessage';
 import SubmitMessageButton from './SubmitMessageButton';
+import SectionTitle from '@/components/shared/SectionTitle';
 
 const PropertyContactForm = ({ property }) => {
   const { data: session } = useSession();
@@ -41,22 +42,7 @@ const PropertyContactForm = ({ property }) => {
     <div className="bg-white rounded-none md:rounded-[30px] overflow-hidden">
       <div className="px-6 py-6 md:p-8">
         <div className="pb-6 md:pb-7 flex items-center justify-between">
-          <h2
-            className="text-[22px] md:text-[28px] font-normal text-[#0F172A] flex items-center"
-            style={{ fontFamily: 'var(--font-heading)' }}
-          >
-            Contactanos
-            <span
-              aria-hidden="true"
-              className="inline-block ml-5"
-              style={{
-                width: '50px',
-                height: '3px',
-                background: 'var(--color-brand)',
-                alignSelf: 'center',
-              }}
-            />
-          </h2>
+          <SectionTitle size="normal">Contactanos</SectionTitle>
         </div>
         <form action={formAction}>
           <input type="hidden" id="property" name="property" defaultValue={property._id} />

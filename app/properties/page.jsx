@@ -9,6 +9,7 @@ import FeaturedPropertyCard from '@/components/FeaturedPropertyCard';
 import Pagination from '@/components/Pagination';
 import SortBar from '@/components/shared/SortBar';
 import ScrollReveal from '@/components/shared/ScrollReveal';
+import SectionTitle from '@/components/shared/SectionTitle';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import User from '@/models/User';
@@ -181,14 +182,9 @@ const PropertiesPage = async ({ searchParams }) => {
 
       {/* Sort Bar */}
       <div id="resultados" className="bg-white px-4 md:px-[50px] pt-8 md:pt-10">
-        <ScrollReveal>
-          <div className="pt-2 pb-2">
-            <h2 className="text-[22px] md:text-[28px] font-normal text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
-              {subtitle}
-              <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
-            </h2>
-          </div>
-        </ScrollReveal>
+        <div className="pt-2 pb-2">
+          <SectionTitle size="normal">{subtitle}</SectionTitle>
+        </div>
         <ScrollReveal delay={100}>
           <SortBar
             total={total}
@@ -234,14 +230,9 @@ const PropertiesPage = async ({ searchParams }) => {
       <section className="relative bg-white px-4 md:px-[50px] pb-12">
           <div className="bg-white rounded-[30px] overflow-hidden">
             <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[40px]">
-              <ScrollReveal>
-                <div className="pb-[30px]">
-                  <h2 className="text-[22px] md:text-[28px] font-normal text-[#0F172A] flex items-center" style={{ fontFamily: 'var(--font-heading)' }}>
-                    Vista en Mapa
-                    <span aria-hidden="true" className="inline-block ml-5" style={{ width: '70px', height: '3px', background: 'var(--color-brand)' }} />
-                  </h2>
-                </div>
-              </ScrollReveal>
+              <div className="pb-[30px]">
+                <SectionTitle size="normal">Vista en Mapa</SectionTitle>
+              </div>
               <ScrollReveal delay={100}>
                 <MapErrorBoundary>
                   <CategoryMap properties={filteredProperties} />
