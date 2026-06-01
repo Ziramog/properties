@@ -29,7 +29,7 @@ const Clients = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="bg-[#F6F6F6] py-16 md:py-24">
+    <section ref={sectionRef} className="bg-[#F6F6F6] pt-[12px] pb-[12px]">
       <div className="px-4 md:px-[50px]">
         {/* Client logo cards — horizontal scroll on mobile, grid on desktop */}
         <div className="flex md:grid overflow-x-auto md:overflow-visible gap-[15px] md:gap-[20px] scrollbar-hide md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
