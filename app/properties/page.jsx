@@ -181,10 +181,8 @@ const PropertiesPage = async ({ searchParams }) => {
       </section>
 
       {/* Sort Bar */}
-      <div id="resultados" className="bg-white px-4 md:px-[50px] pt-8 md:pt-10">
-        <div className="pt-2 pb-2">
-          <SectionTitle size="normal">{subtitle}</SectionTitle>
-        </div>
+      <div id="resultados" className="bg-white px-4 md:px-[50px] pt-3 pb-2">
+        <SectionTitle size="normal">{subtitle}</SectionTitle>
         <ScrollReveal delay={100}>
           <SortBar
             total={total}
