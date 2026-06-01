@@ -62,7 +62,7 @@ const MainLayout = ({ children }) => {
   return (
     <AuthProvider>
       <GlobalProvider>
-        <html lang='es' className={`${lato.variable} ${ptSerif.variable} ${cormorantGaramond.variable}`}>
+        <html lang='es' className={`${lato.variable} ${ptSerif.variable} ${cormorantGaramond.variable}`} data-deploy-id="c77c0b2">
           <body className='font-sans antialiased text-body'>
             <Navbar />
             <main className="relative z-[1]">{children}</main>
