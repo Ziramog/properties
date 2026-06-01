@@ -5,6 +5,7 @@ import StatsBar from '@/components/sections/StatsBar';
 import Agents from '@/components/sections/Agents';
 import ReviewsSection from '@/components/ReviewsSection';
 import Clients from '@/components/Clients';
+import ScrollReveal from '@/components/shared/ScrollReveal';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 
@@ -50,7 +51,9 @@ const HomePage = async () => {
       </div>
 
       {/* 6. Reviews — Nuestros Clientes */}
-      <ReviewsSection />
+      <ScrollReveal variant="fadeScale">
+        <ReviewsSection />
+      </ScrollReveal>
 
       {/* 7. Clients — Empresas y Proyectos */}
       <Clients />
