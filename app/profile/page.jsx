@@ -7,6 +7,7 @@ import { getSessionUser } from '@/utils/getSessionUser';
 import profileDefault from '@/assets/images/profile.png';
 import ProfileProperties from '@/components/ProfileProperties';
 import AgentNameForm from '@/components/AgentNameForm';
+import ScrollReveal from '@/components/shared/ScrollReveal';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 
 const ProfilePage = async () => {
@@ -27,9 +28,11 @@ const ProfilePage = async () => {
     <section className='bg-[#f5f0e8]'>
       <div className='container m-auto py-24'>
         <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0'>
-          <h1 className='text-3xl font-bold mb-4 text-[#1a3c34]'>Tu Perfil</h1>
+          <ScrollReveal>
+            <h1 className='text-3xl font-bold mb-4 text-[#1a3c34]'>Tu Perfil</h1>
+          </ScrollReveal>
           <div className='flex flex-col md:flex-row'>
-            <div className='md:w-1/4 mx-20 mt-10'>
+            <ScrollReveal delay={100} className='md:w-1/4 mx-20 mt-10'>
               <div className='mb-4'>
                 <Image
                   className='h-32 w-32 md:h-48 md:w-48 rounded-full mx-auto md:mx-0'
@@ -50,16 +53,16 @@ const ProfilePage = async () => {
               </h2>
 
               <AgentNameForm initialName={sessionUser.user.name || ''} />
-            </div>
+            </ScrollReveal>
 
-            <div className='md:w-3/4 md:pl-4'>
+            <ScrollReveal delay={200} className='md:w-3/4 md:pl-4'>
               <h2 className='text-xl font-semibold mb-4'>Tus Propiedades</h2>
               {properties.length === 0 ? (
                 <p>No tienes propiedades publicadas</p>
               ) : (
                 <ProfileProperties properties={properties} />
               )}
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </div>

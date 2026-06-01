@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
 import PropertyCard from '@/components/PropertyCard';
 import PropertySearchForm from '@/components/PropertySearchForm';
+import ScrollReveal from '@/components/shared/ScrollReveal';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
@@ -44,21 +45,25 @@ const SearchResultsPage = async ({
       </section>
       <section className='px-4 py-6'>
         <div className='container-xl lg:container m-auto px-4 py-6'>
-          <Link
-            href='/properties'
-            className='flex items-center text-[#d4a574] hover:underline mb-3'
-          >
-            <FaArrowAltCircleLeft className='mr-2 mb-1' /> Volver a Propiedades
-          </Link>
-          <h1 className='text-2xl mb-4 text-[#1a3c34]'>Resultados de Búsqueda</h1>
+          <ScrollReveal>
+            <Link
+              href='/properties'
+              className='flex items-center text-[#d4a574] hover:underline mb-3'
+            >
+              <FaArrowAltCircleLeft className='mr-2 mb-1' /> Volver a Propiedades
+            </Link>
+            <h1 className='text-2xl mb-4 text-[#1a3c34]'>Resultados de Búsqueda</h1>
+          </ScrollReveal>
           {properties.length === 0 ? (
             <p>No se encontraron resultados</p>
           ) : (
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-              {properties.map((property) => (
-                <PropertyCard key={property._id} property={property} />
-              ))}
-            </div>
+            <ScrollReveal delay={100}>
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+                {properties.map((property) => (
+                  <PropertyCard key={property._id} property={property} />
+                ))}
+              </div>
+            </ScrollReveal>
           )}
         </div>
       </section>

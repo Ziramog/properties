@@ -1,6 +1,7 @@
 'use client'
 
 import WhatsAppIcon from '@/components/icons/WhatsAppIcon'
+import ScrollReveal from '@/components/shared/ScrollReveal'
 
 const WHATSAPP_NUMBER = '+5493547563911'
 
@@ -26,13 +27,16 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen bg-[#F8F9FA] py-12">
       <div className="max-w-3xl mx-auto px-4">
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-[#1A1A2E] mb-2">Contacto</h1>
-          <p className="text-gray-600">
-            ¿Tenés alguna consulta? Comunicate con nosotros.
-          </p>
-        </div>
+        <ScrollReveal>
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-bold text-[#1A1A2E] mb-2">Contacto</h1>
+            <p className="text-gray-600">
+              ¿Tenés alguna consulta? Comunicate con nosotros.
+            </p>
+          </div>
+        </ScrollReveal>
 
+        <ScrollReveal delay={100}>
         <div className="bg-white rounded-xl shadow-md p-8 mb-8">
           <ul className="space-y-6 mb-8">
             {contactInfo.map((item) => (
@@ -68,7 +72,9 @@ export default function ContactPage() {
             <span className="text-base">Contactar por WhatsApp</span>
           </a>
         </div>
+        </ScrollReveal>
 
+        <ScrollReveal delay={200}>
         <div className="bg-white rounded-xl shadow-md p-8">
           <h2 className="text-xl font-semibold text-[#1A1A2E] mb-4">
             Roggero & Roma
@@ -78,6 +84,7 @@ export default function ContactPage() {
             Más de 30 años ayudando a familias a encontrar su hogar ideal.
           </p>
         </div>
+        </ScrollReveal>
       </div>
     </main>
   )
