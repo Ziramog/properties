@@ -225,7 +225,7 @@ const PropertiesPage = async ({ searchParams }) => {
 
       {/* Category Map */}
       {filteredProperties.length > 0 && (
-      <section className="relative z-0 bg-white px-4 md:px-[50px] pb-12">
+      <section className="relative bg-white px-4 md:px-[50px] pb-12">
           <div className="bg-white rounded-[30px] overflow-hidden">
             <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[40px]">
               <div className="pb-[30px]">
