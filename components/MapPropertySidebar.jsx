@@ -91,7 +91,7 @@ export default function MapPropertySidebar({ property, onClose }) {
       <div
         className={`fixed z-40 bg-white shadow-xl overflow-hidden flex flex-col ${
           isMobile
-            ? 'bottom-0 left-0 right-0 h-[70vh] rounded-t-[30px] z-50'
+            ? 'inset-0 h-screen rounded-none z-50'
             : 'top-0 right-0 h-screen w-[760px]'
         }`}
         style={{
@@ -105,9 +105,23 @@ export default function MapPropertySidebar({ property, onClose }) {
       >
         {/* Content — mobile allows internal scroll, desktop no scroll (Senada-style) */}
         <div className="flex-1 overflow-y-auto md:overflow-hidden px-[50px] pt-[30px] md:pt-[100px] pb-[50px]">
+          {/* Mobile close button */}
+          <button
+            onClick={onClose}
+            className="md:hidden fixed top-4 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm hover:bg-black/70 transition-colors"
+            aria-label="Cerrar"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-5 h-5">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
           <div className="group">
-            {/* Photo */}
-            <div className="relative rounded-xl overflow-hidden" style={{ aspectRatio: '16/9' }}>
+            {/* Photo — clickable to property detail */}
+            <div
+              className="relative rounded-xl overflow-hidden cursor-pointer"
+              style={{ aspectRatio: '16/9' }}
+              onClick={() => router.push(`/properties/${property._id}`)}
+            >
               <Image
                 src={image}
                 alt={property.name}
