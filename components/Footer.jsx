@@ -134,7 +134,7 @@ const Footer = () => {
           {/* Bottom — Border top + Copyright + Social + Wolfim */}
           <div className="flex items-center justify-between mt-[35px] pt-[35px] md:mt-[50px] md:pt-[50px] border-t-2 border-white/[0.1]">
             <p className="text-white text-[14px] uppercase font-bold">
-              &copy; {currentYear} Roggero & Roma <sup>TM</sup>
+              &copy; {currentYear} Silvia Roggero de Roma <sup>TM</sup>
             </p>
             <ul className="flex items-center gap-[25px]">
               <li>
@@ -269,7 +269,7 @@ const Footer = () => {
           {/* Copyright + Social + Powered by */}
           <div className="border-t border-white/[0.08] pt-6 flex flex-col items-center gap-4">
             <p className="text-[14px] text-white uppercase font-bold mb-2">
-              &copy; {currentYear} Roggero & Roma <sup>TM</sup>
+              &copy; {currentYear} Silvia Roggero de Roma <sup>TM</sup>
             </p>
             <ul className="flex items-center gap-[25px]">
               <li>
