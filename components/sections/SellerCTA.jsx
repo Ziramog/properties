@@ -77,9 +77,8 @@ const SellerCTA = () => {
                 {/* Icon */}
                 <div className="w-14 h-14 bg-[rgba(242,107,46,0.15)] backdrop-blur-sm rounded-xl flex items-center justify-center mb-6 border border-[rgba(242,107,46,0.1)]">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7 text-[var(--color-brand)]">
-                    <line x1="18" y1="20" x2="18" y2="10"/>
-                    <line x1="12" y1="20" x2="12" y2="4"/>
-                    <line x1="6" y1="20" x2="6" y2="14"/>
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                   </svg>
                 </div>
 
@@ -127,9 +126,7 @@ const SellerCTA = () => {
                 {/* Icon */}
                 <div className="w-14 h-14 bg-[rgba(242,107,46,0.15)] backdrop-blur-sm rounded-xl flex items-center justify-center mb-6 border border-[rgba(242,107,46,0.1)]">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7 text-[var(--color-brand)]">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                    <path d="M10 12h4v3a2 2 0 0 1-4 0v-3z" fill="currentColor" stroke="none"/>
+                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5M19 11l-2 2"/>
                   </svg>
                 </div>
 
