@@ -21,18 +21,33 @@ function AuthorAvatar({ name, photo }) {
 
 export default function ReviewCard({ review, variant = 'default' }) {
   if (variant === 'minimal') {
+    const isManual = review.googlePlaceId === 'manual';
+    const Wrapper = isManual ? 'article' : 'a';
+    const wrapperProps = isManual ? {} : {
+      href: `https://search.google.com/local/reviews?placeid=${review.googlePlaceId}`,
+      target: '_blank',
+      rel: 'noopener noreferrer'
+    };
+
     return (
-      <article className="relative flex flex-col h-full bg-[#f2f2f2] rounded-2xl p-6 md:p-8" aria-label={`Reseña de ${review.authorName}`}>
-        <p className="text-[15px] md:text-[16px] text-[#444] leading-[1.7] mb-5 md:mb-6 flex-1 italic line-clamp-4" style={{ fontFamily: 'var(--font-body)' }}>
-          {review.text}
+      <Wrapper 
+        {...wrapperProps}
+        className="relative flex flex-col h-full bg-white border border-[#eaeaea] shadow-[0_8px_30px_rgba(0,0,0,0.04)] rounded-2xl p-6 md:p-8 transition-transform hover:-translate-y-1 block cursor-pointer" 
+        aria-label={`Reseña de ${review.authorName}`}
+      >
+        <p className="text-[15px] md:text-[16px] text-[#555] leading-[1.7] mb-5 md:mb-6 flex-1 italic line-clamp-4" style={{ fontFamily: 'var(--font-body)' }}>
+          "{review.text}"
         </p>
         <div className="flex items-center gap-3 mt-auto">
-          <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 rounded-md" style={{ backgroundColor: 'var(--color-brand)' }}>
-            <span className="text-white leading-none" style={{ fontSize: '40px', lineHeight: 1, marginTop: '-4px' }}>&ldquo;</span>
+          <AuthorAvatar name={review.authorName} photo={review.authorPhoto} />
+          <div>
+            <p className="text-sm font-semibold text-[#1a1a1a] tracking-wide">{review.authorName}</p>
+            <div className="mt-0.5">
+              <StarRating rating={review.rating} size="sm" variant="dark" />
+            </div>
           </div>
-          <p className="text-sm font-semibold text-[#1a1a1a] tracking-wide">{review.authorName}</p>
         </div>
-      </article>
+      </Wrapper>
     );
   }
 
