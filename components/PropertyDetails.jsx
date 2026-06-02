@@ -77,29 +77,6 @@ const PropertyDetails = ({ property }) => {
         </div>
       )}
 
-      {/* Amenities */}
-      {property.amenities && property.amenities.length > 0 && (
-        <div className="bg-white rounded-none overflow-hidden mb-8 md:mb-8">
-          <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[30px]">
-            <div className="pb-[30px]">
-              <SectionTitle>Comodidades</SectionTitle>
-            </div>
-            <ScrollReveal>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {property.amenities.map((amenity, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <div className="text-[var(--color-brand)] flex-shrink-0">
-                      <CheckIcon />
-                    </div>
-                    <span className="text-[15px] text-[#555]">{amenity}</span>
-                  </div>
-                ))}
-              </div>
-            </ScrollReveal>
-          </div>
-        </div>
-      )}
-
       {/* 2-col: Description (70%) + Sidebar (30%) — Senada .info-section */}
       <div className="flex flex-col md:flex-row gap-[20px] mb-8">
         {/* Left: Description — 70% */}
@@ -166,7 +143,13 @@ const PropertyDetails = ({ property }) => {
                   {property.titles_status && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                       <span className="text-[14px] text-[#888]">Estado de Títulos</span>
-                      <span className="text-[14px] font-normal text-[#0F172A]">{property.titles_status}</span>
+                      <span className="text-[14px] font-normal text-[#0F172A] text-right">{property.titles_status}</span>
+                    </li>
+                  )}
+                  {property.amenities && property.amenities.length > 0 && (
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Comodidades</span>
+                      <span className="text-[14px] font-normal text-[#0F172A] text-right">{property.amenities.join(', ')}</span>
                     </li>
                   )}
                   </ul>

@@ -4,19 +4,26 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { toast } from 'react-toastify';
 import imageCompression from 'browser-image-compression';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import addProperty from '@/app/actions/addProperty';
 import { generateDescription } from '@/app/actions/generateDescription';
 
-const SubmitButton = () => {
+const SubmitButton = ({ isRedirecting }) => {
   const { pending } = useFormStatus();
+  const disabled = pending || isRedirecting;
   return (
-    <button
-      className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold py-3 px-4 rounded-md w-full transition-colors disabled:opacity-60 disabled:cursor-not-allowed'
-      type='submit'
-      disabled={pending}
-    >
-      {pending ? 'Agregando...' : 'Agregar Propiedad'}
-    </button>
+    <div className="flex gap-4 mt-8">
+      <Link href="/admin/properties" className="bg-transparent border border-[#555] hover:bg-[#222] text-white font-bold py-3 px-6 rounded-md transition-colors flex items-center justify-center">
+        Cancelar
+      </Link>
+      <button
+        className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold py-3 px-4 rounded-md flex-1 transition-colors disabled:opacity-60 disabled:cursor-not-allowed'
+        type='submit'
+        disabled={disabled}
+      >
+        {isRedirecting ? 'Redirigiendo...' : pending ? 'Agregando...' : 'Agregar Propiedad'}
+      </button>
+    </div>
   );
 };
 
@@ -46,12 +53,14 @@ const PropertyAddForm = () => {
   }, {});
 
   const router = useRouter();
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
     if (state?.error) toast.error(state.error);
     if (state?.success) {
       toast.success('Propiedad Agregada con éxito');
       if (state.redirected) {
+        setIsRedirecting(true);
         setTimeout(() => {
           router.push(state.redirected);
         }, 1500);
@@ -223,20 +232,14 @@ const PropertyAddForm = () => {
         <div className='grid grid-cols-2 md:grid-cols-3 gap-3 bg-[#181818] border border-[#222] p-4 rounded-lg'>
           {[
             ['Wifi', 'Wifi'],
-            ['Full kitchen', 'Cocina completa'],
-            ['Washer & Dryer', 'Lavadora/Secadora'],
             ['Free Parking', 'Estacionamiento'],
+            ['24/7 Security', 'Seguridad 24hs'],
+            ['Balcony/Patio', 'Balcón/Patio'],
             ['Swimming Pool', 'Pileta'],
             ['Hot Tub', 'Hidromasaje'],
-            ['24/7 Security', 'Seguridad 24hs'],
-            ['Wheelchair Accessible', 'Acceso Sillas de Ruedas'],
-            ['Elevator Access', 'Ascensor'],
-            ['Dishwasher', 'Lavavajillas'],
             ['Gym/Fitness Center', 'Gimnasio'],
-            ['Air Conditioning', 'Aire acondicionado'],
-            ['Balcony/Patio', 'Balcón/Patio'],
-            ['Smart TV', 'Smart TV'],
-            ['Coffee Maker', 'Cafetera'],
+            ['Elevator Access', 'Ascensor'],
+            ['Wheelchair Accessible', 'Acceso Sillas de Ruedas'],
           ].map(([val, label]) => (
             <div key={val} className="flex items-center gap-2">
               <input type='checkbox' id={`amenity_${val}`} name='amenities' value={val} className='w-4 h-4 accent-[var(--color-brand)] bg-[#111] border-[#333]' />
@@ -258,9 +261,7 @@ const PropertyAddForm = () => {
         </div>
       </div>
 
-      <div>
-        <SubmitButton />
-      </div>
+      <SubmitButton isRedirecting={isRedirecting} />
     </form>
   );
 };

@@ -5,20 +5,26 @@ import { toast } from 'react-toastify';
 import Image from 'next/image';
 import imageCompression from 'browser-image-compression';
 import { useRouter } from 'next/navigation';
-import { Reorder } from 'framer-motion';
+import Link from 'next/link';
 import updateProperty from '@/app/actions/updateProperty';
 import { generateDescription } from '@/app/actions/generateDescription';
 
-const SubmitButton = () => {
+const SubmitButton = ({ isRedirecting }) => {
   const { pending } = useFormStatus();
+  const disabled = pending || isRedirecting;
   return (
-    <button
-      className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold py-3 px-4 rounded-md w-full transition-colors disabled:opacity-60 disabled:cursor-not-allowed'
-      type='submit'
-      disabled={pending}
-    >
-      {pending ? 'Guardando...' : 'Guardar Cambios'}
-    </button>
+    <div className="flex gap-4 mt-8">
+      <Link href="/admin/properties" className="bg-transparent border border-[#555] hover:bg-[#222] text-white font-bold py-3 px-6 rounded-md transition-colors flex items-center justify-center">
+        Cancelar
+      </Link>
+      <button
+        className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold py-3 px-4 rounded-md flex-1 transition-colors disabled:opacity-60 disabled:cursor-not-allowed'
+        type='submit'
+        disabled={disabled}
+      >
+        {isRedirecting ? 'Redirigiendo...' : pending ? 'Guardando...' : 'Guardar Cambios'}
+      </button>
+    </div>
   );
 };
 
@@ -48,12 +54,14 @@ const PropertyEditForm = ({ property }) => {
   }, {});
 
   const router = useRouter();
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
     if (state?.error) toast.error(state.error);
     if (state?.success) {
       toast.success('Propiedad Actualizada con éxito');
       if (state.redirected) {
+        setIsRedirecting(true);
         setTimeout(() => {
           router.push(state.redirected);
         }, 1500);
@@ -69,10 +77,33 @@ const PropertyEditForm = ({ property }) => {
   const [description, setDescription] = useState(property.description || '');
 
   const [existingImagesState, setExistingImagesState] = useState(property.images || []);
+  const [draggedIdx, setDraggedIdx] = useState(null);
 
   const visibleImages = existingImagesState.filter(
     (img) => !removedImages.includes(typeof img === 'string' ? img : img?.url)
   );
+
+  const handleDragStart = (e, index) => {
+    setDraggedIdx(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    if (draggedIdx === null || draggedIdx === index) return;
+    
+    const newItems = [...existingImagesState];
+    const draggedItem = newItems[draggedIdx];
+    newItems.splice(draggedIdx, 1);
+    newItems.splice(index, 0, draggedItem);
+    
+    setDraggedIdx(index);
+    setExistingImagesState(newItems);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIdx(null);
+  };
 
   const handleRemoveImage = (imgUrl) => setRemovedImages([...removedImages, imgUrl]);
   const handleUndoRemove = (imgUrl) => setRemovedImages(removedImages.filter((url) => url !== imgUrl));
@@ -256,20 +287,14 @@ const PropertyEditForm = ({ property }) => {
         <div className='grid grid-cols-2 md:grid-cols-3 gap-3 bg-[#181818] border border-[#222] p-4 rounded-lg'>
           {[
             ['Wifi', 'Wifi'],
-            ['Full kitchen', 'Cocina completa'],
-            ['Washer & Dryer', 'Lavadora/Secadora'],
             ['Free Parking', 'Estacionamiento'],
+            ['24/7 Security', 'Seguridad 24hs'],
+            ['Balcony/Patio', 'Balcón/Patio'],
             ['Swimming Pool', 'Pileta'],
             ['Hot Tub', 'Hidromasaje'],
-            ['24/7 Security', 'Seguridad 24hs'],
-            ['Wheelchair Accessible', 'Acceso Sillas de Ruedas'],
-            ['Elevator Access', 'Ascensor'],
-            ['Dishwasher', 'Lavavajillas'],
             ['Gym/Fitness Center', 'Gimnasio'],
-            ['Air Conditioning', 'Aire acondicionado'],
-            ['Balcony/Patio', 'Balcón/Patio'],
-            ['Smart TV', 'Smart TV'],
-            ['Coffee Maker', 'Cafetera'],
+            ['Elevator Access', 'Ascensor'],
+            ['Wheelchair Accessible', 'Acceso Sillas de Ruedas'],
           ].map(([val, label]) => (
             <div key={val} className="flex items-center gap-2">
               <input type='checkbox' id={`amenity_${val}`} name='amenities' value={val} className='w-4 h-4 accent-[var(--color-brand)] bg-[#111] border-[#333]' defaultChecked={property.amenities?.includes(val)} />
@@ -285,19 +310,32 @@ const PropertyEditForm = ({ property }) => {
         <label className={labelClass}>Imágenes Existentes (Arrastra para reordenar, la primera será la portada)</label>
 
         {visibleImages.length > 0 && (
-          <Reorder.Group axis="y" as="div" values={visibleImages} onReorder={setExistingImagesState} className='grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4'>
+          <div className='grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4'>
             {visibleImages.map((img, i) => {
               const imgUrl = typeof img === 'string' ? img : img?.url;
+              let labelText = i === 0 ? 'MAIN' : i <= 6 ? `MINI ${i}` : 'GALERÍA';
+              let labelColorClass = i === 0 ? 'bg-[var(--color-brand)] text-white' : i <= 6 ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white';
+
               return (
-              <Reorder.Item key={imgUrl || i} value={img} as="div" className='relative group cursor-grab active:cursor-grabbing'>
-                <Image src={imgUrl} alt={`Imagen ${i + 1}`} width={200} height={150} className='w-full h-32 object-cover rounded-lg border border-[#333] pointer-events-none' />
+              <div 
+                key={imgUrl || i} 
+                draggable 
+                onDragStart={(e) => handleDragStart(e, i)}
+                onDragOver={(e) => handleDragOver(e, i)}
+                onDragEnd={handleDragEnd}
+                className={`relative group cursor-move ${draggedIdx === i ? 'opacity-50' : 'opacity-100'}`}
+              >
+                <Image src={imgUrl} alt={`Imagen ${i + 1}`} width={200} height={150} className='w-full h-32 object-cover rounded-t-lg border-t border-l border-r border-[#333] pointer-events-none' />
+                <div className={`text-center text-[10px] font-bold py-1 rounded-b-lg ${labelColorClass}`}>
+                  {labelText}
+                </div>
                 <button type='button' onClick={() => handleRemoveImage(imgUrl)} className='absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow' title='Eliminar imagen'>
                   ×
                 </button>
-              </Reorder.Item>
+              </div>
               );
             })}
-          </Reorder.Group>
+          </div>
         )}
 
         {removedImages.length > 0 && (
@@ -336,7 +374,7 @@ const PropertyEditForm = ({ property }) => {
         )}
       </div>
 
-      <SubmitButton />
+      <SubmitButton isRedirecting={isRedirecting} />
     </form>
   );
 };
