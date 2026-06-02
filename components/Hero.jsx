@@ -89,7 +89,7 @@ const Hero = () => {
       if (typeof window !== 'undefined' && window.innerWidth < 768) {
         const searchContainer = filtersRef.current?.parentElement;
         if (searchContainer) {
-          const offset = 40;
+          const offset = window.innerHeight * 0.18;
           const top = searchContainer.getBoundingClientRect().top + window.scrollY - offset;
           window.scrollTo({ top, behavior: 'smooth' });
         }
