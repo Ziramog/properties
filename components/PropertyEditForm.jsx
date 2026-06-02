@@ -294,7 +294,7 @@ const PropertyEditForm = ({ property }) => {
             ['Hot Tub', 'Hidromasaje'],
             ['Gym/Fitness Center', 'Gimnasio'],
             ['Elevator Access', 'Ascensor'],
-            ['Wheelchair Accessible', 'Acceso Sillas de Ruedas'],
+            ['Wheelchair Accessible', 'Acceso Discapacitados'],
           ].map(([val, label]) => (
             <div key={val} className="flex items-center gap-2">
               <input type='checkbox' id={`amenity_${val}`} name='amenities' value={val} className='w-4 h-4 accent-[var(--color-brand)] bg-[#111] border-[#333]' defaultChecked={property.amenities?.includes(val)} />
