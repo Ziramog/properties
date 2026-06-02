@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { toast } from 'react-toastify';
 import imageCompression from 'browser-image-compression';
+import { useRouter } from 'next/navigation';
 import addProperty from '@/app/actions/addProperty';
 import { generateDescription } from '@/app/actions/generateDescription';
 
@@ -44,13 +45,19 @@ const PropertyAddForm = () => {
     }
   }, {});
 
+  const router = useRouter();
+
   useEffect(() => {
     if (state?.error) toast.error(state.error);
     if (state?.success) {
       toast.success('Propiedad Agregada con éxito');
-      if (state.redirected) window.location.href = state.redirected;
+      if (state.redirected) {
+        setTimeout(() => {
+          router.push(state.redirected);
+        }, 1500);
+      }
     }
-  }, [state]);
+  }, [state, router]);
 
   const [operation, setOperation] = useState('venta');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -59,8 +66,20 @@ const PropertyAddForm = () => {
 
   const handleGenerateAI = async () => {
     if (!formRef.current) return;
-    setIsGenerating(true);
+    
     const currentFormData = new FormData(formRef.current);
+    const type = currentFormData.get('type');
+    const city = currentFormData.get('location.city');
+    const beds = currentFormData.get('beds');
+    const baths = currentFormData.get('baths');
+    const sqft = currentFormData.get('square_feet');
+
+    if (!type || !city || !beds || !baths || !sqft) {
+      toast.warn('Complete Tipo, Ciudad, Dormitorios, Baños y Metros antes de generar.');
+      return;
+    }
+
+    setIsGenerating(true);
     const res = await generateDescription(currentFormData);
     if (res.error) {
       toast.error(res.error);
@@ -187,7 +206,7 @@ const PropertyAddForm = () => {
             {operation === 'alquiler' ? (
               <input type='text' name='price' className={`${inputClass} bg-[#222] text-gray-500`} value='Consultar' readOnly />
             ) : (
-              <input type='text' name='price' className={inputClass} placeholder='Ej: 502000' />
+              <input type='text' name='price' className={inputClass} placeholder='Ej: 502000' required />
             )}
             <p className={helperClass}>
               {operation === 'alquiler' 
@@ -227,22 +246,6 @@ const PropertyAddForm = () => {
         </div>
       </div>
 
-      {/* Vendedor */}
-      <div className='mb-6 border-t border-[#222] pt-6'>
-        <h3 className="text-white font-bold mb-4">Datos del Vendedor / Agente</h3>
-        <div className='mb-3'>
-          <label htmlFor='seller_name' className={labelClass}>Nombre</label>
-          <input type='text' id='seller_name' name='seller_info.name' className={inputClass} placeholder='Nombre del agente' />
-        </div>
-        <div className='mb-3'>
-          <label htmlFor='seller_email' className={labelClass}>Email</label>
-          <input type='email' id='seller_email' name='seller_info.email' className={inputClass} placeholder='Correo de contacto' required />
-        </div>
-        <div className='mb-3'>
-          <label htmlFor='seller_phone' className={labelClass}>Teléfono</label>
-          <input type='tel' id='seller_phone' name='seller_info.phone' className={inputClass} placeholder='Ej: +54 9 351 123 4567' />
-        </div>
-      </div>
 
       {/* Imagenes */}
       <div className='mb-8'>

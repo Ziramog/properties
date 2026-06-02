@@ -4,6 +4,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 import imageCompression from 'browser-image-compression';
+import { useRouter } from 'next/navigation';
 import updateProperty from '@/app/actions/updateProperty';
 import { generateDescription } from '@/app/actions/generateDescription';
 
@@ -45,13 +46,19 @@ const PropertyEditForm = ({ property }) => {
     }
   }, {});
 
+  const router = useRouter();
+
   useEffect(() => {
     if (state?.error) toast.error(state.error);
     if (state?.success) {
       toast.success('Propiedad Actualizada con éxito');
-      if (state.redirected) window.location.href = state.redirected;
+      if (state.redirected) {
+        setTimeout(() => {
+          router.push(state.redirected);
+        }, 1500);
+      }
     }
-  }, [state]);
+  }, [state, router]);
 
   const [removedImages, setRemovedImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
@@ -85,8 +92,20 @@ const PropertyEditForm = ({ property }) => {
 
   const handleGenerateAI = async () => {
     if (!formRef.current) return;
-    setIsGenerating(true);
+    
     const currentFormData = new FormData(formRef.current);
+    const type = currentFormData.get('type');
+    const city = currentFormData.get('location.city');
+    const beds = currentFormData.get('beds');
+    const baths = currentFormData.get('baths');
+    const sqft = currentFormData.get('square_feet');
+
+    if (!type || !city || !beds || !baths || !sqft) {
+      toast.warn('Complete Tipo, Ciudad, Dormitorios, Baños y Metros antes de generar.');
+      return;
+    }
+
+    setIsGenerating(true);
     const res = await generateDescription(currentFormData);
     if (res.error) {
       toast.error(res.error);
@@ -216,7 +235,7 @@ const PropertyEditForm = ({ property }) => {
             {operation === 'alquiler' ? (
               <input type='text' name='price' className={`${inputClass} bg-[#222] text-gray-500`} value='Consultar' readOnly />
             ) : (
-              <input type='text' name='price' className={inputClass} placeholder='Ej: 502,000' defaultValue={String(property.price || '').replace(/^[A-Z$]+\s*/i, '')} />
+              <input type='text' name='price' className={inputClass} placeholder='Ej: 502,000' defaultValue={String(property.price || '').replace(/^[A-Z$]+\s*/i, '')} required />
             )}
             <p className={helperClass}>
               {operation === 'alquiler' 
@@ -256,22 +275,6 @@ const PropertyEditForm = ({ property }) => {
         </div>
       </div>
 
-      {/* Vendedor */}
-      <div className='mb-6 border-t border-[#222] pt-6'>
-        <h3 className="text-white font-bold mb-4">Datos del Vendedor / Agente</h3>
-        <div className='mb-3'>
-          <label className={labelClass}>Nombre</label>
-          <input type='text' id='seller_name' name='seller_info.name' className={inputClass} defaultValue={property.seller_info?.name} />
-        </div>
-        <div className='mb-3'>
-          <label className={labelClass}>Email</label>
-          <input type='email' id='seller_email' name='seller_info.email' className={inputClass} required defaultValue={property.seller_info?.email} />
-        </div>
-        <div className='mb-3'>
-          <label className={labelClass}>Teléfono</label>
-          <input type='tel' id='seller_phone' name='seller_info.phone' className={inputClass} defaultValue={property.seller_info?.phone} />
-        </div>
-      </div>
 
       {/* Imagenes */}
       <div className='mb-8'>

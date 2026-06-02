@@ -102,11 +102,6 @@ async function updateProperty(prevState, formData) {
       baths: formData.get('baths') || undefined,
       square_feet: formData.get('square_feet') || undefined,
       amenities,
-      seller_info: {
-        name: formData.get('seller_info.name'),
-        email: formData.get('seller_info.email'),
-        phone: formData.get('seller_info.phone'),
-      },
       owner: userId,
       operation: formData.get('operation'),
       status: formData.get('status'),
