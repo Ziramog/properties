@@ -169,9 +169,10 @@ const Hero = () => {
             />
           </div>
         )}
+      </div>
 
-        {/* Search Bar */}
-        <div className={`md:static md:w-full md:px-4 md:pb-[150px] z-[50] ${showMore ? 'fixed left-0 w-full px-4 bottom-[90px]' : 'absolute left-0 w-full px-4 bottom-[90px]'}`}>
+      {/* Search Bar */}
+      <div className={`md:absolute md:left-0 md:w-full md:px-4 md:bottom-[150px] z-[50] ${showMore ? 'fixed left-0 w-full px-4 bottom-[90px]' : 'absolute left-0 w-full px-4 bottom-[90px]'}`}>
           <div
             className='mx-auto max-w-[880px]'
             style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
@@ -418,7 +419,6 @@ const Hero = () => {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Mobile overlay: fixed, covers entire viewport */}
       {showMore && (
