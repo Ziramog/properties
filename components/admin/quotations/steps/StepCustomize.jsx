@@ -9,7 +9,7 @@ export default function StepCustomize({ data, onChange, onNext, onBack }) {
       <div className="space-y-4">
         <div>
           <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Template</label>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               { id: 'modern', label: 'Modern', desc: 'Clean & profesional' },
               { id: 'luxury', label: 'Luxury', desc: 'Elegante' },

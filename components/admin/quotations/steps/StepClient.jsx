@@ -11,7 +11,7 @@ export default function StepClient({ data, onChange, onNext, onBack }) {
           <input type="text" value={data.name} onChange={(e) => update('name', e.target.value)}
             className="w-full bg-[#1a1a1a] text-white border border-[#333] rounded-sm px-4 py-2.5 text-sm outline-none focus:border-[var(--color-brand)]" placeholder="Ej: Juan Pérez" />
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Email</label>
             <input type="email" value={data.email || ''} onChange={(e) => update('email', e.target.value)}

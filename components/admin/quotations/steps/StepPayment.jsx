@@ -31,7 +31,7 @@ export default function StepPayment({ data, propertyPrice, onChange, onNext, onB
 
         {isFinanced && (
           <>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">% Anticipo</label>
                 <input type="number" value={data.downPaymentPct || 30} onChange={(e) => update('downPaymentPct', Number(e.target.value))}
