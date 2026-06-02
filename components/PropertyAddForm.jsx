@@ -197,7 +197,7 @@ const PropertyAddForm = () => {
       <div className='mb-6'>
         <label className={labelClass}>Precio de Venta</label>
         <div className='flex gap-2 items-start'>
-          <select name='price_currency' className={`${inputClass} w-[110px] flex-shrink-0`} disabled={operation === 'alquiler'}>
+          <select name='price_currency' className={`${inputClass} !w-[110px] flex-shrink-0`} disabled={operation === 'alquiler'}>
             <option value='USD'>U$D</option>
             <option value='$'>$</option>
             <option value='ARS'>ARS</option>
