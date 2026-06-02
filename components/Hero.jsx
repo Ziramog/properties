@@ -23,14 +23,12 @@ const Hero = () => {
   const [showMore, setShowMore] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [maxH, setMaxH] = useState('0px');
-  const [overlayVisible, setOverlayVisible] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [desktopFilterOpen, setDesktopFilterOpen] = useState(null);
   const [desktopFocus, setDesktopFocus] = useState(false);
   const [mobileFocus, setMobileFocus] = useState(false);
   const [mobileValue, setMobileValue] = useState('');
   const [topSearches, setTopSearches] = useState([]);
-  const overlayRef = useRef(null);
   const filtersRef = useRef(null);
   const measuredRef = useRef(false);
 
@@ -81,13 +79,11 @@ const Hero = () => {
   const handleShowMoreToggle = () => {
     if (showMore) {
       setMaxH('0px');
-      setOverlayVisible(false);
       setShowMore(false);
     } else {
       if (filtersRef.current) {
         setMaxH(`${filtersRef.current.scrollHeight}px`);
       }
-      setOverlayVisible(true);
       setShowMore(true);
       // Scroll down on mobile to reveal expanded filters
       setTimeout(() => {
@@ -125,24 +121,6 @@ const Hero = () => {
 
   return (
     <section className='relative h-[100dvh] min-h-[100dvh]'>
-      {/* Dark overlay */}
-      <div
-        ref={overlayRef}
-        style={{
-          display: overlayVisible ? 'block' : 'none',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, .92)',
-          zIndex: 10,
-          transition: 'opacity 0.4s ease',
-          opacity: overlayVisible ? 1 : 0,
-          pointerEvents: 'none',
-        }}
-      />
-
       {/* Background Video */}
       <div className='absolute inset-0 z-0'>
         <video
