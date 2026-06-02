@@ -40,7 +40,7 @@ const Agents = () => {
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`} style={{ transitionDelay: '100ms' }}>
           <p className="text-[16px] md:text-[18px] font-light text-[#475569] leading-[1.8]" style={{ fontFamily: 'var(--font-body)' }}>
-            Contamos con 20 años de experiencia propia en el rubro inmobiliario y diversos casos de éxito en importantes negocios inmobiliarios. Trabajamos constantemente con el objetivo de brindar confianza y seriedad en el rubro, dar información real y adecuada sobre el mercado y ofrecer la mayor variedad de alternativas de inversión a nuestros clientes.
+            Contamos con 20 años de experiencia propia en el rubro inmobiliario. Trabajamos con el objetivo de brindar confianza y seriedad en el rubro, dar información real y adecuada sobre el mercado y ofrecer la mejor variedad de alternativas a nuestros clientes.
           </p>
         </div>
       </SectionBox>
