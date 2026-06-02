@@ -65,6 +65,19 @@ const Hero = () => {
     return () => document.removeEventListener('click', handleClick);
   }, [openDropdown, desktopFilterOpen]);
 
+  // Close expanded filters on Escape key (mobile)
+  useEffect(() => {
+    if (!showMore) return;
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') {
+        setShowMore(false);
+        setDesktopFilterOpen(null);
+      }
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, [showMore]);
+
   const handleShowMoreToggle = () => {
     if (showMore) {
       setMaxH('0px');
@@ -169,7 +182,7 @@ const Hero = () => {
           </motion.div>
         </div>
 
-        {!scrolled && (
+        {!scrolled && !showMore && (
           <div className='absolute left-0 right-0 z-10 bottom-[15px] md:hidden flex justify-center scroll-indicator-container'>
             <img
               src='/senada/images/icons/ico_arrow-down.svg'
@@ -262,7 +275,7 @@ const Hero = () => {
             </div>
 
             {/* Mobile: input + button + toggle all fixed; filters expand via position absolute below */}
-            <div className='md:hidden w-full relative bg-black rounded-xl px-4 pt-4 pb-[3px]'>
+            <div className={`md:hidden w-full bg-black rounded-xl px-4 pt-4 pb-[3px] ${showMore ? 'fixed left-0 right-0 bottom-[90px] z-[100]' : 'relative'}`}>
               {/* Search input */}
               <div className='flex items-center gap-2 px-3 py-2.5'>
                 <svg className='w-5 h-5 text-white flex-shrink-0' viewBox='0 0 24 24' fill='currentColor'>
@@ -447,6 +460,15 @@ const Hero = () => {
           }
         }
       `}</style>
+
+      {/* Mobile overlay when filters expanded */}
+      {showMore && (
+        <div
+          className='md:hidden fixed inset-0 bg-black/80 z-[90] transition-opacity duration-300'
+          onClick={() => { setShowMore(false); setOpenDropdown(null); }}
+          aria-hidden='true'
+        />
+      )}
     </section>
   );
 };
