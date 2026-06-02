@@ -18,6 +18,7 @@ export default async function ReviewsSection() {
 
   const serialized = reviews.map(r => ({
     id: r._id.toString(),
+    googlePlaceId: r.googlePlaceId,
     authorName: r.authorName,
     authorPhoto: r.authorPhoto,
     rating: r.rating,
