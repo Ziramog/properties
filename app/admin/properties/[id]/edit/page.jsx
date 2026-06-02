@@ -16,20 +16,18 @@ const PropertyEditPage = async ({ params }) => {
 
   if (!property) {
     return (
-      <h1 className='text-center text-2xl font-bold mt-10'>
-        Property Not Found
+      <h1 className='text-center text-2xl font-bold mt-10 text-white'>
+        Propiedad No Encontrada
       </h1>
     );
   }
 
   return (
-    <section className='bg-blue-50'>
-      <div className='container m-auto max-w-2xl py-24'>
-        <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0'>
-          <PropertyEditForm property={property} />
-        </div>
+    <div className='container mx-auto px-4 py-8 max-w-3xl'>
+      <div className='bg-[#111] border border-[#333] px-6 py-8 shadow-xl rounded-xl'>
+        <PropertyEditForm property={property} />
       </div>
-    </section>
+    </div>
   );
 };
 

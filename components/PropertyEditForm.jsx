@@ -1,11 +1,11 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { useFormState } from 'react-dom';
-import { useFormStatus } from 'react-dom';
+import { useEffect, useState, useRef } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 import imageCompression from 'browser-image-compression';
 import updateProperty from '@/app/actions/updateProperty';
+import { generateDescription } from '@/app/actions/generateDescription';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -26,13 +26,7 @@ const PropertyEditForm = ({ property }) => {
       const imageFiles = formData.getAll('images');
       if (imageFiles.length > 0 && imageFiles[0].size > 0) {
         formData.delete('images');
-        
-        const options = {
-          maxSizeMB: 0.6,
-          maxWidthOrHeight: 1600,
-          useWebWorker: true,
-        };
-
+        const options = { maxSizeMB: 0.6, maxWidthOrHeight: 1600, useWebWorker: true };
         for (const file of imageFiles) {
           if (file.name === '' || file.size === 0) continue;
           try {
@@ -44,42 +38,41 @@ const PropertyEditForm = ({ property }) => {
           }
         }
       }
-
-      const result = await updateProperty(prevState, formData);
-      return result;
+      return await updateProperty(prevState, formData);
     } catch (err) {
       console.error("Action error:", err);
       return { error: 'Error de red. Las imágenes pueden ser demasiado grandes (límite 4.5MB).' };
     }
   }, {});
-  const [removedImages, setRemovedImages] = useState([]);
-  const [previewImages, setPreviewImages] = useState([]);
 
   useEffect(() => {
     if (state?.error) toast.error(state.error);
-    if (state?.success && state.redirected) {
-      window.location.href = state.redirected;
+    if (state?.success) {
+      toast.success('Propiedad Actualizada con éxito');
+      if (state.redirected) window.location.href = state.redirected;
     }
   }, [state]);
+
+  const [removedImages, setRemovedImages] = useState([]);
+  const [previewImages, setPreviewImages] = useState([]);
+  const [operation, setOperation] = useState(property.operation || 'venta');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const formRef = useRef(null);
+  const [description, setDescription] = useState(property.description || '');
 
   const existingImages = (property.images || []).filter(
     (img) => !removedImages.includes(typeof img === 'string' ? img : img?.url)
   );
 
-  const handleRemoveImage = (imgUrl) => {
-    setRemovedImages([...removedImages, imgUrl]);
-  };
-
-  const handleUndoRemove = (imgUrl) => {
-    setRemovedImages(removedImages.filter((url) => url !== imgUrl));
-  };
+  const handleRemoveImage = (imgUrl) => setRemovedImages([...removedImages, imgUrl]);
+  const handleUndoRemove = (imgUrl) => setRemovedImages(removedImages.filter((url) => url !== imgUrl));
 
   const handleNewImageChange = (e) => {
     const files = Array.from(e.target.files);
     const previews = files.map((file) => ({
       url: URL.createObjectURL(file),
       name: file.name,
-      file, // store the actual File reference
+      file,
     }));
     setPreviewImages([...previewImages, ...previews]);
   };
@@ -90,26 +83,37 @@ const PropertyEditForm = ({ property }) => {
     setPreviewImages(updated);
   };
 
+  const handleGenerateAI = async () => {
+    if (!formRef.current) return;
+    setIsGenerating(true);
+    const currentFormData = new FormData(formRef.current);
+    const res = await generateDescription(currentFormData);
+    if (res.error) {
+      toast.error(res.error);
+    } else if (res.description) {
+      setDescription(res.description);
+      toast.success('Descripción generada con IA');
+    }
+    setIsGenerating(false);
+  };
+
+  const inputClass = 'bg-[#111] border border-[#333] text-white rounded w-full py-2 px-3 focus:outline-none focus:border-[var(--color-brand)] focus:ring-1 focus:ring-[var(--color-brand)] transition-colors';
+  const labelClass = 'block text-white/80 font-bold mb-2 text-sm';
+  const helperClass = 'text-[11px] text-gray-500 mt-1';
+
   return (
-    <form action={formAction}>
+    <form ref={formRef} action={formAction}>
       <input type='hidden' name='propertyId' value={property._id} />
-      <h2 className='text-3xl text-center font-semibold mb-6'>Editar Propiedad</h2>
+      {removedImages.map((url) => <input key={url} type='hidden' name='removedImages' value={url} />)}
 
-      {/* Hidden removed images */}
-      {removedImages.map((url) => (
-        <input key={url} type='hidden' name='removedImages' value={url} />
-      ))}
+      <h2 className='text-[28px] md:text-3xl text-center font-normal mb-8 text-white' style={{ fontFamily: 'var(--font-heading)' }}>
+        Editar Propiedad
+      </h2>
 
+      {/* Tipo */}
       <div className='mb-4'>
-        <label htmlFor='type' className='block text-gray-700 font-bold mb-2'>
-          Tipo de Propiedad
-        </label>
-        <select
-          id='type'
-          name='type'
-          className='border rounded w-full py-2 px-3'
-          defaultValue={property.type || ''}
-        >
+        <label htmlFor='type' className={labelClass}>Tipo de Propiedad</label>
+        <select id='type' name='type' className={inputClass} defaultValue={property.type || ''}>
           <option value=''>Sin tipo específico</option>
           <option value='Casa'>Casa</option>
           <option value='Departamento'>Departamento</option>
@@ -120,17 +124,19 @@ const PropertyEditForm = ({ property }) => {
         </select>
       </div>
 
+      {/* Operacion */}
       <div className='mb-4'>
-        <label htmlFor='operation' className='block text-gray-700 font-bold mb-2'>Operación</label>
-        <select id='operation' name='operation' className='border rounded w-full py-2 px-3' defaultValue={property.operation || 'venta'}>
+        <label htmlFor='operation' className={labelClass}>Operación</label>
+        <select id='operation' name='operation' className={inputClass} value={operation} onChange={(e) => setOperation(e.target.value)}>
           <option value='venta'>Venta</option>
           <option value='alquiler'>Alquiler</option>
         </select>
       </div>
 
+      {/* Estado */}
       <div className='mb-4'>
-        <label htmlFor='status' className='block text-gray-700 font-bold mb-2'>Estado</label>
-        <select id='status' name='status' className='border rounded w-full py-2 px-3' defaultValue={property.status || 'active'}>
+        <label htmlFor='status' className={labelClass}>Etiqueta Especial</label>
+        <select id='status' name='status' className={inputClass} defaultValue={property.status || 'active'}>
           <option value='active'>Sin etiqueta</option>
           <option value='PRECIO MEJORADO'>Precio Mejorado</option>
           <option value='ULTIMA UNIDAD'>Última Unidad</option>
@@ -139,74 +145,92 @@ const PropertyEditForm = ({ property }) => {
         </select>
       </div>
 
+      {/* Nombre */}
       <div className='mb-4'>
-        <label className='block text-gray-700 font-bold mb-2'>Nombre</label>
-        <input type='text' id='name' name='name' className='border rounded w-full py-2 px-3 mb-2'
-          required defaultValue={property.name} />
+        <label htmlFor='name' className={labelClass}>Nombre del Anuncio</label>
+        <input type='text' id='name' name='name' className={inputClass} defaultValue={property.name} required />
+        <p className={helperClass}>Un título atractivo y descriptivo, sin mayúsculas sostenidas.</p>
       </div>
 
+      {/* Descripción */}
       <div className='mb-4'>
-        <label className='block text-gray-700 font-bold mb-2'>Descripción</label>
-        <textarea id='description' name='description' className='border rounded w-full py-2 px-3' rows='4'
-          defaultValue={property.description} />
+        <div className="flex justify-between items-end mb-2">
+          <label htmlFor='description' className={labelClass}>Descripción</label>
+          <button type="button" onClick={handleGenerateAI} disabled={isGenerating} className="text-[var(--color-brand)] hover:text-white text-[12px] font-semibold flex items-center gap-1 transition-colors disabled:opacity-50">
+            {isGenerating ? 'Generando...' : '✨ Generar con IA'}
+          </button>
+        </div>
+        <textarea id='description' name='description' className={inputClass} rows='5' value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+        <p className={helperClass}>Usa el botón de IA si necesitas ayuda para reescribir una descripción atractiva.</p>
       </div>
 
-      <div className='mb-4 bg-[#f5f0e8] p-4'>
-        <label className='block text-gray-700 font-bold mb-2'>Ubicación</label>
-        <input type='text' id='street' name='location.street' className='border rounded w-full py-2 px-3 mb-2'
-          placeholder='Calle' defaultValue={property.location?.street} />
-        <input type='text' id='city' name='location.city' className='border rounded w-full py-2 px-3 mb-2'
-          placeholder='Ciudad' required defaultValue={property.location?.city} />
-        <input type='text' id='state' name='location.state' className='border rounded w-full py-2 px-3 mb-2'
-          placeholder='Provincia' required defaultValue={property.location?.state} />
-        <input type='text' id='zipcode' name='location.zipcode' className='border rounded w-full py-2 px-3 mb-2'
-          placeholder='Código Postal' defaultValue={property.location?.zipcode} />
-        <div className='flex gap-2'>
-          <input type='number' step='any' id='lat' name='coordinates.lat' className='border rounded w-full py-2 px-3 mb-2'
-            placeholder='Latitud' defaultValue={property.coordinates?.lat} />
-          <input type='number' step='any' id='lng' name='coordinates.lng' className='border rounded w-full py-2 px-3 mb-2'
-            placeholder='Longitud' defaultValue={property.coordinates?.lng} />
+      {/* Ubicacion */}
+      <div className='mb-4 bg-[#181818] border border-[#222] p-4 rounded-lg'>
+        <label className={labelClass}>Ubicación</label>
+        <input type='text' id='street' name='location.street' className={`${inputClass} mb-3`} placeholder='Calle' defaultValue={property.location?.street} />
+        <div className='grid grid-cols-2 gap-3 mb-3'>
+          <input type='text' id='city' name='location.city' className={inputClass} placeholder='Ciudad' required defaultValue={property.location?.city} />
+          <input type='text' id='state' name='location.state' className={inputClass} placeholder='Provincia' required defaultValue={property.location?.state} />
         </div>
-      </div>
-
-      <div className='mb-4 flex flex-wrap'>
-        <div className='w-full sm:w-1/3 pr-2'>
-          <label className='block text-gray-700 font-bold mb-2'>Dormitorios</label>
-          <input type='number' id='beds' name='beds' className='border rounded w-full py-2 px-3'
-            defaultValue={property.beds} />
+        <input type='text' id='zipcode' name='location.zipcode' className={`${inputClass} mb-3`} placeholder='Código Postal' defaultValue={property.location?.zipcode} />
+        
+        <label className={`${labelClass} mt-4`}>Coordenadas del Mapa</label>
+        <div className='flex gap-3 mb-1'>
+          <input type='number' step='any' id='lat' name='coordinates.lat' className={inputClass} placeholder='Latitud' defaultValue={property.coordinates?.lat} />
+          <input type='number' step='any' id='lng' name='coordinates.lng' className={inputClass} placeholder='Longitud' defaultValue={property.coordinates?.lng} />
         </div>
-        <div className='w-full sm:w-1/3 px-2'>
-          <label className='block text-gray-700 font-bold mb-2'>Baños</label>
-          <input type='number' id='baths' name='baths' className='border rounded w-full py-2 px-3'
-            defaultValue={property.baths} />
-        </div>
-        <div className='w-full sm:w-1/3 pl-2'>
-          <label className='block text-gray-700 font-bold mb-2'>Metros²</label>
-          <input type='number' id='square_feet' name='square_feet' className='border rounded w-full py-2 px-3'
-            defaultValue={property.square_feet} />
+        <div className="flex justify-between items-start mt-1">
+          <p className={helperClass}>Ejemplo: -31.6521, -64.4312</p>
+          <a href="https://www.google.com/maps" target="_blank" rel="noreferrer" className="text-[var(--color-brand)] hover:underline text-[11px] font-medium flex items-center gap-1">
+            Abrir Google Maps ↗
+          </a>
         </div>
       </div>
 
-      <div className='mb-4'>
-        <label className='block text-gray-700 font-bold mb-2'>Precio</label>
+      {/* Características */}
+      <div className='mb-4 flex flex-wrap gap-3'>
+        <div className='flex-1 min-w-[30%]'>
+          <label className={labelClass}>Dormitorios</label>
+          <input type='number' id='beds' name='beds' className={inputClass} defaultValue={property.beds} />
+        </div>
+        <div className='flex-1 min-w-[30%]'>
+          <label className={labelClass}>Baños</label>
+          <input type='number' id='baths' name='baths' className={inputClass} defaultValue={property.baths} />
+        </div>
+        <div className='flex-1 min-w-[30%]'>
+          <label className={labelClass}>Metros²</label>
+          <input type='number' id='square_feet' name='square_feet' className={inputClass} defaultValue={property.square_feet} />
+        </div>
+      </div>
+
+      {/* Precio */}
+      <div className='mb-6'>
+        <label className={labelClass}>Precio de Venta</label>
         <div className='flex gap-2 items-start'>
-          <select name='price_currency' className='border rounded py-2 px-3 w-[110px] flex-shrink-0'
-            defaultValue={(() => { const p = property.price || ''; if (p.startsWith('$')) return '$'; if (p.startsWith('ARS')) return 'ARS'; return 'USD'; })()}>
+          <select name='price_currency' className={`${inputClass} w-[110px] flex-shrink-0`} disabled={operation === 'alquiler'} defaultValue={(() => { const p = property.price || ''; if (p.startsWith('$')) return '$'; if (p.startsWith('ARS')) return 'ARS'; return 'USD'; })()}>
             <option value='USD'>U$D</option>
             <option value='$'>$</option>
             <option value='ARS'>ARS</option>
           </select>
           <div className='flex-1'>
-            <input type='text' name='price' className='border rounded w-full py-2 px-3'
-              placeholder='Ej: 502,000' defaultValue={String(property.price || '').replace(/^[A-Z$]+\s*/i, '')} />
-            <p className='text-[11px] text-gray-400 mt-1'>Ej: <strong>502,000</strong> — sin letras ni símbolos. Usá coma para miles. Escribí <strong>Consultar</strong> si no tiene precio.</p>
+            {operation === 'alquiler' ? (
+              <input type='text' name='price' className={`${inputClass} bg-[#222] text-gray-500`} value='Consultar' readOnly />
+            ) : (
+              <input type='text' name='price' className={inputClass} placeholder='Ej: 502,000' defaultValue={String(property.price || '').replace(/^[A-Z$]+\s*/i, '')} />
+            )}
+            <p className={helperClass}>
+              {operation === 'alquiler' 
+                ? 'Para alquileres, el precio se fija en "Consultar".' 
+                : 'Ej: 502000 — Escribí solo números. Usá coma para miles. Escribí "Consultar" si no querés publicar el precio.'}
+            </p>
           </div>
         </div>
       </div>
 
-      <div className='mb-4'>
-        <label className='block text-gray-700 font-bold mb-2'>Comodidades</label>
-        <div className='grid grid-cols-2 md:grid-cols-3 gap-2'>
+      {/* Comodidades */}
+      <div className='mb-6'>
+        <label className={labelClass}>Comodidades</label>
+        <div className='grid grid-cols-2 md:grid-cols-3 gap-3 bg-[#181818] border border-[#222] p-4 rounded-lg'>
           {[
             ['Wifi', 'Wifi'],
             ['Full kitchen', 'Cocina completa'],
@@ -215,58 +239,43 @@ const PropertyEditForm = ({ property }) => {
             ['Swimming Pool', 'Pileta'],
             ['Hot Tub', 'Hidromasaje'],
             ['24/7 Security', 'Seguridad 24hs'],
+            ['Wheelchair Accessible', 'Acceso Sillas de Ruedas'],
+            ['Elevator Access', 'Ascensor'],
+            ['Dishwasher', 'Lavavajillas'],
+            ['Gym/Fitness Center', 'Gimnasio'],
             ['Air Conditioning', 'Aire acondicionado'],
+            ['Balcony/Patio', 'Balcón/Patio'],
             ['Smart TV', 'Smart TV'],
+            ['Coffee Maker', 'Cafetera'],
           ].map(([val, label]) => (
-            <div key={val}>
-              <input type='checkbox' id={`amenity_${val}`} name='amenities' value={val} className='mr-2'
-                defaultChecked={property.amenities?.includes(val)} />
-              <label htmlFor={`amenity_${val}`}>{label}</label>
+            <div key={val} className="flex items-center gap-2">
+              <input type='checkbox' id={`amenity_${val}`} name='amenities' value={val} className='w-4 h-4 accent-[var(--color-brand)] bg-[#111] border-[#333]' defaultChecked={property.amenities?.includes(val)} />
+              <label htmlFor={`amenity_${val}`} className="text-white/70 text-sm cursor-pointer">{label}</label>
             </div>
           ))}
         </div>
       </div>
 
-      <div className='mb-4 bg-[#e8f0f5] p-4'>
-        <label className='block text-gray-700 font-bold mb-2'>Tarifas (USD)</label>
-        <div className='flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4'>
-          <div className='flex-1'>
-            <label className='text-xs text-gray-500 mb-1 block'>Semanal</label>
-            <input type='number' name='rates.weekly' className='border rounded w-full py-2 px-3'
-              defaultValue={property.rates?.weekly} />
-          </div>
-          <div className='flex-1'>
-            <label className='text-xs text-gray-500 mb-1 block'>Mensual</label>
-            <input type='number' name='rates.monthly' className='border rounded w-full py-2 px-3'
-              defaultValue={property.rates?.monthly} />
-          </div>
-          <div className='flex-1'>
-            <label className='text-xs text-gray-500 mb-1 block'>Por Noche</label>
-            <input type='number' name='rates.nightly' className='border rounded w-full py-2 px-3'
-              defaultValue={property.rates?.nightly} />
-          </div>
+      {/* Vendedor */}
+      <div className='mb-6 border-t border-[#222] pt-6'>
+        <h3 className="text-white font-bold mb-4">Datos del Vendedor / Agente</h3>
+        <div className='mb-3'>
+          <label className={labelClass}>Nombre</label>
+          <input type='text' id='seller_name' name='seller_info.name' className={inputClass} defaultValue={property.seller_info?.name} />
+        </div>
+        <div className='mb-3'>
+          <label className={labelClass}>Email</label>
+          <input type='email' id='seller_email' name='seller_info.email' className={inputClass} required defaultValue={property.seller_info?.email} />
+        </div>
+        <div className='mb-3'>
+          <label className={labelClass}>Teléfono</label>
+          <input type='tel' id='seller_phone' name='seller_info.phone' className={inputClass} defaultValue={property.seller_info?.phone} />
         </div>
       </div>
 
-      <div className='mb-4'>
-        <label className='block text-gray-700 font-bold mb-2'>Vendedor - Nombre</label>
-        <input type='text' id='seller_name' name='seller_info.name' className='border rounded w-full py-2 px-3 mb-2'
-          defaultValue={property.seller_info?.name} />
-      </div>
-      <div className='mb-4'>
-        <label className='block text-gray-700 font-bold mb-2'>Vendedor - Email</label>
-        <input type='email' id='seller_email' name='seller_info.email' className='border rounded w-full py-2 px-3 mb-2'
-          required defaultValue={property.seller_info?.email} />
-      </div>
-      <div className='mb-4'>
-        <label className='block text-gray-700 font-bold mb-2'>Vendedor - Teléfono</label>
-        <input type='tel' id='seller_phone' name='seller_info.phone' className='border rounded w-full py-2 px-3 mb-4'
-          defaultValue={property.seller_info?.phone} />
-      </div>
-
-      {/* Images section */}
-      <div className='mb-6'>
-        <label className='block text-gray-700 font-bold mb-3'>Imágenes</label>
+      {/* Imagenes */}
+      <div className='mb-8'>
+        <label className={labelClass}>Imágenes Existentes</label>
 
         {existingImages.length > 0 && (
           <div className='grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4'>
@@ -274,14 +283,8 @@ const PropertyEditForm = ({ property }) => {
               const imgUrl = typeof img === 'string' ? img : img?.url;
               return (
               <div key={imgUrl || i} className='relative group'>
-                <Image src={imgUrl} alt={`Imagen ${i + 1}`} width={200} height={150}
-                  className='w-full h-32 object-cover rounded-lg border' />
-                <button
-                  type='button'
-                  onClick={() => handleRemoveImage(imgUrl)}
-                  className='absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow'
-                  title='Eliminar imagen'
-                >
+                <Image src={imgUrl} alt={`Imagen ${i + 1}`} width={200} height={150} className='w-full h-32 object-cover rounded-lg border border-[#333]' />
+                <button type='button' onClick={() => handleRemoveImage(imgUrl)} className='absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow' title='Eliminar imagen'>
                   ×
                 </button>
               </div>
@@ -291,50 +294,35 @@ const PropertyEditForm = ({ property }) => {
         )}
 
         {removedImages.length > 0 && (
-          <div className='flex flex-wrap gap-2 mb-2'>
+          <div className='flex flex-wrap gap-2 mb-4'>
             {removedImages.map((url) => (
-              <span key={url} className='bg-red-50 text-red-600 text-xs px-2 py-1 rounded flex items-center gap-1'>
+              <span key={url} className='bg-red-900/30 border border-red-800 text-red-500 text-xs px-2 py-1 rounded flex items-center gap-1'>
                 Marcada para eliminar
-                <button type='button' onClick={() => handleUndoRemove(url)} className='font-bold hover:text-red-800'>↩</button>
+                <button type='button' onClick={() => handleUndoRemove(url)} className='font-bold hover:text-red-400'>↩ Deshacer</button>
               </span>
             ))}
           </div>
         )}
 
-        <div className='border-2 border-dashed border-gray-300 rounded-lg p-4 text-center'>
-          <input
-            type='file'
-            id='new_images'
-            name='images'
-            className='hidden'
-            accept='image/*'
-            multiple
-            onChange={handleNewImageChange}
-          />
-          <label htmlFor='new_images' className='cursor-pointer'>
-            <div className='text-gray-500 text-sm'>
-              + Agregar nuevas imágenes
-            </div>
+        <label className={labelClass}>Agregar Nuevas Imágenes</label>
+        <div className='border-2 border-dashed border-[#333] hover:border-[var(--color-brand)] transition-colors bg-[#111] rounded-lg p-6 text-center'>
+          <input type='file' id='new_images' name='images' className='hidden' accept='image/*' multiple onChange={handleNewImageChange} />
+          <label htmlFor='new_images' className='cursor-pointer text-[var(--color-brand)] text-sm font-bold flex items-center justify-center gap-2'>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Seleccionar fotos
           </label>
+          <p className={helperClass + ' mt-2'}>Las imágenes se comprimirán automáticamente al guardar.</p>
         </div>
 
         {previewImages.length > 0 && (
-          <div className='grid grid-cols-3 sm:grid-cols-4 gap-3 mt-3'>
+          <div className='grid grid-cols-3 sm:grid-cols-4 gap-3 mt-4'>
             {previewImages.map((preview, i) => (
               <div key={i} className='relative'>
-                <img src={preview.url} alt={`Nuevo ${i + 1}`} width={200} height={150}
-                  className='w-full h-32 object-cover rounded-lg border' />
-                <button
-                  type='button'
-                  onClick={() => handleRemovePreview(i)}
-                  className='absolute top-1 right-1 w-6 h-6 bg-gray-700 hover:bg-gray-600 text-white rounded-full flex items-center justify-center text-xs font-bold'
-                  title='Quitar'
-                >
+                <img src={preview.url} alt={`Nuevo ${i + 1}`} className='w-full h-32 object-cover rounded-lg border border-[var(--color-brand)]' />
+                <button type='button' onClick={() => handleRemovePreview(i)} className='absolute top-1 right-1 w-6 h-6 bg-gray-900 hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-xs font-bold' title='Quitar'>
                   ×
                 </button>
-                <div className='absolute bottom-1 left-1 bg-black/60 text-white text-[10px] px-1 rounded'>
-                  Nueva
-                </div>
+                <div className='absolute bottom-1 left-1 bg-black text-[var(--color-brand)] font-bold text-[10px] px-2 py-0.5 rounded'>NUEVA</div>
               </div>
             ))}
           </div>

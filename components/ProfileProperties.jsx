@@ -49,7 +49,7 @@ const ProfileProperties = ({ properties: initialProperties }) => {
       </div>
       <div className='mt-2'>
         <Link
-          href={`/properties/${property._id}/edit`}
+          href={`/admin/properties/${property._id}/edit`}
           className='bg-blue-500 text-white px-3 py-3 rounded-md mr-2 hover:bg-blue-600'
         >
           Edit

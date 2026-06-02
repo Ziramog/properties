@@ -36,6 +36,7 @@ async function addProperty(prevState, formData) {
       type: formData.get('type'),
       name: formData.get('name'),
       description: formData.get('description'),
+      price: formData.get('operation') === 'alquiler' || formData.get('price') === 'Consultar' ? 'Consultar' : `${formData.get('price_currency') || 'USD'} ${formData.get('price')}`,
       location: {
         street: formData.get('location.street'),
         city: formData.get('location.city'),
@@ -50,11 +51,6 @@ async function addProperty(prevState, formData) {
       baths: formData.get('baths') || undefined,
       square_feet: formData.get('square_feet') || undefined,
       amenities,
-      rates: {
-        weekly: formData.get('rates.weekly') || undefined,
-        monthly: formData.get('rates.monthly') || undefined,
-        nightly: formData.get('rates.nightly') || undefined,
-      },
       seller_info: {
         name: formData.get('seller_info.name'),
         email: formData.get('seller_info.email'),
@@ -94,9 +90,9 @@ async function addProperty(prevState, formData) {
     const newProperty = new Property(propertyData);
     await newProperty.save();
 
-    revalidatePath('/', 'layout');
+    revalidatePath('/admin/properties');
 
-    return { success: true, redirected: `/properties/${newProperty._id}` };
+    return { success: true, redirected: `/admin/properties` };
   } catch (error) {
     console.error('Failed to add property:', error);
     return { error: error.message || 'Error al agregar la propiedad.' };

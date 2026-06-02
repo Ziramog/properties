@@ -81,12 +81,13 @@ async function updateProperty(prevState, formData) {
 
     const lat = formData.get('coordinates.lat');
     const lng = formData.get('coordinates.lng');
+    const amenities = formData.getAll('amenities');
 
     prop.set({
       type: formData.get('type'),
       name: formData.get('name'),
       description: formData.get('description'),
-      price: formData.get('price') === 'Consultar' ? 'Consultar' : `${formData.get('price_currency') || 'USD'} ${formData.get('price')}`,
+      price: formData.get('operation') === 'alquiler' || formData.get('price') === 'Consultar' ? 'Consultar' : `${formData.get('price_currency') || 'USD'} ${formData.get('price')}`,
       location: {
         street: formData.get('location.street'),
         city: formData.get('location.city'),
@@ -97,15 +98,10 @@ async function updateProperty(prevState, formData) {
         lat: parseFloat(lat),
         lng: parseFloat(lng),
       } : undefined,
-      beds: cleanNumber(formData.get('beds')),
-      baths: cleanNumber(formData.get('baths')),
-      square_feet: cleanNumber(formData.get('square_feet')),
-      amenities: formData.getAll('amenities'),
-      rates: {
-        weekly: cleanNumber(formData.get('rates.weekly')),
-        monthly: cleanNumber(formData.get('rates.monthly')),
-        nightly: cleanNumber(formData.get('rates.nightly')),
-      },
+      beds: formData.get('beds') || undefined,
+      baths: formData.get('baths') || undefined,
+      square_feet: formData.get('square_feet') || undefined,
+      amenities,
       seller_info: {
         name: formData.get('seller_info.name'),
         email: formData.get('seller_info.email'),
@@ -122,9 +118,9 @@ async function updateProperty(prevState, formData) {
     revalidatePath('/');
     revalidatePath('/properties');
     revalidatePath(`/properties/${propertyId}`);
-    revalidatePath('/profile');
+    revalidatePath('/admin/properties');
 
-    return { success: true, redirected: '/properties' };
+    return { success: true, redirected: `/admin/properties` };
   } catch (err) {
     console.error('[updateProperty] Error:', err);
     const message = (err && typeof err.message === 'string') ? err.message : JSON.stringify(err);
