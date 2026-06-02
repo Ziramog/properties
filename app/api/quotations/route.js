@@ -32,12 +32,15 @@ export async function POST(request) {
 
     const totalValue = body.properties.reduce((sum, p) => sum + (parseFloat(p.price) || 0), 0);
 
+    const trackingToken = crypto.randomUUID();
+
     const quotation = await Quotation.create({
       quoteNumber,
       properties: body.properties,
       client: body.client,
       payment: body.payment,
       customization: body.customization || {},
+      delivery: { trackingToken },
       totalValue,
       createdBy: sessionUser.userId,
     });

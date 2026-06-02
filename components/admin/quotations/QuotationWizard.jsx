@@ -159,14 +159,14 @@ export default function QuotationWizard() {
               disabled={step < s.id}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
                 step === s.id ? 'bg-[var(--color-brand)] text-white' :
-                step > s.id ? 'bg-[#eee] text-[#666] hover:bg-[#ddd] cursor-pointer' :
-                'text-[#ccc] cursor-default'
+                step > s.id ? 'bg-[#222] text-[#bbb] hover:bg-[#333] cursor-pointer border border-[#333]' :
+                'text-[#555] cursor-default border border-transparent'
               }`}
             >
               <span>{s.icon}</span>
               <span className="hidden sm:inline">{s.label}</span>
             </button>
-            {i < STEPS.length - 1 && <div className={`w-6 h-px mx-1 ${step > s.id ? 'bg-[var(--color-brand)]' : 'bg-[#eee]'}`} />}
+            {i < STEPS.length - 1 && <div className={`w-6 h-px mx-1 ${step > s.id ? 'bg-[var(--color-brand)]' : 'bg-[#222]'}`} />}
           </div>
         ))}
       </nav>

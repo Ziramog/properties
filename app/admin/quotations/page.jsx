@@ -8,6 +8,7 @@ export const metadata = {
 import Link from 'next/link';
 import connectDB from '@/config/database';
 import Quotation from '@/models/Quotation';
+import QuotationActions from '@/components/admin/quotations/QuotationActions';
 
 const STATUS_CONFIG = [
   { id: 'draft', label: 'Borrador', color: 'bg-zinc-700 text-zinc-300' },
@@ -85,8 +86,11 @@ const AdminQuotationsPage = async () => {
                     </td>
                     <td className="px-2 md:px-3 py-3 text-[#888] text-[12px] hidden md:table-cell">{new Date(q.createdAt).toLocaleDateString('es-AR')}</td>
                     <td className="px-2 md:px-4 py-3 text-right">
-                      <a href={`/api/quotations/${q._id}/generate-pdf`} target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center w-7 h-7 bg-[var(--color-brand)] text-white text-[11px] font-bold rounded-sm hover:bg-[var(--color-brand-dark)] transition-colors" title="Descargar PDF">PDF</a>
+                      <div className="flex items-center justify-end gap-2 relative z-10">
+                        <a href={`/api/quotations/${q._id}/generate-pdf`} target="_blank" rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center w-7 h-7 bg-[var(--color-brand)] text-white text-[11px] font-bold rounded-sm hover:bg-[var(--color-brand-dark)] transition-colors" title="Descargar PDF">PDF</a>
+                        <QuotationActions quotationId={q._id.toString()} currentStatus={q.status} trackingToken={q.delivery?.trackingToken} />
+                      </div>
                     </td>
                   </tr>
                 );
