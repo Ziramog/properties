@@ -18,7 +18,15 @@ const SubmitButton = () => {
 };
 
 const PropertyAddForm = () => {
-  const [state, formAction] = useFormState(addProperty, {});
+  const [state, formAction] = useFormState(async (prevState, formData) => {
+    try {
+      const result = await addProperty(prevState, formData);
+      return result;
+    } catch (err) {
+      console.error("Action error:", err);
+      return { error: 'Error de red. Las imágenes pueden ser demasiado grandes (límite 4.5MB).' };
+    }
+  }, {});
 
   useEffect(() => {
     if (state?.error) toast.error(state.error);

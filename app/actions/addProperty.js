@@ -65,29 +65,29 @@ async function addProperty(prevState, formData) {
       status: formData.get('status') || 'active',
     };
 
-    const imageUrls = [];
-
-    for (const imageFile of images) {
+    const uploadPromises = images.map(async (imageFile) => {
       const imageBuffer = await imageFile.arrayBuffer();
       const imageData = Buffer.from(imageBuffer);
 
-      // Convert the image data to base64
-      const imageBase64 = imageData.toString('base64');
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: 'roggero-roma/properties',
+            fetch_format: 'auto',
+            quality: 'auto',
+            width: 1200,
+            crop: 'limit',
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve({ url: result.secure_url, public_id: result.public_id });
+          }
+        );
+        stream.end(imageData);
+      });
+    });
 
-      // Make request to upload to Cloudinary
-      const result = await cloudinary.uploader.upload(
-        `data:image/png;base64,${imageBase64}`,
-        {
-          folder: 'roggero-roma/properties',
-          fetch_format: 'auto',
-          quality: 'auto',
-          width: 1200,
-          crop: 'limit',
-        }
-      );
-
-      imageUrls.push({ url: result.secure_url, public_id: result.public_id });
-    }
+    const imageUrls = await Promise.all(uploadPromises);
 
     propertyData.images = imageUrls;
 
