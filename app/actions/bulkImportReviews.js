@@ -56,7 +56,7 @@ async function bulkImportReviews(formData) {
     imported++;
   }
 
-  revalidatePath('/admin/reviews');
+  revalidatePath('/', 'layout');
   return { imported, skipped };
 }
 

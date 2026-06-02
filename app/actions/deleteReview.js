@@ -3,11 +3,10 @@ import connectDB from '@/config/database';
 import Review from '@/models/Review';
 import { revalidatePath } from 'next/cache';
 
-export default async function updateReviewPriority(formData) {
+export default async function deleteReview(formData) {
   const id = formData.get('reviewId');
-  const delta = parseInt(formData.get('delta'), 10);
-  if (isNaN(delta) || delta === 0) return;
+  if (!id) return;
   await connectDB();
-  await Review.findByIdAndUpdate(id, { $inc: { priority: delta } });
+  await Review.findByIdAndDelete(id);
   revalidatePath('/', 'layout');
 }

@@ -14,6 +14,7 @@ import addManualReview from '@/app/actions/addManualReview';
 import toggleReviewFeatured from '@/app/actions/toggleReviewFeatured';
 import toggleReviewHidden from '@/app/actions/toggleReviewHidden';
 import updateReviewPriority from '@/app/actions/updateReviewPriority';
+import deleteReview from '@/app/actions/deleteReview';
 
 const inputCls = 'w-full bg-[#0a0a0a] border border-[#333] rounded-sm px-4 py-2.5 text-sm text-white outline-none focus:border-[var(--color-brand)] transition-colors placeholder:text-[#555]';
 
@@ -61,6 +62,7 @@ const AdminReviewsPage = async ({ searchParams }) => {
           </a>
         </div>
       </div>
+      <p className="text-right text-[11px] text-[#888] mb-6 -mt-4">Google Places API solo sincroniza las 5 reseñas más útiles. Usá la carga manual para reseñas más antiguas.</p>
 
       {syncResult && (
         <div className={`mb-4 p-4 rounded-sm text-sm ${syncResult.success ? 'bg-green-900/30 text-green-400 border border-green-800' : 'bg-red-900/30 text-red-400 border border-red-800'}`}>
@@ -125,17 +127,18 @@ const AdminReviewsPage = async ({ searchParams }) => {
 
           {/* Reviews table */}
           <div className="bg-[#161616] border border-[#222] rounded-sm overflow-hidden">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto max-h-[500px] overflow-y-auto relative">
               <table className="w-full text-left">
-                <thead>
+                <thead className="sticky top-0 bg-[#161616] z-10 shadow-[0_1px_0_#222]">
                   <tr className="border-b border-[#222] text-[10px] font-bold uppercase tracking-wider text-[#888]">
                     <th className="px-3 md:px-4 py-3">Autor</th>
                     <th className="px-2 md:px-3 py-3">★</th>
                     <th className="px-2 md:px-3 py-3 hidden md:table-cell">Reseña</th>
                     <th className="px-2 md:px-3 py-3 hidden md:table-cell">Fecha</th>
                     <th className="px-2 md:px-3 py-3 text-center">Dest</th>
-                    <th className="px-2 md:px-3 py-3 text-center">Oculto</th>
+                    <th className="px-2 md:px-3 py-3 text-center">Visibilidad</th>
                     <th className="px-3 md:px-4 py-3 text-right">Prior.</th>
+                    <th className="px-2 md:px-3 py-3 text-center">Del</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#222]">
@@ -156,7 +159,13 @@ const AdminReviewsPage = async ({ searchParams }) => {
                         <form action={toggleReviewHidden}>
                           <input type="hidden" name="reviewId" value={r._id.toString()} />
                           <input type="hidden" name="current" value={r.hidden ? 'true' : 'false'} />
-                          <button type="submit" className={`inline-block w-2.5 h-2.5 rounded-full cursor-pointer transition-colors ${r.hidden ? 'bg-red-500' : 'bg-green-500 hover:bg-red-400'}`} />
+                          <button type="submit" className={`p-1.5 rounded-md cursor-pointer transition-colors inline-flex ${r.hidden ? 'bg-red-500/10 text-red-500 hover:bg-red-500/20' : 'bg-green-500/10 text-green-500 hover:bg-green-500/20'}`}>
+                            {r.hidden ? (
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                            ) : (
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            )}
+                          </button>
                         </form>
                       </td>
                       <td className="px-3 md:px-4 py-3 text-right">
@@ -173,6 +182,14 @@ const AdminReviewsPage = async ({ searchParams }) => {
                             <button type="submit" className="text-[#888] hover:text-[var(--color-brand)] text-xs leading-none px-1 cursor-pointer">+</button>
                           </form>
                         </div>
+                      </td>
+                      <td className="px-2 md:px-3 py-3 text-center">
+                        <form action={deleteReview}>
+                          <input type="hidden" name="reviewId" value={r._id.toString()} />
+                          <button type="submit" className="p-1.5 rounded-md text-[#555] hover:bg-red-500/20 hover:text-red-500 transition-colors inline-flex">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                          </button>
+                        </form>
                       </td>
                     </tr>
                   ))}

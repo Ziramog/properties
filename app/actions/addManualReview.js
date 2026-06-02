@@ -36,7 +36,7 @@ async function addManualReview(formData) {
     priority: 0,
   });
 
-  revalidatePath('/admin/reviews');
+  revalidatePath('/', 'layout');
 }
 
 export default addManualReview;

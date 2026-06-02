@@ -8,5 +8,5 @@ export default async function toggleReviewHidden(formData) {
   const current = formData.get('current') === 'true';
   await connectDB();
   await Review.findByIdAndUpdate(id, { hidden: !current });
-  revalidatePath('/admin/reviews');
+  revalidatePath('/', 'layout');
 }

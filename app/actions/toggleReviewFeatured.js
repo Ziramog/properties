@@ -8,5 +8,5 @@ export default async function toggleReviewFeatured(formData) {
   const current = formData.get('current') === 'true';
   await connectDB();
   await Review.findByIdAndUpdate(id, { featured: !current });
-  revalidatePath('/admin/reviews');
+  revalidatePath('/', 'layout');
 }
