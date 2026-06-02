@@ -1,6 +1,7 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AuthProvider from '@/components/AuthProvider';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { GlobalProvider } from '@/context/GlobalContext';
 import { ToastContainer } from 'react-toastify';
 import { Lato, PT_Serif, Cormorant_Garamond } from 'next/font/google';
@@ -89,6 +90,7 @@ const MainLayout = ({ children }) => {
             <main className="relative pb-[12px]">{children}</main>
             <Footer />
             <ToastContainer />
+            <GoogleAnalytics />
           </body>
         </html>
       </GlobalProvider>

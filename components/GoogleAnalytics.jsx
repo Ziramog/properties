@@ -1,36 +1,57 @@
 'use client';
 
+import { useEffect } from 'react';
 import Script from 'next/script';
+import { usePathname } from 'next/navigation';
 
-// TODO: Reemplazar con el Measurement ID real de GA4
-const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+const GA_MEASUREMENT_ID = 'G-PW4FH9WHQB';
 
 export default function GoogleAnalytics() {
-  if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID === 'G-XXXXXXXXXX') {
-    console.warn('[GA4] Measurement ID no configurado. Reemplazar G-XXXXXXXXXX en components/GoogleAnalytics.jsx');
-    return null;
+  const pathname = usePathname();
+
+  // Track page views on route changes (SPA navigation)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const hostname = window.location.hostname;
+    const allowedHosts = ['localhost', 'roggeroyroma.com', 'www.roggeroyroma.com', 'roggeroyroma.com.ar', 'www.roggeroyroma.com.ar'];
+    
+    if (!allowedHosts.includes(hostname)) return;
+    if (!window.gtag) return;
+
+    window.gtag('config', GA_MEASUREMENT_ID, {
+      page_path: pathname,
+    });
+  }, [pathname]);
+
+  // Only render script on allowed hosts
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    const allowedHosts = ['localhost', 'roggeroyroma.com', 'www.roggeroyroma.com', 'roggeroyroma.com.ar', 'www.roggeroyroma.com.ar'];
+    if (!allowedHosts.includes(hostname)) return null;
   }
 
   return (
     <>
       <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
         strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
       />
-      <Script id="ga4-init" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${GA_MEASUREMENT_ID}', {
-            page_title: document.title,
-            page_location: window.location.href,
-            send_page_view: true,
-            cookie_flags: 'SameSite=None;Secure',
-            anonymize_ip: true,
-          });
-        `}
-      </Script>
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}', {
+              page_path: window.location.pathname,
+              send_page_view: true,
+            });
+          `,
+        }}
+      />
     </>
   );
 }
