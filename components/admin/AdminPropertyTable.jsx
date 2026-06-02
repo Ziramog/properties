@@ -4,8 +4,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import deleteProperty from '@/app/actions/deleteProperty';
 import { toast } from 'react-toastify';
+import { isGranInversion } from '@/utils/filterProperties';
 
-const AdminPropertyTable = ({ properties = [], defaultType = '' }) => {
+const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInversion = false }) => {
   const router = useRouter();
   const [items, setItems] = useState(properties);
   const [search, setSearch] = useState('');
@@ -13,6 +14,7 @@ const AdminPropertyTable = ({ properties = [], defaultType = '' }) => {
   const [filterOp, setFilterOp] = useState('');
   const [filterFeatured, setFilterFeatured] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [filterGranInversion, setFilterGranInversion] = useState(defaultGranInversion ? 'yes' : '');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const filtered = useMemo(() => {
@@ -29,8 +31,10 @@ const AdminPropertyTable = ({ properties = [], defaultType = '' }) => {
     if (filterFeatured === 'yes') result = result.filter(p => p.is_featured);
     if (filterFeatured === 'no') result = result.filter(p => !p.is_featured);
     if (filterStatus) result = result.filter(p => p.status === filterStatus);
+    if (filterGranInversion === 'yes') result = result.filter(p => isGranInversion(p));
+    if (filterGranInversion === 'no') result = result.filter(p => !isGranInversion(p));
     return result;
-  }, [items, search, filterType, filterOp, filterFeatured, filterStatus]);
+  }, [items, search, filterType, filterOp, filterFeatured, filterStatus, filterGranInversion]);
 
   const handleDelete = async (id, name) => {
     if (!confirm(`¿Eliminar "${name}"? Esta acción no se puede deshacer.`)) return;
@@ -56,14 +60,14 @@ const AdminPropertyTable = ({ properties = [], defaultType = '' }) => {
   };
 
   const typeLabels = {
-    Casa: '🏠 Casa', Departamento: '🏢 Depto', Terreno: '🌳 Terreno',
-    Campo: '🌾 Campo', 'Inmueble Comercial': '🏪 Comercial', 'Gran Inversión': '💰 Inversión',
+    Casa: 'Casa', Departamento: 'Depto', Terreno: 'Terreno',
+    Campo: 'Campo', 'Inmueble Comercial': 'Comercial', 'Gran Inversión': 'Inversión',
   };
 
-  const hasActiveFilters = search || filterType || filterOp || filterFeatured || filterStatus;
+  const hasActiveFilters = search || filterType || filterOp || filterFeatured || filterStatus || filterGranInversion;
 
   const clearFilters = () => {
-    setSearch(''); setFilterType(''); setFilterOp(''); setFilterFeatured(''); setFilterStatus('');
+    setSearch(''); setFilterType(''); setFilterOp(''); setFilterFeatured(''); setFilterStatus(''); setFilterGranInversion('');
   };
 
   const selectCls = 'text-[12px] bg-[#0a0a0a] border border-[#333] rounded-sm px-3 py-2 text-white outline-none focus:border-[var(--color-brand)] transition-colors w-full';
@@ -136,6 +140,11 @@ const AdminPropertyTable = ({ properties = [], defaultType = '' }) => {
               <option value="ULTIMA UNIDAD">Última Unidad</option>
               <option value="UNICO EN SU TIPO">Único en su Tipo</option>
               <option value="NUEVA">Nueva</option>
+            </select>
+            <select value={filterGranInversion} onChange={(e) => setFilterGranInversion(e.target.value)} className={selectCls}>
+              <option value="">Gran Inversión: Todas</option>
+              <option value="yes">Sí</option>
+              <option value="no">No</option>
             </select>
           </div>
         </div>

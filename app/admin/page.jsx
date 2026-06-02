@@ -9,6 +9,17 @@ import Link from 'next/link';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import Quote from '@/models/Quote';
+import { isGranInversion } from '@/utils/filterProperties';
+import {
+  Home,
+  Building2,
+  Sprout,
+  Map,
+  Store,
+  TrendingUp,
+  User,
+  Star,
+} from 'lucide-react';
 
 const AdminPage = async () => {
   await connectDB();
@@ -26,12 +37,22 @@ const AdminPage = async () => {
     }))
   );
 
+  // Gran Inversión: price >= 300k OR square_feet >= 10,000
+  const allPropsForGI = await Property.find({}, 'price square_feet').lean();
+  const granInversionCount = allPropsForGI.filter((p) => isGranInversion(p)).length;
+
   const CATEGORIES = [
-    { type: 'Casa', icon: '🏠', color: '#F26B2E' },
-    { type: 'Departamento', icon: '🏢', color: '#652660' },
-    { type: 'Campo', icon: '🌾', color: '#25D366' },
-    { type: 'Terreno', icon: '📐', color: '#0F172A' },
-    { type: 'Inmueble Comercial', icon: '🏪', color: '#E94560' },
+    { type: 'Casa', Icon: Home, color: '#F26B2E' },
+    { type: 'Departamento', Icon: Building2, color: '#652660' },
+    { type: 'Campo', Icon: Sprout, color: '#25D366' },
+    { type: 'Terreno', Icon: Map, color: '#0F172A' },
+    { type: 'Inmueble Comercial', Icon: Store, color: '#E94560' },
+    { type: 'Gran Inversión', Icon: TrendingUp, color: '#FFD700', count: granInversionCount, href: '/admin/properties?granInversion=true' },
+  ];
+
+  const NAV_LINKS = [
+    { label: 'Perfil', href: '/admin/profile', Icon: User, color: '#888' },
+    { label: 'Reseñas', href: '/admin/reviews', Icon: Star, color: '#FFD700' },
   ];
 
   return (
@@ -47,7 +68,7 @@ const AdminPage = async () => {
           { value: activas, label: 'Activas', color: '#25D366', href: '/admin/properties?status=active' },
           { value: featured, label: 'Destacadas', color: '#652660', href: '/admin/properties?is_featured=true' },
           { value: quotes, label: 'Presupuestos', color: '#0F172A', href: '/admin/quotes' },
-        ].map(stat => (
+        ].map((stat) => (
           <Link key={stat.label} href={stat.href} className="bg-[#161616] border border-[#222] rounded-sm p-5 md:p-6 hover:border-[#333] transition-colors">
             <p className="text-[32px] md:text-[40px] font-bold leading-none mb-1" style={{ fontFamily: 'var(--font-heading)', color: stat.color }}>
               {stat.value}
@@ -58,16 +79,16 @@ const AdminPage = async () => {
       </div>
 
       {/* Category cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {CATEGORIES.map((cat) => {
-          const count = categoryCounts.find((c) => c.type === cat.type)?.count || 0;
+          const count = cat.count !== undefined ? cat.count : categoryCounts.find((c) => c.type === cat.type)?.count || 0;
           return (
             <Link
               key={cat.type}
-              href={`/admin/properties?type=${cat.type}`}
+              href={cat.href || `/admin/properties?type=${cat.type}`}
               className="bg-[#161616] border border-[#222] rounded-sm p-5 hover:border-[#333] transition-colors text-center"
             >
-              <p className="text-3xl mb-2">{cat.icon}</p>
+              <cat.Icon className="w-7 h-7 mx-auto mb-2" style={{ color: cat.color }} strokeWidth={1.5} />
               <p className="text-[24px] font-bold leading-none mb-1" style={{ color: cat.color }}>
                 {count}
               </p>
@@ -75,6 +96,20 @@ const AdminPage = async () => {
             </Link>
           );
         })}
+      </div>
+
+      {/* Navigation links: Perfil + Reseñas */}
+      <div className="grid grid-cols-2 gap-4 mt-6">
+        {NAV_LINKS.map((link) => (
+          <Link
+            key={link.label}
+            href={link.href}
+            className="bg-[#161616] border border-[#222] rounded-sm p-5 hover:border-[#333] transition-colors text-center"
+          >
+            <link.Icon className="w-7 h-7 mx-auto mb-2" style={{ color: link.color }} strokeWidth={1.5} />
+            <p className="text-[11px] font-medium text-[#888] uppercase tracking-wider">{link.label}</p>
+          </Link>
+        ))}
       </div>
     </div>
   );
