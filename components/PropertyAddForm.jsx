@@ -1,9 +1,34 @@
 'use client';
+import { useEffect } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
+import { toast } from 'react-toastify';
 import addProperty from '@/app/actions/addProperty';
 
-const PropertyAddForm = () => {
+const SubmitButton = () => {
+  const { pending } = useFormStatus();
   return (
-    <form action={addProperty}>
+    <button
+      className='bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-60 disabled:cursor-not-allowed'
+      type='submit'
+      disabled={pending}
+    >
+      {pending ? 'Agregando...' : 'Agregar Propiedad'}
+    </button>
+  );
+};
+
+const PropertyAddForm = () => {
+  const [state, formAction] = useFormState(addProperty, {});
+
+  useEffect(() => {
+    if (state?.error) toast.error(state.error);
+    if (state?.success && state.redirected) {
+      window.location.href = state.redirected;
+    }
+  }, [state]);
+
+  return (
+    <form action={formAction}>
       <h2 className='text-3xl text-center font-semibold mb-6 text-[#1a3c34]'>Agregar Propiedad</h2>
 
       <div className='mb-4'>
@@ -443,12 +468,7 @@ const PropertyAddForm = () => {
       </div>
 
       <div>
-        <button
-          className='bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary/50'
-          type='submit'
-        >
-          Agregar Propiedad
-        </button>
+        <SubmitButton />
       </div>
     </form>
   );

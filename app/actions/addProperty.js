@@ -3,30 +3,30 @@ import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import { getSessionUser } from '@/utils/getSessionUser';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import cloudinary from '@/config/cloudinary';
 
-async function addProperty(formData) {
-  await connectDB();
+async function addProperty(prevState, formData) {
+  try {
+    await connectDB();
 
-  const sessionUser = await getSessionUser();
+    const sessionUser = await getSessionUser();
 
-  if (!sessionUser || !sessionUser.userId) {
-    throw new Error('User ID is required');
-  }
+    if (!sessionUser || !sessionUser.userId) {
+      return { error: 'Debes iniciar sesión para agregar una propiedad.' };
+    }
 
-  const { userId } = sessionUser;
+    const { userId } = sessionUser;
 
-  // Access all values for amenities and images
-  const amenities = formData.getAll('amenities');
-  const images = formData.getAll('images').filter((image) => image.name !== '');
+    // Access all values for amenities and images
+    const amenities = formData.getAll('amenities');
+    const images = formData.getAll('images').filter((image) => image.name !== '');
 
-  if (images.length === 0) {
-    throw new Error('Es necesario agregar al menos una foto de la propiedad.');
-  }
-  if (images.length > 10) {
-    throw new Error('Máximo 10 imágenes por propiedad.');
-  }
+    if (images.length === 0) {
+      return { error: 'Es necesario agregar al menos una foto de la propiedad.' };
+    }
+    if (images.length > 10) {
+      return { error: 'Máximo 10 imágenes por propiedad.' };
+    }
 
     const lat = formData.get('coordinates.lat');
     const lng = formData.get('coordinates.lng');
@@ -65,38 +65,42 @@ async function addProperty(formData) {
       status: formData.get('status') || 'active',
     };
 
-  const imageUrls = [];
+    const imageUrls = [];
 
-  for (const imageFile of images) {
-    const imageBuffer = await imageFile.arrayBuffer();
-    const imageData = Buffer.from(imageBuffer);
+    for (const imageFile of images) {
+      const imageBuffer = await imageFile.arrayBuffer();
+      const imageData = Buffer.from(imageBuffer);
 
-    // Convert the image data to base64
-    const imageBase64 = imageData.toString('base64');
+      // Convert the image data to base64
+      const imageBase64 = imageData.toString('base64');
 
-    // Make request to upload to Cloudinary
-    const result = await cloudinary.uploader.upload(
-      `data:image/png;base64,${imageBase64}`,
-      {
-        folder: 'roggero-roma/properties',
-        fetch_format: 'auto',
-        quality: 'auto',
-        width: 1200,
-        crop: 'limit',
-      }
-    );
+      // Make request to upload to Cloudinary
+      const result = await cloudinary.uploader.upload(
+        `data:image/png;base64,${imageBase64}`,
+        {
+          folder: 'roggero-roma/properties',
+          fetch_format: 'auto',
+          quality: 'auto',
+          width: 1200,
+          crop: 'limit',
+        }
+      );
 
-    imageUrls.push({ url: result.secure_url, public_id: result.public_id });
+      imageUrls.push({ url: result.secure_url, public_id: result.public_id });
+    }
+
+    propertyData.images = imageUrls;
+
+    const newProperty = new Property(propertyData);
+    await newProperty.save();
+
+    revalidatePath('/', 'layout');
+
+    return { success: true, redirected: `/properties/${newProperty._id}` };
+  } catch (error) {
+    console.error('Failed to add property:', error);
+    return { error: error.message || 'Error al agregar la propiedad.' };
   }
-
-  propertyData.images = imageUrls;
-
-  const newProperty = new Property(propertyData);
-  await newProperty.save();
-
-  revalidatePath('/', 'layout');
-
-  redirect(`/properties/${newProperty._id}`);
 }
 
 export default addProperty;
