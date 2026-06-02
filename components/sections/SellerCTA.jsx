@@ -78,10 +78,9 @@ const SellerCTA = () => {
                 {/* Icon — Dollar Sign with two vertical lines */}
                 <div className="w-14 h-14 bg-[rgba(242,107,46,0.15)] backdrop-blur-sm rounded-xl flex items-center justify-center mb-6 border border-[rgba(242,107,46,0.1)]">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7 text-[var(--color-brand)]">
-                    <path d="M12 1v22"/>
                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                    <line x1="9" y1="1" x2="9" y2="23"/>
-                    <line x1="15" y1="1" x2="15" y2="23"/>
+                    <line x1="10" y1="1" x2="10" y2="23"/>
+                    <line x1="14" y1="1" x2="14" y2="23"/>
                   </svg>
                 </div>
 
@@ -149,7 +148,7 @@ const SellerCTA = () => {
 
                 {/* Orange outline button */}
                 <a
-                  href={generateWhatsAppLink({ context: 'rental' })}
+                  href="https://wa.me/5493547596631?text=Hola%2C%20estoy%20buscando%20alquilar%20una%20propiedad.%20¿Podrían%20ayudarme%3F"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 w-full h-[52px] bg-transparent hover:bg-[var(--color-brand)] border-2 border-[var(--color-brand)] text-white rounded-[6px] text-sm font-bold uppercase tracking-[0.06em] transition-[background-color,transform] duration-200 hover:-translate-y-px"
