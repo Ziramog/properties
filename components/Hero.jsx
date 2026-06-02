@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaSearch } from 'react-icons/fa';
@@ -65,6 +66,19 @@ const Hero = () => {
     return () => document.removeEventListener('click', handleClick);
   }, [openDropdown, desktopFilterOpen]);
 
+  // Close expanded filters on Escape key
+  useEffect(() => {
+    if (!showMore) return;
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') {
+        setShowMore(false);
+        setDesktopFilterOpen(null);
+      }
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, [showMore]);
+
   const handleShowMoreToggle = () => {
     if (showMore) {
       setMaxH('0px');
@@ -112,23 +126,15 @@ const Hero = () => {
 
   return (
     <section className='relative h-[100dvh] min-h-[100dvh]'>
-      {/* Dark overlay */}
-      <div
-        ref={overlayRef}
-        style={{
-          display: overlayVisible ? 'block' : 'none',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, .92)',
-          zIndex: 10,
-          transition: 'opacity 0.4s ease',
-          opacity: overlayVisible ? 1 : 0,
-          pointerEvents: 'none',
-        }}
-      />
+      {/* Full-page overlay when filters are expanded */}
+      {showMore && typeof document !== 'undefined' && createPortal(
+        <div
+          className="fixed inset-0 bg-black/80 z-[90] transition-opacity duration-300"
+          onClick={() => { setShowMore(false); setDesktopFilterOpen(null); }}
+          aria-hidden="true"
+        />,
+        document.body
+      )}
 
       {/* Background Video */}
       <div className='absolute inset-0 z-0'>
@@ -180,7 +186,7 @@ const Hero = () => {
         )}
 
         {/* Search Bar */}
-        <div className='absolute left-0 w-full px-4 bottom-[90px] md:static md:w-full md:px-4 md:pb-[150px]'>
+        <div className='absolute left-0 w-full px-4 bottom-[90px] md:static md:w-full md:px-4 md:pb-[150px] relative z-[100]'>
           <div
             className='mx-auto max-w-[880px]'
             style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
@@ -208,7 +214,7 @@ const Hero = () => {
               </div>
               {/* .bottom-part */}
               <div className={`transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${desktopFilterOpen ? 'overflow-visible' : 'overflow-hidden'}`} style={{ maxHeight: showMore ? '200px' : '0', opacity: showMore ? 1 : 0, marginTop: showMore ? '16px' : '0' }}>
-                <div className='flex items-end gap-3 bg-black rounded-xl p-5'>
+                <div className='flex items-end gap-3 bg-[#0a0a0a] rounded-xl p-5'>
                   {[
                     {label:'Tipo', name:'type', opts:[{v:'Todos',l:'Todos'},{v:'Casa',l:'Casas'},{v:'Departamento',l:'Departamentos'},{v:'Terreno',l:'Terrenos'},{v:'Campo',l:'Campos'},{v:'Inmueble Comercial',l:'Inmuebles Comerciales'},{v:'Gran Inversión',l:'Grandes Inversiones'}]},
                     {label:'Operación', name:'operation', opts:[{v:'Todos',l:'Todos'},{v:'Venta',l:'Venta'},{v:'Alquiler',l:'Alquiler'}]},
@@ -230,7 +236,7 @@ const Hero = () => {
                           <svg className={`w-4 h-4 text-white/50 transition-transform ${isOpen ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6'/></svg>
                         </div>
                         {isOpen && (
-                          <div className='absolute top-full left-0 right-0 mt-1 bg-black border border-white/10 rounded-xl py-2 z-50 shadow-xl max-h-[250px] overflow-y-auto'>
+                          <div className='absolute top-full left-0 right-0 mt-1 bg-[#111] border border-white/10 rounded-xl py-2 z-50 shadow-xl max-h-[250px] overflow-y-auto'>
                             {f.opts.map(o => (
                               <div
                                 key={o.v}
@@ -262,7 +268,7 @@ const Hero = () => {
             </div>
 
             {/* Mobile: input + button + toggle all fixed; filters expand via position absolute below */}
-            <div className='md:hidden w-full relative bg-black rounded-xl px-4 pt-4 pb-[3px]'>
+            <div className='md:hidden w-full relative bg-[#0a0a0a] rounded-xl px-4 pt-4 pb-[3px]'>
               {/* Search input */}
               <div className='flex items-center gap-2 px-3 py-2.5'>
                 <svg className='w-5 h-5 text-white flex-shrink-0' viewBox='0 0 24 24' fill='currentColor'>
@@ -333,7 +339,7 @@ const Hero = () => {
                 }}
               >
                 <div
-                  className='bg-black w-full overflow-visible'
+                  className='bg-[#0a0a0a] w-full overflow-visible'
                   style={{ borderRadius: 12, marginTop: 7 }}
                 >
                   <div className='grid grid-cols-2'>
@@ -349,7 +355,7 @@ const Hero = () => {
                         <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'type' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                       </span>
                       {openDropdown === 'type' && (
-                        <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-50' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
+                        <div className='absolute top-full left-0 right-0 bg-[#111] border border-white/10 z-50' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
                           {['Todos', 'Casas', 'Departamentos', 'Terrenos', 'Campos', 'Inmuebles Comerciales', 'Grandes Inversiones'].map(v => (
                             <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, type: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer`}>
                               <span className={`text-sm px-3 py-1.5 rounded-lg ${filters.type === v ? 'bg-[var(--color-brand)] text-white font-semibold' : 'text-white/70'}`}>{v}</span>
@@ -370,7 +376,7 @@ const Hero = () => {
                         <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'op' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                       </span>
                       {openDropdown === 'op' && (
-                        <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
+                        <div className='absolute top-full left-0 right-0 bg-[#111] border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
                           {['Venta', 'Alquiler', 'Todos'].map(v => (
                             <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, operation: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer`}>
                               <span className={`text-sm px-3 py-1.5 rounded-lg ${filters.operation === v ? 'bg-[var(--color-brand)] text-white font-semibold' : 'text-white/70'}`}>{v}</span>
@@ -391,7 +397,7 @@ const Hero = () => {
                         <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'zone' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                       </span>
                       {openDropdown === 'zone' && (
-                        <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
+                        <div className='absolute top-full left-0 right-0 bg-[#111] border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
                           {['Córdoba', 'Alta Gracia', 'Villa Allende', 'Mina Clavero', 'Centro'].map(v => (
                             <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, zone: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer`}>
                               <span className={`text-sm px-3 py-1.5 rounded-lg ${filters.zone === v ? 'bg-[var(--color-brand)] text-white font-semibold' : 'text-white/70'}`}>{v}</span>
@@ -412,7 +418,7 @@ const Hero = () => {
                         <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'price' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                       </span>
                       {openDropdown === 'price' && (
-                        <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
+                        <div className='absolute top-full left-0 right-0 bg-[#111] border border-white/10 z-30' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
                           {['Cualquiera', 'Hasta 150k', '150k-300k', '+300k'].map(v => (
                             <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, price: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer`}>
                               <span className={`text-sm px-3 py-1.5 rounded-lg ${filters.price === v ? 'bg-[var(--color-brand)] text-white font-semibold' : 'text-white/70'}`}>{v}</span>
