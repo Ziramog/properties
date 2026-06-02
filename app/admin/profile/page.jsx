@@ -36,7 +36,7 @@ const AdminProfilePage = async () => {
       user={{ name: sessionUser.user.name, email: sessionUser.user.email, image: sessionUser.user.image }}
       totalProps={totalProps}
       payments={JSON.parse(JSON.stringify(payments))}
-      config={config ? { logoUrl: config.logoUrl, exchangeRateARS: config.exchangeRateARS } : {}}
+      config={config ? JSON.parse(JSON.stringify(config)) : {}}
     />
   );
 };

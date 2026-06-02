@@ -9,7 +9,13 @@ export default function ProfileClient({ user, totalProps, payments, config: init
   const [uploading, setUploading] = useState(false);
   const [savingRate, setSavingRate] = useState(false);
   const [savingSig, setSavingSig] = useState(false);
+  const [savingContact, setSavingContact] = useState(false);
   const [rateValue, setRateValue] = useState(config?.exchangeRateARS || '');
+  const [contactData, setContactData] = useState({
+    contactEmail: config?.contactEmail || 'info@roggeroyroma.com.ar',
+    contactPhone: config?.contactPhone || '+54 9 3547 563911',
+    contactAddress: config?.contactAddress || 'Blvd. Carlos Pellegrini 710'
+  });
   const sigRef = useRef(null);
 
   const handleLogoUpload = async (e) => {
@@ -52,6 +58,25 @@ export default function ProfileClient({ user, totalProps, payments, config: init
     }
   };
 
+  const saveContactInfo = async () => {
+    setSavingContact(true);
+    try {
+      const res = await fetch('/api/site-config', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(contactData),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setConfig(prev => ({ ...prev, ...contactData }));
+      }
+    } catch (err) {
+      alert('Error: ' + err.message);
+    } finally {
+      setSavingContact(false);
+    }
+  };
+
   const saveSignature = async () => {
     setSavingSig(true);
     try {
@@ -79,7 +104,7 @@ export default function ProfileClient({ user, totalProps, payments, config: init
     if (sigRef.current) sigRef.current.clear();
   };
 
-  const cardCls = 'bg-[#161616] border border-[#222] rounded-sm p-5';
+  const cardCls = 'bg-[#161616]/70 backdrop-blur-md border border-[#222] rounded-sm p-5 shadow-2xl';
   const labelCls = 'text-[11px] font-bold uppercase tracking-wider text-[#888] mb-1 block';
   const inputCls = 'w-full bg-[#0a0a0a] border border-[#333] rounded-sm px-3 py-2 text-sm text-white outline-none focus:border-[var(--color-brand)] transition-colors placeholder:text-[#555]';
   const btnPrimary = 'bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-xs font-bold px-4 py-2 rounded-sm transition-colors uppercase tracking-wider disabled:opacity-40';
@@ -113,15 +138,18 @@ export default function ProfileClient({ user, totalProps, payments, config: init
         </div>
 
         {/* 2. Plan */}
-        <div className={`${cardCls} bg-gradient-to-br from-[#1C1C1A] to-[#2A2A27]`}>
+        <div className={`${cardCls} bg-gradient-to-br from-[#1C1C1A]/80 to-[#2A2A27]/80`}>
           <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] mb-1">Plan Actual</p>
           <h2 className="text-[28px] font-bold leading-tight mb-1 text-white" style={{ fontFamily: 'var(--font-heading)' }}>Pro</h2>
           <p className="text-white/50 text-xs">Propiedades: {totalProps} activas</p>
           <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
-            <p className="text-[20px] font-bold text-white">U$D 25<span className="text-xs font-normal text-white/50">/mes</span></p>
-            <a href="https://mpago.la/ejemplo" target="_blank" rel="noopener noreferrer" className={btnPrimary}>
-              Suscribir
-            </a>
+            <div>
+              <p className="text-[20px] font-bold text-white">U$D 25<span className="text-xs font-normal text-white/50">/mes</span></p>
+              <p className="text-[9px] text-[#888] uppercase tracking-wider mt-0.5">Abonado en efectivo</p>
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-green-400 bg-green-900/30 px-2 py-1 rounded-sm border border-green-800">
+              Activo
+            </span>
           </div>
         </div>
 
@@ -172,23 +200,24 @@ export default function ProfileClient({ user, totalProps, payments, config: init
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 flex-1">
             {/* Site config */}
             <div>
-              <p className={labelCls}>Configuración del Sitio</p>
-              <div className="space-y-2 text-[13px]">
-                <div className="flex justify-between border-b border-[#222] pb-1.5">
-                  <span className="text-[#888]">Email</span>
-                  <span className="text-white">info@roggeroyroma.com.ar</span>
+              <div className="flex items-center justify-between mb-2">
+                <p className={labelCls + ' mb-0'}>Configuración de Contacto</p>
+                <button onClick={saveContactInfo} disabled={savingContact} className="text-[10px] text-[var(--color-brand)] font-bold uppercase hover:underline">
+                  {savingContact ? '...' : 'Guardar'}
+                </button>
+              </div>
+              <div className="space-y-3 mt-4">
+                <div>
+                  <label className="block text-[9px] font-bold uppercase text-[#555] mb-1">Email</label>
+                  <input type="email" value={contactData.contactEmail} onChange={e => setContactData({...contactData, contactEmail: e.target.value})} className={inputCls + " py-1.5"} />
                 </div>
-                <div className="flex justify-between border-b border-[#222] pb-1.5">
-                  <span className="text-[#888]">WhatsApp</span>
-                  <span className="text-white">+54 9 3547 563911</span>
+                <div>
+                  <label className="block text-[9px] font-bold uppercase text-[#555] mb-1">WhatsApp</label>
+                  <input type="text" value={contactData.contactPhone} onChange={e => setContactData({...contactData, contactPhone: e.target.value})} className={inputCls + " py-1.5"} />
                 </div>
-                <div className="flex justify-between border-b border-[#222] pb-1.5">
-                  <span className="text-[#888]">Dirección</span>
-                  <span className="text-white text-right text-[12px]">Blvd. Carlos Pellegrini 710</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#888]">Dominio</span>
-                  <span className="text-white text-[12px]">properties-srs5.vercel.app</span>
+                <div>
+                  <label className="block text-[9px] font-bold uppercase text-[#555] mb-1">Dirección</label>
+                  <input type="text" value={contactData.contactAddress} onChange={e => setContactData({...contactData, contactAddress: e.target.value})} className={inputCls + " py-1.5"} />
                 </div>
               </div>
             </div>
@@ -242,7 +271,7 @@ export default function ProfileClient({ user, totalProps, payments, config: init
           </div>
           <div className="flex items-start gap-4">
             <div className="flex-1">
-              <div className="border border-[#333] rounded-sm overflow-hidden mb-2 bg-white">
+              <div className="border border-[#333] rounded-sm overflow-hidden mb-2 bg-white" style={{ filter: 'invert(1) hue-rotate(180deg)' }}>
                 <SignatureCanvas
                   ref={sigRef}
                   penColor="#1a1a1a"
