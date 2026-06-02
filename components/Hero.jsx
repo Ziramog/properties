@@ -143,7 +143,7 @@ const Hero = () => {
       {/* Content */}
       <div className='relative z-10 h-full md:flex md:flex-col'>
         {/* Title Area */}
-        <div className='absolute left-0 w-full px-6 text-center bottom-[350px] md:absolute md:top-[12%] md:left-0 md:w-full md:flex md:flex-col md:items-center'>
+        <div className='absolute left-0 w-full px-6 text-center bottom-[350px] md:absolute md:top-[50%] md:left-0 md:w-full md:flex md:flex-col md:items-center'>
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
