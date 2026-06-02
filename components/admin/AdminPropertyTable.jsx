@@ -59,6 +59,20 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
     }
   };
 
+  const handleTogglePublished = async (id) => {
+    const res = await fetch('/api/admin/toggle-published', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      setItems(prev => prev.map(p => p._id === id ? { ...p, is_published: data.is_published } : p));
+      toast.success(data.is_published ? 'Propiedad visible al público' : 'Propiedad ocultada');
+      router.refresh();
+    }
+  };
+
   const typeLabels = {
     Casa: 'Casa', Departamento: 'Depto', Terreno: 'Terreno',
     Campo: 'Campo', 'Inmueble Comercial': 'Comercial', 'Gran Inversión': 'Inversión',
@@ -161,6 +175,7 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
               <th className="px-2 md:px-4 py-3 font-medium hidden md:table-cell">Precio</th>
               <th className="px-2 md:px-4 py-3 font-medium hidden md:table-cell">Fotos</th>
               <th className="px-2 md:px-4 py-3 font-medium text-center">Dest.</th>
+              <th className="px-2 md:px-4 py-3 font-medium text-center">Pub.</th>
               <th className="px-3 md:px-6 py-3 font-medium text-right">Acciones</th>
             </tr>
           </thead>
@@ -205,6 +220,18 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
                     className={`text-lg transition-colors ${prop.is_featured ? 'text-[var(--color-brand)]' : 'text-[#444] hover:text-[var(--color-brand)]'}`}
                     title={prop.is_featured ? 'Quitar destacada' : 'Marcar destacada'}
                   >★</button>
+                </td>
+                <td className="px-2 md:px-4 py-3 text-center">
+                  <button onClick={() => handleTogglePublished(prop._id)}
+                    className={`transition-colors ${(prop.is_published !== false) ? 'text-green-500 hover:text-green-400' : 'text-red-500 hover:text-red-400'}`}
+                    title={(prop.is_published !== false) ? 'Ocultar propiedad' : 'Publicar propiedad'}
+                  >
+                    {(prop.is_published !== false) ? (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5 mx-auto"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5 mx-auto"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+                    )}
+                  </button>
                 </td>
                 <td className="px-3 md:px-6 py-3 text-right">
                   <div className="flex items-center justify-end gap-1 md:gap-2">

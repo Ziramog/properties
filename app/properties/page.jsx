@@ -24,7 +24,7 @@ const PropertiesPage = async ({ searchParams }) => {
 
   const { pageSize = 9, page = 1, type, term, minPrice, maxPrice, bedrooms, baths, operation, area, propertyType, status, sort, favoritos, granInversion } = searchParams;
 
-  const filter = {};
+  const filter = { is_published: { $ne: false } };
 
   // Gran Inversion — handled client-side
   if (granInversion !== 'true') {

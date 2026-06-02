@@ -20,7 +20,7 @@ export const metadata = {
 const HomePage = async () => {
   await connectDB();
 
-  const properties = await Property.find({}).lean();
+  const properties = await Property.find({ is_published: { $ne: false } }).lean();
 
   const serializedProperties = properties.map((p) => ({
     ...p,

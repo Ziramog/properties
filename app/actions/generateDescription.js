@@ -18,6 +18,7 @@ export async function generateDescription(formData) {
     const baths = formData.get('baths');
     const city = formData.get('location.city');
     const amenities = formData.getAll('amenities').join(', ');
+    const tone = formData.get('ai_tone') || 'estándar';
     
     let propertyInfo = `Tipo: ${type}`;
     if (city) propertyInfo += `\nUbicación: ${city}`;
@@ -25,12 +26,18 @@ export async function generateDescription(formData) {
     if (baths) propertyInfo += `\nBaños: ${baths}`;
     if (amenities) propertyInfo += `\nComodidades: ${amenities}`;
 
+    let toneInstruction = 'Escribe un texto fluido, preferiblemente en dos párrafos.';
+    if (tone === 'corta') toneInstruction = 'Escribe un solo párrafo corto, muy directo al punto y atractivo.';
+    if (tone === 'larga') toneInstruction = 'Escribe una descripción extensa y muy detallada de al menos tres o cuatro párrafos, resaltando todos los lujos y beneficios.';
+    if (tone === 'formal') toneInstruction = 'Escribe un texto fluido y estructurado con vocabulario altamente formal, sobrio, elegante e institucional.';
+    if (tone === 'informal') toneInstruction = 'Escribe un texto fluido, muy amigable, usando el "vos" argentino de manera sutil, cercana y relajada.';
+
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         {
           role: 'system',
-          content: 'Eres un redactor y agente inmobiliario experto de la agencia Roggero & Roma. Tu objetivo es escribir descripciones atractivas, elegantes y persuasivas para anuncios de propiedades. Usa un tono profesional, claro y persuasivo. Evita usar viñetas o listas. Escribe un texto fluido, preferiblemente en dos párrafos.'
+          content: `Eres un redactor y agente inmobiliario experto de la agencia Roggero & Roma. Tu objetivo es escribir descripciones para anuncios de propiedades. Evita usar viñetas o listas. ${toneInstruction}`
         },
         {
           role: 'user',

@@ -209,10 +209,19 @@ const PropertyEditForm = ({ property }) => {
       {/* Descripción */}
       <div className='mb-4'>
         <div className="flex justify-between items-end mb-2">
-          <label htmlFor='description' className={labelClass}>Descripción</label>
-          <button type="button" onClick={handleGenerateAI} disabled={isGenerating} className="text-[var(--color-brand)] hover:text-white text-[12px] font-semibold flex items-center gap-1 transition-colors disabled:opacity-50">
-            {isGenerating ? 'Generando...' : '✨ Generar con IA'}
-          </button>
+          <label htmlFor='description' className="block text-white/80 font-bold text-sm">Descripción</label>
+          <div className="flex items-center gap-2">
+            <select name="ai_tone" id="ai_tone" className="bg-[#111] border border-[#333] text-white/80 text-[11px] rounded px-2 py-1 outline-none">
+              <option value="estándar">Estándar</option>
+              <option value="corta">Corta</option>
+              <option value="larga">Larga</option>
+              <option value="formal">Formal</option>
+              <option value="informal">Informal</option>
+            </select>
+            <button type="button" onClick={handleGenerateAI} disabled={isGenerating} className="text-[var(--color-brand)] hover:text-white text-[12px] font-semibold flex items-center gap-1 transition-colors disabled:opacity-50">
+              {isGenerating ? 'Generando...' : '✨ Generar con IA'}
+            </button>
+          </div>
         </div>
         <textarea id='description' name='description' className={inputClass} rows='5' value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
         <p className={helperClass}>Usa el botón de IA si necesitas ayuda para reescribir una descripción atractiva.</p>

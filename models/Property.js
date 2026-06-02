@@ -81,6 +81,10 @@ const PropertySchema = new Schema(
       type: Boolean,
       default: false,
     },
+    is_published: {
+      type: Boolean,
+      default: true,
+    },
     covered_area: {
       type: Number,
     },
