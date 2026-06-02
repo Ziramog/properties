@@ -45,7 +45,7 @@ const AdminPage = async () => {
     { type: 'Casa', Icon: Home, color: '#F26B2E' },
     { type: 'Departamento', Icon: Building2, color: '#652660' },
     { type: 'Campo', Icon: Sprout, color: '#25D366' },
-    { type: 'Terreno', Icon: Map, color: '#0F172A' },
+    { type: 'Terreno', Icon: Map, color: '#60A5FA' },
     { type: 'Inmueble Comercial', Icon: Store, color: '#E94560' },
     { type: 'Gran Inversión', Icon: TrendingUp, color: '#FFD700', count: granInversionCount, href: '/admin/properties?granInversion=true' },
   ];
@@ -69,7 +69,7 @@ const AdminPage = async () => {
           { value: featured, label: 'Destacadas', color: '#652660', href: '/admin/properties?is_featured=true' },
           { value: quotes, label: 'Presupuestos', color: '#0F172A', href: '/admin/quotes' },
         ].map((stat) => (
-          <Link key={stat.label} href={stat.href} className="bg-[#161616] border border-[#222] rounded-sm p-5 md:p-6 hover:border-[#333] transition-colors">
+          <Link key={stat.label} href={stat.href} className="bg-[#161616] border border-[#222] rounded-sm p-5 md:p-6 hover:border-[#333] transition-colors text-center">
             <p className="text-[32px] md:text-[40px] font-bold leading-none mb-1" style={{ fontFamily: 'var(--font-heading)', color: stat.color }}>
               {stat.value}
             </p>
