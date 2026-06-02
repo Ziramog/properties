@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { toast } from 'react-toastify';
+import imageCompression from 'browser-image-compression';
 import addProperty from '@/app/actions/addProperty';
 
 const SubmitButton = () => {
@@ -20,6 +21,28 @@ const SubmitButton = () => {
 const PropertyAddForm = () => {
   const [state, formAction] = useFormState(async (prevState, formData) => {
     try {
+      const imageFiles = formData.getAll('images');
+      if (imageFiles.length > 0 && imageFiles[0].size > 0) {
+        formData.delete('images');
+        
+        const options = {
+          maxSizeMB: 0.6,
+          maxWidthOrHeight: 1600,
+          useWebWorker: true,
+        };
+
+        for (const file of imageFiles) {
+          if (file.name === '' || file.size === 0) continue;
+          try {
+            const compressedFile = await imageCompression(file, options);
+            formData.append('images', compressedFile, compressedFile.name);
+          } catch (error) {
+            console.error('Error compressing image:', error);
+            formData.append('images', file, file.name);
+          }
+        }
+      }
+
       const result = await addProperty(prevState, formData);
       return result;
     } catch (err) {

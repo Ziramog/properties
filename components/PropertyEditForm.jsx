@@ -4,6 +4,7 @@ import { useFormState } from 'react-dom';
 import { useFormStatus } from 'react-dom';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
+import imageCompression from 'browser-image-compression';
 import updateProperty from '@/app/actions/updateProperty';
 
 const SubmitButton = () => {
@@ -20,7 +21,37 @@ const SubmitButton = () => {
 };
 
 const PropertyEditForm = ({ property }) => {
-  const [state, formAction] = useFormState(updateProperty, {});
+  const [state, formAction] = useFormState(async (prevState, formData) => {
+    try {
+      const imageFiles = formData.getAll('images');
+      if (imageFiles.length > 0 && imageFiles[0].size > 0) {
+        formData.delete('images');
+        
+        const options = {
+          maxSizeMB: 0.6,
+          maxWidthOrHeight: 1600,
+          useWebWorker: true,
+        };
+
+        for (const file of imageFiles) {
+          if (file.name === '' || file.size === 0) continue;
+          try {
+            const compressedFile = await imageCompression(file, options);
+            formData.append('images', compressedFile, compressedFile.name);
+          } catch (error) {
+            console.error('Error compressing image:', error);
+            formData.append('images', file, file.name);
+          }
+        }
+      }
+
+      const result = await updateProperty(prevState, formData);
+      return result;
+    } catch (err) {
+      console.error("Action error:", err);
+      return { error: 'Error de red. Las imágenes pueden ser demasiado grandes (límite 4.5MB).' };
+    }
+  }, {});
   const [removedImages, setRemovedImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
 
