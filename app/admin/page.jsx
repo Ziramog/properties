@@ -8,7 +8,7 @@ export const metadata = {
 import Link from 'next/link';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
-import Quote from '@/models/Quote';
+import Quotation from '@/models/Quotation';
 import { isGranInversion } from '@/utils/filterProperties';
 import {
   Home,
@@ -27,7 +27,7 @@ const AdminPage = async () => {
   const total = await Property.countDocuments({});
   const activas = await Property.countDocuments({ status: 'active' });
   const featured = await Property.countDocuments({ is_featured: true });
-  const quotes = await Quote.countDocuments({});
+  const quotations = await Quotation.countDocuments({});
 
   const types = ['Casa', 'Departamento', 'Campo', 'Terreno', 'Inmueble Comercial'];
   const categoryCounts = await Promise.all(
@@ -67,7 +67,7 @@ const AdminPage = async () => {
           { value: total, label: 'Total Propiedades', color: '#F26B2E', href: '/admin/properties' },
           { value: activas, label: 'Activas', color: '#25D366', href: '/admin/properties?status=active' },
           { value: featured, label: 'Destacadas', color: '#652660', href: '/admin/properties?is_featured=true' },
-          { value: quotes, label: 'Presupuestos', color: '#0F172A', href: '/admin/quotes' },
+          { value: quotations, label: 'Propuestas', color: '#0F172A', href: '/admin/quotations' },
         ].map((stat) => (
           <Link key={stat.label} href={stat.href} className="bg-[#161616] border border-[#222] rounded-sm p-5 md:p-6 hover:border-[#333] transition-colors text-center">
             <p className="text-[32px] md:text-[40px] font-bold leading-none mb-1" style={{ fontFamily: 'var(--font-heading)', color: stat.color }}>
