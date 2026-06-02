@@ -464,7 +464,7 @@ const Hero = () => {
       {/* Mobile overlay when filters expanded */}
       {showMore && (
         <div
-          className='md:hidden fixed inset-0 bg-black/80 z-[90] transition-opacity duration-300'
+          className='md:hidden fixed inset-0 bg-black/60 z-[90] transition-opacity duration-300'
           onClick={() => { setShowMore(false); setOpenDropdown(null); }}
           aria-hidden='true'
         />
