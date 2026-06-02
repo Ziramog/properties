@@ -170,17 +170,8 @@ const Hero = () => {
           </div>
         )}
 
-        {/* Mobile overlay when filters expanded */}
-        {showMore && (
-          <div
-            className='md:hidden absolute inset-0 bg-black/60 transition-opacity duration-300'
-            onClick={() => { setShowMore(false); setOpenDropdown(null); }}
-            aria-hidden='true'
-          />
-        )}
-
         {/* Search Bar */}
-        <div className='absolute left-0 w-full px-4 bottom-[90px] md:static md:w-full md:px-4 md:pb-[150px]'>
+        <div className='absolute left-0 w-full px-4 bottom-[90px] md:static md:w-full md:px-4 md:pb-[150px] z-[100]'>
           <div
             className='mx-auto max-w-[880px]'
             style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
@@ -427,6 +418,14 @@ const Hero = () => {
             </div>
           </div>
         </div>
+        {/* Mobile overlay when filters expanded — placed AFTER search bar in DOM */}
+        {showMore && (
+          <div
+            className='md:hidden absolute inset-0 bg-black/60 transition-opacity duration-300 z-[90]'
+            onClick={() => { setShowMore(false); setOpenDropdown(null); }}
+            aria-hidden='true'
+          />
+        )}
       </div>
 
       <style jsx>{`
