@@ -19,12 +19,27 @@ export async function generateDescription(formData) {
     const city = formData.get('location.city');
     const amenities = formData.getAll('amenities').join(', ');
     const tone = formData.get('ai_tone') || 'estándar';
+    const state = formData.get('location.state');
+    const street = formData.get('location.street');
+    const lat = formData.get('coordinates.lat');
+    const lng = formData.get('coordinates.lng');
     
     let propertyInfo = `Tipo: ${type}`;
-    if (city) propertyInfo += `\nUbicación: ${city}`;
+    if (street) propertyInfo += `\nCalle: ${street}`;
+    if (city) propertyInfo += `\nCiudad: ${city}`;
+    if (state) propertyInfo += `\nProvincia: ${state}`;
+    if (lat && lng) propertyInfo += `\nCoordenadas: ${lat}, ${lng}`;
+    
     if (beds) propertyInfo += `\nDormitorios: ${beds}`;
     if (baths) propertyInfo += `\nBaños: ${baths}`;
     if (amenities) propertyInfo += `\nComodidades: ${amenities}`;
+
+    let typeInstruction = 'Resalta la habitabilidad, el diseño, la comodidad y cómo es vivir en esta ubicación.';
+    if (type === 'Terreno' || type === 'Campo' || type === 'Gran Inversión') {
+      typeInstruction = 'Enfócate en las posibilidades del terreno, el entorno geográfico, la ubicación (usa las coordenadas o dirección si las hay para describir la zona) y el potencial de inversión o desarrollo.';
+    } else if (type === 'Inmueble Comercial') {
+      typeInstruction = 'Destaca el potencial comercial, la ubicación estratégica, la visibilidad, el tráfico de la zona y la rentabilidad o versatilidad del espacio.';
+    }
 
     let toneInstruction = 'Escribe un texto fluido, preferiblemente en dos párrafos.';
     if (tone === 'corta') toneInstruction = 'Escribe un solo párrafo corto, muy directo al punto y atractivo.';
@@ -37,7 +52,7 @@ export async function generateDescription(formData) {
       messages: [
         {
           role: 'system',
-          content: `Eres un redactor y agente inmobiliario experto de la agencia Roggero & Roma. Tu objetivo es escribir descripciones para anuncios de propiedades. Evita usar viñetas o listas. ${toneInstruction}`
+          content: `Eres un redactor y agente inmobiliario experto de la agencia Roggero & Roma. Tu objetivo es escribir descripciones para anuncios de propiedades. Evita usar viñetas o listas. ${typeInstruction} ${toneInstruction}`
         },
         {
           role: 'user',

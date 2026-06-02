@@ -83,8 +83,15 @@ const PropertyAddForm = () => {
     const baths = currentFormData.get('baths');
     const sqft = currentFormData.get('square_feet');
 
-    if (!type || !city || !beds || !baths || !sqft) {
-      toast.warn('Complete Tipo, Ciudad, Dormitorios, Baños y Metros antes de generar.');
+    const isLand = type === 'Terreno' || type === 'Campo' || type === 'Gran Inversión';
+
+    if (!type || !city) {
+      toast.warn('Complete Tipo y Ciudad antes de generar.');
+      return;
+    }
+
+    if (!isLand && (!beds || !baths || !sqft)) {
+      toast.warn('Para este tipo de propiedad, complete Dormitorios, Baños y Metros².');
       return;
     }
 
