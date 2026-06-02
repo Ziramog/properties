@@ -44,3 +44,9 @@ cinematic-capture/
 audit-*.js
 audit-*.mjs
 legacy-*
+comparison.json
+inspect-legacy.js
+property_detail.html
+scripts/generate-manifest.js
+scripts/migrate-legacy.js
+scripts/migration_manifest.json

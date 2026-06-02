@@ -280,19 +280,19 @@ const Navbar = () => {
           }}
         >
           <nav className="flex-1 flex flex-col px-0">
-            {/* DESTACADAS */}
-            <Link href="/properties" className={`block text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.2s' }} onClick={() => setIsMobileMenuOpen(false)}>
-              DESTACADAS
+            {/* Destacadas */}
+            <Link href="/properties" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.2s' }} onClick={() => setIsMobileMenuOpen(false)}>
+              Destacadas
             </Link>
 
             {/* Propiedades — expandable */}
             <div className={`border-b border-white/[.08] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ animationDelay: '0.4s' }}>
               <button
-                onClick={() => setMobileSubOpen(!mobileSubOpen)}
-                className="flex items-center justify-between w-full text-white text-[28px] font-normal uppercase py-[15px] hover:text-[var(--color-brand)] transition-colors"
-                style={{ fontFamily: 'var(--font-heading)' }}
-              >
-                PROPIEDADES
+                  onClick={() => setMobileSubOpen(!mobileSubOpen)}
+                  className="flex items-center justify-between w-full text-white text-[28px] font-normal py-[15px] hover:text-[var(--color-brand)] transition-colors"
+                  style={{ fontFamily: 'var(--font-heading)' }}
+                >
+                  Propiedades
                 <svg className={`w-5 h-5 text-white/40 transition-transform duration-300 ${mobileSubOpen ? 'rotate-90' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M9 18l6-6-6-6"/>
                 </svg>
@@ -305,7 +305,7 @@ const Navbar = () => {
                   { href: '/properties?type=Terreno', label: 'Terrenos' },
                   { href: '/properties', label: 'Todas las propiedades' },
                 ].map(l => (
-                  <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] font-light uppercase py-2 pl-4 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] font-light py-2 pl-4 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                     {l.label}
                   </Link>
                 ))}
@@ -313,19 +313,19 @@ const Navbar = () => {
             </div>
 
             {/* SOBRE NOSOTROS */}
-            <Link href="/#nuestra-historia" className={`block text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.6s' }} onClick={() => setIsMobileMenuOpen(false)}>
-              SOBRE NOSOTROS
+            <Link href="/#nuestra-historia" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.6s' }} onClick={() => setIsMobileMenuOpen(false)}>
+              Sobre nosotros
             </Link>
 
             {/* PANEL DE CONTROL — expandable, admin only */}
             {session?.user?.role === 'admin' && (
               <div className={`border-b border-white/[.08] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ animationDelay: '0.7s' }}>
-                <button
-                  onClick={() => setMobileAdminOpen(!mobileAdminOpen)}
-                  className="flex items-center justify-between w-full text-white text-[28px] font-normal uppercase py-[15px] hover:text-[var(--color-brand)] transition-colors"
-                  style={{ fontFamily: 'var(--font-heading)' }}
-                >
-                  PANEL DE CONTROL
+                  <button
+                    onClick={() => setMobileAdminOpen(!mobileAdminOpen)}
+                    className="flex items-center justify-between w-full text-white text-[28px] font-normal py-[15px] hover:text-[var(--color-brand)] transition-colors"
+                    style={{ fontFamily: 'var(--font-heading)' }}
+                  >
+                    Panel de control
                   <svg className={`w-5 h-5 text-white/40 transition-transform duration-300 ${mobileAdminOpen ? 'rotate-90' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M9 18l6-6-6-6"/>
                   </svg>
@@ -338,7 +338,7 @@ const Navbar = () => {
                     { href: '/admin/quotations', label: 'Propuestas' },
                     { href: '/admin/reviews', label: 'Reseñas' },
                   ].map(l => (
-                    <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] font-light uppercase py-2 pl-4 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] font-light py-2 pl-4 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                       {l.label}
                     </Link>
                   ))}
@@ -349,17 +349,17 @@ const Navbar = () => {
             {session ? (
               <>
                 {session?.user?.role !== 'admin' && (
-                  <Link href="/profile" className={`block text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href="/profile" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
                     Perfil
                   </Link>
                 )}
-                <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '1.0s' }}>
+                <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '1.0s' }}>
                   Salir
                 </button>
               </>
             ) : (
               providers && Object.values(providers).map((provider) => (
-                <button key={provider.id} onClick={() => { signIn(provider.id, { callbackUrl: '/admin' }); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[28px] font-normal uppercase py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }}>
+                <button key={provider.id} onClick={() => { signIn(provider.id, { callbackUrl: '/admin' }); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }}>
                   Ingresar
                 </button>
               ))
