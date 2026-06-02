@@ -270,7 +270,7 @@ const PropertyEditForm = ({ property }) => {
             {operation === 'alquiler' ? (
               <input type='text' name='price' className={`${inputClass} bg-[#222] text-gray-500`} value='Consultar' readOnly />
             ) : (
-              <input type='text' name='price' className={inputClass} placeholder='Ej: 502,000' defaultValue={String(property.price || '').replace(/^[A-Z$]+\s*/i, '')} required />
+              <input type='text' name='price' className={inputClass} placeholder='Ej: 502,000' defaultValue={String(property.price || '').replace(/^[A-Z$]+\s*/i, '')} />
             )}
             <p className={helperClass}>
               {operation === 'alquiler' 

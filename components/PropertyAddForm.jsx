@@ -410,7 +410,7 @@ const PropertyAddForm = () => {
             {operation === 'alquiler' ? (
               <input type='text' name='price' className={`${inputClass} bg-[#222] text-gray-500`} value='Consultar' readOnly />
             ) : (
-              <input type='text' name='price' className={inputClass} placeholder='Ej: 502000' required />
+              <input type='text' name='price' className={inputClass} placeholder='Ej: 502000' />
             )}
             <p className={helperClass}>
               {operation === 'alquiler' 
