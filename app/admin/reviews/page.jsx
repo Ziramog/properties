@@ -62,7 +62,6 @@ const AdminReviewsPage = async ({ searchParams }) => {
           </a>
         </div>
       </div>
-      <p className="text-right text-[11px] text-[#888] mb-6 -mt-4">Google Places API solo sincroniza las 5 reseñas más útiles. Usá la carga manual para reseñas más antiguas.</p>
 
       {syncResult && (
         <div className={`mb-4 p-4 rounded-sm text-sm ${syncResult.success ? 'bg-green-900/30 text-green-400 border border-green-800' : 'bg-red-900/30 text-red-400 border border-red-800'}`}>
