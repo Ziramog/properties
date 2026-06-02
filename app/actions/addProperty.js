@@ -28,8 +28,24 @@ async function addProperty(prevState, formData) {
       return { error: 'Máximo 10 imágenes por propiedad.' };
     }
 
-    const lat = formData.get('coordinates.lat');
-    const lng = formData.get('coordinates.lng');
+    let lat = formData.get('coordinates.lat');
+    let lng = formData.get('coordinates.lng');
+
+    let parsedLat = undefined;
+    let parsedLng = undefined;
+
+    if (lat && lng) {
+      lat = lat.replace(',', '.');
+      lng = lng.replace(',', '.');
+      const tempLat = parseFloat(lat);
+      const tempLng = parseFloat(lng);
+      
+      // Valida rangos: latitud de -90 a 90, longitud de -180 a 180
+      if (!isNaN(tempLat) && !isNaN(tempLng) && tempLat >= -90 && tempLat <= 90 && tempLng >= -180 && tempLng <= 180) {
+        parsedLat = tempLat;
+        parsedLng = tempLng;
+      }
+    }
 
     // Create the propertyData object with embedded seller_info
     const propertyData = {
@@ -43,9 +59,9 @@ async function addProperty(prevState, formData) {
         state: formData.get('location.state'),
         zipcode: formData.get('location.zipcode'),
       },
-      coordinates: (lat && lng) ? {
-        lat: parseFloat(lat),
-        lng: parseFloat(lng),
+      coordinates: (parsedLat !== undefined && parsedLng !== undefined) ? {
+        lat: parsedLat,
+        lng: parsedLng,
       } : undefined,
       beds: formData.get('beds') || undefined,
       baths: formData.get('baths') || undefined,

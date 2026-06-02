@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import Image from 'next/image';
 import imageCompression from 'browser-image-compression';
 import { useRouter } from 'next/navigation';
+import { Reorder } from 'framer-motion';
 import updateProperty from '@/app/actions/updateProperty';
 import { generateDescription } from '@/app/actions/generateDescription';
 
@@ -67,7 +68,9 @@ const PropertyEditForm = ({ property }) => {
   const formRef = useRef(null);
   const [description, setDescription] = useState(property.description || '');
 
-  const existingImages = (property.images || []).filter(
+  const [existingImagesState, setExistingImagesState] = useState(property.images || []);
+
+  const visibleImages = existingImagesState.filter(
     (img) => !removedImages.includes(typeof img === 'string' ? img : img?.url)
   );
 
@@ -124,6 +127,7 @@ const PropertyEditForm = ({ property }) => {
     <form ref={formRef} action={formAction}>
       <input type='hidden' name='propertyId' value={property._id} />
       {removedImages.map((url) => <input key={url} type='hidden' name='removedImages' value={url} />)}
+      {visibleImages.map((img) => <input key={'order_' + (typeof img === 'string' ? img : img.url)} type='hidden' name='orderedImages' value={typeof img === 'string' ? img : img.url} />)}
 
       <h2 className='text-[28px] md:text-3xl text-center font-normal mb-8 text-white' style={{ fontFamily: 'var(--font-heading)' }}>
         Editar Propiedad
@@ -278,22 +282,22 @@ const PropertyEditForm = ({ property }) => {
 
       {/* Imagenes */}
       <div className='mb-8'>
-        <label className={labelClass}>Imágenes Existentes</label>
+        <label className={labelClass}>Imágenes Existentes (Arrastra para reordenar, la primera será la portada)</label>
 
-        {existingImages.length > 0 && (
-          <div className='grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4'>
-            {existingImages.map((img, i) => {
+        {visibleImages.length > 0 && (
+          <Reorder.Group axis="y" as="div" values={visibleImages} onReorder={setExistingImagesState} className='grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4'>
+            {visibleImages.map((img, i) => {
               const imgUrl = typeof img === 'string' ? img : img?.url;
               return (
-              <div key={imgUrl || i} className='relative group'>
-                <Image src={imgUrl} alt={`Imagen ${i + 1}`} width={200} height={150} className='w-full h-32 object-cover rounded-lg border border-[#333]' />
+              <Reorder.Item key={imgUrl || i} value={img} as="div" className='relative group cursor-grab active:cursor-grabbing'>
+                <Image src={imgUrl} alt={`Imagen ${i + 1}`} width={200} height={150} className='w-full h-32 object-cover rounded-lg border border-[#333] pointer-events-none' />
                 <button type='button' onClick={() => handleRemoveImage(imgUrl)} className='absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow' title='Eliminar imagen'>
                   ×
                 </button>
-              </div>
+              </Reorder.Item>
               );
             })}
-          </div>
+          </Reorder.Group>
         )}
 
         {removedImages.length > 0 && (

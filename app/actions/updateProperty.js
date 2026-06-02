@@ -56,6 +56,17 @@ async function updateProperty(prevState, formData) {
       (img) => !removedImages.includes(getImageUrl(img))
     );
 
+    const orderedImagesList = formData.getAll('orderedImages').filter(Boolean);
+    if (orderedImagesList.length > 0) {
+      currentImages.sort((a, b) => {
+        const indexA = orderedImagesList.indexOf(getImageUrl(a));
+        const indexB = orderedImagesList.indexOf(getImageUrl(b));
+        const posA = indexA === -1 ? 999 : indexA;
+        const posB = indexB === -1 ? 999 : indexB;
+        return posA - posB;
+      });
+    }
+
     const newImageFiles = formData.getAll('images').filter(
       (img) => img && img.name && img.name !== '' && img.size > 0
     );
@@ -79,9 +90,25 @@ async function updateProperty(prevState, formData) {
       return { error: 'Es necesario mantener al menos una foto de la propiedad.' };
     }
 
-    const lat = formData.get('coordinates.lat');
-    const lng = formData.get('coordinates.lng');
+    let lat = formData.get('coordinates.lat');
+    let lng = formData.get('coordinates.lng');
     const amenities = formData.getAll('amenities');
+
+    let parsedLat = undefined;
+    let parsedLng = undefined;
+
+    if (lat && lng) {
+      lat = lat.replace(',', '.');
+      lng = lng.replace(',', '.');
+      const tempLat = parseFloat(lat);
+      const tempLng = parseFloat(lng);
+      
+      // Valida rangos: latitud de -90 a 90, longitud de -180 a 180
+      if (!isNaN(tempLat) && !isNaN(tempLng) && tempLat >= -90 && tempLat <= 90 && tempLng >= -180 && tempLng <= 180) {
+        parsedLat = tempLat;
+        parsedLng = tempLng;
+      }
+    }
 
     prop.set({
       type: formData.get('type'),
@@ -94,9 +121,9 @@ async function updateProperty(prevState, formData) {
         state: formData.get('location.state'),
         zipcode: formData.get('location.zipcode'),
       },
-      coordinates: (lat && lng) ? {
-        lat: parseFloat(lat),
-        lng: parseFloat(lng),
+      coordinates: (parsedLat !== undefined && parsedLng !== undefined) ? {
+        lat: parsedLat,
+        lng: parsedLng,
       } : undefined,
       beds: formData.get('beds') || undefined,
       baths: formData.get('baths') || undefined,
