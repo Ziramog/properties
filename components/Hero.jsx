@@ -268,7 +268,7 @@ const Hero = () => {
             </div>
 
             {/* Mobile: input + button + toggle all fixed; filters expand via position absolute below */}
-            <div className='md:hidden w-full relative bg-[#0a0a0a] rounded-xl px-4 pt-4 pb-[3px]'>
+            <div className={`md:hidden w-full relative bg-[#0a0a0a] rounded-xl px-4 pt-4 pb-[3px] ${showMore ? 'z-[100]' : ''}`}>
               {/* Search input */}
               <div className='flex items-center gap-2 px-3 py-2.5'>
                 <svg className='w-5 h-5 text-white flex-shrink-0' viewBox='0 0 24 24' fill='currentColor'>
