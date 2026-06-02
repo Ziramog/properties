@@ -85,15 +85,15 @@ const Hero = () => {
         setMaxH(`${filtersRef.current.scrollHeight}px`);
       }
       setShowMore(true);
-      // Scroll down on mobile to reveal expanded filters
-      setTimeout(() => {
-        if (window.innerWidth < 768 && filtersRef.current) {
-          filtersRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          setTimeout(() => {
-            window.scrollBy({ top: 70, behavior: 'smooth' });
-          }, 300);
+      // Smooth scroll to reveal expanded filters (Senada-style)
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        const searchContainer = filtersRef.current?.parentElement;
+        if (searchContainer) {
+          const offset = 40;
+          const top = searchContainer.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top, behavior: 'smooth' });
         }
-      }, 100);
+      }
     }
   };
 
@@ -171,8 +171,8 @@ const Hero = () => {
         )}
       </div>
 
-      {/* Search Bar */}
-      <div className={`md:absolute md:left-0 md:w-full md:px-4 md:bottom-[150px] z-[50] ${showMore ? 'fixed left-0 w-full px-4 bottom-[90px]' : 'absolute left-0 w-full px-4 bottom-[90px]'}`}>
+        {/* Search Bar */}
+        <div className='absolute left-0 w-full px-4 bottom-[90px] md:absolute md:left-0 md:w-full md:px-4 md:bottom-[150px] z-[50]'>
           <div
             className='mx-auto max-w-[880px]'
             style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
