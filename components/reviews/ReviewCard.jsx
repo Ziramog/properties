@@ -1,15 +1,7 @@
 import Image from 'next/image';
 import StarRating from './StarRating';
 
-function AuthorAvatar({ name, photo }) {
-  if (photo) {
-    return (
-      <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[var(--color-brand)] shadow-sm flex-shrink-0">
-        <Image src={photo} alt={name} fill className="object-cover" sizes="40px" unoptimized />
-      </div>
-    );
-  }
-
+function AuthorAvatar({ name }) {
   const initials = name.split(' ').slice(0, 2).map(n => n[0]?.toUpperCase() ?? '').join('');
 
   return (
