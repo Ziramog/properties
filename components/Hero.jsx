@@ -186,13 +186,13 @@ const Hero = () => {
         )}
 
         {/* Search Bar */}
-        <div className='absolute left-0 w-full px-4 bottom-[90px] md:static md:w-full md:px-4 md:pb-[150px] relative z-[100]'>
+        <div className='absolute left-0 w-full px-4 bottom-[90px] md:static md:w-full md:px-4 md:pb-[150px]'>
           <div
             className='mx-auto max-w-[880px]'
             style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
           >
             {/* Desktop: Senada .homepage-search-form */}
-            <form onSubmit={handleSubmit} className='hidden md:flex flex-col'>
+            <form onSubmit={handleSubmit} className='hidden md:flex flex-col relative z-[100]'>
               {/* .top-part */}
               <div className='flex items-end gap-3 bg-black rounded-xl p-5'>
                 <div className='flex-1'>
