@@ -32,7 +32,7 @@ const PropertyGallery = ({ images = [], property }) => {
   };
 
   return (
-    <Gallery>
+    <Gallery options={{ bgOpacity: 0.95 }}>
       <section className="bg-[#000] pt-[90px] md:pt-[150px] pb-[30px]">
         {/* Mosaic: full width with navbar padding, no max-w */}
         <div className="px-4 md:px-[50px]">
@@ -42,7 +42,7 @@ const PropertyGallery = ({ images = [], property }) => {
             <div className="relative group cursor-pointer overflow-hidden bg-[#111] md:aspect-[16/9]"
                  style={{ minHeight: '250px' }}>
               {images[0] && (
-                <Item original={images[0]?.url} thumbnail={images[0]?.url} width="1600" height="900">
+                <Item original={images[0]?.url} thumbnail={images[0]?.url} width="1920" height="1280">
                   {({ ref, open }) => (
                     <div ref={ref} onClick={open}
                          className="relative w-full md:h-full"
@@ -77,7 +77,7 @@ const PropertyGallery = ({ images = [], property }) => {
               {/* Mobile: horizontal scroll */}
                 <div className="md:hidden flex overflow-x-auto gap-[5px] py-2 px-3 scrollbar-hide">
                   {subThumbs.map((image, index) => (
-                    <Item key={index} original={image?.url} thumbnail={image?.url} width="800" height="600">
+                    <Item key={index} original={image?.url} thumbnail={image?.url} width="1920" height="1280">
                       {({ ref, open }) => (
                         <div ref={ref} onClick={open}
                              className="relative group flex-shrink-0 w-[130px] h-[86px] cursor-pointer overflow-hidden">
@@ -93,7 +93,7 @@ const PropertyGallery = ({ images = [], property }) => {
               {/* Desktop: 3-col x 2-row grid */}
                 <div className="hidden md:grid grid-cols-3 gap-[5px] content-start">
                 {subThumbs.map((image, index) => (
-                    <Item key={index} original={image?.url} thumbnail={image?.url} width="800" height="600">
+                    <Item key={index} original={image?.url} thumbnail={image?.url} width="1920" height="1280">
                       {({ ref, open }) => (
                         <div ref={ref} onClick={open}
                              className="relative group cursor-pointer overflow-hidden bg-[#111] aspect-[16/9]">
