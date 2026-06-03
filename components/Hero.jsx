@@ -183,11 +183,16 @@ const Hero = () => {
       {/* Content structured with Flexbox */}
       <div className='relative z-10 h-full flex flex-col justify-center items-center px-0'>
         
-        {/* Offset Wrapper: Baja ambos elementos un 15% manteniendo su distancia */}
-        <div className='w-full flex flex-col items-center translate-y-[8vh] md:translate-y-[15vh]'>
-          
-          {/* Title Area */}
-          <div className='w-full px-6 text-center flex flex-col items-center mb-[36px] md:mb-[80px] transition-all duration-500 shrink-0'>
+        {/* Mobile overlay: fixed, covers entire viewport (moved inside z-10 context) */}
+        {showMore && (
+          <div
+            className='md:hidden fixed -inset-[100px] bg-black/60 transition-opacity duration-300 z-[40]'
+            onClick={() => { setShowMore(false); setOpenDropdown(null); }}
+            aria-hidden='true'
+          />
+        )}
+        {/* Title Area */}
+        <div className='w-full px-6 text-center flex flex-col items-center mb-[36px] md:mb-[80px] transition-all duration-500 shrink-0 translate-y-[8vh] md:translate-y-[15vh] relative z-[30]'>
             <motion.div
               initial={{ opacity: 0, y: -80 }}
               animate={{ opacity: 1, y: 0 }}
@@ -205,7 +210,7 @@ const Hero = () => {
           </div>
 
           {/* Search Bar */}
-          <div className='w-full z-[50] shrink-0'>
+          <div className='relative w-full z-[50] shrink-0 translate-y-[8vh] md:translate-y-[15vh]'>
             <div
               className='mx-auto max-w-[1040px] w-full px-2 md:px-0'
               style={{ animation: 'fadeUp 0.7s var(--ease-out) 0.45s both' }}
@@ -451,7 +456,6 @@ const Hero = () => {
                 </div>
               </div>
             </div>
-          </div>
         </div>
 
         {!scrolled && !showMore && (
@@ -464,15 +468,6 @@ const Hero = () => {
           </div>
         )}
       </div>
-
-      {/* Mobile overlay: fixed, covers entire viewport (extended to prevent scroll gaps) */}
-      {showMore && (
-        <div
-          className='md:hidden fixed -inset-[100px] bg-black/60 transition-opacity duration-300 z-[40]'
-          onClick={() => { setShowMore(false); setOpenDropdown(null); }}
-          aria-hidden='true'
-        />
-      )}
 
       <style jsx>{`
         @keyframes fadeUp {
