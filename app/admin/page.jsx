@@ -19,6 +19,9 @@ import {
   TrendingUp,
   User,
   Star,
+  Layers,
+  CheckCircle,
+  FileText
 } from 'lucide-react';
 
 const AdminPage = async () => {
@@ -61,55 +64,69 @@ const AdminPage = async () => {
         Panel de Control
       </h1>
 
-      {/* Stats cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        {[
-          { value: total, label: 'Total Propiedades', color: '#F26B2E', href: '/admin/properties' },
-          { value: activas, label: 'Activas', color: '#25D366', href: '/admin/properties?status=active' },
-          { value: featured, label: 'Destacadas', color: '#652660', href: '/admin/properties?is_featured=true' },
-          { value: quotations, label: 'Propuestas', color: '#0F172A', href: '/admin/quotations' },
-        ].map((stat) => (
-          <Link key={stat.label} href={stat.href} className="bg-[#161616] border border-[#222] rounded-sm p-5 md:p-6 hover:border-[#333] transition-colors text-center">
-            <p className="text-[32px] md:text-[40px] font-bold leading-none mb-1" style={{ fontFamily: 'var(--font-heading)', color: stat.color }}>
-              {stat.value}
-            </p>
-            <p className="text-[11px] md:text-[13px] font-medium text-[#888] uppercase tracking-wider">{stat.label}</p>
-          </Link>
-        ))}
+      {/* Global Stats */}
+      <div className="mb-8">
+        <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#666] mb-4">Métricas Globales</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { value: total, label: 'Total Propiedades', color: '#F26B2E', href: '/admin/properties', Icon: Layers },
+            { value: activas, label: 'Activas', color: '#25D366', href: '/admin/properties?status=active', Icon: CheckCircle },
+            { value: featured, label: 'Destacadas', color: '#652660', href: '/admin/properties?is_featured=true', Icon: Star },
+            { value: quotations, label: 'Propuestas', color: '#3B82F6', href: '/admin/quotations', Icon: FileText },
+          ].map((stat) => (
+            <Link key={stat.label} href={stat.href} className="bg-[#161616] border border-[#222] rounded-sm p-5 md:p-6 hover:border-[#333] transition-colors relative group overflow-hidden flex flex-col justify-between">
+              <div className="absolute -right-4 -top-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                <stat.Icon size={120} />
+              </div>
+              <div className="relative z-10 text-center mt-2">
+                <p className="text-[32px] md:text-[40px] font-bold leading-none mb-2" style={{ fontFamily: 'var(--font-heading)', color: stat.color }}>
+                  {stat.value}
+                </p>
+                <p className="text-[11px] md:text-[13px] font-medium text-[#888] uppercase tracking-wider">{stat.label}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* Category cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {CATEGORIES.map((cat) => {
-          const count = cat.count !== undefined ? cat.count : categoryCounts.find((c) => c.type === cat.type)?.count || 0;
-          return (
-            <Link
-              key={cat.type}
-              href={cat.href || `/admin/properties?type=${cat.type}`}
-              className="bg-[#161616] border border-[#222] rounded-sm p-5 hover:border-[#333] transition-colors text-center"
-            >
-              <cat.Icon className="w-7 h-7 mx-auto mb-2" style={{ color: cat.color }} strokeWidth={1.5} />
-              <p className="text-[24px] font-bold leading-none mb-1" style={{ color: cat.color }}>
-                {count}
-              </p>
-              <p className="text-[11px] font-medium text-[#888] uppercase tracking-wider">{cat.type}</p>
-            </Link>
-          );
-        })}
+      <div className="mb-8">
+        <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#666] mb-4">Inventario por Categoría</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {CATEGORIES.map((cat) => {
+            const count = cat.count !== undefined ? cat.count : categoryCounts.find((c) => c.type === cat.type)?.count || 0;
+            return (
+              <Link
+                key={cat.type}
+                href={cat.href || `/admin/properties?type=${cat.type}`}
+                className="bg-[#161616] border border-[#222] rounded-sm p-5 hover:border-[#333] transition-colors text-center group"
+              >
+                <cat.Icon className="w-7 h-7 mx-auto mb-3 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all" style={{ color: cat.color }} strokeWidth={1.5} />
+                <p className="text-[24px] font-bold leading-none mb-1" style={{ color: cat.color }}>
+                  {count}
+                </p>
+                <p className="text-[10px] font-medium text-[#888] uppercase tracking-wider">{cat.type}</p>
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
       {/* Navigation links: Perfil + Reseñas */}
-      <div className="grid grid-cols-2 gap-4 mt-6">
-        {NAV_LINKS.map((link) => (
-          <Link
-            key={link.label}
-            href={link.href}
-            className="bg-[#161616] border border-[#222] rounded-sm p-5 hover:border-[#333] transition-colors text-center"
-          >
-            <link.Icon className="w-7 h-7 mx-auto mb-2" style={{ color: link.color }} strokeWidth={1.5} />
-            <p className="text-[11px] font-medium text-[#888] uppercase tracking-wider">{link.label}</p>
-          </Link>
-        ))}
+      <div>
+        <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#666] mb-4">Accesos Rápidos</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="bg-[#161616] border border-[#222] rounded-sm p-5 hover:border-[#333] transition-colors text-center group"
+            >
+              <link.Icon className="w-7 h-7 mx-auto mb-3 opacity-80 group-hover:opacity-100 transition-opacity" style={{ color: link.color }} strokeWidth={1.5} />
+              <p className="text-[11px] font-medium text-[#888] uppercase tracking-wider">{link.label}</p>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
