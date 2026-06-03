@@ -31,7 +31,9 @@ const Navbar = () => {
   };
 
   const isHomepage = pathname === '/';
+  const isAdminPage = pathname.startsWith('/admin');
   const isGlassMode = isHomepage ? (isScrolled || isMobileMenuOpen) : true;
+  const showIso = isScrolled || isAdminPage;
 
   useEffect(() => {
     const setAuthProviders = async () => {
@@ -88,11 +90,11 @@ const Navbar = () => {
           <Link className="flex items-center flex-shrink-0 group" href="/">
             <Image
               className="brightness-0 invert transition-all duration-300 group-hover:opacity-70"
-              src={!isScrolled ? '/images/LOGO R&R 2023.png' : '/images/ISOTIPO R&R-Photoroom.png'}
+              src={!showIso ? '/images/LOGO R&R 2023.png' : '/images/ISOTIPO R&R-Photoroom.png'}
               alt="Roggero & Roma"
-              width={!isScrolled ? 277 : 120}
-              height={!isScrolled ? 92 : 40}
-              style={{ height: !isScrolled ? '92px' : '40px', width: 'auto' }}
+              width={!showIso ? 277 : 120}
+              height={!showIso ? 92 : 40}
+              style={{ height: !showIso ? '92px' : '40px', width: 'auto' }}
             />
           </Link>
 

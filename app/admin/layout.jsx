@@ -22,7 +22,7 @@ const AdminLayout = ({ children }) => {
       </div>
 
       {/* Content */}
-      <main className="flex-1 pt-[60px] md:pt-[78px] min-h-screen text-white max-w-[1600px] mx-auto w-full relative">
+      <main className="flex-1 pt-[60px] md:pt-[90px] min-h-screen text-white max-w-[1600px] mx-auto w-full relative">
         {pathname !== '/admin' && (
           <div className="px-4 md:px-6 pt-4 md:pt-6">
             <Link href="/admin" className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#888] hover:text-[var(--color-brand)] transition-colors">
