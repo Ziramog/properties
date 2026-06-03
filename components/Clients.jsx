@@ -39,13 +39,13 @@ const Clients = () => {
               className={`flex-shrink-0 w-[160px] md:w-auto transition-all duration-500 ease-in-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'}`}
               style={{ transitionDelay: `${i * 150}ms` }}
             >
-              <div className="bg-white rounded-[20px] py-5 px-5 md:px-6 flex items-center justify-center min-h-[100px] md:min-h-[120px]">
+              <div className="bg-white rounded-[20px] p-3 md:p-4 flex items-center justify-center min-h-[110px] md:min-h-[130px]">
                 <Image
                   src={client.logo}
                   alt={client.name}
-                  width={120}
-                  height={120}
-                  className="object-contain max-w-full max-h-full"
+                  width={180}
+                  height={180}
+                  className="object-contain w-[80%] h-auto max-h-[85px] md:max-h-[100px]"
                   style={{ filter: 'grayscale(1)' }}
                 />
               </div>
