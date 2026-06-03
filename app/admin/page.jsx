@@ -54,6 +54,7 @@ const AdminPage = async () => {
   ];
 
   const NAV_LINKS = [
+    { label: 'Propuestas', href: '/admin/quotations', Icon: FileText, color: '#3B82F6' },
     { label: 'Perfil', href: '/admin/profile', Icon: User, color: '#888' },
     { label: 'Reseñas', href: '/admin/reviews', Icon: Star, color: '#FFD700' },
   ];
@@ -64,15 +65,13 @@ const AdminPage = async () => {
         Panel de Control
       </h1>
 
-      {/* Global Stats */}
-      <div className="mb-8">
-        <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#666] mb-4">Métricas Globales</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Global Stats: 3 cards */}
+      <div className="mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
             { value: total, label: 'Total Propiedades', color: '#F26B2E', href: '/admin/properties', Icon: Layers },
             { value: activas, label: 'Activas', color: '#25D366', href: '/admin/properties?status=active', Icon: CheckCircle },
             { value: featured, label: 'Destacadas', color: '#652660', href: '/admin/properties?is_featured=true', Icon: Star },
-            { value: quotations, label: 'Propuestas', color: '#3B82F6', href: '/admin/quotations', Icon: FileText },
           ].map((stat) => (
             <Link key={stat.label} href={stat.href} className="bg-[#161616] border border-[#222] rounded-sm p-5 md:p-6 hover:border-[#333] transition-colors relative group overflow-hidden flex flex-col justify-between">
               <div className="absolute -right-4 -top-4 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -89,9 +88,8 @@ const AdminPage = async () => {
         </div>
       </div>
 
-      {/* Category cards */}
-      <div className="mb-8">
-        <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#666] mb-4">Inventario por Categoría</h2>
+      {/* Category cards: 6 cards */}
+      <div className="mb-6">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {CATEGORIES.map((cat) => {
             const count = cat.count !== undefined ? cat.count : categoryCounts.find((c) => c.type === cat.type)?.count || 0;
@@ -112,10 +110,9 @@ const AdminPage = async () => {
         </div>
       </div>
 
-      {/* Navigation links: Perfil + Reseñas */}
+      {/* Navigation links: 3 cards */}
       <div>
-        <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#666] mb-4">Accesos Rápidos</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.label}
