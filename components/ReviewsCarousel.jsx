@@ -69,7 +69,7 @@ export default function ReviewsCarousel({ reviews, googleRating, totalRatings })
 
   return (
     <section className="pt-[12px] pb-[12px]">
-      <div className="bg-[#F8F9FA] w-full pt-[30px] pb-[30px] md:pt-[60px] md:pb-[70px]">
+      <div className="bg-white w-full pt-[30px] pb-[30px] md:pt-[60px] md:pb-[70px]">
         <div className="max-w-[1820px] mx-auto px-4 md:px-[50px]">
 
           <div className="text-center mb-10 md:mb-14">
