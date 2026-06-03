@@ -36,7 +36,7 @@ const Agents = () => {
         </div>
 
         {/* Body text — animated fade-up like Featured Properties cards */}
-        <div className={`max-w-2xl mx-auto text-center transition-all duration-500 ${
+        <div className={`max-w-2xl mx-auto text-justify transition-all duration-500 ${
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`} style={{ transitionDelay: '100ms' }}>
           <p className="text-[16px] md:text-[18px] font-light text-[#475569] leading-[1.8]" style={{ fontFamily: 'var(--font-body)' }}>

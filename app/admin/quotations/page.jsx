@@ -9,15 +9,7 @@ import Link from 'next/link';
 import connectDB from '@/config/database';
 import Quotation from '@/models/Quotation';
 import QuotationActions from '@/components/admin/quotations/QuotationActions';
-
-const STATUS_CONFIG = [
-  { id: 'draft', label: 'Borrador', color: 'bg-zinc-700 text-zinc-300' },
-  { id: 'sent', label: 'Enviado', color: 'bg-blue-900/40 text-blue-400' },
-  { id: 'viewed', label: 'Visto', color: 'bg-amber-900/40 text-amber-400' },
-  { id: 'accepted', label: 'Aceptado', color: 'bg-green-900/40 text-green-400' },
-  { id: 'rejected', label: 'Rechazado', color: 'bg-red-900/40 text-red-400' },
-  { id: 'expired', label: 'Vencido', color: 'bg-zinc-800 text-zinc-500' },
-];
+import StatusSelector from '@/components/admin/quotations/StatusSelector';
 
 const AdminQuotationsPage = async () => {
   await connectDB();
@@ -56,10 +48,10 @@ const AdminQuotationsPage = async () => {
       </div>
 
       {/* Table */}
-      <div className="bg-[#161616] border border-[#222] rounded-sm overflow-hidden">
+      <div className="bg-[#161616] border border-[#222] rounded-sm max-h-[600px] overflow-y-auto">
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
+          <table className="w-full text-left relative">
+            <thead className="sticky top-0 bg-[#161616] z-20 shadow-sm shadow-black/50">
               <tr className="border-b border-[#222] text-[10px] font-bold uppercase tracking-wider text-[#888]">
                 <th className="px-2 md:px-4 py-3">N°</th>
                 <th className="px-2 md:px-4 py-3">Cliente</th>
@@ -67,12 +59,11 @@ const AdminQuotationsPage = async () => {
                 <th className="px-2 md:px-3 py-3 text-right">Total</th>
                 <th className="px-2 md:px-3 py-3 text-center">Estado</th>
                 <th className="px-2 md:px-3 py-3 hidden md:table-cell">Fecha</th>
-                <th className="px-2 md:px-4 py-3 text-right">Acción</th>
+                <th className="px-2 md:px-4 py-3 text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#222]">
               {quotations.map(q => {
-                const statusCfg = STATUS_CONFIG.find(s => s.id === q.status) || STATUS_CONFIG[0];
                 return (
                   <tr key={q._id.toString()} className="hover:bg-[#1a1a1a] transition-colors text-[13px]">
                     <td className="px-2 md:px-4 py-3 font-medium text-white text-[11px] md:text-[12px]">{q.quoteNumber}</td>
@@ -82,14 +73,18 @@ const AdminQuotationsPage = async () => {
                     <td className="px-2 md:px-3 py-3 text-[#bbb] truncate max-w-[160px] hidden md:table-cell">{q.properties?.[0]?.title || '—'}</td>
                     <td className="px-2 md:px-3 py-3 text-right font-semibold text-[12px] text-white">U$D {q.totalValue?.toLocaleString('es-AR')}</td>
                     <td className="px-2 md:px-3 py-3 text-center">
-                      <span className={`inline-block text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider ${statusCfg.color}`}>{statusCfg.label}</span>
+                      <StatusSelector quotationId={q._id.toString()} initialStatus={q.status} />
                     </td>
                     <td className="px-2 md:px-3 py-3 text-[#888] text-[12px] hidden md:table-cell">{new Date(q.createdAt).toLocaleDateString('es-AR')}</td>
                     <td className="px-2 md:px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-2 relative z-10">
+                      <div className="flex items-center justify-end gap-1.5 relative z-10">
                         <a href={`/api/quotations/${q._id}/generate-pdf`} target="_blank" rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center w-7 h-7 bg-[var(--color-brand)] text-white text-[11px] font-bold rounded-sm hover:bg-[var(--color-brand-dark)] transition-colors" title="Descargar PDF">PDF</a>
-                        <QuotationActions quotationId={q._id.toString()} currentStatus={q.status} trackingToken={q.delivery?.trackingToken} />
+                          className="inline-flex items-center justify-center w-7 h-7 bg-[#222] text-[#888] hover:bg-[#333] hover:text-white rounded-sm transition-colors" title="Ver PDF">
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                          </svg>
+                        </a>
+                        <QuotationActions quotationId={q._id.toString()} trackingToken={q.delivery?.trackingToken} />
                       </div>
                     </td>
                   </tr>

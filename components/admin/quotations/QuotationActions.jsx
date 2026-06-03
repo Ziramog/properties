@@ -1,23 +1,15 @@
 'use client';
 import { useState } from 'react';
-import { updateQuotationStatus } from '@/app/actions/updateQuotationStatus';
 import { deleteQuotation } from '@/app/actions/deleteQuotation';
 
-export default function QuotationActions({ quotationId, currentStatus, trackingToken }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function QuotationActions({ quotationId, trackingToken }) {
   const [isDeleting, setIsDeleting] = useState(false);
-
-  const toggleOpen = () => setIsOpen(!isOpen);
-
-  const handleStatusChange = async (newStatus) => {
-    setIsOpen(false);
-    await updateQuotationStatus(quotationId, newStatus);
-  };
 
   const handleDelete = async () => {
     if (confirm('¿Estás seguro de eliminar esta propuesta?')) {
       setIsDeleting(true);
       await deleteQuotation(quotationId);
+      // El listado debería actualizarse automáticamente vía revalidatePath en el action
     }
   };
 
@@ -29,48 +21,37 @@ export default function QuotationActions({ quotationId, currentStatus, trackingT
     const link = `${window.location.origin}/p/${trackingToken}`;
     navigator.clipboard.writeText(link);
     alert('¡Link copiado! ' + link);
-    setIsOpen(false);
   };
 
   return (
-    <div className="relative inline-block text-left">
+    <div className="flex items-center gap-1.5">
       <button 
-        onClick={toggleOpen} disabled={isDeleting}
+        onClick={handleCopyLink} 
         className="inline-flex items-center justify-center w-7 h-7 bg-[#222] text-[#888] rounded-sm hover:bg-[#333] hover:text-white transition-colors"
-        title="Opciones"
+        title="Copiar Link Público"
       >
-        •••
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        </svg>
       </button>
 
-      {isOpen && (
-        <div className="absolute right-0 z-10 mt-1 w-40 origin-top-right rounded-sm bg-[#1a1a1a] border border-[#333] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="py-1">
-            <button onClick={handleCopyLink} className="block w-full text-left px-4 py-2 text-[11px] font-medium text-[#bbb] hover:bg-[#222] hover:text-white">
-              🔗 Copiar Link Público
-            </button>
-            <div className="border-t border-[#333] my-1"></div>
-            <p className="px-4 py-1 text-[9px] font-bold uppercase text-[#666]">Estado</p>
-            {['draft', 'sent', 'viewed', 'accepted', 'rejected', 'expired'].map(s => (
-              <button 
-                key={s} 
-                onClick={() => handleStatusChange(s)}
-                className={`block w-full text-left px-4 py-1.5 text-[11px] font-medium ${currentStatus === s ? 'text-[var(--color-brand)] bg-[var(--color-brand)]/10' : 'text-[#888] hover:bg-[#222] hover:text-white'}`}
-              >
-                {s.toUpperCase()}
-              </button>
-            ))}
-            <div className="border-t border-[#333] my-1"></div>
-            <button onClick={handleDelete} className="block w-full text-left px-4 py-2 text-[11px] font-medium text-red-500 hover:bg-[#222]">
-              🗑 Eliminar
-            </button>
-          </div>
-        </div>
-      )}
-      
-      {/* Click outside to close - simple hack */}
-      {isOpen && (
-        <div className="fixed inset-0 z-0" onClick={() => setIsOpen(false)}></div>
-      )}
+      <button 
+        onClick={handleDelete} 
+        disabled={isDeleting}
+        className={`inline-flex items-center justify-center w-7 h-7 bg-red-900/20 text-red-500 rounded-sm hover:bg-red-500 hover:text-white transition-colors ${isDeleting ? 'opacity-50 cursor-not-allowed' : ''}`}
+        title="Eliminar"
+      >
+        {isDeleting ? (
+          <svg className="animate-spin w-3.5 h-3.5" viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        ) : (
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        )}
+      </button>
     </div>
   );
 }
