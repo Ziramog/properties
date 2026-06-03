@@ -24,7 +24,7 @@ export default function ReviewCard({ review, variant = 'default' }) {
     return (
       <Wrapper 
         {...wrapperProps}
-        className="relative flex flex-col h-full bg-white border border-[#eaeaea] shadow-[0_8px_30px_rgba(0,0,0,0.04)] rounded-2xl p-6 md:p-8 transition-transform hover:-translate-y-1 block cursor-pointer" 
+        className="relative flex flex-col h-full bg-white shadow-[0_15px_40px_-10px_rgba(0,0,0,0.06)] hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-2 block cursor-pointer" 
         aria-label={`Reseña de ${review.authorName}`}
       >
         <p className="text-[15px] md:text-[16px] text-[#555] leading-[1.7] mb-5 md:mb-6 flex-1 italic line-clamp-4" style={{ fontFamily: 'var(--font-body)' }}>
@@ -44,7 +44,7 @@ export default function ReviewCard({ review, variant = 'default' }) {
   }
 
   return (
-    <article className="relative flex flex-col h-full bg-white border border-[#1a1a1a] rounded-2xl p-5 pb-6 shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-200 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)]" aria-label={`Reseña de ${review.authorName}`}>
+    <article className="relative flex flex-col h-full bg-white rounded-2xl p-5 pb-6 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.06)] hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-2" aria-label={`Reseña de ${review.authorName}`}>
       <div className="flex items-center gap-3 mb-3">
         <AuthorAvatar name={review.authorName} photo={review.authorPhoto} />
         <div className="min-w-0 flex-1">
