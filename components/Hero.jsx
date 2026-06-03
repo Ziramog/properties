@@ -10,8 +10,8 @@ const HERO_LINE1 = 'Vendemos Inmuebles';
 const HERO_LINE2 = 'Construimos Confianza';
 const HERO_TITLE = `${HERO_LINE1}, ${HERO_LINE2}`;
 
-const fullDesktopLabel = 'Buscar > Ciudad, Precio, Tipo Inmueble, Palabra Clave';
-const fullMobileLabel = 'Buscar > Ciudad, Zona, Direccion, Palabra Clave';
+const fullDesktopLabel = 'Ciudad, Localidad, Tipo de Inmueble y Palabra Clave';
+const fullMobileLabel = 'Ciudad, Localidad, Tipo de Inmueble y Palabra Clave';
 
 const Hero = () => {
   const router = useRouter();
