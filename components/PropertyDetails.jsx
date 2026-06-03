@@ -63,11 +63,11 @@ const PropertyDetails = ({ property }) => {
                     className={`flex-1 min-w-[50%] md:min-w-0 flex justify-center py-[30px] px-[20px] md:px-[40px] border-r border-b md:border-b-0 border-[#e9e9e9] ${i === featureItems.length - 1 ? 'border-r-0' : ''} md:[&:nth-last-child(-n+2)]:border-b-0`}
                   >
                     <div>
-                      <h5 className="text-[28px] md:text-[34px] font-bold text-[#0F172A] mb-[5px]"
+                      <h5 className="text-[18px] font-semibold text-[#0F172A] mb-[5px]"
                           style={{ fontFamily: 'var(--font-heading)' }}>
                         {typeof value === 'number' ? value.toLocaleString('es-AR') : value}
                       </h5>
-                      <p className="text-[16px] leading-[24px] text-[#666]">{label}</p>
+                      <p className="text-[14px] leading-[20px] text-[#404040]">{label}</p>
                     </div>
                   </div>
                 ))}
