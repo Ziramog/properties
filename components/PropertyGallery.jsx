@@ -19,7 +19,7 @@ const PropertyGallery = ({ images = [], property }) => {
   const statusMap = {
     'PRECIO MEJORADO': 'Precio Mejorado',
     'ULTIMA UNIDAD': 'Última Unidad',
-    'UNICO EN SU TIPO': 'Único en su Tipo',
+    'UNICO EN SU TIPO': 'Única en su Tipo',
     'NUEVA': 'Nueva',
   };
   const statusLabel = statusMap[property?.status];

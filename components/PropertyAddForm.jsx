@@ -146,7 +146,7 @@ const PropertyAddForm = () => {
           <option value='active'>Sin etiqueta</option>
           <option value='PRECIO MEJORADO'>Precio Mejorado</option>
           <option value='ULTIMA UNIDAD'>Última Unidad</option>
-          <option value='UNICO EN SU TIPO'>Único en su Tipo</option>
+          <option value='UNICO EN SU TIPO'>Única en su Tipo</option>
           <option value='NUEVA'>Nueva</option>
         </select>
       </div>

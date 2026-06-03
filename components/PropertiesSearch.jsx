@@ -33,7 +33,7 @@ const STATUS_CHECKBOXES = [
   { value: 'NUEVA', label: 'Nueva' },
   { value: 'PRECIO MEJORADO', label: 'Precio Mejorado' },
   { value: 'ULTIMA UNIDAD', label: 'Última Unidad' },
-  { value: 'UNICO EN SU TIPO', label: 'Único en su Tipo' },
+  { value: 'UNICO EN SU TIPO', label: 'Única en su Tipo' },
 ];
 
 export default function PropertiesSearch({ currentFilters = {}, onFilter, title = 'Búsqueda de Propiedades' }) {
