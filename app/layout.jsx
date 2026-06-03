@@ -4,22 +4,29 @@ import AuthProvider from '@/components/AuthProvider';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { GlobalProvider } from '@/context/GlobalContext';
 import { ToastContainer } from 'react-toastify';
-import { Lato, PT_Serif, Cormorant_Garamond } from 'next/font/google';
+import { Cormorant_Garamond } from 'next/font/google';
+import localFont from 'next/font/local';
 import 'react-toastify/dist/ReactToastify.css';
 import '@/assets/styles/globals.css';
 import 'photoswipe/dist/photoswipe.css';
 
-const lato = Lato({
-  subsets: ['latin'],
-  weight: ['300', '400', '700', '900'],
+const lato = localFont({
+  src: [
+    { path: '../assets/fonts/lato/Lato-Light.woff2', weight: '300', style: 'normal' },
+    { path: '../assets/fonts/lato/Lato-LightItalic.woff2', weight: '300', style: 'italic' },
+    { path: '../assets/fonts/lato/Lato-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../assets/fonts/lato/Lato-Italic.woff2', weight: '400', style: 'italic' },
+    { path: '../assets/fonts/lato/Lato-Bold.woff2', weight: '700', style: 'normal' },
+  ],
   variable: '--font-body',
   display: 'swap',
 });
 
-const ptSerif = PT_Serif({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  style: ['normal', 'italic'],
+const ptSerif = localFont({
+  src: [
+    { path: '../assets/fonts/pt-serif/PTSerif-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../assets/fonts/pt-serif/PTSerif-Bold.woff2', weight: '700', style: 'normal' },
+  ],
   variable: '--font-heading',
   display: 'swap',
 });
