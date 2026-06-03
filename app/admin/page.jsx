@@ -21,7 +21,8 @@ import {
   Star,
   Layers,
   CheckCircle,
-  FileText
+  FileText,
+  MessageCircle
 } from 'lucide-react';
 
 const AdminPage = async () => {
@@ -54,6 +55,7 @@ const AdminPage = async () => {
   ];
 
   const NAV_LINKS = [
+    { label: 'Comunidad', href: '/admin/subscribers', Icon: MessageCircle, color: '#25D366' },
     { label: 'Propuestas', href: '/admin/quotations', Icon: FileText, color: '#3B82F6' },
     { label: 'Perfil', href: '/admin/profile', Icon: User, color: '#888' },
     { label: 'Reseñas', href: '/admin/reviews', Icon: Star, color: '#FFD700' },
@@ -112,7 +114,7 @@ const AdminPage = async () => {
 
       {/* Navigation links: 3 cards */}
       <div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.label}

@@ -16,6 +16,7 @@ export async function GET() {
       contactEmail: config?.contactEmail || 'info@roggeroyroma.com.ar',
       contactPhone: config?.contactPhone || '+54 9 3547 563911',
       contactAddress: config?.contactAddress || 'Blvd. Carlos Pellegrini 710',
+      whatsappGroupLink: config?.whatsappGroupLink || '',
     });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
@@ -37,6 +38,7 @@ export async function PATCH(request) {
     if (body.contactEmail !== undefined) update.contactEmail = body.contactEmail;
     if (body.contactPhone !== undefined) update.contactPhone = body.contactPhone;
     if (body.contactAddress !== undefined) update.contactAddress = body.contactAddress;
+    if (body.whatsappGroupLink !== undefined) update.whatsappGroupLink = body.whatsappGroupLink;
     
     if (Object.keys(update).length === 0) {
       return NextResponse.json({ success: true });

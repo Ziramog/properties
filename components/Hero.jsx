@@ -164,7 +164,7 @@ const Hero = () => {
       {/* Background Video */}
       <div className='absolute inset-0 z-0'>
         <video
-          src='/images/Reggeroproduction.mp4'
+          src='/images/Francoroggeroyroma_loop.mp4'
           autoPlay
           muted
           loop
