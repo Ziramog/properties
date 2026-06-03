@@ -81,7 +81,7 @@ const PropertyDetails = ({ property }) => {
       <div className="flex flex-col md:flex-row gap-[20px] mb-8">
         {/* Left: Description — 70% */}
         <div className="w-full md:w-[70%]">
-          {property.description && (
+          {property.description ? (
             <div className="bg-white rounded-none overflow-hidden h-full">
               <div className="px-4 md:px-[50px] pt-[40px] pb-0 flex flex-col h-full">
                 <div>
@@ -95,6 +95,22 @@ const PropertyDetails = ({ property }) => {
                     Publicado por {property.seller_info.name}
                   </p>
                 )}
+                {/* Share */}
+                <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6 mt-auto">
+                  <span className="text-[16px] uppercase text-[#999] block text-center mb-4">Compartir</span>
+                  <ShareButtons property={property} />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white rounded-none overflow-hidden h-full flex flex-col">
+              <div className="px-4 md:px-[50px] pt-[40px] pb-0 flex flex-col h-full flex-1">
+                <div>
+                  <SectionTitle>Descripción</SectionTitle>
+                </div>
+                <div className="text-[#999] italic mt-4">
+                  No hay descripción detallada disponible para esta propiedad en este momento.
+                </div>
                 {/* Share */}
                 <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6 mt-auto">
                   <span className="text-[16px] uppercase text-[#999] block text-center mb-4">Compartir</span>
