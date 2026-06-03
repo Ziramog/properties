@@ -97,7 +97,7 @@ const Footer = () => {
                     <ul>
                       <li>
                         <Link href="/#propiedades-destacadas" className="block text-[13px] text-white/70 font-light py-[5px] pr-[10px] hover:text-white transition-colors">
-                          Nuestra Seleccion
+                          Nuestra Selección
                         </Link>
                       </li>
                     </ul>
@@ -235,16 +235,16 @@ const Footer = () => {
                 ))}
               </div>
             </div>
-            {/* Listado Premium */}
+            {/* DESTACADAS */}
             <div>
-              <span className="block text-[15px] text-white uppercase font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>Listado Premium</span>
+              <span className="block text-[15px] text-white uppercase font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>DESTACADAS</span>
               <Link href="/#propiedades-destacadas" className="text-[13px] text-white/60 font-light py-[3px] hover:text-white transition-colors">
-                Nuestra Seleccion
+                Nuestra Selección
               </Link>
             </div>
             {/* Newsletter */}
             <div>
-              <span className="block text-[15px] text-white uppercase font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>Newsletter</span>
+              <span className="block text-[15px] text-white uppercase font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>ENTERATE DE LOS NUEVOS INGRESOS</span>
               <form>
                 <div className="relative mb-3">
                   <img src="/senada/images/icons/ico_newsletter_email.svg" alt="" className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-4" style={{ filter: 'brightness(0) invert(1)' }} />
