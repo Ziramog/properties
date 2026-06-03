@@ -32,7 +32,7 @@ const PropertyGallery = ({ images = [], property }) => {
   };
 
   return (
-    <Gallery options={{ bgOpacity: 0.95 }}>
+    <Gallery options={{ bgOpacity: 0.95, padding: { top: 80, bottom: 80, left: 20, right: 20 } }}>
       <section className="bg-[#000] pt-[90px] md:pt-[150px] pb-[30px]">
         {/* Mosaic: full width with navbar padding, no max-w */}
         <div className="px-4 md:px-[50px]">
