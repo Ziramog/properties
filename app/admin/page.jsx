@@ -75,8 +75,8 @@ const AdminPage = async () => {
             { value: quotations, label: 'Propuestas', color: '#3B82F6', href: '/admin/quotations', Icon: FileText },
           ].map((stat) => (
             <Link key={stat.label} href={stat.href} className="bg-[#161616] border border-[#222] rounded-sm p-5 md:p-6 hover:border-[#333] transition-colors relative group overflow-hidden flex flex-col justify-between">
-              <div className="absolute -right-4 -top-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-                <stat.Icon size={120} />
+              <div className="absolute -right-4 -top-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <stat.Icon size={120} style={{ color: stat.color }} />
               </div>
               <div className="relative z-10 text-center mt-2">
                 <p className="text-[32px] md:text-[40px] font-bold leading-none mb-2" style={{ fontFamily: 'var(--font-heading)', color: stat.color }}>
