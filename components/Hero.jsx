@@ -181,13 +181,13 @@ const Hero = () => {
       </div>
 
       {/* Content structured with Flexbox */}
-      <div className='relative z-10 h-full flex flex-col justify-center items-center px-4 md:px-0'>
+      <div className='relative z-10 h-full flex flex-col justify-center items-center px-0'>
         
         {/* Offset Wrapper: Baja ambos elementos un 15% manteniendo su distancia */}
         <div className='w-full flex flex-col items-center translate-y-[8vh] md:translate-y-[15vh]'>
           
           {/* Title Area */}
-          <div className='w-full px-6 text-center flex flex-col items-center mb-[40px] md:mb-[80px] transition-all duration-500 shrink-0'>
+          <div className='w-full px-6 text-center flex flex-col items-center mb-[36px] md:mb-[80px] transition-all duration-500 shrink-0'>
             <motion.div
               initial={{ opacity: 0, y: -80 }}
               animate={{ opacity: 1, y: 0 }}
@@ -287,9 +287,9 @@ const Hero = () => {
               </div>
 
               {/* Mobile: input + button + toggle all fixed; filters expand via position absolute below */}
-              <div className='md:hidden w-full relative bg-black rounded-xl px-4 pt-4 pb-[3px]'>
+              <div className='md:hidden w-full relative bg-black rounded-xl px-4 pt-5 pb-[4px]'>
                 {/* Search input */}
-                <div className='flex items-center gap-2 px-3 py-2.5'>
+                <div className='flex items-center gap-2 px-2 py-2.5'>
                   <svg className='w-5 h-5 text-white flex-shrink-0' viewBox='0 0 24 24' fill='currentColor'>
                     <path d='M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z'/>
                   </svg>
@@ -326,7 +326,7 @@ const Hero = () => {
                     if (filters.operation && filters.operation !== 'Todos') params.set('operation', filters.operation === 'Venta' ? 'venta' : filters.operation === 'Alquiler' ? 'alquiler' : filters.operation);
                     router.push(`/properties${params.toString() ? `?${params.toString()}` : ''}`);
                   }}
-                  className='w-full bg-primary hover:bg-[#e05a23] text-white font-bold text-sm uppercase tracking-wider rounded-xl h-12 flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/30 mt-3'
+                  className='w-full bg-primary hover:bg-[#e05a23] text-white font-bold text-[14px] uppercase tracking-wider rounded-xl h-[50px] flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/30 mt-3'
                 >
                   <FaSearch className='w-4 h-4' />
                   BUSCAR
@@ -336,7 +336,7 @@ const Hero = () => {
                 <button
                     type='button'
                     onClick={() => handleShowMoreToggle()}
-                    className='flex items-center justify-end gap-1.5 w-full py-3 text-white/60 text-xs font-normal uppercase tracking-wide hover:text-white/80 transition-all'
+                    className='flex items-center justify-end gap-1.5 w-full py-3 text-white/60 text-[11px] font-medium uppercase tracking-wide hover:text-white/80 transition-all'
                   >
                     <span className="text-[#f97316] text-lg font-bold leading-none">{showMore ? '−' : '+'}</span>
                     <span>{showMore ? 'Mostrar menos' : 'Mostrar más'}</span>
@@ -455,7 +455,7 @@ const Hero = () => {
         </div>
 
         {!scrolled && !showMore && (
-          <div className='absolute left-0 right-0 z-10 bottom-[15px] md:hidden flex justify-center scroll-indicator-container'>
+          <div className='absolute left-0 right-0 z-10 bottom-[40px] md:hidden flex justify-center scroll-indicator-container'>
             <img
               src='/senada/images/icons/ico_arrow-down.svg'
               alt='scroll'
