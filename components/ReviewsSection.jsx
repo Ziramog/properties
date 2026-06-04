@@ -7,7 +7,11 @@ export default async function ReviewsSection() {
   await connectDB();
 
   const [reviews, businessInfo] = await Promise.all([
-    Review.find({ featured: true, hidden: false })
+    Review.find({ 
+      featured: true, 
+      hidden: false,
+      authorPhoto: { $ne: null, $ne: "" }
+    })
       .sort({ priority: -1, publishTime: -1 })
       .limit(8)
       .lean(),

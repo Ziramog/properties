@@ -20,12 +20,15 @@ const Agents = () => {
     <section className="pt-[12px] pb-[12px]" id="equipo" ref={ref}>
       <SectionBox className="px-4 md:px-[50px] py-16 md:py-24">
         {/* Section Header — same pattern as Featured Properties */}
-        <div className="text-center mb-10 md:mb-14">
+        <div className="text-center mb-10 md:mb-14 flex flex-col items-center">
           <ScrollReveal variant="fadeLeft">
-            <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-              Roggero & Roma
+            <h2 className="text-[28px] md:text-[40px] font-normal text-[#0F172A] leading-tight mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
+              Silvia Roggero de Roma
             </h2>
           </ScrollReveal>
+          <p className="text-[12px] md:text-[14px] text-[#475569] tracking-[0.2em] uppercase font-light mb-6">
+            Negocios Inmobiliarios
+          </p>
           <div className="flex items-center justify-center gap-3">
             <span className="w-7 h-px bg-[var(--color-brand)] flex-shrink-0" />
             <p className="text-[13px] md:text-[15px] font-medium text-[var(--color-brand)] uppercase tracking-[0.15em]">

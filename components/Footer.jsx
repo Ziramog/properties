@@ -3,9 +3,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaWhatsapp } from 'react-icons/fa';
+import { MapPin } from 'lucide-react';
 import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whatsapp';
 
-const EMAIL = 'info@roggeroyroma.com.ar';
+const EMAIL = 'roggeroroma@hotmail.com';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -56,8 +57,15 @@ const Footer = () => {
                 />
               </Link>
                   <ul>
-                    <li className="text-[13px] text-white/70 font-light py-[5px] block">Blvd. Carlos Pellegrini 710</li>
-                    <li className="text-[13px] text-white/70 font-light py-[5px] block">X5186 Alta Gracia, Córdoba</li>
+                    <li className="py-[5px]">
+                      <a href="https://maps.google.com/?q=Blvd.+Carlos+Pellegrini+710,+Alta+Gracia,+Córdoba" target="_blank" rel="noopener noreferrer" className="flex items-start gap-[5px] text-[13px] text-white/70 font-light hover:text-white transition-colors group">
+                        <MapPin className="w-4 h-4 text-[#F26B2E] mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
+                        <span>
+                          Blvd. Carlos Pellegrini 710<br/>
+                          X5186 Alta Gracia, Córdoba
+                        </span>
+                      </a>
+                    </li>
                   </ul>
               <a href={`mailto:${EMAIL}`} className="flex items-center gap-[5px] text-[13px] text-white font-light py-[5px] hover:text-white/70 transition-colors">
                 <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
@@ -239,8 +247,13 @@ const Footer = () => {
                 className="brightness-0 invert"
               />
             </Link>
-            <p className="text-[13px] text-white/60 font-light mt-3">Blvd. Carlos Pellegrini 710</p>
-            <p className="text-[13px] text-white/60 font-light">X5186 Alta Gracia, Córdoba</p>
+            <a href="https://maps.google.com/?q=Blvd.+Carlos+Pellegrini+710,+Alta+Gracia,+Córdoba" target="_blank" rel="noopener noreferrer" className="flex items-start gap-2 text-[13px] text-white/60 font-light mt-3 hover:text-white transition-colors">
+              <MapPin className="w-4 h-4 text-[#F26B2E] mt-0.5 shrink-0" />
+              <span>
+                Blvd. Carlos Pellegrini 710<br/>
+                X5186 Alta Gracia, Córdoba
+              </span>
+            </a>
             <a href={`mailto:${EMAIL}`} className="flex items-center gap-2 text-[13px] text-white font-light">
               <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
               {EMAIL}

@@ -12,7 +12,7 @@ export default function ProfileClient({ user, totalProps, payments, config: init
   const [savingContact, setSavingContact] = useState(false);
   const [rateValue, setRateValue] = useState(config?.exchangeRateARS || '');
   const [contactData, setContactData] = useState({
-    contactEmail: config?.contactEmail || 'info@roggeroyroma.com.ar',
+    contactEmail: config?.contactEmail || 'roggeroroma@hotmail.com',
     contactPhone: config?.contactPhone || '+54 9 3547 563911',
     contactAddress: config?.contactAddress || 'Blvd. Carlos Pellegrini 710'
   });

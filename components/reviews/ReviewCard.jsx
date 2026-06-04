@@ -1,7 +1,17 @@
 import Image from 'next/image';
 import StarRating from './StarRating';
 
-function AuthorAvatar({ name }) {
+function AuthorAvatar({ name, photo }) {
+  if (photo) {
+    return (
+      <img 
+        src={photo} 
+        alt={name} 
+        className="w-10 h-10 rounded-full flex-shrink-0 object-cover" 
+      />
+    );
+  }
+
   const initials = name.split(' ').slice(0, 2).map(n => n[0]?.toUpperCase() ?? '').join('');
 
   return (
@@ -32,8 +42,11 @@ export default function ReviewCard({ review, variant = 'default' }) {
         </p>
         <div className="flex items-center gap-3 mt-auto">
           <AuthorAvatar name={review.authorName} photo={review.authorPhoto} />
-          <div>
-            <p className="text-sm font-semibold text-[#1a1a1a] tracking-wide">{review.authorName}</p>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-col">
+              <p className="text-sm font-semibold text-[#1a1a1a] tracking-wide truncate">{review.authorName}</p>
+              <time dateTime={review.publishTime} className="text-xs text-[#888]">{review.relativeTimeDescription}</time>
+            </div>
             <div className="mt-0.5">
               <StarRating rating={review.rating} size="sm" variant="dark" />
             </div>

@@ -8,7 +8,7 @@ import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whats
 import logo from '@/assets/images/logo-white.png';
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
 
-const EMAIL = 'info@roggeroyroma.com.ar';
+const EMAIL = 'roggeroroma@hotmail.com';
 const WHATSAPP_NUMBER = '5493547563911';
 
 const Navbar = () => {
