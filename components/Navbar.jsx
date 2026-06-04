@@ -236,8 +236,8 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
           className="md:hidden fixed inset-x-0 z-[110] bg-black flex flex-col overflow-x-hidden"
           style={{
             top: 'calc(env(safe-area-inset-top, 8px) + 60px)',
-            height: 'calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top, 8px) - 60px)',
-            padding: '40px 12px 20px',
+            height: 'calc(100dvh - env(safe-area-inset-top, 8px) - 60px)',
+            padding: '40px 12px calc(20px + env(safe-area-inset-bottom, 0px))',
             overflowY: 'auto',
             transformOrigin: 'top',
             transform: isMobileMenuOpen ? 'scaleY(1)' : 'scaleY(0)',
