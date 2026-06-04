@@ -126,7 +126,7 @@ export default async function PropertiesContent({ searchParams, subtitle }) {
     <div className="bg-white">
       <ScrollToResults searchParams={searchParams} isFiltered={isFiltered} />
       {/* Sort Bar */}
-      <div id="resultados" className="bg-white px-4 md:px-[50px] pt-3 pb-2">
+      <div id="resultados" className="bg-white px-4 md:px-[50px] pt-6 pb-4 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <SectionTitle size="normal">{subtitle}</SectionTitle>
         <ScrollReveal delay={100}>
           <SortBar

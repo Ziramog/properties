@@ -17,19 +17,17 @@ const SortBar = ({ total, activeSort, searchParams }) => {
   };
 
   return (
-    <div className="flex items-center justify-end py-3 bg-white border-b border-gray-100">
-      <div className="flex items-center gap-2">
-        <span className="text-xs font-bold uppercase tracking-wider text-[#999]">Ordenar por</span>
-        <select
-          value={activeSort || 'price-desc'}
-          onChange={handleSortChange}
-          className="text-sm border border-gray-200 rounded-lg px-3 py-2 text-[#0F172A] bg-white focus:outline-none focus:ring-2 focus:ring-[#E94560]/30 focus:border-[#E94560] cursor-pointer transition-all"
-        >
-          {SORT_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
-      </div>
+    <div className="flex items-center gap-2">
+      <span className="text-xs font-bold uppercase tracking-wider text-[#999]">Ordenar por</span>
+      <select
+        value={activeSort || 'price-desc'}
+        onChange={handleSortChange}
+        className="text-sm border border-gray-200 rounded-lg px-3 py-2 text-[#0F172A] bg-white focus:outline-none focus:ring-2 focus:ring-[#E94560]/30 focus:border-[#E94560] cursor-pointer transition-all"
+      >
+        {SORT_OPTIONS.map((opt) => (
+          <option key={opt.value} value={opt.value}>{opt.label}</option>
+        ))}
+      </select>
     </div>
   );
 };
