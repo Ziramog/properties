@@ -199,7 +199,7 @@ export default function QuotationWizard({ initialData = null, editId = null }) {
       {step === 1 && <StepProperty selected={wizardState.properties} onChange={(p) => updateState('properties', p)} onNext={() => setStep(2)} />}
       {step === 2 && <StepClient data={wizardState.client} onChange={(c) => updateState('client', c)} onNext={() => setStep(3)} onBack={() => setStep(1)} />}
       {step === 3 && <StepPayment data={wizardState.payment} propertyPrice={totalPrice} onChange={(p) => updateState('payment', p)} onNext={() => setStep(4)} onBack={() => setStep(2)} />}
-      {step === 4 && <StepCustomize data={wizardState.customization} onChange={(c) => updateState('customization', c)} onNext={() => setStep(5)} onBack={() => setStep(3)} />}
+      {step === 4 && <StepCustomize data={wizardState.customization} wizardState={wizardState} onChange={(c) => updateState('customization', c)} onNext={() => setStep(5)} onBack={() => setStep(3)} />}
       {step === 5 && <StepPreview wizardState={wizardState} isGenerating={isGenerating} generatedPDFUrl={generatedPDFUrl} onGenerate={handleGenerate} onBack={() => setStep(4)} />}
     </div>
   );
