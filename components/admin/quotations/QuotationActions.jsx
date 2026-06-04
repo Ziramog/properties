@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { deleteQuotation } from '@/app/actions/deleteQuotation';
 import Link from 'next/link';
 
-export default function QuotationActions({ quotationId, trackingToken }) {
+export default function QuotationActions({ quotationId, trackingToken, aiDescription }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
@@ -22,6 +22,17 @@ export default function QuotationActions({ quotationId, trackingToken }) {
     const link = `${window.location.origin}/p/${trackingToken}`;
     navigator.clipboard.writeText(link);
     alert('¡Link copiado! ' + link);
+  };
+
+  const handleCopyText = () => {
+    if (!aiDescription) {
+      alert('Esta propuesta no tiene descripción generada por IA.');
+      return;
+    }
+    const link = trackingToken ? `\n\nLink a la propuesta: ${window.location.origin}/p/${trackingToken}` : '';
+    const textToCopy = `${aiDescription}${link}`;
+    navigator.clipboard.writeText(textToCopy);
+    alert('¡Texto copiado al portapapeles!');
   };
 
   return (
@@ -45,6 +56,18 @@ export default function QuotationActions({ quotationId, trackingToken }) {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
         </svg>
       </button>
+
+      {aiDescription && (
+        <button 
+          onClick={handleCopyText} 
+          className="inline-flex items-center justify-center w-7 h-7 bg-[#222] text-[#888] rounded-sm hover:bg-[#10B981] hover:text-white transition-colors"
+          title="Copiar Texto WhatsApp"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </button>
+      )}
 
       <button 
         onClick={handleDelete} 
