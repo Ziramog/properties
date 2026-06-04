@@ -4,6 +4,7 @@ import SiteConfig from '@/models/SiteConfig';
 import { getSessionUser } from '@/utils/getSessionUser';
 import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
+import User from '@/models/User';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +12,19 @@ export async function GET() {
   await connectDB();
   const quotes = await Quotation.find({}).sort({ createdAt: -1 }).lean();
   const config = await SiteConfig.findOne({}).lean();
-  return NextResponse.json({ quotes, exchangeRateARS: config?.exchangeRateARS || null });
+  
+  const users = await User.find({}, '_id username agentName email').lean();
+  const userMap = users.reduce((acc, u) => {
+    acc[u._id.toString()] = u.agentName || u.username || u.email.split('@')[0];
+    return acc;
+  }, {});
+
+  const quotesWithCreator = quotes.map(q => ({
+    ...q,
+    creatorName: userMap[q.createdBy] || 'Silvia Roggero'
+  }));
+
+  return NextResponse.json({ quotes: quotesWithCreator, exchangeRateARS: config?.exchangeRateARS || null });
 }
 
 export async function POST(request) {

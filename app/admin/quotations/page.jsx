@@ -59,6 +59,7 @@ const AdminQuotationsPage = async () => {
                 <th className="px-2 md:px-3 py-3 hidden md:table-cell">Propiedad</th>
                 <th className="px-2 md:px-3 py-3 text-right">Total</th>
                 <th className="px-2 md:px-3 py-3 text-center">Estado</th>
+                <th className="px-2 md:px-3 py-3 hidden md:table-cell">Creador</th>
                 <th className="px-2 md:px-3 py-3 hidden md:table-cell">Fecha</th>
                 <th className="px-2 md:px-4 py-3 text-right group">
                   <div className="flex justify-end items-center gap-1">
@@ -86,6 +87,7 @@ const AdminQuotationsPage = async () => {
                     <td className="px-2 md:px-3 py-3 text-center">
                       <StatusSelector quotationId={q._id.toString()} initialStatus={q.status} />
                     </td>
+                    <td className="px-2 md:px-3 py-3 text-[#bbb] truncate max-w-[120px] hidden md:table-cell">{q.creatorName}</td>
                     <td className="px-2 md:px-3 py-3 text-[#888] text-[12px] hidden md:table-cell">{new Date(q.createdAt).toLocaleDateString('es-AR')}</td>
                     <td className="px-2 md:px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-1.5 relative z-10">
@@ -103,7 +105,7 @@ const AdminQuotationsPage = async () => {
               })}
               {quotations.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-12 text-center text-[#888] text-[14px]">
+                  <td colSpan={8} className="px-4 py-12 text-center text-[#888] text-[14px]">
                     No hay propuestas. <Link href="/admin/quotations/new" className="text-[var(--color-brand)] font-medium hover:underline">Crear la primera</Link>
                   </td>
                 </tr>
