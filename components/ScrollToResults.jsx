@@ -1,7 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 
-export default function ScrollToTop({ searchParams, isFiltered = false }) {
+export default function ScrollToResults({ searchParams, isFiltered = false }) {
   useEffect(() => {
     if (isFiltered) {
       // Scroll to results section with navbar offset

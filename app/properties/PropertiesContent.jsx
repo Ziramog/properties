@@ -9,6 +9,7 @@ import User from '@/models/User';
 import CategoryMap from '@/components/CategoryMap';
 import MapErrorBoundary from '@/components/shared/MapErrorBoundary';
 import { getSessionUser } from '@/utils/getSessionUser';
+import ScrollToResults from '@/components/ScrollToResults';
 
 export default async function PropertiesContent({ searchParams, subtitle }) {
   await connectDB();
@@ -119,8 +120,11 @@ export default async function PropertiesContent({ searchParams, subtitle }) {
     filteredProperties.sort((a, b) => (parsePrice(b.price) || 0) - (parsePrice(a.price) || 0));
   }
 
+  const isFiltered = !!(type && type !== 'Todos') || !!(term && term !== 'Ciudad');
+
   return (
     <div className="bg-white">
+      <ScrollToResults searchParams={searchParams} isFiltered={isFiltered} />
       {/* Sort Bar */}
       <div id="resultados" className="bg-white px-4 md:px-[50px] pt-3 pb-2">
         <SectionTitle size="normal">{subtitle}</SectionTitle>

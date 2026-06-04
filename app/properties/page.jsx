@@ -7,7 +7,6 @@ export const metadata = {
 
 import { Suspense } from 'react';
 import PropertiesSearch from '@/components/PropertiesSearch';
-import ScrollToTop from '@/components/ScrollToTop';
 import LoadingOverlay from '@/components/shared/LoadingOverlay';
 import PropertiesContent from './PropertiesContent';
 
@@ -54,7 +53,6 @@ const PropertiesPage = async ({ searchParams }) => {
 
   return (
     <div className="min-h-screen bg-white">
-      <ScrollToTop searchParams={searchParams} isFiltered={isFiltered} />
       {/* Header + Filters — full dark band */}
       <section className="bg-black px-4 md:px-[50px] pt-32 md:pt-36 pb-6">
         {/* Search */}
