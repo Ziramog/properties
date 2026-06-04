@@ -1,5 +1,6 @@
 'use client';
 import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import StepProperty from './steps/StepProperty';
 import StepClient from './steps/StepClient';
 import StepPayment from './steps/StepPayment';
@@ -16,6 +17,7 @@ const STEPS = [
 ];
 
 export default function QuotationWizard({ initialData = null, editId = null }) {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedPDFUrl, setGeneratedPDFUrl] = useState(null);
@@ -152,7 +154,18 @@ export default function QuotationWizard({ initialData = null, editId = null }) {
       // Create a blob URL from the response
       const blob = await pdfRes.blob();
       const url = URL.createObjectURL(blob);
-      setGeneratedPDFUrl(url);
+      
+      // Auto-download the PDF
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Propuesta-${id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Redirect back to quotations list
+      router.push('/admin/quotations');
+
     } catch (err) {
       alert('Error: ' + err.message);
     } finally {
