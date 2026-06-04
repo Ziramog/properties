@@ -7,22 +7,7 @@ export default function StepCustomize({ data, onChange, onNext, onBack }) {
       <h2 className="text-xl font-semibold mb-4 text-white">Personalizar propuesta</h2>
 
       <div className="space-y-4">
-        <div>
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Template</label>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {[
-              { id: 'modern', label: 'Modern', desc: 'Clean & profesional' },
-              { id: 'luxury', label: 'Luxury', desc: 'Elegante' },
-              { id: 'minimal', label: 'Minimal', desc: 'Simple' },
-            ].map(t => (
-              <button key={t.id} onClick={() => update('template', t.id)}
-                className={`p-4 rounded-sm border text-center transition-colors ${data.template === t.id ? 'border-[var(--color-brand)] bg-[var(--color-brand)]/10' : 'border-[#333] bg-[#1a1a1a] hover:border-[#444]'}`}>
-                <p className="text-sm font-semibold text-white">{t.label}</p>
-                <p className="text-xs text-[#999] mt-1">{t.desc}</p>
-              </button>
-            ))}
-          </div>
-        </div>
+
 
         <div className="flex flex-col gap-4 bg-[#111] border border-[#222] rounded-sm px-4 py-3">
           <div className="flex items-center justify-between">
@@ -37,17 +22,21 @@ export default function StepCustomize({ data, onChange, onNext, onBack }) {
           </div>
 
           {data.showAIDescription && (
-            <div className="pt-2 border-t border-[#222]">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Tono de la IA</label>
-              <select 
-                value={data.aiMode || 'whatsapp'} 
-                onChange={(e) => update('aiMode', e.target.value)}
-                className="w-full bg-[#1a1a1a] text-white border border-[#333] rounded-sm px-3 py-2 text-sm outline-none focus:border-[var(--color-brand)]"
-              >
-                <option value="formal">Formal - Ideal para email institucional</option>
-                <option value="whatsapp">WhatsApp - Cercano, breve y natural</option>
-                <option value="comercial">Comercial - Orientado a conversión</option>
-              </select>
+            <div className="pt-3 border-t border-[#222]">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-2">Tono de redacción</label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {[
+                  { id: 'whatsapp', label: 'WhatsApp', desc: 'Breve y natural' },
+                  { id: 'comercial', label: 'Comercial', desc: 'Orientado a venta' },
+                  { id: 'formal', label: 'Formal', desc: 'Institucional' },
+                ].map(t => (
+                  <button key={t.id} onClick={() => update('aiMode', t.id)}
+                    className={`p-3 rounded-sm border text-center transition-colors ${data.aiMode === t.id ? 'border-[var(--color-brand)] bg-[var(--color-brand)]/10' : 'border-[#333] bg-[#1a1a1a] hover:border-[#444]'}`}>
+                    <p className="text-sm font-semibold text-white">{t.label}</p>
+                    <p className="text-[10px] text-[#999] mt-1">{t.desc}</p>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
