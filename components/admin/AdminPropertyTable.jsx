@@ -167,14 +167,14 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left">
+        <table className="w-full text-left min-w-[900px]">
           <thead>
             <tr className="border-b border-[#222] text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-[#888]">
               <th className="px-3 md:px-6 py-3 font-medium">Propiedad</th>
-              <th className="px-2 md:px-4 py-3 font-medium hidden md:table-cell">Tipo</th>
-              <th className="px-2 md:px-4 py-3 font-medium hidden md:table-cell">Operación</th>
-              <th className="px-2 md:px-4 py-3 font-medium hidden md:table-cell">Precio</th>
-              <th className="px-2 md:px-4 py-3 font-medium hidden md:table-cell">Fotos</th>
+              <th className="px-2 md:px-4 py-3 font-medium">Tipo</th>
+              <th className="px-2 md:px-4 py-3 font-medium">Operación</th>
+              <th className="px-2 md:px-4 py-3 font-medium">Precio</th>
+              <th className="px-2 md:px-4 py-3 font-medium">Fotos</th>
               <th className="px-2 md:px-4 py-3 font-medium text-center">Dest.</th>
               <th className="px-2 md:px-4 py-3 font-medium text-center">Pub.</th>
               <th className="px-3 md:px-6 py-3 font-medium text-right">Acciones</th>
@@ -200,20 +200,20 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
                     </div>
                   </div>
                 </td>
-                <td className="px-2 md:px-4 py-3 hidden md:table-cell">
+                <td className="px-2 md:px-4 py-3">
                   <span className="text-[13px] text-[#bbb]">{typeLabels[prop.type] || prop.type}</span>
                 </td>
-                <td className="px-2 md:px-4 py-3 hidden md:table-cell">
+                <td className="px-2 md:px-4 py-3">
                   <span className={`text-[12px] font-semibold uppercase px-2 py-1 rounded-sm ${
                     prop.operation === 'venta' ? 'bg-green-900/40 text-green-400' : 'bg-blue-900/40 text-blue-400'
                   }`}>
                     {prop.operation === 'venta' ? 'Venta' : prop.operation === 'alquiler' ? 'Alquiler' : prop.operation}
                   </span>
                 </td>
-                <td className="px-2 md:px-4 py-3 hidden md:table-cell">
+                <td className="px-2 md:px-4 py-3">
                   <span className="text-[13px] font-semibold text-white">{prop.price || 'Consultar'}</span>
                 </td>
-                <td className="px-2 md:px-4 py-3 hidden md:table-cell">
+                <td className="px-2 md:px-4 py-3">
                   <span className="text-[13px] text-[#bbb]">{(prop.images || []).length}</span>
                 </td>
                 <td className="px-2 md:px-4 py-3 text-center">

@@ -50,7 +50,7 @@ const AdminQuotationsPage = async () => {
       {/* Table */}
       <div className="bg-[#161616] border border-[#222] rounded-sm max-h-[600px] overflow-y-auto">
         <div className="overflow-x-auto">
-          <table className="w-full text-left relative">
+          <table className="w-full text-left relative min-w-[700px]">
             <thead className="sticky top-0 bg-[#161616] z-20 shadow-sm shadow-black/50">
               <tr className="border-b border-[#222] text-[10px] font-bold uppercase tracking-wider text-[#888]">
                 <th className="px-2 md:px-4 py-3">N°</th>

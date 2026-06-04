@@ -85,7 +85,7 @@ const AdminQuoteDetailPage = async ({ params }) => {
         {/* Items */}
         <div className="mb-6">
           <p className="text-[11px] font-bold uppercase tracking-wider text-[#888] mb-3">Items</p>
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="border-b border-[#222]">
                 <th className="text-left py-2 font-semibold text-[#ccc]">Descripción</th>

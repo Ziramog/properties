@@ -124,7 +124,7 @@ export default function SubscribersClient({ initialLink, subscribers }) {
           </div>
           
           <div className="overflow-x-auto overflow-y-auto max-h-[500px]">
-            <table className="w-full text-left">
+            <table className="w-full text-left min-w-[600px]">
               <thead className="sticky top-0 bg-[#161616] z-10 shadow-[0_1px_0_#222]">
                 <tr className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
                   <th className="px-5 py-4">Teléfono (WhatsApp)</th>

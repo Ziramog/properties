@@ -51,7 +51,7 @@ const AdminQuotesPage = async ({ searchParams }) => {
         </div>
       ) : (
         <div className="bg-[#161616] border border-[#222] rounded-sm overflow-hidden">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[600px]">
             <thead className="bg-[#0a0a0a] border-b border-[#222]">
               <tr>
                 <th className="text-left px-4 py-3 font-semibold text-[#ccc]">Cliente</th>

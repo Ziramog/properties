@@ -123,7 +123,7 @@ const AdminReviewsPage = async ({ searchParams }) => {
           {/* Reviews table */}
           <div className="bg-[#161616] border border-[#222] rounded-sm overflow-hidden">
             <div className="overflow-x-auto max-h-[500px] overflow-y-auto relative">
-              <table className="w-full text-left">
+              <table className="w-full text-left min-w-[800px]">
                 <thead className="sticky top-0 bg-[#161616] z-10 shadow-[0_1px_0_#222]">
                   <tr className="border-b border-[#222] text-[10px] font-bold uppercase tracking-wider text-[#888]">
                     <th className="px-3 md:px-4 py-3">Autor</th>
