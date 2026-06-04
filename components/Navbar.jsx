@@ -32,6 +32,8 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
   const isGlassMode = isHomepage ? (isScrolled || isMobileMenuOpen) : true;
   const showIso = isScrolled || isAdminPage;
 
+  if (pathname.startsWith('/p/')) return null;
+
   useEffect(() => {
     const setAuthProviders = async () => {
       const res = await getProviders();

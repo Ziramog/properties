@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FaWhatsapp } from 'react-icons/fa';
 import { MapPin } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whatsapp';
 
 const Footer = ({ 
@@ -17,6 +18,11 @@ const Footer = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [groupLink, setGroupLink] = useState('#');
+  const pathname = usePathname();
+
+  if (pathname.startsWith('/p/')) {
+    return null;
+  }
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
