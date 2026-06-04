@@ -55,9 +55,9 @@ const AdminPage = async () => {
   ];
 
   const NAV_LINKS = [
-    { label: 'Comunidad', href: '/admin/subscribers', Icon: MessageCircle, color: '#25D366' },
-    { label: 'Propuestas', href: '/admin/quotations', Icon: FileText, color: '#3B82F6' },
     { label: 'Perfil', href: '/admin/profile', Icon: User, color: '#888' },
+    { label: 'Propuestas', href: '/admin/quotations', Icon: FileText, color: '#3B82F6' },
+    { label: 'Comunidad', href: '/admin/subscribers', Icon: MessageCircle, color: '#25D366' },
     { label: 'Reseñas', href: '/admin/reviews', Icon: Star, color: '#FFD700' },
   ];
 
