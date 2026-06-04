@@ -77,9 +77,10 @@ export default function SubscribersClient({ initialLink, subscribers }) {
             <h2 className="text-[14px] font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
               <LinkIcon className="w-4 h-4 text-[#25D366]" />
               Link de Invitación
+              <span className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-[#444] text-[#888] text-[10px] font-bold cursor-help" title="Crea un grupo en WhatsApp, ve a 'Info del grupo', selecciona 'Enlace de invitación', cópialo y pégalo abajo. Luego ve a 'Ajustes del grupo' y configura 'Enviar mensajes' para que solo puedan hacerlo los Administradores.">?</span>
             </h2>
             <p className="text-[12px] text-[#888] mb-4">
-              Este es el enlace al que serán redirigidos los usuarios tras suscribirse en el Footer.
+              Este es el enlace al que serán redirigidos los usuarios tras suscribirse en el Footer. Debes crear un grupo de WhatsApp configurado para que <strong>solo los administradores</strong> puedan enviar mensajes, garantizando privacidad y evitando spam.
             </p>
             <form onSubmit={handleSaveLink}>
               <input
