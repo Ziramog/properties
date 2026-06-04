@@ -161,7 +161,6 @@ export function ModernTemplate({ quotation, branding = {} }) {
           </View>
           <View style={s.headerRight}>
             <Text style={s.headerTitle}>{prop?.title || ''}</Text>
-            <Text style={s.headerPrice}>U$D {fmt(prop?.price)}</Text>
           </View>
         </View>
 
@@ -197,6 +196,13 @@ export function ModernTemplate({ quotation, branding = {} }) {
             </View>
           ) : <View style={s.photoEmpty} />}
         </View>
+
+        {/* ═════ INTRO TEXT (AI Description) ═════ */}
+        {quotation.customization?.aiDescription && (
+           <View style={{ paddingTop: 16, paddingBottom: 4, paddingLeft: PAD_X, paddingRight: PAD_X }}>
+             <Text style={{ fontFamily: BODY, fontSize: 10, color: INK, lineHeight: 1.5 }}>{quotation.customization.aiDescription}</Text>
+           </View>
+        )}
 
         {/* ═════ TWO-COLUMN: CARACTERÍSTICAS + PRECIO ═════ */}
         <View style={s.twoColSection}>
@@ -328,8 +334,8 @@ export function ModernTemplate({ quotation, branding = {} }) {
           <View style={s.signatureSection}>
             <View style={s.signatureBlock}>
               <Image style={s.signatureImg} src={branding.signatureBase64} />
-              <Text style={s.signatureName}>{branding.name || 'Roggero & Roma'}</Text>
-              <Text style={s.signatureAgency}>Roggero & Roma</Text>
+              <Text style={s.signatureName}>Silvia Roggero de Roma</Text>
+              <Text style={s.signatureAgency}>NEGOCIOS INMOBILIARIOS</Text>
               <Text style={s.signatureQuote}>Propuesta N° {quotation.quoteNumber}</Text>
             </View>
           </View>

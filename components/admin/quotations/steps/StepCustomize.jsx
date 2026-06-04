@@ -27,11 +27,11 @@ export default function StepCustomize({ data, onChange, onNext, onBack }) {
         <div className="flex items-center justify-between bg-[#111] border border-[#222] rounded-sm px-4 py-3">
           <div>
             <p className="text-sm font-medium text-white">Descripción con IA</p>
-            <p className="text-xs text-[#888]">MiniMax genera un párrafo persuasivo para la propuesta</p>
+            <p className="text-xs text-[#888]">Genera un párrafo persuasivo y profesional para la propuesta</p>
           </div>
           <button onClick={() => update('showAIDescription', !data.showAIDescription)}
-            className={`relative w-12 h-7 rounded-full transition-colors ${data.showAIDescription ? 'bg-[var(--color-brand)]' : 'bg-zinc-700'}`}>
-            <span className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform ${data.showAIDescription ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
+            className={`relative w-11 h-6 rounded-full transition-colors ${data.showAIDescription ? 'bg-[var(--color-brand)]' : 'bg-zinc-700'}`}>
+            <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${data.showAIDescription ? 'translate-x-5' : 'translate-x-0'}`} />
           </button>
         </div>
 
@@ -42,9 +42,17 @@ export default function StepCustomize({ data, onChange, onNext, onBack }) {
         </div>
 
         <div>
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Válido hasta</label>
+          <div className="flex items-center gap-1.5 mb-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-brand)]">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999]">Válido hasta</label>
+          </div>
           <input type="date" value={data.validUntil || ''} onChange={(e) => update('validUntil', e.target.value)}
-            className="w-full bg-[#1a1a1a] text-white border border-[#333] rounded-sm px-4 py-2.5 text-sm outline-none focus:border-[var(--color-brand)]" />
+            className="w-full bg-[#1a1a1a] text-white border border-[#333] rounded-sm px-4 py-2.5 text-sm outline-none focus:border-[var(--color-brand)] [color-scheme:dark]" />
         </div>
       </div>
 
