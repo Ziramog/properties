@@ -18,10 +18,18 @@ export default withAuth(
       return NextResponse.redirect(new URL('/', req.url));
     }
 
-    // Admin-only routes
+    // Superadmin-only routes
+    if (path.startsWith('/superadmin')) {
+      if (token?.role !== 'superadmin') {
+        console.log('[auth:middleware] Non-superadmin blocked on:', path, 'role:', token?.role);
+        return NextResponse.redirect(new URL('/', req.url));
+      }
+    }
+
+    // Admin and Superadmin routes
     if (path.startsWith('/properties/add') || path.startsWith('/admin') || path.match(/\/properties\/[^/]+\/edit/)) {
-      if (token?.role !== 'admin') {
-        console.log('[auth:middleware] Non-admin blocked on:', path, 'role:', token?.role);
+      if (token?.role !== 'admin' && token?.role !== 'superadmin') {
+        console.log('[auth:middleware] Non-admin/superadmin blocked on:', path, 'role:', token?.role);
         return NextResponse.redirect(new URL('/properties', req.url));
       }
     }
@@ -40,5 +48,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ['/properties/add', '/properties/:id/edit', '/admin'],
+  matcher: ['/properties/add', '/properties/:id/edit', '/admin/:path*', '/superadmin/:path*'],
 };
