@@ -37,6 +37,7 @@ const CustomizationSchema = new Schema({
   template: { type: String, enum: ['luxury', 'modern', 'minimal'], default: 'modern' },
   showAIDescription: { type: Boolean, default: false },
   aiDescription: { type: String, default: null },
+  whatsappMessage: { type: String, default: null },
   agentNotes: { type: String, default: null },
   validUntil: { type: Date, default: null },
 }, { _id: false });

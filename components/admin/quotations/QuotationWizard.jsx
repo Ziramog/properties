@@ -57,33 +57,31 @@ export default function QuotationWizard({ initialData = null, editId = null }) {
         exchangeRate = rateData.exchangeRateARS;
       } catch {}
 
-      // Generate AI description if toggled
-      let aiDescription = null;
-      if (wizardState.customization.showAIDescription) {
-        const firstProp = wizardState.properties[0];
-        if (firstProp) {
-          const aiRes = await fetch('/api/quotations/generate-ai', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              selector_version: wizardState.customization.aiMode || 'whatsapp',
-              nombre_cliente: wizardState.client.name || 'Cliente',
-              tipo_propiedad: firstProp.type || '',
-              operacion: firstProp.operation || 'venta',
-              ubicacion: `${firstProp.location?.city || ''}`,
-              barrio: firstProp.location?.street || '',
-              dormitorios: firstProp.beds || '',
-              banos: firstProp.baths || '',
-              superficie: firstProp.square_feet ? `${firstProp.square_feet} m²` : '',
-              precio: `USD ${totalPrice.toLocaleString('es-AR')}`,
-              puntos_destacados: wizardState.customization.agentNotes || 'Excelente oportunidad',
-              referencias_ubicacion: '',
-              uso_ideal: 'vivir o invertir'
-            }),
-          });
-          const aiData = await aiRes.json();
-          aiDescription = aiData.description || null;
-        }
+      // Always generate WhatsApp message silently for the clipboard action
+      let whatsappMessage = null;
+      const firstProp = wizardState.properties[0];
+      if (firstProp) {
+        const aiRes = await fetch('/api/quotations/generate-ai', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            selector_version: 'whatsapp',
+            nombre_cliente: wizardState.client.name || 'Cliente',
+            tipo_propiedad: firstProp.type || '',
+            operacion: firstProp.operation || 'venta',
+            ubicacion: `${firstProp.location?.city || ''}`,
+            barrio: firstProp.location?.street || '',
+            dormitorios: firstProp.beds || '',
+            banos: firstProp.baths || '',
+            superficie: firstProp.square_feet ? `${firstProp.square_feet} m²` : '',
+            precio: `USD ${totalPrice.toLocaleString('es-AR')}`,
+            puntos_destacados: wizardState.customization.aiDescription || '',
+            referencias_ubicacion: '',
+            uso_ideal: 'vivir o invertir'
+          }),
+        });
+        const aiData = await aiRes.json();
+        whatsappMessage = aiData.description || null;
       }
 
       const body = {
@@ -120,8 +118,8 @@ export default function QuotationWizard({ initialData = null, editId = null }) {
         },
         customization: {
           template: wizardState.customization.template,
-          showAIDescription: wizardState.customization.showAIDescription,
-          aiDescription,
+          aiDescription: wizardState.customization.aiDescription || null,
+          whatsappMessage,
           agentNotes: wizardState.customization.agentNotes || null,
           validUntil: wizardState.customization.validUntil || null,
         },

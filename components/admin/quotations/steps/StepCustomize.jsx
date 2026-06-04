@@ -1,5 +1,53 @@
 'use client';
-export default function StepCustomize({ data, onChange, onNext, onBack }) {
+import { useState } from 'react';
+
+export default function StepCustomize({ data, wizardState, onChange, onNext, onBack }) {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const update = (field, value) => onChange({ ...data, [field]: value });
+
+  const handleGenerateAI = async () => {
+    setIsGenerating(true);
+    try {
+      const firstProp = wizardState.properties[0];
+      if (!firstProp) {
+        alert('Debes seleccionar al menos una propiedad primero.');
+        return;
+      }
+      
+      const parsePrice = (val) => { if (!val) return 0; return parseFloat(String(val).replace(/[^0-9.]/g, '')) || 0; };
+      const totalPrice = wizardState.properties.reduce((sum, p) => sum + parsePrice(p.price), 0);
+
+      const aiRes = await fetch('/api/quotations/generate-ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          selector_version: data.aiMode || 'whatsapp',
+          nombre_cliente: wizardState.client.name || 'Cliente',
+          tipo_propiedad: firstProp.type || '',
+          operacion: firstProp.operation || 'venta',
+          ubicacion: `${firstProp.location?.city || ''}`,
+          barrio: firstProp.location?.street || '',
+          dormitorios: firstProp.beds || '',
+          banos: firstProp.baths || '',
+          superficie: firstProp.square_feet ? `${firstProp.square_feet} m²` : '',
+          precio: `USD ${totalPrice.toLocaleString('es-AR')}`,
+          puntos_destacados: data.aiDescription || 'Excelente oportunidad',
+          referencias_ubicacion: '',
+          uso_ideal: 'vivir o invertir'
+        }),
+      });
+      const aiData = await aiRes.json();
+      if (aiData.description) {
+        update('aiDescription', aiData.description);
+      } else {
+        alert('Error al generar la descripción.');
+      }
+    } catch (err) {
+      alert('Error: ' + err.message);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
   const update = (field, value) => onChange({ ...data, [field]: value });
 
   return (
@@ -9,42 +57,46 @@ export default function StepCustomize({ data, onChange, onNext, onBack }) {
       <div className="space-y-4">
 
 
-        <div className="flex flex-col gap-4 bg-[#111] border border-[#222] rounded-sm px-4 py-3">
-          <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 bg-[#111] border border-[#222] rounded-sm px-4 py-4">
+          <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-white">Descripción con IA</p>
-              <p className="text-xs text-[#888]">Genera un párrafo persuasivo y profesional para la propuesta</p>
+              <p className="text-sm font-medium text-white flex items-center gap-2">
+                Descripción de la Propiedad
+                <span className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-[#444] text-[#888] text-[10px] font-bold cursor-help" title="Puedes escribir la descripción manualmente. Si prefieres, elige un tono y haz clic en 'Generar con IA' para que se escriba sola. Luego podrás editar el resultado a tu gusto antes de generar la propuesta.">?</span>
+              </p>
+              <p className="text-xs text-[#888] mt-1">Escribe la presentación o usa la IA para generarla.</p>
             </div>
-            <button onClick={() => update('showAIDescription', !data.showAIDescription)}
-              className={`relative w-11 h-6 rounded-full transition-colors ${data.showAIDescription ? 'bg-[var(--color-brand)]' : 'bg-zinc-700'}`}>
-              <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${data.showAIDescription ? 'translate-x-5' : 'translate-x-0'}`} />
-            </button>
           </div>
 
-          {data.showAIDescription && (
-            <div className="pt-3 border-t border-[#222]">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-2">Tono de redacción</label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {[
-                  { id: 'whatsapp', label: 'WhatsApp', desc: 'Breve y natural' },
-                  { id: 'comercial', label: 'Comercial', desc: 'Orientado a venta' },
-                  { id: 'formal', label: 'Formal', desc: 'Institucional' },
-                ].map(t => (
-                  <button key={t.id} onClick={() => update('aiMode', t.id)}
-                    className={`p-3 rounded-sm border text-center transition-colors ${data.aiMode === t.id ? 'border-[var(--color-brand)] bg-[var(--color-brand)]/10' : 'border-[#333] bg-[#1a1a1a] hover:border-[#444]'}`}>
-                    <p className="text-sm font-semibold text-white">{t.label}</p>
-                    <p className="text-[10px] text-[#999] mt-1">{t.desc}</p>
-                  </button>
-                ))}
-              </div>
+          <div className="pt-2">
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-2">Asistente de Inteligencia Artificial</label>
+            <div className="flex flex-wrap items-center gap-3">
+              {[
+                { id: 'whatsapp', label: 'WhatsApp', desc: 'Natural' },
+                { id: 'comercial', label: 'Comercial', desc: 'Venta' },
+                { id: 'formal', label: 'Formal', desc: 'Serio' },
+              ].map(t => (
+                <button key={t.id} onClick={() => update('aiMode', t.id)}
+                  className={`px-3 py-1.5 rounded-sm border transition-colors ${data.aiMode === t.id ? 'border-[var(--color-brand)] bg-[var(--color-brand)]/10 text-white' : 'border-[#333] bg-[#1a1a1a] text-[#888] hover:border-[#444]'}`}>
+                  <span className="text-xs font-semibold">{t.label}</span>
+                </button>
+              ))}
+              <button 
+                onClick={handleGenerateAI} 
+                disabled={isGenerating}
+                className="ml-auto flex items-center gap-2 bg-[#222] border border-[#333] hover:border-[var(--color-brand)] text-[var(--color-brand)] text-xs font-bold px-4 py-1.5 rounded-sm transition-colors disabled:opacity-50 uppercase tracking-wider">
+                {isGenerating ? 'Generando...' : '✨ Generar con IA'}
+              </button>
             </div>
-          )}
-        </div>
+          </div>
 
-        <div>
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-[#999] mb-1">Notas generales</label>
-          <textarea value={data.agentNotes || ''} onChange={(e) => update('agentNotes', e.target.value)} rows={3}
-            className="w-full bg-[#1a1a1a] text-white border border-[#333] rounded-sm px-4 py-2.5 text-sm outline-none focus:border-[var(--color-brand)]" placeholder="Notas personalizadas para el cliente..." />
+          <textarea 
+            value={data.aiDescription || ''} 
+            onChange={(e) => update('aiDescription', e.target.value)} 
+            rows={5}
+            className="w-full bg-[#1a1a1a] text-white border border-[#333] rounded-sm px-4 py-3 text-[13px] outline-none focus:border-[var(--color-brand)] leading-relaxed" 
+            placeholder="Puedes escribir aquí la presentación de la propiedad..." 
+          />
         </div>
 
         <div>

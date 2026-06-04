@@ -215,17 +215,6 @@ export default async function PublicQuotationPage({ params }) {
             
           </div>
 
-          {/* General Notes */}
-          {customization?.agentNotes && (
-            <div className="mt-10 pt-6 border-t border-[#e8e6e0]">
-               <div className="flex items-center gap-3 mb-4">
-                 <h3 className="text-xs font-bold uppercase tracking-widest text-[#1a1a18]">Notas Generales</h3>
-                 <div className="h-[2px] w-10 bg-[var(--color-brand)]"></div>
-               </div>
-               <p className="text-sm text-[#4b4b48] leading-relaxed">{customization.agentNotes}</p>
-            </div>
-          )}
-
           {/* Footer Signature */}
           <div className="mt-16 pt-10 text-center">
              <div className="inline-block">

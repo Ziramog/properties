@@ -321,14 +321,6 @@ export function ModernTemplate({ quotation, branding = {} }) {
           </View>
         </View>
 
-        {/* ═════ NOTAS GENERALES ═════ */}
-        {quotation.customization?.agentNotes && (
-          <View style={{ paddingTop: 8, paddingBottom: 8, paddingLeft: PAD_X, paddingRight: PAD_X, borderTop: `0.5 solid ${BORDER}` }}>
-            <SectionHeading title="Notas generales" />
-            <Text style={{ fontFamily: BODY, fontSize: 8.5, color: INK2, lineHeight: 1.5 }}>{quotation.customization.agentNotes}</Text>
-          </View>
-        )}
-
         {/* ═════ SIGNATURE (centered) ═════ */}
         {hasSignature && (
           <View style={s.signatureSection}>
