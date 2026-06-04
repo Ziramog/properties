@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { deleteQuotation } from '@/app/actions/deleteQuotation';
+import Link from 'next/link';
 
 export default function QuotationActions({ quotationId, trackingToken }) {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -25,6 +26,16 @@ export default function QuotationActions({ quotationId, trackingToken }) {
 
   return (
     <div className="flex items-center gap-1.5">
+      <Link
+        href={`/admin/quotations/${quotationId}/edit`}
+        className="inline-flex items-center justify-center w-7 h-7 bg-[#222] text-[#888] rounded-sm hover:bg-[var(--color-brand)] hover:text-white transition-colors"
+        title="Editar"
+      >
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+        </svg>
+      </Link>
+
       <button 
         onClick={handleCopyLink} 
         className="inline-flex items-center justify-center w-7 h-7 bg-[#222] text-[#888] rounded-sm hover:bg-[#333] hover:text-white transition-colors"

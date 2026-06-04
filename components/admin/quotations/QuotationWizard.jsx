@@ -15,13 +15,13 @@ const STEPS = [
   { id: 5, label: 'Generar', icon: '📄' },
 ];
 
-export default function QuotationWizard() {
+export default function QuotationWizard({ initialData = null, editId = null }) {
   const [step, setStep] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedPDFUrl, setGeneratedPDFUrl] = useState(null);
-  const [generatedId, setGeneratedId] = useState(null);
+  const [generatedId, setGeneratedId] = useState(editId || null);
 
-  const [wizardState, setWizardState] = useState({
+  const [wizardState, setWizardState] = useState(initialData || {
     properties: [],
     client: { name: '', email: '', phone: '', dni: '', notes: '' },
     payment: { type: 'contado', downPaymentPct: 30, downPayment: null, installments: null, installmentAmount: null, interestRate: null, notes: '' },
@@ -121,12 +121,21 @@ export default function QuotationWizard() {
         },
       };
 
-      const createRes = await fetch('/api/quotations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      if (!createRes.ok) throw new Error('Error al crear presupuesto');
+      let createRes;
+      if (editId) {
+        createRes = await fetch(`/api/quotations/${editId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+      } else {
+        createRes = await fetch('/api/quotations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+      }
+      if (!createRes.ok) throw new Error(editId ? 'Error al actualizar presupuesto' : 'Error al crear presupuesto');
       const { id } = await createRes.json();
       setGeneratedId(id);
 
