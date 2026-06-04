@@ -7,13 +7,14 @@ import StepPayment from './steps/StepPayment';
 import StepCustomize from './steps/StepCustomize';
 import StepPreview from './steps/StepPreview';
 import { calculateFrenchSystem } from '@/lib/quotations/payment-calculator';
+import { Home, User, CreditCard, Palette, FileText } from 'lucide-react';
 
 const STEPS = [
-  { id: 1, label: 'Propiedad', icon: '🏠' },
-  { id: 2, label: 'Cliente', icon: '👤' },
-  { id: 3, label: 'Pago', icon: '💳' },
-  { id: 4, label: 'Diseño', icon: '🎨' },
-  { id: 5, label: 'Generar', icon: '📄' },
+  { id: 1, label: 'Propiedad', icon: <Home className="w-4 h-4" /> },
+  { id: 2, label: 'Cliente', icon: <User className="w-4 h-4" /> },
+  { id: 3, label: 'Pago', icon: <CreditCard className="w-4 h-4" /> },
+  { id: 4, label: 'Diseño', icon: <Palette className="w-4 h-4" /> },
+  { id: 5, label: 'Generar', icon: <FileText className="w-4 h-4" /> },
 ];
 
 export default function QuotationWizard({ initialData = null, editId = null }) {
