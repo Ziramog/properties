@@ -13,6 +13,12 @@ export default function StepCustomize({ data, wizardState, onChange, onNext, onB
         alert('Debes seleccionar al menos una propiedad primero.');
         return;
       }
+
+      if (!data.aiMode) {
+        alert('Por favor, selecciona un tono de redacción primero (WhatsApp, Comercial o Formal).');
+        setIsGenerating(false);
+        return;
+      }
       
       const parsePrice = (val) => { if (!val) return 0; return parseFloat(String(val).replace(/[^0-9.]/g, '')) || 0; };
       const totalPrice = wizardState.properties.reduce((sum, p) => sum + parsePrice(p.price), 0);
@@ -21,7 +27,7 @@ export default function StepCustomize({ data, wizardState, onChange, onNext, onB
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          selector_version: data.aiMode || 'whatsapp',
+          selector_version: data.aiMode,
           nombre_cliente: wizardState.client.name || 'Cliente',
           tipo_propiedad: firstProp.type || '',
           operacion: firstProp.operation || 'venta',

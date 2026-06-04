@@ -21,7 +21,7 @@ export async function GET() {
 
   const quotesWithCreator = quotes.map(q => ({
     ...q,
-    creatorName: userMap[q.createdBy] || 'Silvia Roggero'
+    creatorName: userMap[q.createdBy?.toString()] || 'Silvia Roggero'
   }));
 
   return NextResponse.json({ quotes: quotesWithCreator, exchangeRateARS: config?.exchangeRateARS || null });
