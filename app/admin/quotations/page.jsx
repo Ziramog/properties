@@ -59,7 +59,17 @@ const AdminQuotationsPage = async () => {
                 <th className="px-2 md:px-3 py-3 text-right">Total</th>
                 <th className="px-2 md:px-3 py-3 text-center">Estado</th>
                 <th className="px-2 md:px-3 py-3 hidden md:table-cell">Fecha</th>
-                <th className="px-2 md:px-4 py-3 text-right">Acciones</th>
+                <th className="px-2 md:px-4 py-3 text-right group">
+                  <div className="flex justify-end items-center gap-1">
+                    Acciones
+                    <span 
+                      className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border border-[#444] text-[#888] text-[8px] font-bold cursor-help"
+                      title="👁️ Ver PDF | ✏️ Editar Propuesta | 🔗 Copiar Link Público | 💬 Copiar Descripción de IA para WhatsApp (solo si generaste la descripción) | 🗑️ Eliminar Propuesta"
+                    >
+                      ?
+                    </span>
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#222]">
