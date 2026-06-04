@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import Image from 'next/image';
 import SignatureCanvas from 'react-signature-canvas';
 import AgentNameForm from '@/components/AgentNameForm';
+import { HelpCircle } from 'lucide-react';
 
 export default function ProfileClient({ user, totalProps, payments, config: initialConfig }) {
   const [config, setConfig] = useState(initialConfig || {});
@@ -117,9 +118,10 @@ export default function ProfileClient({ user, totalProps, payments, config: init
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        {/* ROW 1 */}
         {/* 1. User */}
         <div className={cardCls}>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 h-full">
             <Image
               src={user?.image || '/images/profile.png'}
               alt="Avatar"
@@ -132,166 +134,209 @@ export default function ProfileClient({ user, totalProps, payments, config: init
               <p className="text-[12px] text-[#888]">{user?.email || ''}</p>
             </div>
           </div>
-          <div className="mt-3 pt-3 border-t border-[#222]">
-            <AgentNameForm initialName={user?.agentName} />
-          </div>
         </div>
 
-        {/* 2. Plan */}
-        <div className={`${cardCls} bg-gradient-to-br from-[#1C1C1A]/80 to-[#2A2A27]/80`}>
-          <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] mb-1">Plan Actual</p>
-          <h2 className="text-[28px] font-bold leading-tight mb-1 text-white" style={{ fontFamily: 'var(--font-heading)' }}>Pro</h2>
-          <p className="text-white/50 text-xs">Propiedades: {totalProps} activas</p>
-          <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
-            <div>
-              <p className="text-[20px] font-bold text-white">U$D 25<span className="text-xs font-normal text-white/50">/mes</span></p>
-              <p className="text-[9px] text-[#888] uppercase tracking-wider mt-0.5">Abonado en efectivo</p>
-            </div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-green-400 bg-green-900/30 px-2 py-1 rounded-sm border border-green-800">
-              Activo
-            </span>
-          </div>
-        </div>
-
-        {/* 3. Logo */}
+        {/* 2. Configuración de Contacto del Sitio */}
         <div className={cardCls}>
-          <p className={labelCls}>Logo Inmobiliaria</p>
-          <p className="text-[12px] text-[#666] mb-3">Aparece en propuestas PDF.</p>
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-sm border border-[#333] flex items-center justify-center overflow-hidden bg-[#0a0a0a]">
-              {config.logoUrl ? (
-                <img src={config.logoUrl} alt="Logo" className="object-contain w-full h-full" />
-              ) : (
-                <span className="text-[#555] text-[10px] text-center px-1">Sin logo</span>
-              )}
+          <div className="flex items-center justify-between mb-2 relative">
+            <div className="flex items-center gap-1.5">
+              <p className={labelCls + ' mb-0'}>Contacto Global del Sitio</p>
+              <div className="relative group cursor-help flex items-center">
+                <HelpCircle className="w-3.5 h-3.5 text-[#888] hover:text-white transition-colors" />
+                
+                {/* Tooltip Popup */}
+                <div className="absolute bottom-full right-[-8px] mb-2 w-72 bg-[#0a0a0a] border border-[#333] rounded-sm p-3 shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-200 z-[120]">
+                  <p className="text-[11px] font-bold text-white uppercase tracking-wider mb-1.5 border-b border-[#222] pb-1">⚠️ Impacto Crítico Global</p>
+                  <ul className="space-y-1.5 text-[10.5px] text-[#aaa] list-disc list-inside">
+                    <li><strong className="text-white">Email:</strong> Cambia la dirección de correo y los links <code className="text-[#F26B2E]">mailto:</code> del menú y el pie de página de todo el sitio.</li>
+                    <li><strong className="text-white">WhatsApp:</strong> Modifica la redirección y número de chat directo en la cabecera, pie de página y menú móvil de todo el sitio.</li>
+                    <li><strong className="text-white">Dirección:</strong> Cambia la dirección expuesta en el pie de página y la búsqueda del local en Google Maps.</li>
+                    <li><strong className="text-white">SEO Local:</strong> Actualiza automáticamente los metadatos de Google (Schema.org) de la empresa.</li>
+                  </ul>
+                  <div className="absolute top-full right-2 w-2 h-2 bg-[#0a0a0a] border-r border-b border-[#333] rotate-45"></div>
+                </div>
+              </div>
             </div>
-            <div>
-              <label className={`${btnPrimary} cursor-pointer inline-block`}>
-                {uploading ? 'Subiendo...' : 'Seleccionar'}
-                <input type="file" accept="image/png,image/jpeg" className="hidden" onChange={handleLogoUpload} disabled={uploading} />
-              </label>
-              <p className="text-[10px] text-[#555] mt-1">PNG o JPG ideal</p>
-            </div>
-          </div>
-        </div>
-
-        {/* 4. Exchange rate */}
-        <div className={cardCls}>
-          <p className={labelCls}>Tipo de Cambio</p>
-          <p className="text-[12px] text-[#666] mb-3">Para precios en ARS.</p>
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[12px] text-[#666]">$</span>
-              <input type="number" value={rateValue} onChange={(e) => setRateValue(e.target.value)}
-                className={`${inputCls} w-28 pl-5`} placeholder="1200" min="0" step="1" />
-            </div>
-            <span className="text-[12px] text-[#666]">ARS/USD</span>
-            <button onClick={saveExchangeRate} disabled={savingRate} className={btnPrimary}>
-              {savingRate ? '...' : 'Guardar'}
+            
+            <button onClick={saveContactInfo} disabled={savingContact} className="text-[10px] text-[var(--color-brand)] font-bold uppercase hover:underline">
+              {savingContact ? '...' : 'Guardar'}
             </button>
           </div>
-          {config.exchangeRateARS && (
-            <p className="text-[11px] text-[#555] mt-2">Actual: $ {parseFloat(config.exchangeRateARS).toLocaleString('es-AR')}</p>
-          )}
+          
+          <div className="space-y-3 mt-4">
+            <div>
+              <label className="block text-[9px] font-bold uppercase text-[#555] mb-1">Email</label>
+              <input type="email" value={contactData.contactEmail} onChange={e => setContactData({...contactData, contactEmail: e.target.value})} className={inputCls + " py-1.5"} />
+            </div>
+            <div>
+              <label className="block text-[9px] font-bold uppercase text-[#555] mb-1">WhatsApp</label>
+              <input type="text" value={contactData.contactPhone} onChange={e => setContactData({...contactData, contactPhone: e.target.value})} className={inputCls + " py-1.5"} />
+            </div>
+            <div>
+              <label className="block text-[9px] font-bold uppercase text-[#555] mb-1">Dirección</label>
+              <input type="text" value={contactData.contactAddress} onChange={e => setContactData({...contactData, contactAddress: e.target.value})} className={inputCls + " py-1.5"} />
+            </div>
+          </div>
         </div>
 
-        {/* 5. Config + Payments combined */}
-        <div className={`${cardCls} md:col-span-2 xl:col-span-2 flex flex-col`}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 flex-1">
-            {/* Site config */}
+        {/* 3. Plan & Payments combined */}
+        <div className={`${cardCls} md:col-span-2 xl:col-span-2 flex flex-col md:flex-row gap-6 bg-gradient-to-br from-[#161616]/70 via-[#1C1C1A]/80 to-[#161616]/70`}>
+          {/* Plan Section */}
+          <div className="flex-1 flex flex-col justify-between pr-0 md:pr-6 border-b md:border-b-0 md:border-r border-[#222] pb-6 md:pb-0">
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <p className={labelCls + ' mb-0'}>Configuración de Contacto</p>
-                <button onClick={saveContactInfo} disabled={savingContact} className="text-[10px] text-[var(--color-brand)] font-bold uppercase hover:underline">
-                  {savingContact ? '...' : 'Guardar'}
+              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-brand)] mb-1">Plan Actual</p>
+              <h2 className="text-[28px] font-bold leading-tight mb-1 text-white" style={{ fontFamily: 'var(--font-heading)' }}>Pro</h2>
+              <p className="text-white/50 text-xs">Propiedades: {totalProps} activas</p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
+              <div>
+                <p className="text-[20px] font-bold text-white">U$D 25<span className="text-xs font-normal text-white/50">/mes</span></p>
+                <p className="text-[9px] text-[#888] uppercase tracking-wider mt-0.5">Abonado en efectivo</p>
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-green-400 bg-green-900/30 px-2 py-1 rounded-sm border border-green-800">
+                Activo
+              </span>
+            </div>
+          </div>
+
+          {/* Payments Section */}
+          <div className="flex-1 flex flex-col justify-between">
+            <p className={labelCls}>Historial de Pagos</p>
+            <div className="overflow-auto flex-1 mt-2 pr-1" style={{ maxHeight: 110 }}>
+              {payments.length === 0 ? (
+                <p className="text-[12px] text-[#666] text-center py-4">No hay pagos registrados.</p>
+              ) : (
+                <table className="w-full text-[11px]">
+                  <thead>
+                    <tr className="border-b border-[#333] text-[#888] uppercase tracking-wider text-[9px]">
+                      <th className="text-left py-1">Fecha</th>
+                      <th className="text-left py-1">Plan</th>
+                      <th className="text-right py-1">Monto</th>
+                      <th className="text-right py-1">Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#222]">
+                    {payments.map((p) => (
+                      <tr key={p._id}>
+                        <td className="py-1.5 text-[#999]">{new Date(p.createdAt).toLocaleDateString('es-AR')}</td>
+                        <td className="py-1.5 text-white capitalize">{p.plan}</td>
+                        <td className="py-1.5 text-right text-white font-medium">{p.currency || 'U$D'} {p.amount?.toLocaleString('es-AR')}</td>
+                        <td className="py-1.5 text-right">
+                          <span className={`text-[9px] font-bold px-1 py-0.5 rounded-sm uppercase tracking-wider text-white ${
+                            p.status === 'paid' ? 'bg-green-600' : p.status === 'pending' ? 'bg-yellow-600' : 'bg-red-600'
+                          }`}>
+                            {p.status === 'paid' ? 'Pagado' : p.status === 'pending' ? 'Pendiente' : 'Vencido'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* ROW 2 */}
+        {/* 4. Configuración de Propuestas (PDF) */}
+        <div className={`${cardCls} md:col-span-2 xl:col-span-4 bg-gradient-to-br from-[#111] to-[#151515] border-[#222]`}>
+          <div className="flex items-center gap-1.5 mb-5 border-b border-[#222] pb-3">
+            <p className="text-[13px] font-bold uppercase tracking-wider text-[var(--color-brand)] mb-0">Configuración de Propuestas (PDF)</p>
+            <div className="relative group cursor-help flex items-center">
+              <HelpCircle className="w-3.5 h-3.5 text-[#888] hover:text-white transition-colors" />
+              <div className="absolute bottom-full left-0 mb-2 w-64 bg-[#0a0a0a] border border-[#333] rounded-sm p-3 shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-200 z-[120]">
+                <p className="text-[11px] font-bold text-white uppercase tracking-wider mb-1.5 border-b border-[#222] pb-1">Impacto en PDFs</p>
+                <p className="text-[10.5px] text-[#aaa]">
+                  Estos datos construyen y personalizan exclusivamente las propuestas PDF que descargas para enviar a los clientes.
+                </p>
+                <div className="absolute top-full left-2 w-2 h-2 bg-[#0a0a0a] border-r border-b border-[#333] rotate-45"></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-6 gap-y-8">
+            {/* Agent Name */}
+            <div className="flex flex-col">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#888] mb-1">Nombre del Agente</p>
+              <p className="text-[12px] text-[#666] mb-3">Aparece en el pie del PDF.</p>
+              <AgentNameForm initialName={user?.agentName} />
+            </div>
+
+            {/* Logo */}
+            <div className="flex flex-col">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#888] mb-1">Logo Inmobiliaria</p>
+              <p className="text-[12px] text-[#666] mb-3">Cabecera de propuestas.</p>
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-sm border border-[#333] flex items-center justify-center overflow-hidden bg-[#0a0a0a]">
+                  {config.logoUrl ? (
+                    <img src={config.logoUrl} alt="Logo" className="object-contain w-full h-full" />
+                  ) : (
+                    <span className="text-[#555] text-[10px] text-center px-1">Sin logo</span>
+                  )}
+                </div>
+                <div>
+                  <label className={`${btnPrimary} cursor-pointer inline-block`}>
+                    {uploading ? 'Subiendo...' : 'Seleccionar'}
+                    <input type="file" accept="image/png,image/jpeg" className="hidden" onChange={handleLogoUpload} disabled={uploading} />
+                  </label>
+                  <p className="text-[10px] text-[#555] mt-1">PNG o JPG ideal</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Tipo de Cambio */}
+            <div className="flex flex-col">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#888] mb-1">Tipo de Cambio</p>
+              <p className="text-[12px] text-[#666] mb-3">Para calcular valores en ARS.</p>
+              <div className="flex items-center gap-2">
+                <div className="relative">
+                  <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[12px] text-[#666]">$</span>
+                  <input type="number" value={rateValue} onChange={(e) => setRateValue(e.target.value)}
+                    className={`${inputCls} w-28 pl-5`} placeholder="1200" min="0" step="1" />
+                </div>
+                <span className="text-[12px] text-[#666]">ARS/USD</span>
+                <button onClick={saveExchangeRate} disabled={savingRate} className={btnPrimary}>
+                  {savingRate ? '...' : 'Guardar'}
                 </button>
               </div>
-              <div className="space-y-3 mt-4">
-                <div>
-                  <label className="block text-[9px] font-bold uppercase text-[#555] mb-1">Email</label>
-                  <input type="email" value={contactData.contactEmail} onChange={e => setContactData({...contactData, contactEmail: e.target.value})} className={inputCls + " py-1.5"} />
-                </div>
-                <div>
-                  <label className="block text-[9px] font-bold uppercase text-[#555] mb-1">WhatsApp</label>
-                  <input type="text" value={contactData.contactPhone} onChange={e => setContactData({...contactData, contactPhone: e.target.value})} className={inputCls + " py-1.5"} />
-                </div>
-                <div>
-                  <label className="block text-[9px] font-bold uppercase text-[#555] mb-1">Dirección</label>
-                  <input type="text" value={contactData.contactAddress} onChange={e => setContactData({...contactData, contactAddress: e.target.value})} className={inputCls + " py-1.5"} />
-                </div>
-              </div>
+              {config.exchangeRateARS && (
+                <p className="text-[11px] text-[#555] mt-2">Actual: $ {parseFloat(config.exchangeRateARS).toLocaleString('es-AR')}</p>
+              )}
             </div>
 
-            {/* Payments */}
+            {/* Signature */}
             <div className="flex flex-col">
-              <p className={labelCls}>Historial de Pagos</p>
-              <div className="overflow-auto flex-1" style={{ maxHeight: 200 }}>
-                {payments.length === 0 ? (
-                  <p className="text-[12px] text-[#666] text-center py-4">No hay pagos registrados.</p>
-                ) : (
-                  <table className="w-full text-[11px]">
-                    <thead>
-                      <tr className="border-b border-[#333] text-[#888] uppercase tracking-wider text-[9px]">
-                        <th className="text-left py-1">Fecha</th>
-                        <th className="text-left py-1">Plan</th>
-                        <th className="text-right py-1">Monto</th>
-                        <th className="text-right py-1">Estado</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#222]">
-                      {payments.map((p) => (
-                        <tr key={p._id}>
-                          <td className="py-1.5 text-[#999]">{new Date(p.createdAt).toLocaleDateString('es-AR')}</td>
-                          <td className="py-1.5 text-white capitalize">{p.plan}</td>
-                          <td className="py-1.5 text-right text-white font-medium">{p.currency || 'U$D'} {p.amount?.toLocaleString('es-AR')}</td>
-                          <td className="py-1.5 text-right">
-                            <span className={`text-[9px] font-bold px-1 py-0.5 rounded-sm uppercase tracking-wider text-white ${
-                              p.status === 'paid' ? 'bg-green-600' : p.status === 'pending' ? 'bg-yellow-600' : 'bg-red-600'
-                            }`}>
-                              {p.status === 'paid' ? 'Pagado' : p.status === 'pending' ? 'Pendiente' : 'Vencido'}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#888] mb-0">Firma Digital</p>
+                {config.signatureBase64 && (
+                  <span className="text-[10px] text-green-400 font-bold uppercase tracking-wider">Guardada</span>
                 )}
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 6. Signature */}
-        <div className={`${cardCls} md:col-span-2 xl:col-span-2`}>
-          <div className="flex items-center justify-between mb-2">
-            <p className={labelCls + ' mb-0'}>Firma Digital</p>
-            {config.signatureBase64 && (
-              <span className="text-[10px] text-green-400 font-bold uppercase tracking-wider">Guardada</span>
-            )}
-          </div>
-          <div className="flex items-start gap-4">
-            <div className="flex-1">
               <div className="border border-[#333] rounded-sm overflow-hidden mb-2 bg-white" style={{ filter: 'invert(1) hue-rotate(180deg)' }}>
                 <SignatureCanvas
                   ref={sigRef}
                   penColor="#1a1a1a"
-                  canvasProps={{ className: 'w-full', style: { width: '100%', height: 90 } }}
+                  canvasProps={{ className: 'w-full', style: { width: '100%', height: 75 } }}
                 />
               </div>
-              <div className="flex items-center gap-2">
-                <button onClick={clearSignaturePad} className={btnSecondary}>Limpiar</button>
-                <button onClick={saveSignature} disabled={savingSig} className={btnPrimary}>
-                  {savingSig ? 'Guardando...' : 'Guardar Firma'}
-                </button>
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex gap-2">
+                  <button onClick={clearSignaturePad} className={btnSecondary}>Limpiar</button>
+                  <button onClick={saveSignature} disabled={savingSig} className={btnPrimary}>
+                    {savingSig ? 'Guardando...' : 'Guardar'}
+                  </button>
+                </div>
+                {config.signatureBase64 && (
+                  <div className="w-16 p-1 bg-[#0a0a0a] border border-[#222] rounded-sm flex items-center justify-center flex-shrink-0">
+                    <img src={config.signatureBase64} alt="Firma" className="h-6 object-contain" />
+                  </div>
+                )}
               </div>
             </div>
-            {config.signatureBase64 && (
-              <div className="w-32 p-2 bg-[#0a0a0a] border border-[#222] rounded-sm flex items-center justify-center flex-shrink-0">
-                <img src={config.signatureBase64} alt="Firma" className="h-10" />
-              </div>
-            )}
+
           </div>
         </div>
+
       </div>
     </div>
   );
