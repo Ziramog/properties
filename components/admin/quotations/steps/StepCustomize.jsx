@@ -48,7 +48,6 @@ export default function StepCustomize({ data, wizardState, onChange, onNext, onB
       setIsGenerating(false);
     }
   };
-  const update = (field, value) => onChange({ ...data, [field]: value });
 
   return (
     <div>
