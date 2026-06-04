@@ -24,8 +24,9 @@ const AdminQuotationsPage = async () => {
 
   return (
     <div className="p-3 md:p-6">
-      <h1 className="text-[24px] md:text-[36px] font-normal text-white mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
+      <h1 className="text-[24px] md:text-[36px] font-normal text-white mb-3 flex items-center gap-3" style={{ fontFamily: 'var(--font-heading)' }}>
         Propuestas
+        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#444] text-[#888] text-[12px] font-bold cursor-help" title="Crea y gestiona presupuestos en PDF o web para tus clientes. Al generar una propuesta, puedes enviar un enlace seguro para que la aprueben.">?</span>
       </h1>
       <Link href="/admin/quotations/new"
         className="inline-block bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[12px] md:text-[13px] font-bold uppercase tracking-wider px-5 py-2.5 rounded-sm transition-colors mb-6">

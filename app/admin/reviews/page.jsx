@@ -46,8 +46,9 @@ const AdminReviewsPage = async ({ searchParams }) => {
     <div className="p-3 md:p-6">
 
       <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
-        <h1 className="text-[24px] md:text-[36px] font-normal text-white" style={{ fontFamily: 'var(--font-heading)' }}>
+        <h1 className="text-[24px] md:text-[36px] font-normal text-white flex items-center gap-3" style={{ fontFamily: 'var(--font-heading)' }}>
           Reseñas Google
+          <span className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#444] text-[#888] text-[12px] font-bold cursor-help" title="Modera y visualiza las reseñas públicas. Destaca tus favoritas para que aparezcan primeras y oculta las que no aporten valor.">?</span>
         </h1>
         <div className="flex gap-2">
           <a href={showAdd ? '/admin/reviews' : '/admin/reviews?add=1'} className="text-[12px] font-bold uppercase tracking-wider px-4 py-2.5 rounded-sm border border-[var(--color-brand)] text-[var(--color-brand)] hover:bg-[var(--color-brand)] hover:text-white transition-colors">

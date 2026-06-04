@@ -60,6 +60,7 @@ export default function SubscribersClient({ initialLink, subscribers }) {
           <h1 className="text-[28px] md:text-[36px] font-normal text-white flex items-center gap-3" style={{ fontFamily: 'var(--font-heading)' }}>
             <MessageCircle className="w-8 h-8 text-[#25D366]" />
             Comunidad WhatsApp
+            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#444] text-[#888] text-[12px] font-bold cursor-help" title="Gestiona los contactos que se unieron a través del enlace de invitación y exporta tu base de datos en CSV para realizar envíos masivos.">?</span>
           </h1>
           <p className="text-[#888] text-sm mt-1">
             Administra los números de la base de datos y el enlace de tu grupo.
