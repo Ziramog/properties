@@ -112,19 +112,42 @@ const AdminPage = async () => {
         </div>
       </div>
 
-      {/* Navigation links: 3 cards */}
+      {/* Navigation links: 4 cards */}
       <div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="bg-[#161616] border border-[#222] rounded-sm p-5 hover:border-[#333] transition-colors text-center group"
-            >
-              <link.Icon className="w-7 h-7 mx-auto mb-3 opacity-80 group-hover:opacity-100 transition-opacity" style={{ color: link.color }} strokeWidth={1.5} />
-              <p className="text-[11px] font-medium text-[#888] uppercase tracking-wider">{link.label}</p>
-            </Link>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const tooltipText = 
+              link.label === 'Perfil' ? 'Administra información personal, firma PDF y configuraciones de contacto.' :
+              link.label === 'Propuestas' ? 'Crea y gestiona presupuestos en PDF o web para tus clientes.' :
+              link.label === 'Comunidad' ? 'Gestiona contactos, suscripciones y boletines.' :
+              'Modera y visualiza las reseñas y testimonios públicos.';
+
+            return (
+              <div key={link.label} className="relative group">
+                <Link
+                  href={link.href}
+                  className="block bg-[#161616] border border-[#222] rounded-sm p-5 hover:border-[#333] transition-colors text-center group-hover:bg-[#1a1a1a]"
+                >
+                  <link.Icon className="w-7 h-7 mx-auto mb-3 opacity-80 group-hover:opacity-100 transition-opacity" style={{ color: link.color }} strokeWidth={1.5} />
+                  <p className="text-[11px] font-medium text-[#888] uppercase tracking-wider">{link.label}</p>
+                </Link>
+
+                <div className="absolute top-2 right-2 group/help cursor-help">
+                  <div className="p-1 rounded-full hover:bg-white/10 transition-colors">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#666] group-hover/help:text-white">
+                       <circle cx="12" cy="12" r="10"></circle>
+                       <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                       <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                     </svg>
+                  </div>
+                  {/* Tooltip Popup */}
+                  <div className="absolute bottom-full right-0 mb-2 w-48 sm:w-56 bg-[#0a0a0a] border border-[#333] rounded-sm p-3 shadow-2xl opacity-0 pointer-events-none group-hover/help:opacity-100 transition-opacity duration-200 z-20">
+                    <p className="text-[10px] text-[#aaa] leading-relaxed">{tooltipText}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

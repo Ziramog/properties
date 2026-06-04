@@ -179,12 +179,7 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
                       </li>
                     ))}
                     {session && (
-                      <>
-                        {session.user?.role !== 'admin' && (
-                          <li className="border-b border-[#252525] last:border-b-0"><Link href="/profile" className="block text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">Perfil</Link></li>
-                        )}
-                        <li className="border-b border-[#252525] last:border-b-0"><button onClick={() => signOut()} className="block w-full text-center text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">Salir</button></li>
-                      </>
+                      <li className="border-b border-[#252525] last:border-b-0"><button onClick={() => signOut()} className="block w-full text-center text-white text-[13px] px-5 py-[15px] font-normal hover:opacity-40">Salir</button></li>
                     )}
                   </ul>
                 </div>
@@ -295,16 +290,9 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
             )}
 
             {session ? (
-              <>
-                {session?.user?.role !== 'admin' && (
-                  <Link href="/profile" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }} onClick={() => setIsMobileMenuOpen(false)}>
-                    Perfil
-                  </Link>
-                )}
-                <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '1.0s' }}>
-                  Salir
-                </button>
-              </>
+              <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '1.0s' }}>
+                Salir
+              </button>
             ) : (
               providers && Object.values(providers).map((provider) => (
                 <button key={provider.id} onClick={() => { signIn(provider.id, { callbackUrl: '/admin' }); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.8s' }}>
