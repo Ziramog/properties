@@ -257,15 +257,31 @@ export default function ProfileClient({ user, totalProps, payments, config: init
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-6 gap-y-8">
             {/* Agent Name */}
             <div className="flex flex-col">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-[#888] mb-1">Nombre del Agente</p>
-              <p className="text-[12px] text-[#666] mb-3">Aparece en el pie del PDF.</p>
+              <div className="flex items-center gap-1.5 mb-3">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#888] mb-0">Nombre del Agente</p>
+                <div className="relative group cursor-help flex items-center">
+                  <HelpCircle className="w-3.5 h-3.5 text-[#555] hover:text-[var(--color-brand)] transition-colors" />
+                  <div className="absolute bottom-full left-[-8px] mb-2 w-56 bg-[#0a0a0a] border border-[#333] rounded-sm p-3 shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-200 z-[120]">
+                    <p className="text-[10px] text-[#aaa] m-0"><strong>Impacto:</strong> Se imprime en el pie de página de los PDF que generes, estableciendo al responsable de la propuesta.</p>
+                    <div className="absolute top-full left-3 w-2 h-2 bg-[#0a0a0a] border-r border-b border-[#333] rotate-45"></div>
+                  </div>
+                </div>
+              </div>
               <AgentNameForm initialName={user?.agentName} />
             </div>
 
             {/* Logo */}
             <div className="flex flex-col">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-[#888] mb-1">Logo Inmobiliaria</p>
-              <p className="text-[12px] text-[#666] mb-3">Cabecera de propuestas.</p>
+              <div className="flex items-center gap-1.5 mb-3">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#888] mb-0">Logo Inmobiliaria</p>
+                <div className="relative group cursor-help flex items-center">
+                  <HelpCircle className="w-3.5 h-3.5 text-[#555] hover:text-[var(--color-brand)] transition-colors" />
+                  <div className="absolute bottom-full left-[-8px] mb-2 w-56 bg-[#0a0a0a] border border-[#333] rounded-sm p-3 shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-200 z-[120]">
+                    <p className="text-[10px] text-[#aaa] m-0"><strong>Impacto:</strong> Reemplaza el logotipo por defecto en la cabecera de todas las propuestas PDF, reforzando tu marca.</p>
+                    <div className="absolute top-full left-3 w-2 h-2 bg-[#0a0a0a] border-r border-b border-[#333] rotate-45"></div>
+                  </div>
+                </div>
+              </div>
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-sm border border-[#333] flex items-center justify-center overflow-hidden bg-[#0a0a0a]">
                   {config.logoUrl ? (
@@ -286,8 +302,16 @@ export default function ProfileClient({ user, totalProps, payments, config: init
 
             {/* Tipo de Cambio */}
             <div className="flex flex-col">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-[#888] mb-1">Tipo de Cambio</p>
-              <p className="text-[12px] text-[#666] mb-3">Para calcular valores en ARS.</p>
+              <div className="flex items-center gap-1.5 mb-3">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#888] mb-0">Tipo de Cambio</p>
+                <div className="relative group cursor-help flex items-center">
+                  <HelpCircle className="w-3.5 h-3.5 text-[#555] hover:text-[var(--color-brand)] transition-colors" />
+                  <div className="absolute bottom-full left-[-8px] mb-2 w-56 bg-[#0a0a0a] border border-[#333] rounded-sm p-3 shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-200 z-[120]">
+                    <p className="text-[10px] text-[#aaa] m-0"><strong>Impacto:</strong> Convierte automáticamente todos los precios en dólares (USD) a pesos argentinos (ARS) dentro del PDF.</p>
+                    <div className="absolute top-full left-3 w-2 h-2 bg-[#0a0a0a] border-r border-b border-[#333] rotate-45"></div>
+                  </div>
+                </div>
+              </div>
               <div className="flex items-center gap-2">
                 <div className="relative">
                   <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[12px] text-[#666]">$</span>
@@ -306,8 +330,17 @@ export default function ProfileClient({ user, totalProps, payments, config: init
 
             {/* Signature */}
             <div className="flex flex-col">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-[#888] mb-0">Firma Digital</p>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-1.5">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#888] mb-0">Firma Digital</p>
+                  <div className="relative group cursor-help flex items-center">
+                    <HelpCircle className="w-3.5 h-3.5 text-[#555] hover:text-[var(--color-brand)] transition-colors" />
+                    <div className="absolute bottom-full left-[-8px] mb-2 w-56 bg-[#0a0a0a] border border-[#333] rounded-sm p-3 shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-200 z-[120]">
+                      <p className="text-[10px] text-[#aaa] m-0"><strong>Impacto:</strong> Esta firma se adjuntará visualmente al final de las propuestas PDF como sello de autenticidad.</p>
+                      <div className="absolute top-full left-3 w-2 h-2 bg-[#0a0a0a] border-r border-b border-[#333] rotate-45"></div>
+                    </div>
+                  </div>
+                </div>
                 {config.signatureBase64 && (
                   <span className="text-[10px] text-green-400 font-bold uppercase tracking-wider">Guardada</span>
                 )}
