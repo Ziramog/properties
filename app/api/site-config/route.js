@@ -21,7 +21,7 @@ export async function GET() {
       heroSubtitle: config?.heroSubtitle || 'Alta Gracia, Córdoba, Argentina',
       aboutTitle: config?.aboutTitle || 'Silvia Roggero de Roma',
       aboutSubtitle: config?.aboutSubtitle || 'NEGOCIOS INMOBILIARIOS',
-      aboutText: config?.aboutText || 'Contamos con 20 años de trayectoria ininterrumpida, siendo un estandarte de las transacciones inmobiliarias y brindando soluciones en Alta Gracia y toda la Provincia de Córdoba.',
+      aboutText: config?.aboutText || 'Contamos con 20 años de experiencia propia en el rubro inmobiliario. Trabajamos con el objetivo de brindar confianza y seriedad en el rubro, dar información real y adecuada sobre el mercado y ofrecer la mejor variedad de alternativas a nuestros clientes.',
       footerDescription: config?.footerDescription || 'En Roggero & Roma te acompañamos en cada paso. Nuestra experiencia asegura las mejores oportunidades del mercado inmobiliario.',
       analyticsId: config?.analyticsId || 'G-PW4FH9WHQB',
       facebookPixelId: config?.facebookPixelId || '',

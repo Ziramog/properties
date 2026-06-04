@@ -223,6 +223,24 @@ export default function ContentManagerPage() {
         </div>
 
       </div>
+
+      {/* Floating Save Button / Bottom Save Button */}
+      <div className="mt-12 flex justify-end">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="bg-purple-600 hover:bg-purple-500 text-white font-bold px-10 py-4 rounded-xl tracking-wide transition-colors shadow-[0_0_20px_rgba(147,51,234,0.4)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-lg"
+        >
+          {saving ? (
+            <>
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Guardando...
+            </>
+          ) : (
+            'Guardar Cambios'
+          )}
+        </button>
+      </div>
     </div>
   );
 }
