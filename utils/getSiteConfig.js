@@ -8,8 +8,8 @@ export const getSiteConfig = async () => {
     
     // Default values if nothing in DB yet
     return {
-      heroTitle: config?.heroTitle || 'Descubrí la Belleza de lo Inesperado',
-      heroSubtitle: config?.heroSubtitle || 'Casas y Departamentos Exclusivos en Alta Gracia.',
+      heroTitle: config?.heroTitle || 'Vendemos Inmuebles, Construimos Confianza',
+      heroSubtitle: config?.heroSubtitle || 'Alta Gracia, Córdoba, Argentina',
       aboutTitle: config?.aboutTitle || 'Silvia Roggero de Roma',
       aboutSubtitle: config?.aboutSubtitle || 'NEGOCIOS INMOBILIARIOS',
       aboutText: config?.aboutText || 'Contamos con 20 años de trayectoria ininterrumpida, siendo un estandarte de las transacciones inmobiliarias y brindando soluciones en Alta Gracia y toda la Provincia de Córdoba.',
@@ -26,8 +26,8 @@ export const getSiteConfig = async () => {
     console.error('Error fetching site config:', error);
     // Fallback defaults
     return {
-      heroTitle: 'Descubrí la Belleza de lo Inesperado',
-      heroSubtitle: 'Casas y Departamentos Exclusivos en Alta Gracia.',
+      heroTitle: 'Vendemos Inmuebles, Construimos Confianza',
+      heroSubtitle: 'Alta Gracia, Córdoba, Argentina',
       aboutTitle: 'Silvia Roggero de Roma',
       aboutSubtitle: 'NEGOCIOS INMOBILIARIOS',
       aboutText: 'Contamos con 20 años de trayectoria ininterrumpida...',

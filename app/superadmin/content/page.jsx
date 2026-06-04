@@ -131,11 +131,13 @@ export default function ContentManagerPage() {
             <InputField 
               label="Título Principal" 
               name="heroTitle" 
-              description="Es lo primero que lee la gente al entrar. Ejemplo: Descubrí la Belleza de lo Inesperado."
+              placeholder="Vendemos Inmuebles, Construimos Confianza"
+              description="Es lo primero que lee la gente al entrar."
             />
             <InputField 
               label="Subtítulo" 
               name="heroSubtitle" 
+              placeholder="Alta Gracia, Córdoba, Argentina"
               description="Texto pequeño debajo del título principal."
             />
           </div>
