@@ -20,6 +20,7 @@ const STATUS_COLORS = {
   'PRECIO MEJORADO': { bg: '#F59E0B', text: WHITE },
   'ULTIMA UNIDAD': { bg: '#EF4444', text: WHITE },
   'UNICO EN SU TIPO': { bg: '#8B5CF6', text: WHITE },
+  'MEJOR PRECIO': { bg: '#10B981', text: WHITE },
 };
 
 const s = StyleSheet.create({

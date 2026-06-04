@@ -154,6 +154,7 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
               <option value="ULTIMA UNIDAD">Última Unidad</option>
               <option value="UNICO EN SU TIPO">Única en su Tipo</option>
               <option value="NUEVA">Nueva</option>
+              <option value="MEJOR PRECIO">Mejor Precio del Mercado</option>
             </select>
             <select value={filterGranInversion} onChange={(e) => setFilterGranInversion(e.target.value)} className={selectCls}>
               <option value="">Gran Inversión: Todas</option>

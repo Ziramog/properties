@@ -123,7 +123,7 @@ const PropertySchema = new Schema(
     },
     status: {
       type: String,
-      enum: ['active', 'PRECIO MEJORADO', 'ULTIMA UNIDAD', 'UNICO EN SU TIPO', 'NUEVA'],
+      enum: ['active', 'PRECIO MEJORADO', 'ULTIMA UNIDAD', 'UNICO EN SU TIPO', 'NUEVA', 'MEJOR PRECIO'],
       default: 'active',
     },
     property_type: {

@@ -65,6 +65,7 @@ const PropertyDetail = ({ property, onClose }) => {
                property.status === 'PRECIO MEJORADO' ? 'Precio Mejorado' :
                property.status === 'ULTIMA UNIDAD' ? 'Última Unidad' :
                property.status === 'UNICO EN SU TIPO' ? 'Única en su Tipo' :
+               property.status === 'MEJOR PRECIO' ? 'Mejor Precio del Mercado' :
                property.status}
             </span>
           </div>

@@ -60,7 +60,8 @@ export function isNewListing(property, days = 7) {
 const STATUS_BADGE_MAP = {
   'PRECIO MEJORADO':  { label: 'Precio Mejorado', color: 'bg-green-500' },
   'ULTIMA UNIDAD':    { label: 'Última Unidad',   color: 'bg-[var(--color-brand)]' },
-  'UNICO EN SU TIPO': { label: 'Único en su Tipo', color: 'bg-purple-500' },
+  'UNICO EN SU TIPO': { label: 'Única en su Tipo', color: 'bg-purple-500' },
+  'MEJOR PRECIO': { label: 'Mejor Precio del Mercado', color: 'bg-emerald-500' },
   'NUEVA':            { label: 'Nueva',           color: 'bg-blue-500' },
 };
 
