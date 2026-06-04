@@ -6,9 +6,12 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { MapPin } from 'lucide-react';
 import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whatsapp';
 
-const EMAIL = 'roggeroroma@hotmail.com';
-
-const Footer = () => {
+const Footer = ({ 
+  footerDescription = 'En Roggero & Roma te acompañamos en cada paso. Nuestra experiencia asegura las mejores oportunidades del mercado inmobiliario.',
+  contactEmail = 'roggeroroma@hotmail.com',
+  contactPhone = '+54 9 3547 563911',
+  contactAddress = 'Blvd. Carlos Pellegrini 710'
+}) => {
   const currentYear = new Date().getFullYear();
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,22 +61,22 @@ const Footer = () => {
               </Link>
                   <ul>
                     <li className="py-[5px]">
-                      <a href="https://maps.google.com/?q=Blvd.+Carlos+Pellegrini+710,+Alta+Gracia,+Córdoba" target="_blank" rel="noopener noreferrer" className="flex items-start gap-[5px] text-[13px] text-white/70 font-light hover:text-white transition-colors group">
+                      <a href={`https://maps.google.com/?q=${encodeURIComponent(contactAddress + ', Alta Gracia, Córdoba')}`} target="_blank" rel="noopener noreferrer" className="flex items-start gap-[5px] text-[13px] text-white/70 font-light hover:text-white transition-colors group">
                         <MapPin className="w-4 h-4 text-[#F26B2E] mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
                         <span>
-                          Blvd. Carlos Pellegrini 710<br/>
+                          {contactAddress}<br/>
                           X5186 Alta Gracia, Córdoba
                         </span>
                       </a>
                     </li>
                   </ul>
-              <a href={`mailto:${EMAIL}`} className="flex items-center gap-[5px] text-[13px] text-white font-light py-[5px] hover:text-white/70 transition-colors">
+              <a href={`mailto:${contactEmail}`} className="flex items-center gap-[5px] text-[13px] text-white font-light py-[5px] hover:text-white/70 transition-colors">
                 <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
-                {EMAIL}
+                {contactEmail}
               </a>
-              <a href={`tel:${PHONE_NUMBER}`} className="flex items-center gap-[5px] text-[13px] text-white font-light py-[5px] hover:text-white/70 transition-colors">
+              <a href={`https://wa.me/${contactPhone.replace(/\D/g, '')}`} className="flex items-center gap-[5px] text-[13px] text-white font-light py-[5px] hover:text-white/70 transition-colors">
                 <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
-                {PHONE_DISPLAY}
+                {contactPhone}
               </a>
             </div>
 
@@ -195,7 +198,7 @@ const Footer = () => {
             </p>
             <ul className="flex items-center gap-[25px]">
               <li>
-                <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Email">
+                <a href={`mailto:${contactEmail}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Email">
                   <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[20px] h-[20px]" style={{ filter: 'brightness(0) invert(1)' }} />
                 </a>
               </li>
@@ -247,20 +250,20 @@ const Footer = () => {
                 className="brightness-0 invert"
               />
             </Link>
-            <a href="https://maps.google.com/?q=Blvd.+Carlos+Pellegrini+710,+Alta+Gracia,+Córdoba" target="_blank" rel="noopener noreferrer" className="flex items-start gap-2 text-[13px] text-white/60 font-light mt-3 hover:text-white transition-colors">
+            <a href={`https://maps.google.com/?q=${encodeURIComponent(contactAddress + ', Alta Gracia, Córdoba')}`} target="_blank" rel="noopener noreferrer" className="flex items-start gap-2 text-[13px] text-white/60 font-light mt-3 hover:text-white transition-colors">
               <MapPin className="w-4 h-4 text-[#F26B2E] mt-0.5 shrink-0" />
               <span>
-                Blvd. Carlos Pellegrini 710<br/>
+                {contactAddress}<br/>
                 X5186 Alta Gracia, Córdoba
               </span>
             </a>
-            <a href={`mailto:${EMAIL}`} className="flex items-center gap-2 text-[13px] text-white font-light">
+            <a href={`mailto:${contactEmail}`} className="flex items-center gap-2 text-[13px] text-white font-light">
               <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
-              {EMAIL}
+              {contactEmail}
             </a>
-            <a href={`tel:${PHONE_NUMBER}`} className="flex items-center gap-2 text-[13px] text-white font-light">
+            <a href={`https://wa.me/${contactPhone.replace(/\D/g, '')}`} className="flex items-center gap-2 text-[13px] text-white font-light">
               <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
-              {PHONE_DISPLAY}
+              {contactPhone}
             </a>
           </div>
 
@@ -357,7 +360,7 @@ const Footer = () => {
             </p>
             <ul className="flex items-center gap-[25px]">
               <li>
-                <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Email">
+                <a href={`mailto:${contactEmail}`} className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Email">
                   <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
                 </a>
               </li>

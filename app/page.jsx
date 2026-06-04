@@ -9,6 +9,7 @@ import ScrollReveal from '@/components/shared/ScrollReveal';
 import JsonLd from '@/components/JsonLd';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
+import { getSiteConfig } from '@/utils/getSiteConfig';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,6 +22,7 @@ const HomePage = async () => {
   await connectDB();
 
   const properties = await Property.find({ is_published: { $ne: false } }).lean();
+  const siteConfig = await getSiteConfig();
 
   const serializedProperties = properties.map((p) => ({
     ...p,
@@ -57,11 +59,11 @@ const HomePage = async () => {
         name: 'Roggero & Roma',
         image: 'https://properties-srs5.vercel.app/images/ISOTIPO%20R&R-Photoroom.png',
         url: 'https://properties-srs5.vercel.app',
-        telephone: '+54 9 9354 7563911',
-        email: 'info@roggeroyroma.com.ar',
+        telephone: siteConfig.contactPhone || '+54 9 9354 7563911',
+        email: siteConfig.contactEmail || 'info@roggeroyroma.com.ar',
         address: {
           '@type': 'PostalAddress',
-          streetAddress: 'Blvd. Carlos Pellegrini 710',
+          streetAddress: siteConfig.contactAddress || 'Blvd. Carlos Pellegrini 710',
           addressLocality: 'Alta Gracia',
           addressRegion: 'Córdoba',
           postalCode: 'X5186',
@@ -102,7 +104,7 @@ const HomePage = async () => {
     <div>
       <JsonLd data={jsonLd} />
       {/* 1. Hero — emotional hook + search + trust strip */}
-      <Hero />
+      <Hero title={siteConfig.heroTitle} subtitle={siteConfig.heroSubtitle} />
 
       {/* 2. Stats Bar — social proof metrics (flush with hero) */}
       <StatsBar />
@@ -117,7 +119,11 @@ const HomePage = async () => {
 
       {/* 5. Agents — Roggero & Roma Historia */}
       <div id="nuestra-historia">
-        <Agents />
+        <Agents 
+          title={siteConfig.aboutTitle} 
+          subtitle={siteConfig.aboutSubtitle} 
+          text={siteConfig.aboutText} 
+        />
       </div>
 
       {/* 6. Reviews — Nuestros Clientes */}

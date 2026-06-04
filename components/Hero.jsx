@@ -6,14 +6,15 @@ import { FaSearch } from 'react-icons/fa';
 import logSearch from '@/app/actions/logSearch';
 import getTopSearches from '@/app/actions/getTopSearches';
 
-const HERO_LINE1 = 'Vendemos Inmuebles';
-const HERO_LINE2 = 'Construimos Confianza';
-const HERO_TITLE = `${HERO_LINE1}, ${HERO_LINE2}`;
-
 const fullDesktopLabel = 'Ciudad, Localidad, Tipo de Inmueble y Palabra Clave';
 const fullMobileLabel = 'Ciudad, Localidad, Tipo de Inmueble y Palabra Clave';
 
-const Hero = () => {
+const Hero = ({ title = 'Vendemos Inmuebles, Construimos Confianza', subtitle = '' }) => {
+  // Parse title if it contains a comma for the two-line effect
+  const [line1, ...rest] = title.split(',');
+  const line2 = rest.join(',').trim();
+  const hasTwoLines = !!line2;
+
   const router = useRouter();
   const [filters, setFilters] = useState({
     operation: 'Venta',
@@ -199,13 +200,22 @@ const Hero = () => {
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
             >
               <h1 className='font-display font-normal text-white leading-tight' style={{ fontSize: 'clamp(28px, 2.4vw, 38px)', lineHeight: 1.0 }}>
-                {HERO_TITLE}
+                {hasTwoLines ? (
+                  <>
+                    <span className="block mb-2">{line1},</span>
+                    <span className="block">{line2}</span>
+                  </>
+                ) : (
+                  title
+                )}
               </h1>
-              <div className='flex items-center justify-center gap-3 mt-6'>
-                <span className='w-7 h-px bg-white/40 flex-shrink-0' />
-                <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>Alta Gracia, Córdoba, Argentina</span>
-                <span className='w-7 h-px bg-white/40 flex-shrink-0' />
-              </div>
+              {subtitle && (
+                <div className='flex items-center justify-center gap-3 mt-6'>
+                  <span className='w-7 h-px bg-white/40 flex-shrink-0' />
+                  <span className='text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em]'>{subtitle}</span>
+                  <span className='w-7 h-px bg-white/40 flex-shrink-0' />
+                </div>
+              )}
             </motion.div>
           </div>
 

@@ -8,10 +8,7 @@ import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whats
 import logo from '@/assets/images/logo-white.png';
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
 
-const EMAIL = 'roggeroroma@hotmail.com';
-const WHATSAPP_NUMBER = '5493547563911';
-
-const Navbar = () => {
+const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 9 3547 563911' }) => {
   const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -152,7 +149,7 @@ const Navbar = () => {
           {/* Side Nav — Senada .sideMenu: Phone | Search | Show More */}
           <div className="desktop-dropdown flex items-center gap-4 ml-8">
             {/* Phone → WhatsApp */}
-            <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors" aria-label="WhatsApp">
+            <a href={`https://wa.me/${contactPhone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors" aria-label="WhatsApp">
               <img src="/senada/images/icons/ico_phone.svg" alt="Teléfono" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
             </a>
             {/* Search */}
@@ -321,17 +318,17 @@ const Navbar = () => {
           <div className="flex-shrink-0 pt-8 pb-4">
             <ul className="flex items-center justify-center gap-3 flex-wrap max-w-full mx-auto px-2">
               <li>
-                <a href={`tel:${PHONE_NUMBER}`} className="flex items-center justify-center w-10 h-10 rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Llamar">
+                <a href={`tel:${contactPhone.replace(/\D/g, '')}`} className="flex items-center justify-center w-10 h-10 rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Llamar">
                   <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
                 </a>
               </li>
               <li>
-                <a href={`mailto:${EMAIL}`} className="flex items-center justify-center w-10 h-10 rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Email">
+                <a href={`mailto:${contactEmail}`} className="flex items-center justify-center w-10 h-10 rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Email">
                   <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
                 </a>
               </li>
               <li>
-                <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="WhatsApp">
+                <a href={`https://wa.me/${contactPhone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="WhatsApp">
                   <FaWhatsapp className="text-white text-xl" />
                 </a>
               </li>

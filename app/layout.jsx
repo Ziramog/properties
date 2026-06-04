@@ -87,17 +87,21 @@ export const metadata = {
   },
 };
 
-const MainLayout = ({ children }) => {
+import { getSiteConfig } from '@/utils/getSiteConfig';
+
+const MainLayout = async ({ children }) => {
+  const siteConfig = await getSiteConfig();
+
   return (
     <AuthProvider>
       <GlobalProvider>
         <html lang='es' className={`${lato.variable} ${ptSerif.variable} ${cormorantGaramond.variable}`}>
           <body className='font-sans antialiased text-body'>
-            <Navbar />
+            <Navbar contactEmail={siteConfig.contactEmail} contactPhone={siteConfig.contactPhone} />
             <main className="relative pb-[12px]">{children}</main>
-            <Footer />
+            <Footer footerDescription={siteConfig.footerDescription} contactEmail={siteConfig.contactEmail} contactPhone={siteConfig.contactPhone} contactAddress={siteConfig.contactAddress} />
             <ToastContainer />
-            <GoogleAnalytics />
+            <GoogleAnalytics analyticsId={siteConfig.analyticsId} facebookPixelId={siteConfig.facebookPixelId} />
           </body>
         </html>
       </GlobalProvider>

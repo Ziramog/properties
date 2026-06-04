@@ -17,6 +17,15 @@ export async function GET() {
       contactPhone: config?.contactPhone || '+54 9 3547 563911',
       contactAddress: config?.contactAddress || 'Blvd. Carlos Pellegrini 710',
       whatsappGroupLink: config?.whatsappGroupLink || '',
+      heroTitle: config?.heroTitle || 'Descubrí la Belleza de lo Inesperado',
+      heroSubtitle: config?.heroSubtitle || 'Casas y Departamentos Exclusivos en Alta Gracia.',
+      aboutTitle: config?.aboutTitle || 'Silvia Roggero de Roma',
+      aboutSubtitle: config?.aboutSubtitle || 'NEGOCIOS INMOBILIARIOS',
+      aboutText: config?.aboutText || 'Contamos con 20 años de trayectoria ininterrumpida, siendo un estandarte de las transacciones inmobiliarias y brindando soluciones en Alta Gracia y toda la Provincia de Córdoba.',
+      footerDescription: config?.footerDescription || 'En Roggero & Roma te acompañamos en cada paso. Nuestra experiencia asegura las mejores oportunidades del mercado inmobiliario.',
+      analyticsId: config?.analyticsId || 'G-PW4FH9WHQB',
+      facebookPixelId: config?.facebookPixelId || '',
+      whatsappDefaultMessage: config?.whatsappDefaultMessage || 'Hola, vengo desde la web y me gustaría recibir más información.',
     });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
@@ -26,19 +35,35 @@ export async function GET() {
 export async function PATCH(request) {
   try {
     const sessionUser = await getSessionUser();
-    if (!sessionUser || sessionUser.role !== 'admin') {
+    // Allow both admin and superadmin to update site config
+    if (!sessionUser || (sessionUser.role !== 'admin' && sessionUser.role !== 'superadmin')) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
 
     await connectDB();
     const body = await request.json();
     const update = {};
+    
+    // Config normal
     if (body.exchangeRateARS !== undefined) update.exchangeRateARS = body.exchangeRateARS || null;
     if (body.signatureBase64 !== undefined) update.signatureBase64 = body.signatureBase64;
     if (body.contactEmail !== undefined) update.contactEmail = body.contactEmail;
     if (body.contactPhone !== undefined) update.contactPhone = body.contactPhone;
     if (body.contactAddress !== undefined) update.contactAddress = body.contactAddress;
     if (body.whatsappGroupLink !== undefined) update.whatsappGroupLink = body.whatsappGroupLink;
+    
+    // CMS Fields
+    if (body.heroTitle !== undefined) update.heroTitle = body.heroTitle;
+    if (body.heroSubtitle !== undefined) update.heroSubtitle = body.heroSubtitle;
+    if (body.aboutTitle !== undefined) update.aboutTitle = body.aboutTitle;
+    if (body.aboutSubtitle !== undefined) update.aboutSubtitle = body.aboutSubtitle;
+    if (body.aboutText !== undefined) update.aboutText = body.aboutText;
+    if (body.footerDescription !== undefined) update.footerDescription = body.footerDescription;
+    
+    // Extras
+    if (body.analyticsId !== undefined) update.analyticsId = body.analyticsId;
+    if (body.facebookPixelId !== undefined) update.facebookPixelId = body.facebookPixelId;
+    if (body.whatsappDefaultMessage !== undefined) update.whatsappDefaultMessage = body.whatsappDefaultMessage;
     
     if (Object.keys(update).length === 0) {
       return NextResponse.json({ success: true });
