@@ -1,5 +1,6 @@
 import connectDB from '@/config/database';
 import Quotation from '@/models/Quotation';
+import User from '@/models/User';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -25,7 +26,15 @@ export default async function PublicQuotationPage({ params }) {
     notFound();
   }
 
-  const { client, properties, payment, customization, quoteNumber, totalValue } = quotation;
+  const { client, properties, payment, customization, quoteNumber, totalValue, createdBy } = quotation;
+
+  let agentName = 'Roggero & Roma';
+  if (createdBy) {
+    const creator = await User.findById(createdBy).lean();
+    if (creator) {
+      agentName = creator.agentName || creator.username || 'Roggero & Roma';
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#f3f4f6] text-[#1a1a18] selection:bg-[var(--color-brand)] selection:text-white py-12 px-4 sm:px-6">
@@ -227,7 +236,8 @@ export default async function PublicQuotationPage({ params }) {
                     <path d="M25,25 L45,15" />
                   </svg>
                 </div>
-                <h4 className="text-sm font-bold text-[#1a1a18] mb-0.5">Silvia Roggero de Roma</h4>
+                <h4 className="text-sm font-bold text-[#1a1a18] mb-0.5">{agentName}</h4>
+                <p className="text-[10px] font-bold text-[#8c8c88] tracking-widest uppercase mt-1">Silvia Roggero de Roma</p>
                 <p className="text-[10px] font-bold text-[#8c8c88] tracking-widest uppercase">NEGOCIOS INMOBILIARIOS</p>
                 <p className="text-[10px] text-[#8c8c88] mt-2">Propuesta N° {quoteNumber}</p>
              </div>

@@ -334,7 +334,8 @@ export function ModernTemplate({ quotation, branding = {} }) {
           <View style={s.signatureSection}>
             <View style={s.signatureBlock}>
               <Image style={s.signatureImg} src={branding.signatureBase64} />
-              <Text style={s.signatureName}>Silvia Roggero de Roma</Text>
+              <Text style={s.signatureName}>{branding.name}</Text>
+              <Text style={{ ...s.signatureAgency, marginTop: 4 }}>Silvia Roggero de Roma</Text>
               <Text style={s.signatureAgency}>NEGOCIOS INMOBILIARIOS</Text>
               <Text style={s.signatureQuote}>Propuesta N° {quotation.quoteNumber}</Text>
             </View>
