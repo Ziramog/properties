@@ -122,6 +122,14 @@ export default async function PropertiesContent({ searchParams, subtitle }) {
 
   const isFiltered = !!(type && type !== 'Todos') || !!(term && term !== 'Ciudad');
 
+  const parsedPage = parseInt(page, 10) || 1;
+  const parsedPageSize = parseInt(pageSize, 10) || 9;
+  const paginatedProperties = filteredProperties.slice(
+    (parsedPage - 1) * parsedPageSize,
+    parsedPage * parsedPageSize
+  );
+  const finalTotal = filteredProperties.length;
+
   return (
     <div className="bg-white">
       <ScrollToResults searchParams={searchParams} isFiltered={isFiltered} />
@@ -130,7 +138,7 @@ export default async function PropertiesContent({ searchParams, subtitle }) {
         <SectionTitle size="normal">{subtitle}</SectionTitle>
         <ScrollReveal delay={100}>
           <SortBar
-            total={total}
+            total={finalTotal}
             activeSort={sort}
             searchParams={searchParams}
           />
@@ -139,7 +147,7 @@ export default async function PropertiesContent({ searchParams, subtitle }) {
 
       {/* Results */}
       <section className="bg-white px-4 md:px-[50px] pb-12">
-          {filteredProperties.length === 0 ? (
+          {finalTotal === 0 ? (
             <ScrollReveal variant="fadeScale">
               <div className="text-center py-20">
                 <div className="w-16 h-16 rounded-full bg-[#f5f5f5] flex items-center justify-center mx-auto mb-4 shadow-sm">
@@ -160,11 +168,11 @@ export default async function PropertiesContent({ searchParams, subtitle }) {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-                {filteredProperties.map((property, i) => (
+                {paginatedProperties.map((property, i) => (
                   <FeaturedPropertyCard key={property._id} property={property} />
                 ))}
               </div>
-              <Pagination page={parseInt(page)} pageSize={parseInt(pageSize)} totalItems={total} />
+              <Pagination page={parsedPage} pageSize={parsedPageSize} totalItems={finalTotal} />
             </>
           )}
       </section>
