@@ -80,6 +80,31 @@ export default function MapAllProperties({ initialProperties = [] }) {
   const [selectedProperty, setSelectedProperty] = useState(null);
   const mapRef = useRef(null);
   const [activeFilters, setActiveFilters] = useState(null);
+  const [visibleCount, setVisibleCount] = useState(0);
+
+  const updateVisibleCount = useCallback(() => {
+    if (!mapRef.current) return;
+    const bounds = mapRef.current.getMap().getBounds();
+    if (!bounds) return;
+
+    const count = filteredProps.filter(p => {
+      if (!p.coords) return false;
+      return (
+        p.coords.lat >= bounds.getSouth() &&
+        p.coords.lat <= bounds.getNorth() &&
+        p.coords.lng >= bounds.getWest() &&
+        p.coords.lng <= bounds.getEast()
+      );
+    }).length;
+    setVisibleCount(count);
+  }, [filteredProps]);
+
+  useEffect(() => {
+    // We try to update the count when filteredProps changes, 
+    // waiting for the map to be ready
+    const timer = setTimeout(() => updateVisibleCount(), 100);
+    return () => clearTimeout(timer);
+  }, [filteredProps, updateVisibleCount]);
 
   useEffect(() => {
     const geo = initialProperties
@@ -207,7 +232,7 @@ export default function MapAllProperties({ initialProperties = [] }) {
               <div className="relative rounded-[30px] overflow-hidden" style={{ height: 'calc(100vh - 380px)', minHeight: '500px' }}>
                 {/* Property count badge */}
                 <div className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-md rounded-full px-4 py-2 text-[12px] font-semibold text-[#1A1A18] shadow-lg">
-                  {filteredProps.length} propiedades
+                  {visibleCount} propiedades visibles
                 </div>
 
                 <Map
@@ -218,6 +243,8 @@ export default function MapAllProperties({ initialProperties = [] }) {
                   style={{ width: '100%', height: '100%' }}
                   mapStyle={MAP_STYLE}
                   {...MAP_DEFAULT_PROPS}
+                  onMove={updateVisibleCount}
+                  onLoad={updateVisibleCount}
                 >
                   <MapClusterLayer properties={filteredProps} onSelect={setSelectedProperty} selectedId={selectedProperty?._id} />
                 </Map>
