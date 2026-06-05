@@ -71,8 +71,8 @@ export const metadata = {
     canonical: '/',
   },
   icons: {
-    icon: '/favicon.ico',
-    apple: '/senada/favicon/favicon-32x32.png',
+    icon: '/images/ISOTIPO R&R-Photoroom.png',
+    apple: '/images/ISOTIPO R&R-Photoroom.png',
   },
   robots: {
     index: true,
