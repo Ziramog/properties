@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import updateProperty from '@/app/actions/updateProperty';
 import { generateDescription } from '@/app/actions/generateDescription';
+import LocationPickerMap from '@/components/shared/LocationPickerMap';
 
 const SubmitButton = ({ isRedirecting }) => {
   const { pending } = useFormStatus();
@@ -75,6 +76,15 @@ const PropertyEditForm = ({ property }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const formRef = useRef(null);
   const [description, setDescription] = useState(property.description || '');
+
+  const [coordinates, setCoordinates] = useState({
+    lat: property.coordinates?.lat || '',
+    lng: property.coordinates?.lng || '',
+  });
+
+  const handleLocationChange = (lat, lng) => {
+    setCoordinates({ lat: parseFloat(lat.toFixed(6)), lng: parseFloat(lng.toFixed(6)) });
+  };
 
   const [existingImagesState, setExistingImagesState] = useState(property.images || []);
   const [draggedIdx, setDraggedIdx] = useState(null);
@@ -246,12 +256,19 @@ const PropertyEditForm = ({ property }) => {
         <input type='text' id='zipcode' name='location.zipcode' className={`${inputClass} mb-3`} placeholder='Código Postal' defaultValue={property.location?.zipcode} />
         
         <label className={`${labelClass} mt-4`}>Coordenadas del Mapa</label>
-        <div className='flex gap-3 mb-1'>
-          <input type='number' step='any' id='lat' name='coordinates.lat' className={inputClass} placeholder='Latitud' defaultValue={property.coordinates?.lat} />
-          <input type='number' step='any' id='lng' name='coordinates.lng' className={inputClass} placeholder='Longitud' defaultValue={property.coordinates?.lng} />
+        <div className='flex gap-3 mb-3'>
+          <input type='number' step='any' id='lat' name='coordinates.lat' className={inputClass} placeholder='Latitud' value={coordinates.lat} onChange={(e) => setCoordinates(prev => ({...prev, lat: e.target.value}))} />
+          <input type='number' step='any' id='lng' name='coordinates.lng' className={inputClass} placeholder='Longitud' value={coordinates.lng} onChange={(e) => setCoordinates(prev => ({...prev, lng: e.target.value}))} />
+        </div>
+        <div className="mb-2">
+          <LocationPickerMap
+            initialLat={coordinates.lat ? parseFloat(coordinates.lat) : undefined}
+            initialLng={coordinates.lng ? parseFloat(coordinates.lng) : undefined}
+            onLocationChange={handleLocationChange}
+          />
         </div>
         <div className="flex justify-between items-start mt-1">
-          <p className={helperClass}>Ejemplo: -31.6521, -64.4312</p>
+          <p className={helperClass}>El pin inicia en el centro de la ciudad o en su ubicación guardada. Podés arrastrarlo para afinar la ubicación.</p>
           <a href="https://www.google.com/maps" target="_blank" rel="noreferrer" className="text-[var(--color-brand)] hover:underline text-[11px] font-medium flex items-center gap-1">
             Abrir Google Maps ↗
           </a>
