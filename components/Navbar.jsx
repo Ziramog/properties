@@ -248,16 +248,16 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
         >
           <nav className="flex-1 flex flex-col px-0">
             {/* Destacadas */}
-            <Link href="/properties" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.1s' }} onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/properties" className={`block text-white text-[22px] py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400, animationDelay: '0.05s' }} onClick={() => setIsMobileMenuOpen(false)}>
               Destacadas
             </Link>
 
             {/* Propiedades — expandable */}
-            <div className={`border-b border-white/[.08] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ animationDelay: '0.2s' }}>
+            <div className={`border-b border-white/[.08] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ animationDelay: '0.1s' }}>
               <button
                   onClick={() => setMobileSubOpen(!mobileSubOpen)}
-                  className="flex items-center justify-between w-full text-white text-[28px] font-normal py-[15px] hover:text-[var(--color-brand)] transition-colors"
-                  style={{ fontFamily: 'var(--font-heading)' }}
+                  className="flex items-center justify-between w-full text-white text-[22px] py-[15px] hover:text-[var(--color-brand)] transition-colors"
+                  style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400 }}
                 >
                   Propiedades
                 <svg className={`w-5 h-5 text-white/40 transition-transform duration-300 ${mobileSubOpen ? 'rotate-90' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -273,7 +273,7 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
                   { href: '/properties?type=Terreno', label: 'Terrenos' },
                   { href: '/properties', label: 'Todas las propiedades' },
                 ].map(l => (
-                    <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] font-light py-2 pl-4 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] py-2 pl-4 hover:text-white transition-colors" style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400 }} onClick={() => setIsMobileMenuOpen(false)}>
                     {l.label}
                   </Link>
                 ))}
@@ -281,24 +281,24 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
             </div>
 
             {/* SOBRE NOSOTROS */}
-            <Link href="/#nuestra-historia" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.3s' }} onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/#nuestra-historia" className={`block text-white text-[22px] py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400, animationDelay: '0.15s' }} onClick={() => setIsMobileMenuOpen(false)}>
               Sobre nosotros
             </Link>
 
             {/* PANEL DE CONTROL */}
             {session && (
-              <Link href="/admin" className={`block text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.4s' }} onClick={() => setIsMobileMenuOpen(false)}>
+              <Link href="/admin" className={`block text-white text-[22px] py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400, animationDelay: '0.2s' }} onClick={() => setIsMobileMenuOpen(false)}>
                 Panel de control
               </Link>
             )}
 
             {session ? (
-              <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.5s' }}>
+              <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[22px] py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400, animationDelay: '0.25s' }}>
                 Salir
               </button>
             ) : (
-              providers && Object.values(providers).map((provider) => (
-                <button key={provider.id} onClick={() => { signIn(provider.id, { callbackUrl: '/admin' }); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[28px] font-normal py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: 'var(--font-heading)', animationDelay: '0.4s' }}>
+              providers && Object.values(providers).map((provider, i) => (
+                <button key={provider.id} onClick={() => { signIn(provider.id, { callbackUrl: '/admin' }); setIsMobileMenuOpen(false); }} className={`block w-full text-left text-white text-[22px] py-[15px] border-b border-white/[.08] hover:text-[var(--color-brand)] transition-colors ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400, animationDelay: `${0.2 + (i*0.05)}s` }}>
                   Ingresar
                 </button>
               ))
@@ -306,7 +306,7 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
           </nav>
 
           {/* Social icons at bottom */}
-          <div className={`flex-shrink-0 pt-8 pb-4 ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ animationDelay: '0.6s' }}>
+          <div className={`flex-shrink-0 pt-8 pb-4 ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ animationDelay: '0.3s' }}>
             <ul className="flex items-center justify-center gap-3 flex-wrap max-w-full mx-auto px-2">
               <li>
                 <a href={`tel:${contactPhone.replace(/\D/g, '')}`} className="flex items-center justify-center w-10 h-10 rounded-xl bg-black/50 hover:bg-[var(--color-brand)] transition-colors duration-300" aria-label="Llamar">
@@ -365,8 +365,8 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
         }
         .mobile-item {
           opacity: 0;
-          transform: translateY(30px);
-          animation: mobileFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          transform: translateY(15px);
+          animation: mobileFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         @keyframes mobileFadeIn {
           to { opacity: 1; transform: translateY(0); }
