@@ -269,6 +269,7 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
                   { href: '/properties?type=Casa', label: 'Casas' },
                   { href: '/properties?type=Departamento', label: 'Departamentos' },
                   { href: '/properties?type=Campo', label: 'Campos' },
+                  { href: '/properties?type=Inmueble+Comercial', label: 'Inmuebles Comerciales' },
                   { href: '/properties?type=Terreno', label: 'Terrenos' },
                   { href: '/properties', label: 'Todas las propiedades' },
                 ].map(l => (
