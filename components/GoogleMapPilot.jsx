@@ -71,8 +71,8 @@ function parsePrice(priceStr) {
 
 const ClusteredMarkers = ({ properties, selectedProperty, setSelectedProperty }) => {
   const map = useMap();
-  const [markers, setMarkers] = useState({});
   const clusterer = useRef(null);
+  const markersRef = useRef({});
 
   useEffect(() => {
     if (!map) return;
@@ -96,10 +96,24 @@ const ClusteredMarkers = ({ properties, selectedProperty, setSelectedProperty })
             el.style.cursor = 'pointer';
             el.innerText = count;
 
-            return new window.google.maps.marker.AdvancedMarkerElement({
-              position,
-              content: el,
-            });
+            if (window.google?.maps?.marker?.AdvancedMarkerElement) {
+              return new window.google.maps.marker.AdvancedMarkerElement({
+                position,
+                content: el,
+              });
+            } else {
+              return new window.google.maps.Marker({
+                position,
+                label: { text: String(count), color: 'white' },
+                icon: {
+                  path: window.google.maps.SymbolPath.CIRCLE,
+                  scale: 20,
+                  fillColor: '#db7340',
+                  fillOpacity: 1,
+                  strokeWeight: 0,
+                }
+              });
+            }
           }
         }
       });
@@ -108,22 +122,12 @@ const ClusteredMarkers = ({ properties, selectedProperty, setSelectedProperty })
 
   useEffect(() => {
     if (!clusterer.current) return;
-    clusterer.current.clearMarkers();
-    clusterer.current.addMarkers(Object.values(markers));
-  }, [markers]);
-
-  const setMarkerRef = (marker, key) => {
-    setMarkers(prev => {
-      if ((marker && prev[key]) || (!marker && !prev[key])) return prev;
-      if (marker) {
-        return { ...prev, [key]: marker };
-      } else {
-        const newMarkers = { ...prev };
-        delete newMarkers[key];
-        return newMarkers;
-      }
-    });
-  };
+    const timer = setTimeout(() => {
+      clusterer.current.clearMarkers();
+      clusterer.current.addMarkers(Object.values(markersRef.current));
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [properties, map]);
 
   return (
     <>
@@ -132,7 +136,10 @@ const ClusteredMarkers = ({ properties, selectedProperty, setSelectedProperty })
           key={p._id}
           position={{ lat: p.coords.lat, lng: p.coords.lng }}
           onClick={() => setSelectedProperty(p)}
-          ref={(marker) => setMarkerRef(marker, p._id)}
+          ref={(marker) => {
+            if (marker) markersRef.current[p._id] = marker;
+            else delete markersRef.current[p._id];
+          }}
         >
           <div className="relative cursor-pointer transition-transform duration-200 hover:scale-110">
             <Pin background={'#db7340'} borderColor={'#ffffff'} glyphColor={'#ffffff'} scale={selectedProperty?._id === p._id ? 1.2 : 1.0} />
