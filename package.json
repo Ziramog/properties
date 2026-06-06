@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@googlemaps/markerclusterer": "^2.6.2",
     "@react-pdf/renderer": "^4.5.1",
     "@vercel/blob": "^2.4.0",
     "@vis.gl/react-google-maps": "^1.8.3",

@@ -1,6 +1,7 @@
 'use client';
-import { useEffect, useState, useMemo, useCallback } from 'react';
-import { APIProvider, Map, AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
+import { APIProvider, Map, AdvancedMarker, Pin, useMap } from '@vis.gl/react-google-maps';
+import { MarkerClusterer } from '@googlemaps/markerclusterer';
 import PropertiesSearch from '@/components/PropertiesSearch';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import MapPropertySidebar from '@/components/MapPropertySidebar';
@@ -67,6 +68,80 @@ function parsePrice(priceStr) {
   const cleaned = priceStr.replace(/[^0-9]/g, '');
   return parseInt(cleaned, 10) || 0;
 }
+
+const ClusteredMarkers = ({ properties, selectedProperty, setSelectedProperty }) => {
+  const map = useMap();
+  const [markers, setMarkers] = useState({});
+  const clusterer = useRef(null);
+
+  useEffect(() => {
+    if (!map) return;
+    if (!clusterer.current) {
+      clusterer.current = new MarkerClusterer({
+        map,
+        renderer: {
+          render: ({ count, position }) => {
+            const el = document.createElement('div');
+            el.style.backgroundColor = '#db7340';
+            el.style.color = '#ffffff';
+            el.style.borderRadius = '50%';
+            el.style.width = '40px';
+            el.style.height = '40px';
+            el.style.display = 'flex';
+            el.style.justifyContent = 'center';
+            el.style.alignItems = 'center';
+            el.style.fontSize = '14px';
+            el.style.fontWeight = 'bold';
+            el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
+            el.style.cursor = 'pointer';
+            el.innerText = count;
+
+            return new window.google.maps.marker.AdvancedMarkerElement({
+              position,
+              content: el,
+            });
+          }
+        }
+      });
+    }
+  }, [map]);
+
+  useEffect(() => {
+    if (!clusterer.current) return;
+    clusterer.current.clearMarkers();
+    clusterer.current.addMarkers(Object.values(markers));
+  }, [markers]);
+
+  const setMarkerRef = (marker, key) => {
+    setMarkers(prev => {
+      if ((marker && prev[key]) || (!marker && !prev[key])) return prev;
+      if (marker) {
+        return { ...prev, [key]: marker };
+      } else {
+        const newMarkers = { ...prev };
+        delete newMarkers[key];
+        return newMarkers;
+      }
+    });
+  };
+
+  return (
+    <>
+      {properties.map(p => (
+        <AdvancedMarker
+          key={p._id}
+          position={{ lat: p.coords.lat, lng: p.coords.lng }}
+          onClick={() => setSelectedProperty(p)}
+          ref={(marker) => setMarkerRef(marker, p._id)}
+        >
+          <div className="relative cursor-pointer transition-transform duration-200 hover:scale-110">
+            <Pin background={'#db7340'} borderColor={'#ffffff'} glyphColor={'#ffffff'} scale={selectedProperty?._id === p._id ? 1.2 : 1.0} />
+          </div>
+        </AdvancedMarker>
+      ))}
+    </>
+  );
+};
 
 export default function GoogleMapPilot({ initialProperties = [] }) {
   const [allProps, setAllProps] = useState([]);
@@ -222,17 +297,11 @@ export default function GoogleMapPilot({ initialProperties = [] }) {
                     mapTypeControl={false}
                     fullscreenControl={true}
                   >
-                    {filteredProps.map(p => (
-                      <AdvancedMarker
-                        key={p._id}
-                        position={{ lat: p.coords.lat, lng: p.coords.lng }}
-                        onClick={() => setSelectedProperty(p)}
-                      >
-                        <div className="relative cursor-pointer transition-transform duration-200 hover:scale-110">
-                          <Pin background={'#db7340'} borderColor={'#ffffff'} glyphColor={'#ffffff'} scale={selectedProperty?._id === p._id ? 1.2 : 1.0} />
-                        </div>
-                      </AdvancedMarker>
-                    ))}
+                    <ClusteredMarkers 
+                      properties={filteredProps} 
+                      selectedProperty={selectedProperty} 
+                      setSelectedProperty={setSelectedProperty} 
+                    />
                   </Map>
 
                   {filteredProps.length === 0 && allProps.length > 0 && (
