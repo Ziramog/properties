@@ -215,7 +215,7 @@ export default function GoogleMapPilot({ initialProperties = [] }) {
                   <Map
                     defaultZoom={11}
                     defaultCenter={{ lat: -31.6525, lng: -64.4397 }}
-                    mapId="DEMO_MAP_ID"
+                    mapId="5840ac3c29d4b1c78be4a027"
                     onIdle={(e) => handleMapIdle(e.map)}
                     disableDefaultUI={false}
                     streetViewControl={true}
