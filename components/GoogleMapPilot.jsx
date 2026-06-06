@@ -81,25 +81,23 @@ const ClusteredMarkers = ({ properties, selectedProperty, setSelectedProperty })
         map,
         renderer: {
           render: ({ count, position }) => {
-            const el = document.createElement('div');
-            el.style.backgroundColor = '#db7340';
-            el.style.color = '#ffffff';
-            el.style.borderRadius = '50%';
-            el.style.width = '40px';
-            el.style.height = '40px';
-            el.style.display = 'flex';
-            el.style.justifyContent = 'center';
-            el.style.alignItems = 'center';
-            el.style.fontSize = '14px';
-            el.style.fontWeight = 'bold';
-            el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
-            el.style.cursor = 'pointer';
-            el.innerText = count;
+            const container = document.createElement('div');
+            container.className = 'relative flex items-center justify-center w-10 h-10 cursor-pointer';
+
+            const ripple = document.createElement('div');
+            ripple.className = 'absolute inset-0 rounded-full bg-[#db7340] animate-ping opacity-75';
+
+            const circle = document.createElement('div');
+            circle.className = 'relative z-10 flex items-center justify-center w-full h-full rounded-full bg-[#db7340] text-white font-bold text-sm shadow-md';
+            circle.innerText = count;
+
+            container.appendChild(ripple);
+            container.appendChild(circle);
 
             if (window.google?.maps?.marker?.AdvancedMarkerElement) {
               return new window.google.maps.marker.AdvancedMarkerElement({
                 position,
-                content: el,
+                content: container,
               });
             } else {
               return new window.google.maps.Marker({
