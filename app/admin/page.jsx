@@ -156,6 +156,28 @@ const AdminPage = async () => {
           })}
         </div>
       </div>
+
+      {/* Super Admin Tools */}
+      <div className="mt-8">
+        <h2 className="text-[16px] md:text-[20px] font-semibold text-white mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+          Herramientas de Administrador
+        </h2>
+        <div className="bg-[#161616] border border-[#222] rounded-sm p-5 md:p-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h3 className="text-[14px] md:text-[16px] font-bold text-white mb-1">Copia de Seguridad de Imágenes (Backup)</h3>
+              <p className="text-[12px] md:text-[13px] text-[#888] max-w-2xl">
+                Para resguardar todas las fotos de Cloudinary en tu disco local (F:), abre la terminal en VS Code y ejecuta el siguiente comando. Esto creará una carpeta automáticamente con la fecha de hoy.
+              </p>
+            </div>
+            <div className="bg-[#0a0a0a] border border-[#333] rounded-sm p-3 flex items-center gap-3 w-full md:w-auto">
+              <code className="text-[#25D366] text-[12px] md:text-[13px] font-mono whitespace-nowrap">
+                node scripts/backup-cloudinary.js
+              </code>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
