@@ -125,6 +125,28 @@ export default function SuperadminPage() {
           </table>
         </div>
       </div>
+
+      {/* Super Admin Tools */}
+      <div className="mt-8">
+        <h2 className="text-[16px] md:text-[20px] font-semibold text-white mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+          Herramientas de Administrador
+        </h2>
+        <div className="bg-[#121217] rounded-2xl border border-purple-900/30 overflow-hidden shadow-2xl p-5 md:p-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h3 className="text-[14px] md:text-[16px] font-bold text-white mb-1">Copia de Seguridad Inteligente (Backup Local)</h3>
+              <p className="text-[12px] md:text-[13px] text-zinc-400 max-w-2xl">
+                Para resguardar todas las fotos de Cloudinary en tu disco local (F:), abre la terminal en VS Code y ejecuta el comando de abajo. El sistema ordenará tus fotos en carpetas separadas por el nombre de cada propiedad y solo descargará las fotos nuevas que no tengas, ahorrando datos.
+              </p>
+            </div>
+            <div className="bg-black/50 border border-purple-900/30 rounded-lg p-3 flex items-center gap-3 w-full md:w-auto">
+              <code className="text-purple-400 text-[12px] md:text-[13px] font-mono whitespace-nowrap">
+                node scripts/backup-cloudinary.js
+              </code>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
