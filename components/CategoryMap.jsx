@@ -61,7 +61,14 @@ function getOffset(id) {
   };
 }
 
+import MapProvider from '@/components/shared/MapProvider';
+import { Map as GoogleMap } from '@vis.gl/react-google-maps';
+import GoogleMapClusterLayer from '@/components/GoogleMapClusterLayer';
+
 const CategoryMap = ({ properties = [] }) => {
+  const mapProvider = process.env.NEXT_PUBLIC_MAP_PROVIDER || 'mapbox';
+  const googleMapId = '5840ac3c29d4b1c78be4a027';
+
   const [selectedProperty, setSelectedProperty] = useState(null);
   const mapRef = useRef();
   const router = useRouter();
@@ -123,7 +130,7 @@ const CategoryMap = ({ properties = [] }) => {
     };
   }, [properties]);
 
-  const onMapLoad = useCallback((evt) => {
+  const onMapboxLoad = useCallback((evt) => {
     const map = evt.target;
 
     if (markers.length > 1) {
@@ -140,6 +147,23 @@ const CategoryMap = ({ properties = [] }) => {
     }
   }, [markers]);
 
+  // Track if we already fitted bounds on Google Maps
+  const hasFittedBoundsRef = useRef(false);
+
+  const onGoogleMapIdle = useCallback((map) => {
+    if (!map || hasFittedBoundsRef.current || !window.google) return;
+    
+    if (markers.length > 1) {
+      const bounds = new window.google.maps.LatLngBounds();
+      markers.forEach(m => bounds.extend(new window.google.maps.LatLng(m.coords.lat, m.coords.lng)));
+      map.fitBounds(bounds);
+    } else if (markers.length === 1) {
+      map.setCenter({ lat: markers[0].coords.lat, lng: markers[0].coords.lng });
+      map.setZoom(14);
+    }
+    hasFittedBoundsRef.current = true;
+  }, [markers]);
+
   if (markers.length === 0) {
     return (
       <div className="flex items-center justify-center h-[300px] text-[#999] text-[15px]">
@@ -149,20 +173,39 @@ const CategoryMap = ({ properties = [] }) => {
   }
 
   return (
-    <>
-      <div className="relative rounded-[30px] overflow-hidden">
-        <Map
-          ref={mapRef}
-          onLoad={onMapLoad}
-          mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-          mapLib={mapboxgl}
-          initialViewState={initialViewState}
-          style={{ width: '100%', height: 500 }}
-          mapStyle={MAP_STYLE}
-          {...MAP_DEFAULT_PROPS}
-        >
-          <MapClusterLayer properties={markers} onSelect={setSelectedProperty} selectedId={selectedProperty?._id} />
-        </Map>
+    <MapProvider>
+      <div className="relative rounded-[30px] overflow-hidden" style={{ height: 500 }}>
+        {mapProvider === 'google' ? (
+          <GoogleMap
+            defaultZoom={initialViewState?.zoom || 11}
+            defaultCenter={{ lat: initialViewState?.latitude || -31.6525, lng: initialViewState?.longitude || -64.4397 }}
+            mapId={googleMapId}
+            onIdle={(e) => onGoogleMapIdle(e.map)}
+            disableDefaultUI={false}
+            streetViewControl={true}
+            mapTypeControl={false}
+            fullscreenControl={true}
+          >
+            <GoogleMapClusterLayer 
+              properties={markers} 
+              onSelect={setSelectedProperty} 
+              selectedId={selectedProperty?._id} 
+            />
+          </GoogleMap>
+        ) : (
+          <Map
+            ref={mapRef}
+            onLoad={onMapboxLoad}
+            mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+            mapLib={mapboxgl}
+            initialViewState={initialViewState}
+            style={{ width: '100%', height: '100%' }}
+            mapStyle={MAP_STYLE}
+            {...MAP_DEFAULT_PROPS}
+          >
+            <MapClusterLayer properties={markers} onSelect={setSelectedProperty} selectedId={selectedProperty?._id} />
+          </Map>
+        )}
       </div>
 
       {/* Sidebar — portal to body so it escapes overflow-hidden ancestors */}
@@ -173,7 +216,7 @@ const CategoryMap = ({ properties = [] }) => {
         />,
         document.body
       )}
-    </>
+    </MapProvider>
   );
 };
 

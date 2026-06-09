@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
-import { APIProvider, Map, AdvancedMarker, Pin, useMap } from '@vis.gl/react-google-maps';
+import { APIProvider, Map, AdvancedMarker, Pin, useMap, useMapsLibrary } from '@vis.gl/react-google-maps';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
 import PropertiesSearch from '@/components/PropertiesSearch';
 import ScrollReveal from '@/components/shared/ScrollReveal';
@@ -71,11 +71,12 @@ function parsePrice(priceStr) {
 
 const ClusteredMarkers = ({ properties, selectedProperty, setSelectedProperty }) => {
   const map = useMap();
+  const markerLibrary = useMapsLibrary('marker');
   const clusterer = useRef(null);
   const markersRef = useRef({});
 
   useEffect(() => {
-    if (!map) return;
+    if (!map || !markerLibrary) return;
     if (!clusterer.current) {
       clusterer.current = new MarkerClusterer({
         map,
@@ -94,29 +95,15 @@ const ClusteredMarkers = ({ properties, selectedProperty, setSelectedProperty })
             container.appendChild(ripple);
             container.appendChild(circle);
 
-            if (window.google?.maps?.marker?.AdvancedMarkerElement) {
-              return new window.google.maps.marker.AdvancedMarkerElement({
-                position,
-                content: container,
-              });
-            } else {
-              return new window.google.maps.Marker({
-                position,
-                label: { text: String(count), color: 'white' },
-                icon: {
-                  path: window.google.maps.SymbolPath.CIRCLE,
-                  scale: 20,
-                  fillColor: '#db7340',
-                  fillOpacity: 1,
-                  strokeWeight: 0,
-                }
-              });
-            }
+            return new markerLibrary.AdvancedMarkerElement({
+              position,
+              content: container,
+            });
           }
         }
       });
     }
-  }, [map]);
+  }, [map, markerLibrary]);
 
   useEffect(() => {
     if (!clusterer.current) return;
@@ -125,7 +112,7 @@ const ClusteredMarkers = ({ properties, selectedProperty, setSelectedProperty })
       clusterer.current.addMarkers(Object.values(markersRef.current));
     }, 100);
     return () => clearTimeout(timer);
-  }, [properties, map]);
+  }, [properties, map, markerLibrary]);
 
   return (
     <>
@@ -150,6 +137,7 @@ const ClusteredMarkers = ({ properties, selectedProperty, setSelectedProperty })
 
 export default function GoogleMapPilot({ initialProperties = [] }) {
   const [allProps, setAllProps] = useState([]);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [activeFilters, setActiveFilters] = useState(null);
   const [visibleCount, setVisibleCount] = useState(0);
@@ -159,6 +147,7 @@ export default function GoogleMapPilot({ initialProperties = [] }) {
       .map((p) => ({ ...p, coords: geocode(p) }))
       .filter((p) => p.coords != null);
     setAllProps(geo);
+    setHasLoaded(true);
   }, [initialProperties]);
 
   const filteredProps = useMemo(() => {
@@ -252,7 +241,7 @@ export default function GoogleMapPilot({ initialProperties = [] }) {
     setVisibleCount(count);
   }, [filteredProps]);
 
-  if (allProps.length === 0) {
+  if (!hasLoaded) {
     return (
       <div className="h-screen flex items-center justify-center bg-[#F6F6F6]">
         <p className="text-gray-500">Cargando propiedades...</p>

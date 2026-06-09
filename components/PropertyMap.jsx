@@ -49,7 +49,13 @@ function geocodeCity(city) {
   return coords ? { lat: coords[0], lng: coords[1] } : null;
 }
 
+import MapProvider from '@/components/shared/MapProvider';
+import { Map as GoogleMap, AdvancedMarker } from '@vis.gl/react-google-maps';
+
 const PropertyMap = ({ property }) => {
+  const mapProvider = process.env.NEXT_PUBLIC_MAP_PROVIDER || 'mapbox';
+  const googleMapId = '5840ac3c29d4b1c78be4a027';
+
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -125,32 +131,54 @@ const PropertyMap = ({ property }) => {
     return <div className='text-xl'>No location data found</div>;
   }
 
+  const markerSvg = (
+    <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <path d="m32 0a24.028 24.028 0 0 0 -24 24c0 16.228 22.342 38.756 23.293 39.707a1 1 0 0 0 1.414 0c.951-.951 23.293-23.479 23.293-39.707a24.028 24.028 0 0 0 -24-24z" fill="#db7340"/>
+      <circle cx="32" cy="24" fill="#c06030" r="13"/>
+      <circle cx="32" cy="24" fill="#fff" opacity="0.25" r="6"/>
+    </svg>
+  );
+
   return (
-    <div className="relative">
-      <Map
-        ref={mapRef}
-        onLoad={onMapLoad}
-        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-        mapLib={mapboxgl}
-        initialViewState={{
-          longitude: lng,
-          latitude: lat,
-          zoom: 15,
-        }}
-        style={{ width: '100%', height: 500 }}
-        mapStyle={MAP_STYLE}
-        onError={(e) => console.error('[PropertyMap] Map load ERROR:', e?.error?.message || e)}
-        {...MAP_DEFAULT_PROPS}
-      >
-        <Marker longitude={lng} latitude={lat} anchor='bottom'>
-          <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-            <path d="m32 0a24.028 24.028 0 0 0 -24 24c0 16.228 22.342 38.756 23.293 39.707a1 1 0 0 0 1.414 0c.951-.951 23.293-23.479 23.293-39.707a24.028 24.028 0 0 0 -24-24z" fill="#db7340"/>
-            <circle cx="32" cy="24" fill="#c06030" r="13"/>
-            <circle cx="32" cy="24" fill="#fff" opacity="0.25" r="6"/>
-          </svg>
-        </Marker>
-      </Map>
-    </div>
+    <MapProvider>
+      <div className="relative h-[500px]">
+        {mapProvider === 'google' ? (
+          <GoogleMap
+            defaultZoom={15}
+            defaultCenter={{ lat, lng }}
+            mapId={googleMapId}
+            disableDefaultUI={false}
+            streetViewControl={true}
+            mapTypeControl={false}
+            fullscreenControl={true}
+          >
+            <AdvancedMarker position={{ lat, lng }}>
+              {markerSvg}
+            </AdvancedMarker>
+          </GoogleMap>
+        ) : (
+          <Map
+            ref={mapRef}
+            onLoad={onMapLoad}
+            mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+            mapLib={mapboxgl}
+            initialViewState={{
+              longitude: lng,
+              latitude: lat,
+              zoom: 15,
+            }}
+            style={{ width: '100%', height: '100%' }}
+            mapStyle={MAP_STYLE}
+            onError={(e) => console.error('[PropertyMap] Map load ERROR:', e?.error?.message || e)}
+            {...MAP_DEFAULT_PROPS}
+          >
+            <Marker longitude={lng} latitude={lat} anchor='bottom'>
+              {markerSvg}
+            </Marker>
+          </Map>
+        )}
+      </div>
+    </MapProvider>
   );
 };
 

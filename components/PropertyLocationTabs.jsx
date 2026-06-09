@@ -31,7 +31,13 @@ function geocodeCity(city) {
   return coords ? { lat: coords[0], lng: coords[1] } : null;
 }
 
+import MapProvider from '@/components/shared/MapProvider';
+import { Map as GoogleMap, AdvancedMarker } from '@vis.gl/react-google-maps';
+
 const PropertyLocationTabs = ({ property }) => {
+  const mapProvider = process.env.NEXT_PUBLIC_MAP_PROVIDER || 'mapbox';
+  const googleMapId = '5840ac3c29d4b1c78be4a027';
+
   const [activeTab, setActiveTab] = useState('map');
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
@@ -101,69 +107,87 @@ const PropertyLocationTabs = ({ property }) => {
   ];
 
   return (
-    <div>
-      {/* Tabs */}
-      <div className="flex gap-1 mb-3">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-200 ${
-              activeTab === tab.id
-                ? 'bg-[var(--color-brand)] text-white shadow-md shadow-[var(--color-brand)]/20'
-                : 'bg-[var(--color-surface-soft)] text-[var(--color-ink-secondary)] hover:bg-[var(--color-border)]'
-            }`}
-          >
-            {tab.icon}
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Content */}
-      <div className="rounded-2xl overflow-hidden border border-[var(--color-border)]" style={{ height: 500 }}>
-        {activeTab === 'map' ? (
-          <Map
-            mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-            mapLib={import('mapbox-gl')}
-            initialViewState={{ longitude: lng, latitude: lat, zoom: 15 }}
-            style={{ width: '100%', height: '100%' }}
-            mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
-            cooperativeGestures={true}
-          >
-            <Marker longitude={lng} latitude={lat} anchor='bottom'>
-              <Image src={pin} alt='location' width={40} height={40} />
-            </Marker>
-          </Map>
-        ) : (
-          <div className="relative w-full h-full">
-            <iframe
-              title="Street View"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              loading="lazy"
-              allowFullScreen
-              src={`https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1000!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1ses!2sar`}
-            />
-            {/* Overlay link to open full Street View */}
-            <a
-              href={`https://www.google.com/maps/@${lat},${lng},3a,75y,210h,90t/data=!3m6!1e1!3m4!1s!2e0!7i13312!8i6656`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm text-[var(--color-ink)] px-4 py-2 rounded-xl text-sm font-medium shadow-lg hover:bg-white transition-all flex items-center gap-2"
+    <MapProvider>
+      <div>
+        {/* Tabs */}
+        <div className="flex gap-1 mb-3">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-200 ${
+                activeTab === tab.id
+                  ? 'bg-[var(--color-brand)] text-white shadow-md shadow-[var(--color-brand)]/20'
+                  : 'bg-[var(--color-surface-soft)] text-[var(--color-ink-secondary)] hover:bg-[var(--color-border)]'
+              }`}
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                <polyline points="15 3 21 3 21 9"/>
-                <line x1="10" y1="14" x2="21" y2="3"/>
-              </svg>
-              Abrir Street View
-            </a>
-          </div>
-        )}
+              {tab.icon}
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
+        <div className="rounded-2xl overflow-hidden border border-[var(--color-border)]" style={{ height: 500 }}>
+          {activeTab === 'map' ? (
+            mapProvider === 'google' ? (
+              <GoogleMap
+                defaultZoom={15}
+                defaultCenter={{ lat, lng }}
+                mapId={googleMapId}
+                disableDefaultUI={false}
+                streetViewControl={true}
+                mapTypeControl={false}
+                fullscreenControl={true}
+              >
+                <AdvancedMarker position={{ lat, lng }}>
+                  <Image src={pin} alt='location' width={40} height={40} />
+                </AdvancedMarker>
+              </GoogleMap>
+            ) : (
+              <Map
+                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+                mapLib={import('mapbox-gl')}
+                initialViewState={{ longitude: lng, latitude: lat, zoom: 15 }}
+                style={{ width: '100%', height: '100%' }}
+                mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
+                cooperativeGestures={true}
+              >
+                <Marker longitude={lng} latitude={lat} anchor='bottom'>
+                  <Image src={pin} alt='location' width={40} height={40} />
+                </Marker>
+              </Map>
+            )
+          ) : (
+            <div className="relative w-full h-full">
+              <iframe
+                title="Street View"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                allowFullScreen
+                src={`https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1000!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1ses!2sar`}
+              />
+              {/* Overlay link to open full Street View */}
+              <a
+                href={`https://www.google.com/maps/@${lat},${lng},3a,75y,210h,90t/data=!3m6!1e1!3m4!1s!2e0!7i13312!8i6656`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm text-[var(--color-ink)] px-4 py-2 rounded-xl text-sm font-medium shadow-lg hover:bg-white transition-all flex items-center gap-2"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                Abrir Street View
+              </a>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </MapProvider>
   );
 };
 

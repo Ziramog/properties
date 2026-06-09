@@ -89,16 +89,39 @@ function formatPrice(property) {
   return `USD $${num}`;
 }
 
+import MapProvider from '@/components/shared/MapProvider';
+import { Map as GoogleMap, AdvancedMarker, InfoWindow, useMap as useGoogleMap } from '@vis.gl/react-google-maps';
+
+function GoogleMapViewControls({ geocodedProps }) {
+  const map = useGoogleMap();
+  useEffect(() => {
+    if (!map || geocodedProps.length === 0 || !window.google) return;
+    const bounds = new window.google.maps.LatLngBounds();
+    geocodedProps.forEach(p => {
+      bounds.extend(new window.google.maps.LatLng(p.coords.lat, p.coords.lng));
+    });
+    map.fitBounds(bounds, 60);
+  }, [map, geocodedProps]);
+  return null;
+}
+
 // ── Main MapView component ──
 const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref) => {
+  const mapProvider = process.env.NEXT_PUBLIC_MAP_PROVIDER || 'mapbox';
+  const googleMapId = '5840ac3c29d4b1c78be4a027';
+
   const [geocodedProps, setGeocodedProps] = useState([]);
   const [visitedIds, setVisitedIds] = useState(new Set());
   const [popupProperty, setPopupProperty] = useState(null);
   const mapRef = useRef(null);
+  const [googleMapInstance, setGoogleMapInstance] = useState(null);
 
   useImperativeHandle(ref, () => ({
     flyTo: (coords, zoom) => {
-      if (mapRef.current) {
+      if (mapProvider === 'google' && googleMapInstance) {
+        googleMapInstance.panTo({ lat: coords[1], lng: coords[0] });
+        googleMapInstance.setZoom(zoom || 15);
+      } else if (mapRef.current) {
         mapRef.current.flyTo({ center: [coords[1], coords[0]], zoom: zoom || 15, duration: 800 });
       }
     },
@@ -132,94 +155,159 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
     );
   }
 
+  const renderPopupContent = (prop) => (
+    <div className="min-w-[220px] max-w-[260px]" style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+      <img
+        src={getPropertyImage(prop)}
+        alt={prop.name}
+        className="w-full h-32 object-cover rounded-md mb-2"
+      />
+      <h3 className="font-semibold text-sm text-gray-900 line-clamp-1">{prop.name}</h3>
+      <p className="text-xs text-gray-500 mt-0.5">
+        {prop.location?.city}, {prop.location?.state}
+      </p>
+      <p className="font-bold mt-1 text-base" style={{ color: '#C93E15' }}>{prop.price || 'Consultar'}</p>
+      <a
+        href={generateWhatsAppLink({ property: prop })}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-2 flex items-center justify-center gap-1.5 w-full py-1.5 bg-whatsapp text-white text-xs font-semibold rounded-md hover:bg-whatsapp-hover transition-colors"
+      >
+        WhatsApp
+      </a>
+    </div>
+  );
+
   return (
-    <Map
-      ref={mapRef}
-      mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-      mapLib={import('mapbox-gl')}
-      initialViewState={{
-        longitude: defaultCenter[0],
-        latitude: defaultCenter[1],
-        zoom: 13,
-      }}
-      style={{ width: '100%', height: '100%' }}
-      mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
-      scrollZoom={true}
-      attributionControl={false}
-      cooperativeGestures={true}
-    >
-      <MapViewControls mapRef={mapRef} geocodedProps={geocodedProps} />
-      {geocodedProps.map((property) => {
-        const isSelected = selectedId === property._id;
-        const isVisited = visitedIds.has(property._id);
-        const bg = isVisited ? '#6B7B8D' : isSelected ? '#E94560' : '#C93E15';
-
-        return (
-          <Marker
-            key={property._id}
-            longitude={property.coords.lng}
-            latitude={property.coords.lat}
-            anchor="bottom"
-            onClick={(e) => {
-              e.originalEvent.stopPropagation();
-              handleMarkerClick(property);
-            }}
-          >
-            <div
-              className="price-tag"
-              style={{
-                background: bg,
-                color: bg,
-                border: 'none',
-                borderRadius: '10px',
-                boxShadow: isSelected
-                  ? '0 0 0 3px rgba(233,69,96,0.4), 0 8px 24px rgba(0,0,0,0.35)'
-                  : '0 4px 16px rgba(0,0,0,0.3), 0 1px 4px rgba(0,0,0,0.15)',
-                transform: isSelected ? 'scale(1.15)' : 'none',
-                zIndex: isSelected ? 1000 : 'auto',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <span style={{ color: '#fff' }}>{formatPrice(property)}</span>
-            </div>
-          </Marker>
-        );
-      })}
-
-      {popupProperty && (
-        <Popup
-          longitude={popupProperty.coords.lng}
-          latitude={popupProperty.coords.lat}
-          anchor="top"
-          onClose={() => setPopupProperty(null)}
-          closeButton={true}
-          closeOnClick={false}
-          maxWidth="280px"
-          className="property-popup"
+    <MapProvider>
+      {mapProvider === 'google' ? (
+        <GoogleMap
+          defaultZoom={13}
+          defaultCenter={{ lat: defaultCenter[1], lng: defaultCenter[0] }}
+          mapId={googleMapId}
+          onIdle={(e) => setGoogleMapInstance(e.map)}
+          disableDefaultUI={false}
+          streetViewControl={true}
+          mapTypeControl={false}
+          fullscreenControl={true}
         >
-          <div className="min-w-[220px] max-w-[260px]" style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
-            <img
-              src={getPropertyImage(popupProperty)}
-              alt={popupProperty.name}
-              className="w-full h-32 object-cover rounded-md mb-2"
-            />
-            <h3 className="font-semibold text-sm text-gray-900 line-clamp-1">{popupProperty.name}</h3>
-            <p className="text-xs text-gray-500 mt-0.5">
-              {popupProperty.location?.city}, {popupProperty.location?.state}
-            </p>
-            <p className="font-bold mt-1 text-base" style={{ color: '#C93E15' }}>{popupProperty.price || 'Consultar'}</p>
-            <a
-              href={generateWhatsAppLink({ property: popupProperty })}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 flex items-center justify-center gap-1.5 w-full py-1.5 bg-whatsapp text-white text-xs font-semibold rounded-md hover:bg-whatsapp-hover transition-colors"
+          <GoogleMapViewControls geocodedProps={geocodedProps} />
+          {geocodedProps.map((property) => {
+            const isSelected = selectedId === property._id;
+            const isVisited = visitedIds.has(property._id);
+            const bg = isVisited ? '#6B7B8D' : isSelected ? '#E94560' : '#C93E15';
+
+            return (
+              <AdvancedMarker
+                key={property._id}
+                position={{ lat: property.coords.lat, lng: property.coords.lng }}
+                onClick={(e) => {
+                  e.stop();
+                  handleMarkerClick(property);
+                }}
+              >
+                <div
+                  className="price-tag"
+                  style={{
+                    background: bg,
+                    color: bg,
+                    border: 'none',
+                    borderRadius: '10px',
+                    boxShadow: isSelected
+                      ? '0 0 0 3px rgba(233,69,96,0.4), 0 8px 24px rgba(0,0,0,0.35)'
+                      : '0 4px 16px rgba(0,0,0,0.3), 0 1px 4px rgba(0,0,0,0.15)',
+                    transform: isSelected ? 'scale(1.15)' : 'none',
+                    zIndex: isSelected ? 1000 : 'auto',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  <span style={{ color: '#fff' }}>{formatPrice(property)}</span>
+                </div>
+              </AdvancedMarker>
+            );
+          })}
+          
+          {popupProperty && (
+            <InfoWindow
+              position={{ lat: popupProperty.coords.lat, lng: popupProperty.coords.lng }}
+              onCloseClick={() => setPopupProperty(null)}
+              pixelOffset={[0, -30]}
             >
-              WhatsApp
-            </a>
-          </div>
-        </Popup>
+              {renderPopupContent(popupProperty)}
+            </InfoWindow>
+          )}
+        </GoogleMap>
+      ) : (
+        <Map
+          ref={mapRef}
+          mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+          mapLib={import('mapbox-gl')}
+          initialViewState={{
+            longitude: defaultCenter[0],
+            latitude: defaultCenter[1],
+            zoom: 13,
+          }}
+          style={{ width: '100%', height: '100%' }}
+          mapStyle="mapbox://styles/wolfim77/cmp93y2ft000s01qf5dxi9ar7"
+          scrollZoom={true}
+          attributionControl={false}
+          cooperativeGestures={true}
+        >
+          <MapViewControls mapRef={mapRef} geocodedProps={geocodedProps} />
+          {geocodedProps.map((property) => {
+            const isSelected = selectedId === property._id;
+            const isVisited = visitedIds.has(property._id);
+            const bg = isVisited ? '#6B7B8D' : isSelected ? '#E94560' : '#C93E15';
+
+            return (
+              <Marker
+                key={property._id}
+                longitude={property.coords.lng}
+                latitude={property.coords.lat}
+                anchor="bottom"
+                onClick={(e) => {
+                  e.originalEvent.stopPropagation();
+                  handleMarkerClick(property);
+                }}
+              >
+                <div
+                  className="price-tag"
+                  style={{
+                    background: bg,
+                    color: bg,
+                    border: 'none',
+                    borderRadius: '10px',
+                    boxShadow: isSelected
+                      ? '0 0 0 3px rgba(233,69,96,0.4), 0 8px 24px rgba(0,0,0,0.35)'
+                      : '0 4px 16px rgba(0,0,0,0.3), 0 1px 4px rgba(0,0,0,0.15)',
+                    transform: isSelected ? 'scale(1.15)' : 'none',
+                    zIndex: isSelected ? 1000 : 'auto',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  <span style={{ color: '#fff' }}>{formatPrice(property)}</span>
+                </div>
+              </Marker>
+            );
+          })}
+
+          {popupProperty && (
+            <Popup
+              longitude={popupProperty.coords.lng}
+              latitude={popupProperty.coords.lat}
+              anchor="top"
+              onClose={() => setPopupProperty(null)}
+              closeButton={true}
+              closeOnClick={false}
+              maxWidth="280px"
+              className="property-popup"
+            >
+              {renderPopupContent(popupProperty)}
+            </Popup>
+          )}
+        </Map>
       )}
-      </Map>
+    </MapProvider>
   );
 });
 

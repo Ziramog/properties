@@ -75,14 +75,21 @@ function parsePrice(priceStr) {
   return parseInt(cleaned, 10) || 0;
 }
 
+import MapProvider from '@/components/shared/MapProvider';
+import { Map as GoogleMap } from '@vis.gl/react-google-maps';
+import GoogleMapClusterLayer from '@/components/GoogleMapClusterLayer';
+
 export default function MapAllProperties({ initialProperties = [] }) {
+  const mapProvider = process.env.NEXT_PUBLIC_MAP_PROVIDER || 'mapbox';
+  const googleMapId = '5840ac3c29d4b1c78be4a027';
+  
   const [allProps, setAllProps] = useState([]);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const mapRef = useRef(null);
   const [activeFilters, setActiveFilters] = useState(null);
   const [visibleCount, setVisibleCount] = useState(0);
 
-  const updateVisibleCount = useCallback(() => {
+  const updateVisibleCountMapbox = useCallback(() => {
     if (!mapRef.current) return;
     const bounds = mapRef.current.getMap().getBounds();
     if (!bounds) return;
@@ -99,12 +106,26 @@ export default function MapAllProperties({ initialProperties = [] }) {
     setVisibleCount(count);
   }, [filteredProps]);
 
+  const updateVisibleCountGoogle = useCallback((map) => {
+    if (!map) return;
+    const bounds = map.getBounds();
+    if (!bounds) return;
+
+    const count = filteredProps.filter(p => {
+      if (!p.coords) return false;
+      if (!window.google) return false;
+      const latLng = new window.google.maps.LatLng(p.coords.lat, p.coords.lng);
+      return bounds.contains(latLng);
+    }).length;
+    setVisibleCount(count);
+  }, [filteredProps]);
+
   useEffect(() => {
-    // We try to update the count when filteredProps changes, 
-    // waiting for the map to be ready
-    const timer = setTimeout(() => updateVisibleCount(), 100);
-    return () => clearTimeout(timer);
-  }, [filteredProps, updateVisibleCount]);
+    if (mapProvider === 'mapbox') {
+      const timer = setTimeout(() => updateVisibleCountMapbox(), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [filteredProps, updateVisibleCountMapbox, mapProvider]);
 
   useEffect(() => {
     const geo = initialProperties
@@ -210,44 +231,64 @@ export default function MapAllProperties({ initialProperties = [] }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#F6F6F6]">
-      {/* Search bar */}
-      <section className="bg-black px-4 md:px-[50px] pt-20 md:pt-28 pb-6">
-        <div className="max-w-7xl mx-auto">
-          <PropertiesSearch onFilter={setActiveFilters} title="Mapa de Propiedades" />
-        </div>
-      </section>
+    <MapProvider>
+      <div className="min-h-screen bg-[#F6F6F6]">
+        {/* Search bar */}
+        <section className="bg-black px-4 md:px-[50px] pt-20 md:pt-28 pb-6">
+          <div className="max-w-7xl mx-auto">
+            <PropertiesSearch onFilter={setActiveFilters} title="Mapa de Propiedades" />
+          </div>
+        </section>
 
-      {/* Map section */}
-      <section className="px-4 md:px-[50px] pb-12 pt-[12px]">
-        <div className="bg-white rounded-[30px] overflow-hidden">
-          <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[40px]">
-            {/* Title */}
-            <div className="pb-[30px] flex items-center justify-between">
-              <SectionTitle size="normal">Todas las Propiedades</SectionTitle>
-            </div>
+        {/* Map section */}
+        <section className="px-4 md:px-[50px] pb-12 pt-[12px]">
+          <div className="bg-white rounded-[30px] overflow-hidden">
+            <div className="mx-auto px-4 md:px-[50px] py-[30px] md:py-[40px]">
+              {/* Title */}
+              <div className="pb-[30px] flex items-center justify-between">
+                <SectionTitle size="normal">Todas las Propiedades</SectionTitle>
+              </div>
 
-            {/* Map */}
-            <ScrollReveal>
-              <div className="relative rounded-[30px] overflow-hidden" style={{ height: 'calc(100vh - 380px)', minHeight: '500px' }}>
-                {/* Property count badge */}
-                <div className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-md rounded-full px-4 py-2 text-[12px] font-semibold text-[#1A1A18] shadow-lg">
-                  {visibleCount} propiedades visibles
-                </div>
+              {/* Map */}
+              <ScrollReveal>
+                <div className="relative rounded-[30px] overflow-hidden" style={{ height: 'calc(100vh - 380px)', minHeight: '500px' }}>
+                  {/* Property count badge */}
+                  <div className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-md rounded-full px-4 py-2 text-[12px] font-semibold text-[#1A1A18] shadow-lg">
+                    {visibleCount} propiedades visibles
+                  </div>
 
-                <Map
-                  ref={mapRef}
-                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-                  mapLib={mapboxgl}
-                  initialViewState={{ longitude: -64.4397, latitude: -31.6525, zoom: 11 }}
-                  style={{ width: '100%', height: '100%' }}
-                  mapStyle={MAP_STYLE}
-                  {...MAP_DEFAULT_PROPS}
-                  onMove={updateVisibleCount}
-                  onLoad={updateVisibleCount}
-                >
-                  <MapClusterLayer properties={filteredProps} onSelect={setSelectedProperty} selectedId={selectedProperty?._id} />
-                </Map>
+                  {mapProvider === 'google' ? (
+                    <GoogleMap
+                      defaultZoom={11}
+                      defaultCenter={{ lat: -31.6525, lng: -64.4397 }}
+                      mapId={googleMapId}
+                      onIdle={(e) => updateVisibleCountGoogle(e.map)}
+                      disableDefaultUI={false}
+                      streetViewControl={true}
+                      mapTypeControl={false}
+                      fullscreenControl={true}
+                    >
+                      <GoogleMapClusterLayer 
+                        properties={filteredProps} 
+                        onSelect={setSelectedProperty} 
+                        selectedId={selectedProperty?._id} 
+                      />
+                    </GoogleMap>
+                  ) : (
+                    <Map
+                      ref={mapRef}
+                      mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+                      mapLib={mapboxgl}
+                      initialViewState={{ longitude: -64.4397, latitude: -31.6525, zoom: 11 }}
+                      style={{ width: '100%', height: '100%' }}
+                      mapStyle={MAP_STYLE}
+                      {...MAP_DEFAULT_PROPS}
+                      onMove={updateVisibleCountMapbox}
+                      onLoad={updateVisibleCountMapbox}
+                    >
+                      <MapClusterLayer properties={filteredProps} onSelect={setSelectedProperty} selectedId={selectedProperty?._id} />
+                    </Map>
+                  )}
 
                 {/* No results overlay */}
                 {filteredProps.length === 0 && allProps.length > 0 && (
@@ -272,6 +313,7 @@ export default function MapAllProperties({ initialProperties = [] }) {
           onClose={() => setSelectedProperty(null)}
         />
       )}
-    </div>
+      </div>
+    </MapProvider>
   );
 }
