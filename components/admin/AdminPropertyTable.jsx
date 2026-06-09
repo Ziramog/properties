@@ -186,7 +186,17 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
                 <td className="px-3 md:px-6 py-3">
                   <div className="flex items-center gap-3">
                     {prop.images?.[0]?.url ? (
-                      <img src={prop.images[0].url} alt="" className="w-14 h-14 md:w-16 md:h-16 rounded-sm object-cover flex-shrink-0 bg-[#222]" />
+                      <img 
+                        src={prop.images[0].url} 
+                        alt="" 
+                        className="w-14 h-14 md:w-16 md:h-16 rounded-sm object-cover flex-shrink-0 bg-[#222]" 
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          // If image fails, replace with inline SVG placeholder
+                          e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23555" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>';
+                          e.target.className = "w-14 h-14 md:w-16 md:h-16 rounded-sm bg-[#222] flex items-center justify-center flex-shrink-0 p-4 object-contain";
+                        }}
+                      />
                     ) : (
                       <div className="w-14 h-14 md:w-16 md:h-16 rounded-sm bg-[#222] flex items-center justify-center flex-shrink-0">
                         <svg viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="1.5" className="w-6 h-6"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
