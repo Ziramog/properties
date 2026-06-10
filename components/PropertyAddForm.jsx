@@ -10,12 +10,12 @@ import { generateDescription } from '@/app/actions/generateDescription';
 import LocationPickerMap from '@/components/shared/LocationPickerMap';
 import FullScreenLoader from '@/components/shared/FullScreenLoader';
 
-const SubmitButton = ({ isRedirecting }) => {
+const SubmitButton = ({ isRedirecting, isSuccess }) => {
   const { pending } = useFormStatus();
-  const disabled = pending || isRedirecting;
+  const disabled = pending || isRedirecting || isSuccess;
   return (
     <>
-      <FullScreenLoader isUploading={pending && !isRedirecting} isSuccess={isRedirecting} />
+      <FullScreenLoader isUploading={pending && !isSuccess && !isRedirecting} isSuccess={isSuccess || isRedirecting} />
       <div className="mt-8 flex gap-4">
         <Link href="/admin/properties" className={`bg-transparent border border-[#555] hover:bg-[#222] text-white font-bold py-3 px-6 rounded-md transition-colors flex items-center justify-center ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
           Cancelar
@@ -25,7 +25,7 @@ const SubmitButton = ({ isRedirecting }) => {
           type='submit'
           disabled={disabled}
         >
-          {isRedirecting ? 'Redirigiendo...' : pending ? 'Guardando...' : 'Agregar Propiedad'}
+          {isRedirecting || isSuccess ? 'Redirigiendo...' : pending ? 'Guardando...' : 'Agregar Propiedad'}
         </button>
       </div>
     </>
@@ -285,7 +285,7 @@ const PropertyAddForm = () => {
         </div>
       </div>
 
-      <SubmitButton isRedirecting={isRedirecting} />
+      <SubmitButton isRedirecting={isRedirecting} isSuccess={state?.success} />
     </form>
   );
 };
