@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
+import Image from 'next/image';
 import imageCompression from 'browser-image-compression';
 import Link from 'next/link';
 import updateProperty from '@/app/actions/updateProperty';
