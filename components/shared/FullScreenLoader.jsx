@@ -41,7 +41,7 @@ const FullScreenLoader = ({ isUploading, isSuccess }) => {
         {/* Logo in the center */}
         <div className="absolute inset-0 m-auto w-24 h-24 rounded-full flex items-center justify-center p-2 bg-[#111] overflow-hidden shadow-xl">
           <Image 
-            src="/images/logo-rr.png" 
+            src="/images/ISOTIPO R&R-Photoroom.png" 
             alt="Roggero y Roma" 
             width={80} 
             height={80} 
