@@ -67,11 +67,10 @@ const PropertyAddForm = () => {
         setIsUploading(false);
       } else if (result?.success) {
         setIsSuccess(true);
-        toast.success('Propiedad Agregada con éxito');
         if (result.redirected) {
           setTimeout(() => {
             window.location.href = result.redirected;
-          }, 1500);
+          }, 800);
         }
       }
     } catch (err) {

@@ -68,11 +68,10 @@ const PropertyEditForm = ({ property }) => {
         setIsUploading(false);
       } else if (result?.success) {
         setIsSuccess(true);
-        toast.success('Propiedad Actualizada con éxito');
         if (result.redirected) {
           setTimeout(() => {
             window.location.href = result.redirected;
-          }, 1500);
+          }, 800);
         }
       }
     } catch (err) {
