@@ -9,21 +9,15 @@ import Link from 'next/link';
 import updateProperty from '@/app/actions/updateProperty';
 import { generateDescription } from '@/app/actions/generateDescription';
 import LocationPickerMap from '@/components/shared/LocationPickerMap';
+import FullScreenLoader from '@/components/shared/FullScreenLoader';
 
 const SubmitButton = ({ isRedirecting }) => {
   const { pending } = useFormStatus();
   const disabled = pending || isRedirecting;
   return (
-    <div className="mt-8">
-      {disabled && (
-        <div className="mb-4 p-4 bg-[#181818] border border-[var(--color-brand)] rounded-lg flex items-center gap-4 animate-pulse">
-          <div className="w-6 h-6 border-2 border-[var(--color-brand)] border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-[var(--color-brand)] font-semibold text-sm">
-            {isRedirecting ? '¡Guardado con éxito! Redirigiendo...' : 'Procesando imágenes y guardando propiedad... Por favor, espera.'}
-          </p>
-        </div>
-      )}
-      <div className="flex gap-4">
+    <>
+      <FullScreenLoader isUploading={pending && !isRedirecting} isSuccess={isRedirecting} />
+      <div className="mt-8 flex gap-4">
         <Link href="/admin/properties" className={`bg-transparent border border-[#555] hover:bg-[#222] text-white font-bold py-3 px-6 rounded-md transition-colors flex items-center justify-center ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
           Cancelar
         </Link>
@@ -35,7 +29,7 @@ const SubmitButton = ({ isRedirecting }) => {
           {isRedirecting ? 'Redirigiendo...' : pending ? 'Guardando...' : 'Guardar Cambios'}
         </button>
       </div>
-    </div>
+    </>
   );
 };
 
