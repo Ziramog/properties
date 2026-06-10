@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import Image from 'next/image';
 import imageCompression from 'browser-image-compression';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import updateProperty from '@/app/actions/updateProperty';
 import { generateDescription } from '@/app/actions/generateDescription';
 import LocationPickerMap from '@/components/shared/LocationPickerMap';
@@ -35,6 +36,8 @@ const PropertyEditForm = ({ property }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState(null);
 
+  const router = useRouter();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsUploading(true);
@@ -60,6 +63,9 @@ const PropertyEditForm = ({ property }) => {
         }
       }
 
+      previewImages.forEach((img) => formData.append('orderedImages', img.url));
+      removedImages.forEach((img) => formData.append('removedImages', img));
+
       const result = await updateProperty({}, formData);
 
       if (result?.error) {
@@ -70,7 +76,7 @@ const PropertyEditForm = ({ property }) => {
         setIsSuccess(true);
         if (result.redirected) {
           setTimeout(() => {
-            window.location.href = result.redirected;
+            router.push(result.redirected);
           }, 800);
         }
       }

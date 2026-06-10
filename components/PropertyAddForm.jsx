@@ -2,6 +2,7 @@
 import { useState, useRef } from 'react';
 import { toast } from 'react-toastify';
 import imageCompression from 'browser-image-compression';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import addProperty from '@/app/actions/addProperty';
 import { generateDescription } from '@/app/actions/generateDescription';
@@ -33,6 +34,8 @@ const PropertyAddForm = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState(null);
+
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,7 +72,7 @@ const PropertyAddForm = () => {
         setIsSuccess(true);
         if (result.redirected) {
           setTimeout(() => {
-            window.location.href = result.redirected;
+            router.push(result.redirected);
           }, 800);
         }
       }
