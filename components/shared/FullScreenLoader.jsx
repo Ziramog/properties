@@ -3,14 +3,14 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 
-const FullScreenLoader = ({ isUploading, isSuccess }) => {
+const FullScreenLoader = ({ isUploading, isSuccess, error, onCloseError }) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!isUploading && !isSuccess) return null;
+  if (!isUploading && !isSuccess && !error) return null;
   if (!mounted) return null;
 
   return createPortal(
@@ -25,16 +25,16 @@ const FullScreenLoader = ({ isUploading, isSuccess }) => {
             stroke="#222" 
             strokeWidth="4" 
           />
-          {/* Progress / Success Stroke */}
+          {/* Progress / Success / Error Stroke */}
           <circle 
             cx="50" cy="50" r="45" 
             fill="none" 
-            stroke={isSuccess ? "#4ADE80" : "var(--color-brand)"} 
+            stroke={error ? "#EF4444" : isSuccess ? "#4ADE80" : "var(--color-brand)"} 
             strokeWidth="4"
             strokeLinecap="round"
-            className={isSuccess ? "transition-all duration-1000 ease-out" : "animate-spin origin-center"}
+            className={isSuccess || error ? "transition-all duration-1000 ease-out" : "animate-spin origin-center"}
             strokeDasharray="283"
-            strokeDashoffset={isSuccess ? "0" : "180"}
+            strokeDashoffset={isSuccess || error ? "0" : "180"}
           />
         </svg>
 
@@ -45,14 +45,23 @@ const FullScreenLoader = ({ isUploading, isSuccess }) => {
             alt="Roggero y Roma" 
             width={80} 
             height={80} 
-            className={`object-contain transition-all duration-500 ${isUploading && !isSuccess ? 'animate-pulse' : ''}`} 
+            className={`object-contain transition-all duration-500 ${isUploading && !isSuccess && !error ? 'animate-pulse' : ''}`} 
           />
         </div>
       </div>
 
       {/* Text Indicator */}
-      <div className="text-center">
-        {isSuccess ? (
+      <div className="text-center max-w-md px-4">
+        {error ? (
+          <div className="flex flex-col items-center transition-opacity duration-500 opacity-100">
+            <div className="w-12 h-12 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center mb-3">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-6 h-6 stroke-[3]"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-heading)' }}>Error al Guardar</h2>
+            <p className="text-gray-400 text-sm mb-6">{error}</p>
+            <button type="button" onClick={onCloseError} className="px-6 py-2 bg-[#222] hover:bg-[#333] text-white rounded-md font-bold transition-colors">Volver al Formulario</button>
+          </div>
+        ) : isSuccess ? (
           <div className="flex flex-col items-center transition-opacity duration-500 opacity-100">
             <div className="w-12 h-12 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mb-3">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-6 h-6 stroke-[3]"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"></path></svg>

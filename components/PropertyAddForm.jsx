@@ -1,21 +1,18 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useState, useRef } from 'react';
 import { toast } from 'react-toastify';
 import imageCompression from 'browser-image-compression';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import addProperty from '@/app/actions/addProperty';
 import { generateDescription } from '@/app/actions/generateDescription';
 import LocationPickerMap from '@/components/shared/LocationPickerMap';
 import FullScreenLoader from '@/components/shared/FullScreenLoader';
 
-const SubmitButton = ({ isRedirecting, isSuccess }) => {
-  const { pending } = useFormStatus();
-  const disabled = pending || isRedirecting || isSuccess;
+const SubmitButton = ({ isUploading, isSuccess, error, onCloseError }) => {
+  const disabled = isUploading || isSuccess;
   return (
     <>
-      <FullScreenLoader isUploading={pending && !isSuccess && !isRedirecting} isSuccess={isSuccess || isRedirecting} />
+      <FullScreenLoader isUploading={isUploading} isSuccess={isSuccess} error={error} onCloseError={onCloseError} />
       <div className="mt-8 flex gap-4">
         <Link href="/admin/properties" className={`bg-transparent border border-[#555] hover:bg-[#222] text-white font-bold py-3 px-6 rounded-md transition-colors flex items-center justify-center ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
           Cancelar
@@ -25,7 +22,7 @@ const SubmitButton = ({ isRedirecting, isSuccess }) => {
           type='submit'
           disabled={disabled}
         >
-          {isRedirecting || isSuccess ? 'Redirigiendo...' : pending ? 'Guardando...' : 'Agregar Propiedad'}
+          {isSuccess ? 'Redirigiendo...' : isUploading ? 'Guardando...' : 'Agregar Propiedad'}
         </button>
       </div>
     </>
@@ -33,9 +30,20 @@ const SubmitButton = ({ isRedirecting, isSuccess }) => {
 };
 
 const PropertyAddForm = () => {
-  const [state, formAction] = useFormState(async (prevState, formData) => {
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsUploading(true);
+    setError(null);
+    setIsSuccess(false);
+
     try {
+      const formData = new FormData(e.currentTarget);
       const imageFiles = formData.getAll('images');
+      
       if (imageFiles.length > 0 && imageFiles[0].size > 0) {
         formData.delete('images');
         const options = { maxSizeMB: 0.6, maxWidthOrHeight: 1600, useWebWorker: true };
@@ -44,34 +52,36 @@ const PropertyAddForm = () => {
           try {
             const compressedFile = await imageCompression(file, options);
             formData.append('images', compressedFile, compressedFile.name);
-          } catch (error) {
-            console.error('Error compressing image:', error);
+          } catch (compressError) {
+            console.error('Error compressing image:', compressError);
             formData.append('images', file, file.name);
           }
         }
       }
-      return await addProperty(prevState, formData);
+
+      const result = await addProperty({}, formData);
+
+      if (result?.error) {
+        setError(result.error);
+        toast.error(result.error);
+        setIsUploading(false);
+      } else if (result?.success) {
+        setIsSuccess(true);
+        toast.success('Propiedad Agregada con éxito');
+        if (result.redirected) {
+          setTimeout(() => {
+            window.location.href = result.redirected;
+          }, 1500);
+        }
+      }
     } catch (err) {
       console.error("Action error:", err);
-      return { error: 'Error de red. Las imágenes pueden ser demasiado grandes (límite 4.5MB).' };
+      const msg = 'Error de red. Las imágenes pueden ser demasiado grandes (límite 20MB).';
+      setError(msg);
+      toast.error(msg);
+      setIsUploading(false);
     }
-  }, {});
-
-  const router = useRouter();
-  const [isRedirecting, setIsRedirecting] = useState(false);
-
-  useEffect(() => {
-    if (state?.error) toast.error(state.error);
-    if (state?.success) {
-      toast.success('Propiedad Agregada con éxito');
-      if (state.redirected) {
-        setIsRedirecting(true);
-        setTimeout(() => {
-          window.location.href = state.redirected;
-        }, 1500);
-      }
-    }
-  }, [state, router]);
+  };
 
   const [operation, setOperation] = useState('venta');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -121,7 +131,7 @@ const PropertyAddForm = () => {
   const helperClass = 'text-[11px] text-gray-500 mt-1';
 
   return (
-    <form ref={formRef} action={formAction}>
+    <form ref={formRef} onSubmit={handleSubmit}>
       <h2 className='text-[28px] md:text-3xl text-center font-normal mb-8 text-white' style={{ fontFamily: 'var(--font-heading)' }}>
         Agregar Propiedad
       </h2>
@@ -285,7 +295,12 @@ const PropertyAddForm = () => {
         </div>
       </div>
 
-      <SubmitButton isRedirecting={isRedirecting} isSuccess={state?.success} />
+      <SubmitButton 
+        isUploading={isUploading} 
+        isSuccess={isSuccess} 
+        error={error} 
+        onCloseError={() => setError(null)} 
+      />
     </form>
   );
 };
