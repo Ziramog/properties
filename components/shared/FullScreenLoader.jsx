@@ -23,7 +23,7 @@ const FullScreenLoader = ({ isUploading, isSuccess }) => {
             stroke={isSuccess ? "#4ADE80" : "var(--color-brand)"} 
             strokeWidth="4"
             strokeLinecap="round"
-            className={isSuccess ? "transition-all duration-1000 ease-out" : "animate-[spin_2s_linear_infinite]"}
+            className={isSuccess ? "transition-all duration-1000 ease-out" : "animate-spin origin-center"}
             strokeDasharray="283"
             strokeDashoffset={isSuccess ? "0" : "180"}
           />
@@ -32,7 +32,7 @@ const FullScreenLoader = ({ isUploading, isSuccess }) => {
         {/* Logo in the center */}
         <div className="absolute inset-0 m-auto w-24 h-24 rounded-full flex items-center justify-center p-2 bg-[#111] overflow-hidden shadow-xl">
           <Image 
-            src="/images/ISOTIPO R&R-Photoroom.png" 
+            src="/images/logo-rr.png" 
             alt="Roggero y Roma" 
             width={80} 
             height={80} 
@@ -44,7 +44,7 @@ const FullScreenLoader = ({ isUploading, isSuccess }) => {
       {/* Text Indicator */}
       <div className="text-center">
         {isSuccess ? (
-          <div className="flex flex-col items-center animate-[fade-in_0.5s_ease-out]">
+          <div className="flex flex-col items-center transition-opacity duration-500 opacity-100">
             <div className="w-12 h-12 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mb-3">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-6 h-6 stroke-[3]"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"></path></svg>
             </div>
@@ -52,7 +52,7 @@ const FullScreenLoader = ({ isUploading, isSuccess }) => {
             <p className="text-gray-400 text-sm">Redirigiendo al panel de propiedades...</p>
           </div>
         ) : (
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center transition-opacity duration-500 opacity-100">
             <h2 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-heading)' }}>Subiendo Archivos</h2>
             <p className="text-[var(--color-brand)] text-sm font-medium animate-pulse">Por favor, no cierres esta ventana...</p>
           </div>
