@@ -14,17 +14,27 @@ const SubmitButton = ({ isRedirecting }) => {
   const { pending } = useFormStatus();
   const disabled = pending || isRedirecting;
   return (
-    <div className="flex gap-4 mt-8">
-      <Link href="/admin/properties" className="bg-transparent border border-[#555] hover:bg-[#222] text-white font-bold py-3 px-6 rounded-md transition-colors flex items-center justify-center">
-        Cancelar
-      </Link>
-      <button
-        className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold py-3 px-4 rounded-md flex-1 transition-colors disabled:opacity-60 disabled:cursor-not-allowed'
-        type='submit'
-        disabled={disabled}
-      >
-        {isRedirecting ? 'Redirigiendo...' : pending ? 'Guardando...' : 'Guardar Cambios'}
-      </button>
+    <div className="mt-8">
+      {disabled && (
+        <div className="mb-4 p-4 bg-[#181818] border border-[var(--color-brand)] rounded-lg flex items-center gap-4 animate-pulse">
+          <div className="w-6 h-6 border-2 border-[var(--color-brand)] border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-[var(--color-brand)] font-semibold text-sm">
+            {isRedirecting ? '¡Guardado con éxito! Redirigiendo...' : 'Procesando imágenes y guardando propiedad... Por favor, espera.'}
+          </p>
+        </div>
+      )}
+      <div className="flex gap-4">
+        <Link href="/admin/properties" className={`bg-transparent border border-[#555] hover:bg-[#222] text-white font-bold py-3 px-6 rounded-md transition-colors flex items-center justify-center ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
+          Cancelar
+        </Link>
+        <button
+          className='bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold py-3 px-4 rounded-md flex-1 transition-colors disabled:opacity-60 disabled:cursor-not-allowed'
+          type='submit'
+          disabled={disabled}
+        >
+          {isRedirecting ? 'Redirigiendo...' : pending ? 'Guardando...' : 'Guardar Cambios'}
+        </button>
+      </div>
     </div>
   );
 };

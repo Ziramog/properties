@@ -24,8 +24,8 @@ async function addProperty(prevState, formData) {
     if (images.length === 0) {
       return { error: 'Es necesario agregar al menos una foto de la propiedad.' };
     }
-    if (images.length > 10) {
-      return { error: 'Máximo 10 imágenes por propiedad.' };
+    if (images.length > 15) {
+      return { error: 'Máximo 15 imágenes por propiedad en la subida inicial.' };
     }
 
     let lat = formData.get('coordinates.lat');
