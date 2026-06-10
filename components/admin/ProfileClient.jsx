@@ -190,8 +190,8 @@ export default function ProfileClient({ user, totalProps, payments, config: init
             </div>
             <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
               <div>
-                <p className="text-[20px] font-bold text-white">U$D 25<span className="text-xs font-normal text-white/50">/mes</span></p>
-                <p className="text-[9px] text-[#888] uppercase tracking-wider mt-0.5">Abonado en efectivo</p>
+                <p className="text-[20px] font-bold text-white">Plan Anual</p>
+                <p className="text-[10px] text-[var(--color-brand)] uppercase tracking-wider mt-0.5 font-bold">Próximo pago: 08/06/27</p>
               </div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-green-400 bg-green-900/30 px-2 py-1 rounded-sm border border-green-800">
                 Activo
