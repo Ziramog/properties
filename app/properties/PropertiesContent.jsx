@@ -172,7 +172,7 @@ export default async function PropertiesContent({ searchParams, subtitle }) {
                   <FeaturedPropertyCard key={property._id} property={property} />
                 ))}
               </div>
-              <Pagination page={parsedPage} pageSize={parsedPageSize} totalItems={finalTotal} />
+              <Pagination page={parsedPage} pageSize={parsedPageSize} totalItems={finalTotal} searchParams={searchParams} />
             </>
           )}
       </section>
