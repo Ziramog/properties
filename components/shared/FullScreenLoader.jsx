@@ -1,10 +1,19 @@
 'use client';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 
 const FullScreenLoader = ({ isUploading, isSuccess }) => {
-  if (!isUploading && !isSuccess) return null;
+  const [mounted, setMounted] = useState(false);
 
-  return (
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!isUploading && !isSuccess) return null;
+  if (!mounted) return null;
+
+  return createPortal(
     <div className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center transition-all duration-500">
       <div className="relative w-40 h-40 flex items-center justify-center mb-8">
         {/* Animated SVG Circle */}
@@ -58,7 +67,8 @@ const FullScreenLoader = ({ isUploading, isSuccess }) => {
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

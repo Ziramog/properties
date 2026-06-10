@@ -67,7 +67,7 @@ const PropertyAddForm = () => {
       if (state.redirected) {
         setIsRedirecting(true);
         setTimeout(() => {
-          router.push(state.redirected);
+          window.location.href = state.redirected;
         }, 1500);
       }
     }
