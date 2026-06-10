@@ -48,8 +48,8 @@ const AdminQuotationsPage = async () => {
         ))}
       </div>
 
-      {/* Table */}
-      <div className="bg-[#161616] border border-[#222] rounded-sm max-h-[600px] overflow-y-auto">
+      {/* Desktop Table */}
+      <div className="bg-[#161616] border border-[#222] rounded-sm max-h-[600px] overflow-y-auto hidden md:block">
         <div className="overflow-x-auto">
           <table className="w-full text-left relative min-w-[700px]">
             <thead className="sticky top-0 bg-[#161616] z-20 shadow-sm shadow-black/50">
@@ -113,6 +113,50 @@ const AdminQuotationsPage = async () => {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="md:hidden bg-[#161616] border border-[#222] rounded-sm flex flex-col divide-y divide-[#222]">
+        {quotations.map(q => (
+          <div key={q._id.toString()} className="p-4 flex flex-col gap-3 hover:bg-[#1a1a1a] transition-colors">
+            {/* Header: Name and N° */}
+            <div className="flex justify-between items-start gap-2">
+              <div className="min-w-0">
+                <p className="font-semibold text-white truncate text-[14px]">{q.client?.name}</p>
+                <p className="text-[12px] font-medium text-[#888]">{q.quoteNumber}</p>
+              </div>
+              <div className="text-right flex-shrink-0">
+                <p className="font-bold text-white text-[14px]">U$D {q.totalValue?.toLocaleString('es-AR')}</p>
+                <p className="text-[11px] text-[#888]">{new Date(q.createdAt).toLocaleDateString('es-AR')}</p>
+              </div>
+            </div>
+
+            {/* Body: Status */}
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#888]">Estado:</span>
+              <div className="flex-1">
+                <StatusSelector quotationId={q._id.toString()} initialStatus={q.status} />
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#222] mt-1 relative z-10">
+              <a href={`/api/quotations/${q._id}/generate-pdf`} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-3 py-1.5 text-[12px] font-medium bg-[#222] text-[#bbb] hover:bg-[#333] hover:text-white border border-[#333] rounded-sm transition-colors gap-1" title="Ver PDF">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                PDF
+              </a>
+              <QuotationActions quotationId={q._id.toString()} trackingToken={q.delivery?.trackingToken} aiDescription={q.customization?.whatsappMessage || q.customization?.aiDescription} />
+            </div>
+          </div>
+        ))}
+        {quotations.length === 0 && (
+          <div className="p-8 text-center text-[#888] text-[14px]">
+            No hay propuestas. <Link href="/admin/quotations/new" className="text-[var(--color-brand)] font-medium hover:underline">Crear la primera</Link>
+          </div>
+        )}
       </div>
     </div>
   );

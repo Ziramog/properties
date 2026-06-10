@@ -165,8 +165,8 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
         </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
+      {/* Desktop Table */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left min-w-[900px]">
           <thead>
             <tr className="border-b border-[#222] text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-[#888]">
@@ -192,7 +192,6 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
                         className="w-14 h-14 md:w-16 md:h-16 rounded-sm object-cover flex-shrink-0 bg-[#222]" 
                         onError={(e) => {
                           e.target.onerror = null;
-                          // If image fails, replace with inline SVG placeholder
                           e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23555" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>';
                           e.target.className = "w-14 h-14 md:w-16 md:h-16 rounded-sm bg-[#222] flex items-center justify-center flex-shrink-0 p-4 object-contain";
                         }}
@@ -264,13 +263,97 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-6 py-12 text-center text-[#888] text-[14px]">
+                <td colSpan={8} className="px-6 py-12 text-center text-[#888] text-[14px]">
                   No se encontraron propiedades.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="md:hidden flex flex-col divide-y divide-[#222]">
+        {filtered.map(prop => (
+          <div key={prop._id} className="p-4 flex flex-col gap-3 hover:bg-[#1a1a1a] transition-colors">
+            {/* Header: Image & Title */}
+            <div className="flex items-center gap-3">
+              {prop.images?.[0]?.url ? (
+                <img 
+                  src={prop.images[0].url} 
+                  alt="" 
+                  className="w-14 h-14 rounded-sm object-cover flex-shrink-0 bg-[#222]" 
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23555" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>';
+                    e.target.className = "w-14 h-14 rounded-sm bg-[#222] flex items-center justify-center flex-shrink-0 p-3 object-contain";
+                  }}
+                />
+              ) : (
+                <div className="w-14 h-14 rounded-sm bg-[#222] flex items-center justify-center flex-shrink-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="1.5" className="w-5 h-5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <Link href={`/properties/${prop._id}`} className="text-[14px] font-semibold text-white hover:text-[var(--color-brand)] transition-colors block leading-tight truncate">
+                  {prop.name}
+                </Link>
+                <p className="text-[12px] text-[#888] mt-0.5 truncate">{prop.location?.city || '—'}</p>
+              </div>
+            </div>
+            
+            {/* Body: Details */}
+            <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium uppercase tracking-wider">
+              <span className={`px-2 py-1 rounded-sm ${
+                prop.operation === 'venta' ? 'bg-green-900/40 text-green-400' : 'bg-blue-900/40 text-blue-400'
+              }`}>
+                {prop.operation === 'venta' ? 'Venta' : prop.operation === 'alquiler' ? 'Alquiler' : prop.operation}
+              </span>
+              <span className="bg-[#222] text-[#bbb] px-2 py-1 rounded-sm">{typeLabels[prop.type] || prop.type}</span>
+              <span className="bg-[#222] text-[#bbb] px-2 py-1 rounded-sm">{(prop.images || []).length} 📷</span>
+            </div>
+            
+            {/* Price */}
+            <div className="text-[14px] font-semibold text-white">
+              {prop.price || 'Consultar'}
+            </div>
+
+            {/* Footer: Actions */}
+            <div className="flex items-center justify-between pt-2 border-t border-[#222]">
+              <div className="flex items-center gap-4">
+                <button onClick={() => handleToggleFeatured(prop._id)}
+                  className={`text-lg transition-colors ${prop.is_featured ? 'text-[var(--color-brand)]' : 'text-[#444] hover:text-[var(--color-brand)]'}`}
+                  title={prop.is_featured ? 'Quitar destacada' : 'Marcar destacada'}
+                >★</button>
+                <button onClick={() => handleTogglePublished(prop._id)}
+                  className={`transition-colors ${(prop.is_published !== false) ? 'text-green-500 hover:text-green-400' : 'text-red-500 hover:text-red-400'}`}
+                  title={(prop.is_published !== false) ? 'Ocultar propiedad' : 'Publicar propiedad'}
+                >
+                  {(prop.is_published !== false) ? (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+                  )}
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link href={`/admin/properties/${prop._id}/edit`}
+                  className="inline-flex items-center justify-center w-8 h-8 bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white rounded-sm transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5m-1.414-9.414a2 2 0 1 1 2.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                </Link>
+                <button onClick={() => handleDelete(prop._id, prop.name)}
+                  className="inline-flex items-center justify-center w-8 h-8 text-[#888] border border-[#333] hover:text-red-400 hover:border-red-400/50 rounded-sm transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0 1 16.138 21h-8.276a2 2 0 0 1-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v3M4 7h16"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <div className="p-8 text-center text-[#888] text-[13px]">
+            No se encontraron propiedades.
+          </div>
+        )}
       </div>
     </div>
   );

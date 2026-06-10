@@ -125,7 +125,8 @@ export default function SubscribersClient({ initialLink, subscribers }) {
             </button>
           </div>
           
-          <div className="overflow-x-auto overflow-y-auto max-h-[500px]">
+          {/* Desktop Table */}
+          <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-[500px]">
             <table className="w-full text-left min-w-[600px]">
               <thead className="sticky top-0 bg-[#161616] z-10 shadow-[0_1px_0_#222]">
                 <tr className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
@@ -163,6 +164,34 @@ export default function SubscribersClient({ initialLink, subscribers }) {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden flex flex-col divide-y divide-[#222] overflow-y-auto max-h-[500px]">
+            {subscribers.map((sub, idx) => (
+              <div key={idx} className="p-4 flex items-center justify-between hover:bg-[#1a1a1a] transition-colors">
+                <div>
+                  <a href={`https://wa.me/${sub.whatsappNumber.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" className="text-[14px] font-semibold text-white hover:text-[#25D366] transition-colors flex items-center gap-1.5">
+                    {sub.whatsappNumber}
+                    <svg className="w-3.5 h-3.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                  </a>
+                  <p className="text-[11px] text-[#888] mt-1">
+                    {new Date(sub.createdAt).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  </p>
+                </div>
+                <div>
+                  <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider bg-green-900/30 text-green-400 border border-green-800/50">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+                    {sub.status === 'active' ? 'Activo' : sub.status}
+                  </span>
+                </div>
+              </div>
+            ))}
+            {subscribers.length === 0 && (
+              <div className="p-8 text-center text-[#888] text-[13px]">
+                Aún no hay números registrados.
+              </div>
+            )}
           </div>
         </div>
 

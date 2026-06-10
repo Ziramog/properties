@@ -5,7 +5,7 @@ import Property from '@/models/Property';
 async function getPropertyCount() {
   try {
     await connectDB();
-    return await Property.countDocuments({});
+    return await Property.countDocuments({ is_published: { $ne: false } });
   } catch (err) {
     console.error('[getPropertyCount] Error:', err.message);
     return 0;

@@ -121,8 +121,8 @@ const AdminReviewsPage = async ({ searchParams }) => {
             ))}
           </div>
 
-          {/* Reviews table */}
-          <div className="bg-[#161616] border border-[#222] rounded-sm overflow-hidden">
+          {/* Reviews table (Desktop) */}
+          <div className="hidden md:block bg-[#161616] border border-[#222] rounded-sm overflow-hidden">
             <div className="overflow-x-auto max-h-[500px] overflow-y-auto relative">
               <table className="w-full text-left min-w-[800px]">
                 <thead className="sticky top-0 bg-[#161616] z-10 shadow-[0_1px_0_#222]">
@@ -191,7 +191,7 @@ const AdminReviewsPage = async ({ searchParams }) => {
                   ))}
                   {reviews.length === 0 && (
                     <tr>
-                      <td colSpan={7} className="px-4 py-12 text-center text-[#888] text-[14px]">
+                      <td colSpan={8} className="px-4 py-12 text-center text-[#888] text-[14px]">
                         No hay reseñas. Hacé clic en "Sincronizar" para traerlas desde Google.
                       </td>
                     </tr>
@@ -199,6 +199,76 @@ const AdminReviewsPage = async ({ searchParams }) => {
                 </tbody>
               </table>
             </div>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden bg-[#161616] border border-[#222] rounded-sm flex flex-col divide-y divide-[#222] overflow-y-auto max-h-[500px]">
+            {reviews.map(r => (
+              <div key={r._id.toString()} className="p-4 flex flex-col gap-2 hover:bg-[#1a1a1a] transition-colors">
+                <div className="flex items-start justify-between">
+                  <div className="min-w-0">
+                    <p className="font-semibold text-white truncate text-[14px]">{r.authorName}</p>
+                    <div className="text-amber-400 text-[12px] tracking-widest mt-0.5">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</div>
+                  </div>
+                  <span className="text-[11px] text-[#888] flex-shrink-0">{r.relativeTimeDescription || r.publishTime?.toISOString().split('T')[0]}</span>
+                </div>
+                
+                {r.text && (
+                  <p className="text-[13px] text-[#bbb] line-clamp-3 mt-1 leading-relaxed">
+                    "{r.text}"
+                  </p>
+                )}
+
+                <div className="flex items-center justify-between pt-3 mt-1 border-t border-[#222]">
+                  <div className="flex gap-2">
+                    <form action={toggleReviewFeatured}>
+                      <input type="hidden" name="reviewId" value={r._id.toString()} />
+                      <input type="hidden" name="current" value={r.featured ? 'true' : 'false'} />
+                      <button type="submit" className={`inline-block w-7 h-7 rounded-full text-[14px] leading-[28px] font-bold cursor-pointer transition-colors ${r.featured ? 'bg-[var(--color-brand)] text-white' : 'bg-[#333] text-[#888] hover:bg-[#444]'}`} title="Destacar">★</button>
+                    </form>
+                    <form action={toggleReviewHidden}>
+                      <input type="hidden" name="reviewId" value={r._id.toString()} />
+                      <input type="hidden" name="current" value={r.hidden ? 'true' : 'false'} />
+                      <button type="submit" className={`w-7 h-7 flex items-center justify-center rounded-sm cursor-pointer transition-colors ${r.hidden ? 'bg-red-500/10 text-red-500 hover:bg-red-500/20' : 'bg-green-500/10 text-green-500 hover:bg-green-500/20'}`} title="Visibilidad">
+                        {r.hidden ? (
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        ) : (
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        )}
+                      </button>
+                    </form>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1 bg-[#0a0a0a] border border-[#333] rounded-sm px-1 py-0.5">
+                      <form action={updateReviewPriority}>
+                        <input type="hidden" name="reviewId" value={r._id.toString()} />
+                        <input type="hidden" name="delta" value="-1" />
+                        <button type="submit" className="text-[#888] hover:text-[var(--color-brand)] w-5 h-5 flex items-center justify-center">−</button>
+                      </form>
+                      <span className="text-[12px] text-[#888] w-4 text-center font-medium">{r.priority}</span>
+                      <form action={updateReviewPriority}>
+                        <input type="hidden" name="reviewId" value={r._id.toString()} />
+                        <input type="hidden" name="delta" value="1" />
+                        <button type="submit" className="text-[#888] hover:text-[var(--color-brand)] w-5 h-5 flex items-center justify-center">+</button>
+                      </form>
+                    </div>
+
+                    <form action={deleteReview}>
+                      <input type="hidden" name="reviewId" value={r._id.toString()} />
+                      <button type="submit" className="w-7 h-7 flex items-center justify-center rounded-sm text-[#555] hover:bg-red-500/20 hover:text-red-500 transition-colors" title="Eliminar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {reviews.length === 0 && (
+              <div className="p-8 text-center text-[#888] text-[13px]">
+                No hay reseñas. Hacé clic en "Sincronizar" para traerlas desde Google.
+              </div>
+            )}
           </div>
         </>
       )}
