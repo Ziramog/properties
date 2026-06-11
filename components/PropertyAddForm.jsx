@@ -81,6 +81,10 @@ const PropertyAddForm = () => {
         }
       }
 
+      if (formData.getAll('uploadedImages').length === 0) {
+        throw new Error(`DEBUG LOCAL: No se subió ninguna imagen a Cloudinary. imageFiles.length=${imageFiles.length}, imageFiles[0].size=${imageFiles[0]?.size}`);
+      }
+
       const result = await addProperty({}, formData);
 
       if (result?.error) {
@@ -97,7 +101,10 @@ const PropertyAddForm = () => {
       }
     } catch (err) {
       console.error("Action error:", err);
-      const msg = 'Error de red. Las imágenes pueden ser demasiado grandes (límite 20MB).';
+      let msg = 'Error de red. Las imágenes pueden ser demasiado grandes (límite 20MB).';
+      if (err && err.message && err.message.includes('DEBUG LOCAL')) {
+        msg = err.message;
+      }
       setError(msg);
       toast.error(msg);
       setIsUploading(false);
