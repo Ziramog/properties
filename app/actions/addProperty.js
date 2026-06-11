@@ -86,7 +86,8 @@ async function addProperty(prevState, formData) {
     }
 
     if (imageUrls.length === 0) {
-      return { error: 'Es necesario agregar al menos una foto de la propiedad.' };
+      const keys = Array.from(formData.keys()).join(', ');
+      return { error: `Es necesario agregar al menos una foto de la propiedad. (Debug keys: ${keys})` };
     }
     if (imageUrls.length > 30) {
       return { error: 'Máximo 30 imágenes por propiedad.' };
