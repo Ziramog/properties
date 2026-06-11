@@ -46,20 +46,41 @@ const PropertyEditForm = ({ property }) => {
 
     try {
       const formData = new FormData(e.currentTarget);
-      const imageFiles = formData.getAll('images');
+      // Get files from previewImages state instead of form input to support multiple drag/drop/selects
+      const imageFiles = previewImages.map(p => p.file);
       
-      if (imageFiles.length > 0 && imageFiles[0].size > 0) {
-        formData.delete('images');
+      formData.delete('images');
+      
+      if (imageFiles.length > 0) {
         const options = { maxSizeMB: 0.6, maxWidthOrHeight: 1600, useWebWorker: true };
         for (const file of imageFiles) {
-          if (file.name === '' || file.size === 0) continue;
+          if (!file || file.name === '' || file.size === 0) continue;
+          let fileToUpload = file;
           try {
-            const compressedFile = await imageCompression(file, options);
-            formData.append('images', compressedFile, compressedFile.name);
+            fileToUpload = await imageCompression(file, options);
           } catch (compressError) {
             console.error('Error compressing image:', compressError);
-            formData.append('images', file, file.name);
           }
+          
+          // Upload directly to Cloudinary
+          const uploadData = new FormData();
+          uploadData.append('file', fileToUpload);
+          uploadData.append('upload_preset', 'property_pulse_unsigned');
+          
+          const uploadRes = await fetch('https://api.cloudinary.com/v1_1/dunkbcery/image/upload', {
+            method: 'POST',
+            body: uploadData
+          });
+          
+          if (!uploadRes.ok) {
+            throw new Error('Fallo al subir imagen a Cloudinary');
+          }
+          
+          const cloudinaryResult = await uploadRes.json();
+          formData.append('uploadedImages', JSON.stringify({
+            url: cloudinaryResult.secure_url,
+            public_id: cloudinaryResult.public_id
+          }));
         }
       }
 

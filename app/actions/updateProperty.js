@@ -67,23 +67,16 @@ async function updateProperty(prevState, formData) {
       });
     }
 
-    const newImageFiles = formData.getAll('images').filter(
-      (img) => img && img.name && img.name !== '' && img.size > 0
-    );
-
-    for (const imageFile of newImageFiles) {
-      const imageBuffer = await imageFile.arrayBuffer();
-      const imageData = Buffer.from(imageBuffer);
-      const imageBase64 = imageData.toString('base64');
-
-      const result = await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: 'roggero-roma/properties', fetch_format: 'auto', quality: 'auto', width: 1200, crop: 'limit' },
-          (error, result) => (error ? reject(error) : resolve(result))
-        );
-        stream.end(imageData);
-      });
-      currentImages.push({ url: result.secure_url, public_id: result.public_id });
+    const uploadedImagesJson = formData.getAll('uploadedImages');
+    
+    if (uploadedImagesJson && uploadedImagesJson.length > 0) {
+      try {
+        const newUploadedImages = uploadedImagesJson.map(jsonStr => JSON.parse(jsonStr));
+        currentImages = [...currentImages, ...newUploadedImages];
+      } catch (err) {
+        console.error("Error parsing uploaded images JSON", err);
+        return { error: 'Error al procesar las imágenes subidas.' };
+      }
     }
 
     if (currentImages.length === 0) {

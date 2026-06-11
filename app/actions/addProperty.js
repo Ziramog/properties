@@ -72,29 +72,25 @@ async function addProperty(prevState, formData) {
       status: formData.get('status') || 'active',
     };
 
-    const uploadPromises = images.map(async (imageFile) => {
-      const imageBuffer = await imageFile.arrayBuffer();
-      const imageData = Buffer.from(imageBuffer);
+    // Retrieve pre-uploaded image data from the client
+    const uploadedImagesJson = formData.getAll('uploadedImages');
+    let imageUrls = [];
+    
+    if (uploadedImagesJson && uploadedImagesJson.length > 0) {
+      try {
+        imageUrls = uploadedImagesJson.map(jsonStr => JSON.parse(jsonStr));
+      } catch (err) {
+        console.error("Error parsing uploaded images JSON", err);
+        return { error: 'Error al procesar las imágenes subidas.' };
+      }
+    }
 
-      return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          {
-            folder: 'roggero-roma/properties',
-            fetch_format: 'auto',
-            quality: 'auto',
-            width: 1200,
-            crop: 'limit',
-          },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve({ url: result.secure_url, public_id: result.public_id });
-          }
-        );
-        stream.end(imageData);
-      });
-    });
-
-    const imageUrls = await Promise.all(uploadPromises);
+    if (imageUrls.length === 0) {
+      return { error: 'Es necesario agregar al menos una foto de la propiedad.' };
+    }
+    if (imageUrls.length > 30) {
+      return { error: 'Máximo 30 imágenes por propiedad.' };
+    }
 
     propertyData.images = imageUrls;
 
