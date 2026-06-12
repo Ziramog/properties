@@ -30,7 +30,7 @@ const AdminPage = async () => {
   await connectDB();
 
   const total = await Property.countDocuments({});
-  const activas = await Property.countDocuments({ status: 'active' });
+  const activas = await Property.countDocuments({ is_published: { $ne: false } });
   const featured = await Property.countDocuments({ is_featured: true });
   const quotations = await Quotation.countDocuments({});
 
