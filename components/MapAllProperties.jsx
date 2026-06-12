@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
-import Map from 'react-map-gl';
+import MapboxMap from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 import { getPropertyImage } from '@/utils/propertyDisplay';
@@ -13,7 +13,9 @@ import { MAP_DEFAULT_PROPS, MAP_STYLE } from '@/components/shared/MapConfig';
 import SectionTitle from '@/components/shared/SectionTitle';
 import MapProvider from '@/components/shared/MapProvider';
 import { Map as GoogleMap } from '@vis.gl/react-google-maps';
-import GoogleMapClusterLayer from '@/components/GoogleMapClusterLayer';
+import dynamic from 'next/dynamic';
+
+const GoogleMapClusterLayer = dynamic(() => import('@/components/GoogleMapClusterLayer'), { ssr: false });
 const knownCities = {
   'Alta Gracia': [-31.6525, -64.4397],
   Cordoba: [-31.4201, -64.1888],
@@ -84,44 +86,6 @@ export default function MapAllProperties({ initialProperties = [] }) {
   const mapRef = useRef(null);
   const [activeFilters, setActiveFilters] = useState(null);
   const [visibleCount, setVisibleCount] = useState(0);
-
-  const updateVisibleCountMapbox = useCallback(() => {
-    if (!mapRef.current) return;
-    const bounds = mapRef.current.getMap().getBounds();
-    if (!bounds) return;
-
-    const count = filteredProps.filter(p => {
-      if (!p.coords) return false;
-      return (
-        p.coords.lat >= bounds.getSouth() &&
-        p.coords.lat <= bounds.getNorth() &&
-        p.coords.lng >= bounds.getWest() &&
-        p.coords.lng <= bounds.getEast()
-      );
-    }).length;
-    setVisibleCount(count);
-  }, [filteredProps]);
-
-  const updateVisibleCountGoogle = useCallback((map) => {
-    if (!map) return;
-    const bounds = map.getBounds();
-    if (!bounds) return;
-
-    const count = filteredProps.filter(p => {
-      if (!p.coords) return false;
-      if (!window.google) return false;
-      const latLng = new window.google.maps.LatLng(p.coords.lat, p.coords.lng);
-      return bounds.contains(latLng);
-    }).length;
-    setVisibleCount(count);
-  }, [filteredProps]);
-
-  useEffect(() => {
-    if (mapProvider === 'mapbox') {
-      const timer = setTimeout(() => updateVisibleCountMapbox(), 100);
-      return () => clearTimeout(timer);
-    }
-  }, [filteredProps, updateVisibleCountMapbox, mapProvider]);
 
   useEffect(() => {
     const geo = initialProperties
@@ -218,6 +182,46 @@ export default function MapAllProperties({ initialProperties = [] }) {
     return result;
   }, [allProps, activeFilters]);
 
+  const updateVisibleCountMapbox = useCallback(() => {
+    if (!mapRef.current) return;
+    const bounds = mapRef.current.getMap().getBounds();
+    if (!bounds) return;
+
+    const count = filteredProps.filter(p => {
+      if (!p.coords) return false;
+      return (
+        p.coords.lat >= bounds.getSouth() &&
+        p.coords.lat <= bounds.getNorth() &&
+        p.coords.lng >= bounds.getWest() &&
+        p.coords.lng <= bounds.getEast()
+      );
+    }).length;
+    setVisibleCount(count);
+  }, [filteredProps]);
+
+  const updateVisibleCountGoogle = useCallback((map) => {
+    if (!map) return;
+    const bounds = map.getBounds();
+    if (!bounds) return;
+
+    const count = filteredProps.filter(p => {
+      if (!p.coords) return false;
+      if (!window.google) return false;
+      const latLng = new window.google.maps.LatLng(p.coords.lat, p.coords.lng);
+      return bounds.contains(latLng);
+    }).length;
+    setVisibleCount(count);
+  }, [filteredProps]);
+
+  useEffect(() => {
+    if (mapProvider === 'mapbox') {
+      const timer = setTimeout(() => updateVisibleCountMapbox(), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [filteredProps, updateVisibleCountMapbox, mapProvider]);
+
+
+
   if (allProps.length === 0) {
     return (
       <div className="h-screen flex items-center justify-center bg-[#F6F6F6]">
@@ -271,19 +275,28 @@ export default function MapAllProperties({ initialProperties = [] }) {
                       />
                     </GoogleMap>
                   ) : (
-                    <Map
+                    <MapboxMap
                       ref={mapRef}
+                      onLoad={updateVisibleCountMapbox}
+                      onMove={updateVisibleCountMapbox}
                       mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
                       mapLib={mapboxgl}
-                      initialViewState={{ longitude: -64.4397, latitude: -31.6525, zoom: 11 }}
+                      initialViewState={{
+                        longitude: -64.4397,
+                        latitude: -31.6525,
+                        zoom: 11,
+                      }}
                       style={{ width: '100%', height: '100%' }}
                       mapStyle={MAP_STYLE}
+                      onError={(e) => console.error('[MapAllProperties] Map load ERROR:', e?.error?.message || e)}
                       {...MAP_DEFAULT_PROPS}
-                      onMove={updateVisibleCountMapbox}
-                      onLoad={updateVisibleCountMapbox}
                     >
-                      <MapClusterLayer properties={filteredProps} onSelect={setSelectedProperty} selectedId={selectedProperty?._id} />
-                    </Map>
+                      <MapClusterLayer
+                        properties={filteredProps}
+                        onSelect={setSelectedProperty}
+                        selectedId={selectedProperty?._id}
+                      />
+                    </MapboxMap>
                   )}
 
                 {/* No results overlay */}
