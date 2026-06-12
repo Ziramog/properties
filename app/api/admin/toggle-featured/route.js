@@ -1,6 +1,7 @@
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import { getSessionUser } from '@/utils/getSessionUser';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(request) {
   try {
@@ -17,6 +18,10 @@ export async function POST(request) {
 
     prop.is_featured = !prop.is_featured;
     await prop.save();
+
+    revalidatePath('/');
+    revalidatePath('/properties');
+    revalidatePath(`/properties/${id}`);
 
     return Response.json({ success: true, is_featured: prop.is_featured });
   } catch (err) {

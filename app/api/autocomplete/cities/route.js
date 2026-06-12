@@ -41,7 +41,14 @@ export async function GET(request) {
 
     const allResults = [...matchedFromList, ...dbResults].slice(0, 10);
 
-    return NextResponse.json({ results: allResults });
+    return NextResponse.json(
+      { results: allResults },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=43200',
+        },
+      }
+    );
   } catch (error) {
     console.error('Autocomplete error:', error);
     return NextResponse.json({ results: [] }, { status: 500 });

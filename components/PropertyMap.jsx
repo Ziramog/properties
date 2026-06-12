@@ -5,6 +5,8 @@ import mapboxgl from 'mapbox-gl';
 import Map, { Marker } from 'react-map-gl';
 import { MAP_DEFAULT_PROPS, MAP_STYLE } from '@/components/shared/MapConfig';
 import Spinner from './Spinner';
+import MapProvider from '@/components/shared/MapProvider';
+import { Map as GoogleMap, AdvancedMarker } from '@vis.gl/react-google-maps';
 
 const knownCities = {
   'Alta Gracia': [-31.6525, -64.4397],
@@ -48,9 +50,6 @@ function geocodeCity(city) {
   const coords = knownCities[city];
   return coords ? { lat: coords[0], lng: coords[1] } : null;
 }
-
-import MapProvider from '@/components/shared/MapProvider';
-import { Map as GoogleMap, AdvancedMarker } from '@vis.gl/react-google-maps';
 
 const PropertyMap = ({ property }) => {
   const mapProvider = process.env.NEXT_PUBLIC_MAP_PROVIDER || 'mapbox';

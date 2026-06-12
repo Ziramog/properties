@@ -90,6 +90,8 @@ async function addProperty(prevState, formData) {
     const newProperty = new Property(propertyData);
     await newProperty.save();
 
+    revalidatePath('/');
+    revalidatePath('/properties');
     revalidatePath('/admin/properties');
 
     return { success: true, redirected: `/admin/properties` };

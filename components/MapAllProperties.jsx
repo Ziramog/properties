@@ -11,8 +11,9 @@ import MapClusterLayer from '@/components/MapClusterLayer';
 import MapPropertySidebar from '@/components/MapPropertySidebar';
 import { MAP_DEFAULT_PROPS, MAP_STYLE } from '@/components/shared/MapConfig';
 import SectionTitle from '@/components/shared/SectionTitle';
-
-
+import MapProvider from '@/components/shared/MapProvider';
+import { Map as GoogleMap } from '@vis.gl/react-google-maps';
+import GoogleMapClusterLayer from '@/components/GoogleMapClusterLayer';
 const knownCities = {
   'Alta Gracia': [-31.6525, -64.4397],
   Cordoba: [-31.4201, -64.1888],
@@ -74,11 +75,6 @@ function parsePrice(priceStr) {
   const cleaned = priceStr.replace(/[^0-9]/g, '');
   return parseInt(cleaned, 10) || 0;
 }
-
-import MapProvider from '@/components/shared/MapProvider';
-import { Map as GoogleMap } from '@vis.gl/react-google-maps';
-import GoogleMapClusterLayer from '@/components/GoogleMapClusterLayer';
-
 export default function MapAllProperties({ initialProperties = [] }) {
   const mapProvider = process.env.NEXT_PUBLIC_MAP_PROVIDER || 'mapbox';
   const googleMapId = '5840ac3c29d4b1c78be4a027';

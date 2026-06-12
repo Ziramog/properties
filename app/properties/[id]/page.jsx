@@ -1,17 +1,32 @@
-export const dynamic = 'force-dynamic';
 
 import PropertyDetails from '@/components/PropertyDetails';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import PropertyGallery from '@/components/PropertyGallery';
-import PropertyMap from '@/components/PropertyMap';
+import dynamic from 'next/dynamic';
 import MapErrorBoundary from '@/components/shared/MapErrorBoundary';
 import FullGallery from '@/components/FullGallery';
+
+const PropertyMap = dynamic(() => import('@/components/PropertyMap'), {
+  ssr: false,
+});
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import SectionTitle from '@/components/shared/SectionTitle';
 import JsonLd from '@/components/JsonLd';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 import Link from 'next/link';
+
+export const revalidate = 600;
+
+export async function generateStaticParams() {
+  const connectDB = (await import('@/config/database')).default;
+  const Property = (await import('@/models/Property')).default;
+  await connectDB();
+  const props = await Property.find({ is_published: { $ne: false } })
+    .select('_id')
+    .lean();
+  return props.map((p) => ({ id: p._id.toString() }));
+}
 
 export async function generateMetadata({ params }) {
   await connectDB();

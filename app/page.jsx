@@ -11,7 +11,7 @@ import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import { getSiteConfig } from '@/utils/getSiteConfig';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 600;
 
 export const metadata = {
   title: 'Inicio',
@@ -21,7 +21,14 @@ export const metadata = {
 const HomePage = async () => {
   await connectDB();
 
-  const properties = await Property.find({ is_published: { $ne: false } }).lean();
+  const properties = await Property.find({
+    is_published: { $ne: false },
+    is_featured: true,
+    'images.0': { $exists: true }
+  })
+    .sort({ createdAt: -1 })
+    .limit(6)
+    .lean();
   const siteConfig = await getSiteConfig();
 
   const serializedProperties = properties.map((p) => ({
@@ -111,7 +118,7 @@ const HomePage = async () => {
 
       {/* 3. Featured — best inventory showcase */}
       <div id="propiedades-destacadas">
-        <FeaturedPropertiesCarousel properties={serializedProperties.filter(p => p.is_featured && (p.images || []).length > 0).slice(0, 6)} />
+        <FeaturedPropertiesCarousel properties={serializedProperties} />
       </div>
 
       {/* 4. CTA — seller + investor */}
