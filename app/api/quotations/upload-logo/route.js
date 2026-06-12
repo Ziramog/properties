@@ -15,10 +15,12 @@ async function uploadToBlob(buffer, filename) {
   return blob.url;
 }
 
+import { isAdmin } from '@/utils/isAdmin';
+
 export async function POST(request) {
   try {
     const sessionUser = await getSessionUser();
-    if (!sessionUser || sessionUser.role !== 'admin') {
+    if (!isAdmin(sessionUser)) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
 

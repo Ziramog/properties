@@ -3,10 +3,12 @@ import Property from '@/models/Property';
 import { getSessionUser } from '@/utils/getSessionUser';
 import { revalidatePath } from 'next/cache';
 
+import { isAdmin } from '@/utils/isAdmin';
+
 export async function POST(request) {
   try {
     const sessionUser = await getSessionUser();
-    if (!sessionUser || sessionUser.role !== 'admin') {
+    if (!isAdmin(sessionUser)) {
       return Response.json({ error: 'No autorizado' }, { status: 403 });
     }
 

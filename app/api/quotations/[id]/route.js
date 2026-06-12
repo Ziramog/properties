@@ -7,10 +7,12 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
+import { isAdmin } from '@/utils/isAdmin';
+
 export async function PUT(request, { params }) {
   await connectDB();
   const sessionUser = await getSessionUser();
-  if (!sessionUser || !sessionUser.userId) {
+  if (!isAdmin(sessionUser)) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
   }
 

@@ -4,12 +4,14 @@ import { getSessionUser } from '@/utils/getSessionUser';
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 
+import { isAdmin } from '@/utils/isAdmin';
+
 export async function POST(request) {
   try {
     await connectDB();
 
     const sessionUser = await getSessionUser();
-    if (!sessionUser || !sessionUser.userId) {
+    if (!isAdmin(sessionUser)) {
       return new Response('Unauthorized', { status: 401 });
     }
 

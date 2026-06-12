@@ -27,10 +27,12 @@ export async function GET() {
   return NextResponse.json({ quotes: quotesWithCreator, exchangeRateARS: config?.exchangeRateARS || null });
 }
 
+import { isAdmin } from '@/utils/isAdmin';
+
 export async function POST(request) {
   await connectDB();
   const sessionUser = await getSessionUser();
-  if (!sessionUser || !sessionUser.userId) {
+  if (!isAdmin(sessionUser)) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
   }
 
