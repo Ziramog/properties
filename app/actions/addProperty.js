@@ -17,16 +17,8 @@ async function addProperty(prevState, formData) {
 
     const { userId } = sessionUser;
 
-    // Access all values for amenities and images
+    // Access all values for amenities
     const amenities = formData.getAll('amenities');
-    const images = formData.getAll('images').filter((image) => image.name !== '');
-
-    if (images.length === 0) {
-      return { error: 'Es necesario agregar al menos una foto de la propiedad.' };
-    }
-    if (images.length > 15) {
-      return { error: 'Máximo 15 imágenes por propiedad en la subida inicial.' };
-    }
 
     let lat = formData.get('coordinates.lat');
     let lng = formData.get('coordinates.lng');
