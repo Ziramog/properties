@@ -35,6 +35,16 @@ const PropertyEditForm = ({ property }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState(null);
+  const [status, setStatus] = useState(property.status || 'active');
+
+  const getExistingExpiration = () => {
+    if (property.badgeExpiresAt) {
+      return new Date(property.badgeExpiresAt).toISOString().split('T')[0];
+    }
+    const date = new Date();
+    date.setDate(date.getDate() + 90);
+    return date.toISOString().split('T')[0];
+  };
 
   const router = useRouter();
 
@@ -247,7 +257,7 @@ const PropertyEditForm = ({ property }) => {
       {/* Estado */}
       <div className='mb-4'>
         <label htmlFor='status' className={labelClass}>Etiqueta Especial</label>
-        <select id='status' name='status' className={inputClass} defaultValue={property.status || 'active'}>
+        <select id='status' name='status' className={inputClass} value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value='active'>Sin etiqueta</option>
           <option value='PRECIO MEJORADO'>Precio Mejorado</option>
           <option value='ULTIMA UNIDAD'>Última Unidad</option>
@@ -257,6 +267,14 @@ const PropertyEditForm = ({ property }) => {
           <option value='EXCELENTE PRECIO'>Excelente Precio</option>
         </select>
       </div>
+
+      {status === 'NUEVA' && (
+        <div className='mb-4'>
+          <label htmlFor='badgeExpiresAt' className={labelClass}>Vence</label>
+          <input type='date' id='badgeExpiresAt' name='badgeExpiresAt' className={inputClass} defaultValue={getExistingExpiration()} required />
+          <p className={helperClass}>La etiqueta "Nueva" dejará de mostrarse automáticamente después de esta fecha.</p>
+        </div>
+      )}
 
       {/* Nombre */}
       <div className='mb-4'>

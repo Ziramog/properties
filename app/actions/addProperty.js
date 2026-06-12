@@ -64,6 +64,14 @@ async function addProperty(prevState, formData) {
       status: formData.get('status') || 'active',
     };
 
+    if (propertyData.status === 'NUEVA' && formData.get('badgeExpiresAt')) {
+      const dateStr = formData.get('badgeExpiresAt');
+      const dateObj = new Date(`${dateStr}T23:59:59.999-03:00`);
+      if (!isNaN(dateObj.getTime())) {
+        propertyData.badgeExpiresAt = dateObj;
+      }
+    }
+
     // Retrieve pre-uploaded image data from the client
     const uploadedImagesJson = formData.getAll('uploadedImages');
     let imageUrls = [];

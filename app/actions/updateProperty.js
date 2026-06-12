@@ -128,6 +128,18 @@ async function updateProperty(prevState, formData) {
       images: currentImages,
     });
 
+    if (prop.status === 'NUEVA' && formData.get('badgeExpiresAt')) {
+      const dateStr = formData.get('badgeExpiresAt');
+      const dateObj = new Date(`${dateStr}T23:59:59.999-03:00`);
+      if (!isNaN(dateObj.getTime())) {
+        prop.badgeExpiresAt = dateObj;
+      } else {
+        prop.badgeExpiresAt = null;
+      }
+    } else {
+      prop.badgeExpiresAt = null;
+    }
+
     await prop.save();
 
     revalidatePath('/');

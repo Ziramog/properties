@@ -126,6 +126,10 @@ const PropertySchema = new Schema(
       enum: ['active', 'PRECIO MEJORADO', 'ULTIMA UNIDAD', 'UNICO EN SU TIPO', 'NUEVA', 'MEJOR PRECIO', 'EXCELENTE PRECIO'],
       default: 'active',
     },
+    badgeExpiresAt: {
+      type: Date,
+      default: null,
+    },
     property_type: {
       type: String,
       enum: ['residential', 'multi_family', 'land', 'commercial', 'rental', 'industrial'],

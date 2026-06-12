@@ -70,10 +70,18 @@ const STATUS_BADGE_MAP = {
  * Return a status badge config for a property card, or null if no badge.
  */
 export function getStatusBadge(property) {
-  if (property.status && property.status !== 'active') {
-    return STATUS_BADGE_MAP[property.status] || null;
+  if (!property.status || property.status === 'active') {
+    return null;
   }
-  return null;
+
+  if (property.status === 'NUEVA') {
+    if (property.badgeExpiresAt) {
+      const expired = new Date(property.badgeExpiresAt) <= new Date();
+      if (expired) return null;
+    }
+  }
+
+  return STATUS_BADGE_MAP[property.status] || null;
 }
 
 /**
