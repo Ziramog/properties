@@ -91,13 +91,13 @@ const PropertyAddForm = () => {
         setError(result.error);
         toast.error(result.error);
         setIsUploading(false);
+        alert(result.error);
       } else if (result?.success) {
         setIsSuccess(true);
-        if (result.redirected) {
-          setTimeout(() => {
-            router.push(result.redirected);
-          }, 800);
-        }
+        toast.success('Propiedad agregada exitosamente');
+        setTimeout(() => {
+          router.push(result.redirected || '/admin/properties');
+        }, 2000);
       }
     } catch (err) {
       console.error("Action error:", err);
@@ -108,6 +108,7 @@ const PropertyAddForm = () => {
       setError(msg);
       toast.error(msg);
       setIsUploading(false);
+      alert(msg);
     }
   };
 
