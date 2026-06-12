@@ -63,6 +63,7 @@ const STATUS_BADGE_MAP = {
   'UNICO EN SU TIPO': { label: 'Única en su Tipo', color: 'bg-purple-500' },
   'MEJOR PRECIO': { label: 'Mejor Precio del Mercado', color: 'bg-emerald-500' },
   'NUEVA':            { label: 'Nueva',           color: 'bg-blue-500' },
+  'EXCELENTE PRECIO': { label: 'Excelente Precio', color: 'bg-amber-500' },
 };
 
 /**
