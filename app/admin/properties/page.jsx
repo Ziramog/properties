@@ -24,7 +24,13 @@ const AdminPropertiesPage = async ({ searchParams }) => {
         Propiedades
       </h1>
 
-      <AdminPropertyTable properties={serialized} defaultType={searchParams?.type || ''} defaultGranInversion={searchParams?.granInversion === 'true'} />
+      <AdminPropertyTable 
+        properties={serialized} 
+        defaultType={searchParams?.type || ''} 
+        defaultGranInversion={searchParams?.granInversion === 'true'} 
+        defaultFeatured={searchParams?.is_featured === 'true' ? 'yes' : ''}
+        defaultPublished={searchParams?.status === 'active' ? 'yes' : ''}
+      />
     </div>
   );
 };

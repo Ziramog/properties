@@ -6,15 +6,16 @@ import deleteProperty from '@/app/actions/deleteProperty';
 import { toast } from 'react-toastify';
 import { isGranInversion } from '@/utils/filterProperties';
 
-const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInversion = false }) => {
+const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInversion = false, defaultFeatured = '', defaultPublished = '' }) => {
   const router = useRouter();
   const [items, setItems] = useState(properties);
   const [search, setSearch] = useState('');
   const [filterType, setFilterType] = useState(defaultType);
   const [filterOp, setFilterOp] = useState('');
-  const [filterFeatured, setFilterFeatured] = useState('');
+  const [filterFeatured, setFilterFeatured] = useState(defaultFeatured);
   const [filterStatus, setFilterStatus] = useState('');
   const [filterGranInversion, setFilterGranInversion] = useState(defaultGranInversion ? 'yes' : '');
+  const [filterPublished, setFilterPublished] = useState(defaultPublished);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const filtered = useMemo(() => {
@@ -33,8 +34,10 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
     if (filterStatus) result = result.filter(p => p.status === filterStatus);
     if (filterGranInversion === 'yes') result = result.filter(p => isGranInversion(p));
     if (filterGranInversion === 'no') result = result.filter(p => !isGranInversion(p));
+    if (filterPublished === 'yes') result = result.filter(p => p.is_published !== false);
+    if (filterPublished === 'no') result = result.filter(p => p.is_published === false);
     return result;
-  }, [items, search, filterType, filterOp, filterFeatured, filterStatus, filterGranInversion]);
+  }, [items, search, filterType, filterOp, filterFeatured, filterStatus, filterGranInversion, filterPublished]);
 
   const handleDelete = async (id, name) => {
     if (!confirm(`¿Eliminar "${name}"? Esta acción no se puede deshacer.`)) return;
@@ -78,10 +81,10 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
     Campo: 'Campo', 'Inmueble Comercial': 'Comercial', 'Gran Inversión': 'Inversión',
   };
 
-  const hasActiveFilters = search || filterType || filterOp || filterFeatured || filterStatus || filterGranInversion;
+  const hasActiveFilters = search || filterType || filterOp || filterFeatured || filterStatus || filterGranInversion || filterPublished;
 
   const clearFilters = () => {
-    setSearch(''); setFilterType(''); setFilterOp(''); setFilterFeatured(''); setFilterStatus(''); setFilterGranInversion('');
+    setSearch(''); setFilterType(''); setFilterOp(''); setFilterFeatured(''); setFilterStatus(''); setFilterGranInversion(''); setFilterPublished('');
   };
 
   const selectCls = 'text-[12px] bg-[#0a0a0a] border border-[#333] rounded-sm px-3 py-2 text-white outline-none focus:border-[var(--color-brand)] transition-colors w-full';
@@ -160,6 +163,11 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
               <option value="">Gran Inversión: Todas</option>
               <option value="yes">Sí</option>
               <option value="no">No</option>
+            </select>
+            <select value={filterPublished} onChange={(e) => setFilterPublished(e.target.value)} className={selectCls}>
+              <option value="">Visibilidad: Todas</option>
+              <option value="yes">Visibles</option>
+              <option value="no">Ocultas</option>
             </select>
           </div>
         </div>
