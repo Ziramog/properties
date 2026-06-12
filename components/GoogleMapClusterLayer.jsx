@@ -14,6 +14,12 @@ export default function GoogleMapClusterLayer({ properties, onSelect, selectedId
     if (!clusterer.current) {
       clusterer.current = new MarkerClusterer({
         map,
+        onClusterClick: (event, cluster, map) => {
+          const currentZoom = map.getZoom();
+          const targetZoom = Math.min(currentZoom + 3, 18);
+          map.panTo(cluster.position);
+          map.setZoom(targetZoom);
+        },
         renderer: {
           render: ({ count, position }) => {
             const container = document.createElement('div');
