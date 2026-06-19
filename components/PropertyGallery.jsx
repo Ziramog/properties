@@ -22,6 +22,8 @@ const PropertyGallery = ({ images = [], property }) => {
     'UNICO EN SU TIPO': 'Única en su Tipo',
     'MEJOR PRECIO': 'Mejor Precio del Mercado',
     'NUEVA': 'Nueva',
+    'EXCELENTE PRECIO': 'Excelente Precio',
+    'AMOBLADA': 'Amoblada',
   };
   const statusLabel = statusMap[property?.status];
 

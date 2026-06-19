@@ -123,7 +123,7 @@ const PropertySchema = new Schema(
     },
     status: {
       type: String,
-      enum: ['active', 'PRECIO MEJORADO', 'ULTIMA UNIDAD', 'UNICO EN SU TIPO', 'NUEVA', 'MEJOR PRECIO', 'EXCELENTE PRECIO'],
+      enum: ['active', 'PRECIO MEJORADO', 'ULTIMA UNIDAD', 'UNICO EN SU TIPO', 'NUEVA', 'MEJOR PRECIO', 'EXCELENTE PRECIO', 'AMOBLADA'],
       default: 'active',
     },
     badgeExpiresAt: {

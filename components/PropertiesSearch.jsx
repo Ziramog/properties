@@ -35,6 +35,8 @@ const STATUS_CHECKBOXES = [
   { value: 'ULTIMA UNIDAD', label: 'Última Unidad' },
   { value: 'UNICO EN SU TIPO', label: 'Única en su Tipo' },
   { value: 'MEJOR PRECIO', label: 'Mejor Precio del Mercado' },
+  { value: 'EXCELENTE PRECIO', label: 'Excelente Precio' },
+  { value: 'AMOBLADA', label: 'Amoblada' },
 ];
 
 export default function PropertiesSearch({ currentFilters = {}, onFilter, title = 'Búsqueda de Propiedades' }) {

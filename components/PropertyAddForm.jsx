@@ -206,6 +206,7 @@ const PropertyAddForm = () => {
           <option value='NUEVA'>Nueva</option>
           <option value='MEJOR PRECIO'>Mejor Precio del Mercado</option>
           <option value='EXCELENTE PRECIO'>Excelente Precio</option>
+          <option value='AMOBLADA'>Amoblada</option>
         </select>
       </div>
 
