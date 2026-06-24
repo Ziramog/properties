@@ -120,6 +120,8 @@ const PropertyAddForm = () => {
   };
 
   const [operation, setOperation] = useState('venta');
+  const [type, setType] = useState('');
+  const isLandOrCommercial = ['Terreno', 'Campo', 'Gran Inversión', 'Inmueble Comercial'].includes(type);
   const [isGenerating, setIsGenerating] = useState(false);
   const formRef = useRef(null);
   const [description, setDescription] = useState('');
@@ -175,7 +177,7 @@ const PropertyAddForm = () => {
       {/* Tipo */}
       <div className='mb-4'>
         <label htmlFor='type' className={labelClass}>Tipo de Propiedad</label>
-        <select id='type' name='type' className={inputClass} required>
+        <select id='type' name='type' className={inputClass} required value={type} onChange={(e) => setType(e.target.value)}>
           <option value=''>Seleccione un tipo</option>
           <option value='Casa'>Casa</option>
           <option value='Departamento'>Departamento</option>
@@ -270,12 +272,18 @@ const PropertyAddForm = () => {
       {/* Características */}
       <div className='mb-4 flex flex-wrap gap-3'>
         <div className='flex-1 min-w-[30%]'>
-          <label htmlFor='beds' className={labelClass}>Dormitorios</label>
-          <input type='number' id='beds' name='beds' className={inputClass} required />
+          <label htmlFor='beds' className={labelClass}>
+            Dormitorios
+            {isLandOrCommercial && <span className="text-gray-400 font-normal ml-2 text-xs">Opcional para este tipo de propiedad</span>}
+          </label>
+          <input type='number' id='beds' name='beds' className={inputClass} required={!isLandOrCommercial} />
         </div>
         <div className='flex-1 min-w-[30%]'>
-          <label htmlFor='baths' className={labelClass}>Baños</label>
-          <input type='number' id='baths' name='baths' className={inputClass} required />
+          <label htmlFor='baths' className={labelClass}>
+            Baños
+            {isLandOrCommercial && <span className="text-gray-400 font-normal ml-2 text-xs">Opcional para este tipo de propiedad</span>}
+          </label>
+          <input type='number' id='baths' name='baths' className={inputClass} required={!isLandOrCommercial} />
         </div>
         <div className='flex-1 min-w-[30%]'>
           <label htmlFor='square_feet' className={labelClass}>Metros²</label>
