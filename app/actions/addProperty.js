@@ -58,6 +58,7 @@ async function addProperty(prevState, formData) {
       beds: formData.get('beds') || undefined,
       baths: formData.get('baths') || undefined,
       square_feet: formData.get('square_feet') || undefined,
+      covered_area: formData.get('covered_area') || undefined,
       amenities,
       owner: userId,
       operation: formData.get('operation') || 'venta',

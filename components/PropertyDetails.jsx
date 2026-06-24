@@ -4,6 +4,7 @@ import CheckIcon from './icons/CheckIcon';
 import ShareButtons from './ShareButtons';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import SectionTitle from '@/components/shared/SectionTitle';
+import { getAreaDisplay } from '@/utils/propertyDisplay';
 
 const ReadMoreText = ({ text, maxChars = 400 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -37,7 +38,7 @@ const PropertyDetails = ({ property }) => {
 
   const featureItems = [
     { label: 'Precio', value: numericPrice ? `U$D ${numericPrice.toLocaleString('es-AR')}` : 'Consultar' },
-    { label: 'Área Total', value: coveredArea ? `${coveredArea.toLocaleString('es-AR')} m²` : null },
+    { label: 'Superficie', value: getAreaDisplay(property) },
     { label: 'Dormitorios', value: property.beds },
     { label: 'Baños', value: property.baths },
     { label: 'Cochera', value: property.garage != null ? property.garage : null },
@@ -132,16 +133,16 @@ const PropertyDetails = ({ property }) => {
                 </div>
                 <ScrollReveal>
                   <ul>
-                  {property.square_feet && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
-                      <span className="text-[14px] text-[#888]">Sup. Cubierta</span>
-                      <span className="text-[14px] font-normal text-[#0F172A]">{property.square_feet.toLocaleString('es-AR')} m²</span>
-                    </li>
-                  )}
                   {coveredArea && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
-                      <span className="text-[14px] text-[#888]">Sup. Total</span>
+                      <span className="text-[14px] text-[#888]">Sup. Cubierta</span>
                       <span className="text-[14px] font-normal text-[#0F172A]">{coveredArea.toLocaleString('es-AR')} m²</span>
+                    </li>
+                  )}
+                  {property.square_feet && (
+                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
+                      <span className="text-[14px] text-[#888]">Sup. Total</span>
+                      <span className="text-[14px] font-normal text-[#0F172A]">{property.square_feet.toLocaleString('es-AR')} m²</span>
                     </li>
                   )}
                   {property.garage != null && (

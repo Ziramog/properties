@@ -1,14 +1,16 @@
 'use client';
 import Image from 'next/image';
 import { Gallery, Item } from 'react-photoswipe-gallery';
-import { LayoutGrid } from 'lucide-react';
+import { LayoutGrid, LandPlot } from 'lucide-react';
+import { getAreaDisplay } from '@/utils/propertyDisplay';
 
 const PropertyGallery = ({ images = [], property }) => {
   if (images.length === 0) return null;
 
   const beds = property?.beds;
   const baths = property?.baths;
-  const area = property?.square_feet;
+  const displayArea = getAreaDisplay(property);
+  const isLand = ['Terreno', 'Campo', 'Gran Inversión'].includes(property?.type);
   const rawPrice = property?.price;
   const numericPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.-]/g, '')) : null;
 
@@ -165,10 +167,14 @@ const PropertyGallery = ({ images = [], property }) => {
                     {baths}
                   </span>
                 )}
-                {area && (
+                {displayArea && (
                   <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-normal text-[16px] md:text-[22px]">
-                    <img src="/senada/images/icons/ico_sqfoot.svg" alt="" className="w-5 h-5 md:w-[30px] md:h-[25px]" />
-                    {area.toLocaleString('es-AR')} m²
+                    {isLand ? (
+                      <LandPlot className="w-5 h-5 md:w-[30px] md:h-[25px] text-white" strokeWidth={1.5} />
+                    ) : (
+                      <img src="/senada/images/icons/ico_sqfoot.svg" alt="" className="w-5 h-5 md:w-[30px] md:h-[25px]" />
+                    )}
+                    {displayArea}
                   </span>
                 )}
               </div>

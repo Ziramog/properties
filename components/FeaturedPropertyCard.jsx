@@ -10,6 +10,7 @@ import bookmarkProperty from '@/app/actions/bookmarkProperty';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { LandPlot } from 'lucide-react';
 
 const FeaturedPropertyCard = ({ property }) => {
   const { data: session } = useSession();
@@ -21,6 +22,7 @@ const FeaturedPropertyCard = ({ property }) => {
   const area = getAreaDisplay(property);
   const price = getPriceDisplay(property);
   const badge = getStatusBadge(property);
+  const isLand = ['Terreno', 'Campo', 'Gran Inversión'].includes(property?.type);
 
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [toggling, setToggling] = useState(false);
@@ -87,7 +89,11 @@ const FeaturedPropertyCard = ({ property }) => {
               )}
               {area && (
                 <span className="flex items-center gap-1 text-white text-[14px] font-normal" style={{ fontFamily: 'var(--font-heading)' }}>
-                  <img src="/senada/images/icons/ico_sqfoot.svg" alt="" className="w-5 h-5" />
+                  {isLand ? (
+                    <LandPlot className="w-5 h-5 text-white" strokeWidth={1.5} />
+                  ) : (
+                    <img src="/senada/images/icons/ico_sqfoot.svg" alt="" className="w-5 h-5" />
+                  )}
                   {area}
                 </span>
               )}

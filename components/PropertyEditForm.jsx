@@ -123,6 +123,8 @@ const PropertyEditForm = ({ property }) => {
   const [removedImages, setRemovedImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
   const [operation, setOperation] = useState(property.operation || 'venta');
+  const [type, setType] = useState(property.type || '');
+  const isLandOrCommercial = ['Terreno', 'Campo', 'Gran Inversión'].includes(type);
   const [isGenerating, setIsGenerating] = useState(false);
   const formRef = useRef(null);
   const [description, setDescription] = useState(property.description || '');
@@ -234,7 +236,7 @@ const PropertyEditForm = ({ property }) => {
       {/* Tipo */}
       <div className='mb-4'>
         <label htmlFor='type' className={labelClass}>Tipo de Propiedad</label>
-        <select id='type' name='type' className={inputClass} defaultValue={property.type || ''}>
+        <select id='type' name='type' className={inputClass} value={type} onChange={(e) => setType(e.target.value)}>
           <option value=''>Sin tipo específico</option>
           <option value='Casa'>Casa</option>
           <option value='Departamento'>Departamento</option>
@@ -346,9 +348,15 @@ const PropertyEditForm = ({ property }) => {
           <input type='number' id='baths' name='baths' className={inputClass} defaultValue={property.baths} />
         </div>
         <div className='flex-1 min-w-[30%]'>
-          <label className={labelClass}>Metros²</label>
+          <label className={labelClass}>Sup. Total (m²)</label>
           <input type='number' id='square_feet' name='square_feet' className={inputClass} defaultValue={property.square_feet} />
         </div>
+        {!isLandOrCommercial && (
+          <div className='flex-1 min-w-[30%]'>
+            <label className={labelClass}>Sup. Cubierta (m²)</label>
+            <input type='number' id='covered_area' name='covered_area' className={inputClass} defaultValue={property.covered_area} />
+          </div>
+        )}
       </div>
 
       {/* Precio */}

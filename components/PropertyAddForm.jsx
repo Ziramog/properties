@@ -286,9 +286,15 @@ const PropertyAddForm = () => {
           <input type='number' id='baths' name='baths' className={inputClass} required={!isLandOrCommercial} />
         </div>
         <div className='flex-1 min-w-[30%]'>
-          <label htmlFor='square_feet' className={labelClass}>Metros²</label>
+          <label htmlFor='square_feet' className={labelClass}>Sup. Total (m²)</label>
           <input type='number' id='square_feet' name='square_feet' className={inputClass} required />
         </div>
+        {!isLandOrCommercial && (
+          <div className='flex-1 min-w-[30%]'>
+            <label htmlFor='covered_area' className={labelClass}>Sup. Cubierta (m²)</label>
+            <input type='number' id='covered_area' name='covered_area' className={inputClass} />
+          </div>
+        )}
       </div>
 
       {/* Precio */}
