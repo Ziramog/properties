@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { Gallery, Item } from 'react-photoswipe-gallery';
+import { LayoutGrid } from 'lucide-react';
 
 const PropertyGallery = ({ images = [], property }) => {
   if (images.length === 0) return null;
@@ -67,8 +68,9 @@ const PropertyGallery = ({ images = [], property }) => {
               {images.length > 1 && (
                 <button
                   onClick={scrollToFullGallery}
-                  className="absolute left-4 top-4 md:left-[30px] md:top-[30px] bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[13px] font-light px-5 py-2 rounded-none transition-all duration-300 ease-in-out z-10"
+                  className="absolute left-4 top-4 md:left-[30px] md:top-[30px] bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[14px] font-normal px-4 py-2 md:px-5 md:py-2.5 rounded-[12px] md:rounded-[14px] transition-all duration-300 ease-in-out z-10 flex items-center gap-2 shadow-md hover:shadow-lg"
                 >
+                  <LayoutGrid size={18} strokeWidth={2} />
                   Ver todas las {images.length} fotos
                 </button>
               )}
@@ -111,6 +113,13 @@ const PropertyGallery = ({ images = [], property }) => {
               </div>
             </div>
           )}
+
+          {/* Elementos ocultos para que PhotoSwipe indexe todas las imágenes de la propiedad */}
+          {images.slice(7).map((image, index) => (
+            <Item key={`hidden-${index}`} original={image?.url} thumbnail={image?.url} width="1920" height="1280">
+              {({ ref }) => <div ref={ref} style={{ display: 'none' }} />}
+            </Item>
+          ))}
         </div>
         </div>
 
