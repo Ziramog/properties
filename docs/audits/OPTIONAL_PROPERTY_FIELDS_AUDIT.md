@@ -51,3 +51,6 @@ El código del frontend es altamente defensivo y ya está preparado para la ause
 
 ## 12. Preguntas de Negocio Pendientes
 - ¿Deberían los "Inmuebles Comerciales" exigir baños obligatoriamente? (Algunos locales de galería no poseen baños propios). Se asume opcional en el plan, pero requiere validación comercial.
+
+## 13. Notas de Despliegue (Post-Mortem Vercel)
+Durante el despliegue a producción de esta funcionalidad, se observó que la integración del PR a `main` mediante CLI/API no desencadenó automáticamente el build en el proyecto Vercel `properties-srs5`. El código de producción permaneció desactualizado a pesar del merge en GitHub. Fue necesario ejecutar un commit vacío manual (`git commit --allow-empty -m "trigger: vercel production build"`) sobre la rama `main` para forzar a Vercel a registrar el cambio y desplegar correctamente.

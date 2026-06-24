@@ -26,6 +26,7 @@
 
 ## 4. Configuración y Despliegue
 - **Vercel:** Desplegado en Vercel. El archivo `vercel.json` contiene un Cron Job (`/api/cron/sync-reviews`) que se ejecuta a diario a las 06:00.
+  - *Quirk de Despliegue*: Ocasionalmente, las integraciones de PRs vía API/CLI (ej. fast-forwards o merges silenciosos en GitHub) no disparan el webhook de Vercel. Si el código en producción no se actualiza tras un merge a `main`, se requiere empujar un commit vacío a `main` (`git commit --allow-empty -m "trigger: vercel production build"`) para forzar el despliegue automático.
 - **Next.js (`next.config.mjs`):** 
   - Imágenes desoptimizadas (`unoptimized: true`) y dominios configurados (Cloudinary, Google, Unsplash, dominio propio).
   - El límite de tamaño para Server Actions (`bodySizeLimit`) se ha ampliado a `20mb`, presumiblemente por la carga múltiple de imágenes.
