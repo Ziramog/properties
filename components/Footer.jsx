@@ -84,6 +84,10 @@ const Footer = ({
                 <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
                 {contactPhone}
               </a>
+              <a href="https://wa.me/5493547509413" className="flex items-center gap-[5px] text-[13px] text-white font-light py-[5px] hover:text-white/70 transition-colors">
+                <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
+                +54 9 3547 50-9413
+              </a>
             </div>
 
             {/* Right: Nav + Newsletter */}
@@ -270,6 +274,10 @@ const Footer = ({
             <a href={`https://wa.me/${contactPhone.replace(/\D/g, '')}`} className="flex items-center gap-2 text-[13px] text-white font-light">
               <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
               {contactPhone}
+            </a>
+            <a href="https://wa.me/5493547509413" className="flex items-center gap-2 text-[13px] text-white font-light">
+              <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
+              +54 9 3547 50-9413
             </a>
           </div>
 
