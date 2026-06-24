@@ -37,10 +37,10 @@
   - IA: `DEEPSEEK_API_KEY`
 
 ## 5. Arquitectura de Carpetas Destacada
-- `app/`: Contiene las rutas, layouts globales y la carpeta `actions/` donde residen todas las Server Actions (CRUD propiedades, mensajes, favoritos).
-- `components/`: Gran cantidad de componentes de UI y de negocio (MapProperties, FeaturedProperties, Forms).
-- `models/`: Esquemas de Mongoose (`Property`, `User`, `Message`).
-- Raíz: Numerosos scripts sueltos y archivos de auditoría/migración (ej. `audit-target.js`, `find-dups.js`, `patch-db.mjs`) que evidencian tareas de mantenimiento de la base de datos.
+- `app/`: Contiene las rutas (incluyendo `admin`, `superadmin`, `google-maps-pilot`), layouts globales y la carpeta `actions/`.
+- `components/`: Gran cantidad de componentes de UI (Hero, Carousels, Forms) y utilidades SEO.
+- `models/`: Esquemas de Mongoose que revelan un sistema mucho más amplio que solo propiedades. Incluye: `Property`, `User`, `Message`, además de **Módulos Transaccionales/CRM** (`Quotation`, `Quote`, `Payment`, `Subscriber`), **Gestión de Marca** (`Review`, `BusinessInfo`, `SiteConfig`) y **Analítica** (`SearchTerm`).
+- Raíz: Numerosos scripts sueltos y archivos de auditoría/migración que evidencian tareas de mantenimiento de la base de datos.
 
 ## 6. Problemas Pendientes y Riesgos Visibles
 1. **Rendimiento / Límites de Vercel:** Existe una rama remota llamada `optimize-vercel-cpu-stage1`, lo cual sugiere fuertemente que la app ha enfrentado límites de CPU en Vercel. Esto podría deberse a Server Actions pesadas, serialización de objetos grandes de Mongoose, o un mal uso de las imágenes.
