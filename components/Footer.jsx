@@ -80,14 +80,17 @@ const Footer = ({
                 <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
                 {contactEmail}
               </a>
-              <a href={`https://wa.me/${contactPhone.replace(/\D/g, '')}`} className="flex items-center gap-[5px] text-[13px] text-white font-light py-[5px] hover:text-white/70 transition-colors">
-                <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
-                {contactPhone}
-              </a>
-              <a href="https://wa.me/5493547509413" className="flex items-center gap-[5px] text-[13px] text-white font-light py-[5px] hover:text-white/70 transition-colors">
-                <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
-                +54 9 3547 50-9413
-              </a>
+              <div className="flex items-start gap-[5px] py-[5px]">
+                <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px] mt-[2px]" style={{ filter: 'brightness(0) invert(1)' }} />
+                <div className="flex flex-col gap-[2px]">
+                  <a href={`https://wa.me/${contactPhone.replace(/\D/g, '')}`} className="text-[13px] text-white font-light hover:text-white/70 transition-colors">
+                    {contactPhone.replace(/(\d{2})(\d{4})$/, '$1-$2')}
+                  </a>
+                  <a href="https://wa.me/5493547509413" className="text-[13px] text-white font-light hover:text-white/70 transition-colors">
+                    +54 9 3547 50-9413
+                  </a>
+                </div>
+              </div>
             </div>
 
             {/* Right: Nav + Newsletter */}
@@ -271,14 +274,17 @@ const Footer = ({
               <img src="/senada/images/icons/ico_mail.svg" alt="email" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
               {contactEmail}
             </a>
-            <a href={`https://wa.me/${contactPhone.replace(/\D/g, '')}`} className="flex items-center gap-2 text-[13px] text-white font-light">
-              <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
-              {contactPhone}
-            </a>
-            <a href="https://wa.me/5493547509413" className="flex items-center gap-2 text-[13px] text-white font-light">
-              <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px]" style={{ filter: 'brightness(0) invert(1)' }} />
-              +54 9 3547 50-9413
-            </a>
+            <div className="flex items-start gap-2">
+              <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px] mt-[2px]" style={{ filter: 'brightness(0) invert(1)' }} />
+              <div className="flex flex-col gap-1">
+                <a href={`https://wa.me/${contactPhone.replace(/\D/g, '')}`} className="text-[13px] text-white font-light">
+                  {contactPhone.replace(/(\d{2})(\d{4})$/, '$1-$2')}
+                </a>
+                <a href="https://wa.me/5493547509413" className="text-[13px] text-white font-light">
+                  +54 9 3547 50-9413
+                </a>
+              </div>
+            </div>
           </div>
 
           {/* Nav columns — stacked with headings */}
