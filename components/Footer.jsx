@@ -10,7 +10,7 @@ import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whats
 const Footer = ({ 
   footerDescription = 'En Roggero & Roma te acompañamos en cada paso. Nuestra experiencia asegura las mejores oportunidades del mercado inmobiliario.',
   contactEmail = 'roggeroroma@hotmail.com',
-  contactPhone = '+54 9 3547 563911',
+  contactPhone = '+54 9 3547 56-3911',
   contactAddress = 'Blvd. Carlos Pellegrini 710'
 }) => {
   const currentYear = new Date().getFullYear();
