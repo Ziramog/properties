@@ -67,7 +67,7 @@ const Footer = ({
               </Link>
                   <ul>
                     <li className="py-[5px]">
-                      <a href={`https://maps.google.com/?q=${encodeURIComponent(contactAddress + ', Alta Gracia, Córdoba')}`} target="_blank" rel="noopener noreferrer" className="flex items-start gap-[5px] text-[13px] text-white/70 font-light hover:text-white transition-colors group">
+                      <a href="https://www.google.com/maps/place/Silvia+Roggero+de+Roma+Negocios+Inmobiliarios/@-31.6520294,-64.4449129,933m/data=!3m2!1e3!4b1!4m6!3m5!1s0x942d50b08d3e4da3:0x197a00f87b2d43a6!8m2!3d-31.652034!4d-64.442338!16s%2Fg%2F11rr_l873" target="_blank" rel="noopener noreferrer" className="flex items-start gap-[5px] text-[13px] text-white/70 font-light hover:text-white transition-colors group">
                         <MapPin className="w-4 h-4 text-[#F26B2E] mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
                         <span>
                           {contactAddress}<br/>
@@ -263,7 +263,7 @@ const Footer = ({
                 className="brightness-0 invert"
               />
             </Link>
-            <a href={`https://maps.google.com/?q=${encodeURIComponent(contactAddress + ', Alta Gracia, Córdoba')}`} target="_blank" rel="noopener noreferrer" className="flex items-start gap-2 text-[13px] text-white/60 font-light mt-3 hover:text-white transition-colors">
+            <a href="https://www.google.com/maps/place/Silvia+Roggero+de+Roma+Negocios+Inmobiliarios/@-31.6520294,-64.4449129,933m/data=!3m2!1e3!4b1!4m6!3m5!1s0x942d50b08d3e4da3:0x197a00f87b2d43a6!8m2!3d-31.652034!4d-64.442338!16s%2Fg%2F11rr_l873" target="_blank" rel="noopener noreferrer" className="flex items-start gap-2 text-[13px] text-white/60 font-light mt-3 hover:text-white transition-colors">
               <MapPin className="w-4 h-4 text-[#F26B2E] mt-0.5 shrink-0" />
               <span>
                 {contactAddress}<br/>
