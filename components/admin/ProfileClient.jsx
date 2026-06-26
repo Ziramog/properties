@@ -4,17 +4,12 @@ import Image from 'next/image';
 import SignatureCanvas from 'react-signature-canvas';
 import AgentNameForm from '@/components/AgentNameForm';
 import { HelpCircle } from 'lucide-react';
-import updateCustomLabels from '@/app/actions/updateCustomLabels';
-
 export default function ProfileClient({ user, totalProps, payments, config: initialConfig }) {
   const [config, setConfig] = useState(initialConfig || {});
   const [uploading, setUploading] = useState(false);
   const [savingRate, setSavingRate] = useState(false);
   const [savingSig, setSavingSig] = useState(false);
   const [savingContact, setSavingContact] = useState(false);
-  const [savingLabels, setSavingLabels] = useState(false);
-  const [customLabels, setCustomLabels] = useState(config?.customPropertyLabels || ['PRECIO MEJORADO', 'ULTIMA UNIDAD', 'UNICO EN SU TIPO', 'MEJOR PRECIO', 'EXCELENTE PRECIO', 'AMOBLADA']);
-  const [newLabel, setNewLabel] = useState('');
   const [rateValue, setRateValue] = useState(config?.exchangeRateARS || '');
   const [contactData, setContactData] = useState({
     contactEmail: config?.contactEmail || 'roggeroroma@hotmail.com',
@@ -107,34 +102,6 @@ export default function ProfileClient({ user, totalProps, payments, config: init
 
   const clearSignaturePad = () => {
     if (sigRef.current) sigRef.current.clear();
-  };
-
-  const handleAddLabel = async () => {
-    const trimmed = newLabel.trim().toUpperCase();
-    if (!trimmed || customLabels.includes(trimmed)) return;
-    
-    const updated = [...customLabels, trimmed];
-    setCustomLabels(updated);
-    setNewLabel('');
-    await saveLabelsToDB(updated);
-  };
-
-  const handleRemoveLabel = async (labelToRemove) => {
-    const updated = customLabels.filter(l => l !== labelToRemove);
-    setCustomLabels(updated);
-    await saveLabelsToDB(updated);
-  };
-
-  const saveLabelsToDB = async (labelsArray) => {
-    setSavingLabels(true);
-    try {
-      const res = await updateCustomLabels(labelsArray);
-      if (res.error) alert(res.error);
-    } catch (err) {
-      alert('Error: ' + err.message);
-    } finally {
-      setSavingLabels(false);
-    }
   };
 
   const cardCls = 'bg-[#161616]/70 backdrop-blur-md border border-[#222] rounded-sm p-5 shadow-2xl';
@@ -399,61 +366,6 @@ export default function ProfileClient({ user, totalProps, payments, config: init
               </div>
             </div>
 
-          </div>
-        </div>
-
-        {/* ROW 3 */}
-        {/* 5. Etiquetas Personalizadas */}
-        <div className={`${cardCls} md:col-span-2 xl:col-span-4 bg-[#111] border-[#222]`}>
-          <div className="flex items-center gap-1.5 mb-5 border-b border-[#222] pb-3">
-            <p className="text-[13px] font-bold uppercase tracking-wider text-[var(--color-brand)] mb-0">Etiquetas Personalizadas</p>
-            <div className="relative group cursor-help flex items-center">
-              <HelpCircle className="w-3.5 h-3.5 text-[#888] hover:text-white transition-colors" />
-              <div className="absolute bottom-full left-0 mb-2 w-64 bg-[#0a0a0a] border border-[#333] rounded-sm p-3 shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-200 z-[120]">
-                <p className="text-[11px] font-bold text-white uppercase tracking-wider mb-1.5 border-b border-[#222] pb-1">Impacto Global</p>
-                <p className="text-[10.5px] text-[#aaa]">
-                  Crea opciones de etiquetas (badges) para mostrar sobre las imágenes de las propiedades. "NUEVA" y "Sin etiqueta" son predeterminadas e imborrables.
-                </p>
-                <div className="absolute top-full left-2 w-2 h-2 bg-[#0a0a0a] border-r border-b border-[#333] rotate-45"></div>
-              </div>
-            </div>
-            {savingLabels && <span className="ml-auto text-[10px] text-[#888] font-bold uppercase">Guardando...</span>}
-          </div>
-
-          <div className="flex flex-col md:flex-row gap-6">
-            <div className="w-full md:w-1/3">
-              <label className="block text-[11px] font-bold uppercase text-[#555] mb-2">Agregar Nueva</label>
-              <div className="flex gap-2">
-                <input 
-                  type="text" 
-                  value={newLabel} 
-                  onChange={e => setNewLabel(e.target.value.toUpperCase())}
-                  onKeyDown={e => e.key === 'Enter' && handleAddLabel()}
-                  placeholder="Ej: BLACK FRIDAY" 
-                  className={inputCls} 
-                />
-                <button onClick={handleAddLabel} disabled={savingLabels || !newLabel.trim()} className={btnPrimary}>
-                  Agregar
-                </button>
-              </div>
-            </div>
-            
-            <div className="w-full md:w-2/3">
-              <label className="block text-[11px] font-bold uppercase text-[#555] mb-2">Etiquetas Activas</label>
-              <div className="flex flex-wrap gap-2">
-                {customLabels.map(label => (
-                  <div key={label} className="flex items-center gap-2 bg-[#1a1a1a] border border-[#333] px-3 py-1.5 rounded-sm">
-                    <span className="text-[11px] font-bold text-white uppercase tracking-wider">{label}</span>
-                    <button onClick={() => handleRemoveLabel(label)} className="text-[#666] hover:text-red-500 transition-colors" title="Eliminar">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                    </button>
-                  </div>
-                ))}
-                {customLabels.length === 0 && (
-                  <span className="text-[11px] text-[#666] py-1.5">No hay etiquetas personalizadas.</span>
-                )}
-              </div>
-            </div>
           </div>
         </div>
 

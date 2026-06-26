@@ -8,6 +8,7 @@ import addProperty from '@/app/actions/addProperty';
 import { generateDescription } from '@/app/actions/generateDescription';
 import LocationPickerMap from '@/components/shared/LocationPickerMap';
 import FullScreenLoader from '@/components/shared/FullScreenLoader';
+import CustomLabelsManager from '@/components/admin/CustomLabelsManager';
 
 const SubmitButton = ({ isUploading, isSuccess, error, onCloseError }) => {
   const disabled = isUploading || isSuccess;
@@ -31,6 +32,7 @@ const SubmitButton = ({ isUploading, isSuccess, error, onCloseError }) => {
 };
 
 const PropertyAddForm = ({ customLabels = [] }) => {
+  const [labels, setLabels] = useState(customLabels);
   const [isUploading, setIsUploading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState(null);
@@ -199,11 +201,14 @@ const PropertyAddForm = ({ customLabels = [] }) => {
 
       {/* Estado */}
       <div className='mb-4'>
-        <label htmlFor='status' className={labelClass}>Etiqueta Especial</label>
+        <div className="flex justify-between items-end mb-2">
+          <label htmlFor='status' className="block text-white/80 font-bold text-sm">Etiqueta Especial</label>
+          <CustomLabelsManager labels={labels} setLabels={setLabels} />
+        </div>
         <select id='status' name='status' className={inputClass} value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value='active'>Sin etiqueta</option>
           <option value='NUEVA'>Nueva</option>
-          {customLabels.map(label => (
+          {labels.map(label => (
             <option key={label} value={label}>{label}</option>
           ))}
         </select>

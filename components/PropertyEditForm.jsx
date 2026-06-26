@@ -32,6 +32,7 @@ const SubmitButton = ({ isUploading, isSuccess, error, onCloseError }) => {
 };
 
 const PropertyEditForm = ({ property, customLabels = [] }) => {
+  const [labels, setLabels] = useState(customLabels);
   const [isUploading, setIsUploading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState(null);
@@ -258,11 +259,14 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
 
       {/* Estado */}
       <div className='mb-4'>
-        <label htmlFor='status' className={labelClass}>Etiqueta Especial</label>
+        <div className="flex justify-between items-end mb-2">
+          <label htmlFor='status' className="block text-white/80 font-bold text-sm">Etiqueta Especial</label>
+          <CustomLabelsManager labels={labels} setLabels={setLabels} />
+        </div>
         <select id='status' name='status' className={inputClass} value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value='active'>Sin etiqueta</option>
           <option value='NUEVA'>Nueva</option>
-          {Array.from(new Set([...customLabels, property.status || 'active'])).filter(l => l && l !== 'active' && l !== 'NUEVA').map(label => (
+          {Array.from(new Set([...labels, property.status || 'active'])).filter(l => l && l !== 'active' && l !== 'NUEVA').map(label => (
             <option key={label} value={label}>{label}</option>
           ))}
         </select>
