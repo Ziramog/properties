@@ -21,6 +21,12 @@ const SiteConfigSchema = new Schema({
   analyticsId: { type: String, default: 'G-PW4FH9WHQB' },
   facebookPixelId: { type: String, default: '' },
   whatsappDefaultMessage: { type: String, default: 'Hola, vengo desde la web y me gustaría recibir más información.' },
+  
+  // Custom Labels
+  customPropertyLabels: { 
+    type: [String], 
+    default: ['PRECIO MEJORADO', 'ULTIMA UNIDAD', 'UNICO EN SU TIPO', 'MEJOR PRECIO', 'EXCELENTE PRECIO', 'AMOBLADA'] 
+  },
 }, { timestamps: true });
 
 const SiteConfig = models.SiteConfig || model('SiteConfig', SiteConfigSchema);

@@ -7,8 +7,14 @@ import PropertyAddForm from '@/components/PropertyAddForm';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import connectDB from '@/config/database';
+import SiteConfig from '@/models/SiteConfig';
 
-const PropertyAddPage = () => {
+const PropertyAddPage = async () => {
+  await connectDB();
+  const config = await SiteConfig.findOne({}).lean();
+  const customLabels = config?.customPropertyLabels || ['PRECIO MEJORADO', 'ULTIMA UNIDAD', 'UNICO EN SU TIPO', 'MEJOR PRECIO', 'EXCELENTE PRECIO', 'AMOBLADA'];
+
   return (
     <div className='container mx-auto px-4 py-8 max-w-3xl'>
       <div className='mb-4'>
@@ -19,7 +25,7 @@ const PropertyAddPage = () => {
       </div>
       <ScrollReveal>
         <div className='bg-[#111] border border-[#333] px-6 py-8 shadow-xl rounded-xl'>
-          <PropertyAddForm />
+          <PropertyAddForm customLabels={customLabels} />
         </div>
       </ScrollReveal>
     </div>

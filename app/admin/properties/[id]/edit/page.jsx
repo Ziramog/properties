@@ -6,6 +6,7 @@ export const metadata = {
 import PropertyEditForm from '@/components/PropertyEditForm';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
+import SiteConfig from '@/models/SiteConfig';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
@@ -13,8 +14,12 @@ import { ArrowLeft } from 'lucide-react';
 const PropertyEditPage = async ({ params }) => {
   await connectDB();
 
-  const propertyDoc = await Property.findById(params.id).lean();
+  const [propertyDoc, config] = await Promise.all([
+    Property.findById(params.id).lean(),
+    SiteConfig.findOne({}).lean()
+  ]);
   const property = convertToSerializeableObject(propertyDoc);
+  const customLabels = config?.customPropertyLabels || ['PRECIO MEJORADO', 'ULTIMA UNIDAD', 'UNICO EN SU TIPO', 'MEJOR PRECIO', 'EXCELENTE PRECIO', 'AMOBLADA'];
 
   if (!property) {
     return (
@@ -34,7 +39,7 @@ const PropertyEditPage = async ({ params }) => {
           </Link>
         </div>
         <div className='bg-[#111] border border-[#333] px-6 py-8 shadow-xl rounded-xl'>
-          <PropertyEditForm property={property} />
+          <PropertyEditForm property={property} customLabels={customLabels} />
         </div>
       </div>
     </section>

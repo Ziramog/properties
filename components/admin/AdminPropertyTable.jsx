@@ -6,7 +6,7 @@ import deleteProperty from '@/app/actions/deleteProperty';
 import { toast } from 'react-toastify';
 import { isGranInversion } from '@/utils/filterProperties';
 
-const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInversion = false, defaultFeatured = '', defaultPublished = '' }) => {
+const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = '', defaultGranInversion = false, defaultFeatured = '', defaultPublished = '' }) => {
   const router = useRouter();
   const [items, setItems] = useState(properties);
   const [search, setSearch] = useState('');
@@ -153,11 +153,10 @@ const AdminPropertyTable = ({ properties = [], defaultType = '', defaultGranInve
             </select>
             <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className={selectCls}>
               <option value="">Estado: Todos</option>
-              <option value="PRECIO MEJORADO">Precio Mejorado</option>
-              <option value="ULTIMA UNIDAD">Última Unidad</option>
-              <option value="UNICO EN SU TIPO">Única en su Tipo</option>
               <option value="NUEVA">Nueva</option>
-              <option value="MEJOR PRECIO">Mejor Precio del Mercado</option>
+              {customLabels.map(label => (
+                <option key={label} value={label}>{label}</option>
+              ))}
             </select>
             <select value={filterGranInversion} onChange={(e) => setFilterGranInversion(e.target.value)} className={selectCls}>
               <option value="">Gran Inversión: Todas</option>

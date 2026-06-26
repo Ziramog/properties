@@ -30,7 +30,7 @@ const SubmitButton = ({ isUploading, isSuccess, error, onCloseError }) => {
   );
 };
 
-const PropertyAddForm = () => {
+const PropertyAddForm = ({ customLabels = [] }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState(null);
@@ -202,13 +202,10 @@ const PropertyAddForm = () => {
         <label htmlFor='status' className={labelClass}>Etiqueta Especial</label>
         <select id='status' name='status' className={inputClass} value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value='active'>Sin etiqueta</option>
-          <option value='PRECIO MEJORADO'>Precio Mejorado</option>
-          <option value='ULTIMA UNIDAD'>Última Unidad</option>
-          <option value='UNICO EN SU TIPO'>Única en su Tipo</option>
           <option value='NUEVA'>Nueva</option>
-          <option value='MEJOR PRECIO'>Mejor Precio del Mercado</option>
-          <option value='EXCELENTE PRECIO'>Excelente Precio</option>
-          <option value='AMOBLADA'>Amoblada</option>
+          {customLabels.map(label => (
+            <option key={label} value={label}>{label}</option>
+          ))}
         </select>
       </div>
 
