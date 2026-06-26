@@ -15,13 +15,13 @@ const FullGallery = ({ images = [], propertyName }) => {
                   <div
                     ref={ref}
                     onClick={open}
-                    className="relative group cursor-pointer overflow-hidden bg-[#f0f0f0] h-[150px] sm:h-[200px]"
+                    className="relative group cursor-pointer overflow-hidden bg-[#111] h-[150px] sm:h-[200px]"
                   >
                     <Image
                       src={image?.url}
                       alt={`${propertyName || 'Propiedad'} foto ${index + 1}`}
                       fill
-                      className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
+                      className="object-contain transition-transform duration-300 ease-in-out group-hover:scale-110"
                       sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       loading="lazy"
                     />
