@@ -9,6 +9,7 @@ import updateProperty from '@/app/actions/updateProperty';
 import { generateDescription } from '@/app/actions/generateDescription';
 import LocationPickerMap from '@/components/shared/LocationPickerMap';
 import FullScreenLoader from '@/components/shared/FullScreenLoader';
+import CustomLabelsManager from '@/components/admin/CustomLabelsManager';
 
 const SubmitButton = ({ isUploading, isSuccess, error, onCloseError }) => {
   const disabled = isUploading || isSuccess;
