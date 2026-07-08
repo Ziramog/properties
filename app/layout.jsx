@@ -3,6 +3,7 @@ import Footer from '@/components/Footer';
 import AuthProvider from '@/components/AuthProvider';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { GlobalProvider } from '@/context/GlobalContext';
+import { Suspense } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { Cormorant_Garamond } from 'next/font/google';
 import localFont from 'next/font/local';
@@ -101,7 +102,9 @@ const MainLayout = async ({ children }) => {
             <main className="relative pb-[12px]">{children}</main>
             <Footer footerDescription={siteConfig.footerDescription} contactEmail={siteConfig.contactEmail} contactPhone={siteConfig.contactPhone} contactAddress={siteConfig.contactAddress} />
             <ToastContainer />
-            <GoogleAnalytics analyticsId={siteConfig.analyticsId} facebookPixelId={siteConfig.facebookPixelId} />
+            <Suspense fallback={null}>
+              <GoogleAnalytics analyticsId={siteConfig.analyticsId} facebookPixelId={siteConfig.facebookPixelId} />
+            </Suspense>
           </body>
         </html>
       </GlobalProvider>
