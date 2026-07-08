@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaSearch, FaChevronDown, FaTimes, FaHeart } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
+import { trackSearchUsed } from '@/utils/analytics';
 
 const PROPERTY_TYPES = ['Todos', 'Casa', 'Departamento', 'Terreno', 'Campo', 'Inmueble Comercial', 'Gran Inversión'];
 const CITIES = ['Ciudad', 'Alta Gracia', 'Anisacate', 'Despeñaderos', 'Falda del Carmen', 'Huerta Grande'];
@@ -42,6 +43,12 @@ const PropertiesFiltersInline = ({ currentFilters }) => {
     if (filters.maxPrice) params.set('maxPrice', filters.maxPrice);
     if (filters.bedrooms) params.set('bedrooms', filters.bedrooms);
     if (filters.favoritos === 'true') params.set('favoritos', 'true');
+
+    trackSearchUsed({
+      property_type: filters.type !== 'Todos' ? filters.type : undefined,
+      location: filters.city !== 'Ciudad' ? filters.city : undefined,
+    });
+
     const query = params.toString();
     router.push(`/properties${query ? `?${query}` : ''}`);
   };

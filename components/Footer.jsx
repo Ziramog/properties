@@ -4,8 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FaWhatsapp } from 'react-icons/fa';
 import { MapPin } from 'lucide-react';
-import { usePathname } from 'next/navigation';
 import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whatsapp';
+import { trackWhatsappClick, trackMapClick, trackContactFormSubmitted } from '@/utils/analytics';
 
 const Footer = ({ 
   footerDescription = 'En Roggero & Roma te acompañamos en cada paso. Nuestra experiencia asegura las mejores oportunidades del mercado inmobiliario.',
@@ -27,9 +27,7 @@ const Footer = ({
   const handleSubscribe = async (e) => {
     e.preventDefault();
     if (!whatsappNumber) return;
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'form_submit', { component: 'footer', form_type: 'newsletter_whatsapp' });
-    }
+    trackContactFormSubmitted({ form_name: 'newsletter_whatsapp', form_location: 'footer' });
     setIsSubmitting(true);
     try {
       const res = await fetch('/api/subscribe', {
@@ -70,7 +68,7 @@ const Footer = ({
               </Link>
                   <ul>
                     <li className="py-[5px]">
-                      <a href="https://www.google.com/maps/place/Silvia+Roggero+de+Roma+Negocios+Inmobiliarios/@-31.6520294,-64.4449129,933m/data=!3m2!1e3!4b1!4m6!3m5!1s0x942d50b08d3e4da3:0x197a00f87b2d43a6!8m2!3d-31.652034!4d-64.442338!16s%2Fg%2F11rr_l873" target="_blank" rel="noopener noreferrer" className="flex items-start gap-[5px] text-[13px] text-white/70 font-light hover:text-white transition-colors group" onClick={() => { if (typeof window !== 'undefined' && window.gtag) { window.gtag('event', 'click_maps', { component: 'footer', type: 'office_address' }); } }}>
+                      <a href="https://www.google.com/maps/place/Silvia+Roggero+de+Roma+Negocios+Inmobiliarios/@-31.6520294,-64.4449129,933m/data=!3m2!1e3!4b1!4m6!3m5!1s0x942d50b08d3e4da3:0x197a00f87b2d43a6!8m2!3d-31.652034!4d-64.442338!16s%2Fg%2F11rr_l873" target="_blank" rel="noopener noreferrer" className="flex items-start gap-[5px] text-[13px] text-white/70 font-light hover:text-white transition-colors group" onClick={() => trackMapClick({ cta_location: 'footer', context: 'office_address' })}>
                         <MapPin className="w-4 h-4 text-[#F26B2E] mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
                         <span>
                           {contactAddress}<br/>
@@ -86,10 +84,10 @@ const Footer = ({
               <div className="flex items-start gap-[5px] py-[5px]">
                 <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px] mt-[2px]" style={{ filter: 'brightness(0) invert(1)' }} />
                 <div className="flex flex-col gap-[2px]">
-                  <a href={`https://wa.me/${contactPhone.replace(/\D/g, '')}`} className="text-[13px] text-white font-light hover:text-white/70 transition-colors" onClick={() => { if (typeof window !== 'undefined' && window.gtag) { window.gtag('event', 'click_whatsapp', { component: 'footer', number: contactPhone }); } }}>
+                  <a href={`https://wa.me/${contactPhone.replace(/\D/g, '')}`} className="text-[13px] text-white font-light hover:text-white/70 transition-colors" onClick={() => trackWhatsappClick({ cta_location: 'footer', number: contactPhone })}>
                     {contactPhone.replace(/(\d{2})(\d{4})$/, '$1-$2')}
                   </a>
-                  <a href="https://wa.me/5493547509413" className="text-[13px] text-white font-light hover:text-white/70 transition-colors" onClick={() => { if (typeof window !== 'undefined' && window.gtag) { window.gtag('event', 'click_whatsapp', { component: 'footer', number: '5493547509413' }); } }}>
+                  <a href="https://wa.me/5493547509413" className="text-[13px] text-white font-light hover:text-white/70 transition-colors" onClick={() => trackWhatsappClick({ cta_location: 'footer', number: '5493547509413' })}>
                     +54 9 3547 50-9413
                   </a>
                 </div>
@@ -219,7 +217,7 @@ const Footer = ({
                 </a>
               </li>
               <li>
-                <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="WhatsApp" onClick={() => { if (typeof window !== 'undefined' && window.gtag) { window.gtag('event', 'click_whatsapp', { component: 'footer', context: 'general' }); } }}>
+                <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="WhatsApp" onClick={() => trackWhatsappClick({ cta_location: 'footer', context: 'general' })}>
                   <FaWhatsapp className="text-xl" />
                 </a>
               </li>
@@ -266,7 +264,7 @@ const Footer = ({
                 className="brightness-0 invert"
               />
             </Link>
-            <a href="https://www.google.com/maps/place/Silvia+Roggero+de+Roma+Negocios+Inmobiliarios/@-31.6520294,-64.4449129,933m/data=!3m2!1e3!4b1!4m6!3m5!1s0x942d50b08d3e4da3:0x197a00f87b2d43a6!8m2!3d-31.652034!4d-64.442338!16s%2Fg%2F11rr_l873" target="_blank" rel="noopener noreferrer" className="flex items-start gap-2 text-[13px] text-white/60 font-light mt-3 hover:text-white transition-colors" onClick={() => { if (typeof window !== 'undefined' && window.gtag) { window.gtag('event', 'click_maps', { component: 'footer_mobile', type: 'office_address' }); } }}>
+            <a href="https://www.google.com/maps/place/Silvia+Roggero+de+Roma+Negocios+Inmobiliarios/@-31.6520294,-64.4449129,933m/data=!3m2!1e3!4b1!4m6!3m5!1s0x942d50b08d3e4da3:0x197a00f87b2d43a6!8m2!3d-31.652034!4d-64.442338!16s%2Fg%2F11rr_l873" target="_blank" rel="noopener noreferrer" className="flex items-start gap-2 text-[13px] text-white/60 font-light mt-3 hover:text-white transition-colors" onClick={() => trackMapClick({ cta_location: 'footer_mobile', context: 'office_address' })}>
               <MapPin className="w-4 h-4 text-[#F26B2E] mt-0.5 shrink-0" />
               <span>
                 {contactAddress}<br/>
@@ -388,7 +386,7 @@ const Footer = ({
                 </a>
               </li>
               <li>
-                <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="WhatsApp" onClick={() => { if (typeof window !== 'undefined' && window.gtag) { window.gtag('event', 'click_whatsapp', { component: 'footer_mobile', context: 'general' }); } }}>
+                <a href={generateWhatsAppLink({ context: 'general' })} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="WhatsApp" onClick={() => trackWhatsappClick({ cta_location: 'footer_mobile', context: 'general' })}>
                   <FaWhatsapp className="text-xl" />
                 </a>
               </li>

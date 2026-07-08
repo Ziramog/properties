@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Gallery, Item } from 'react-photoswipe-gallery';
 import { LayoutGrid, LandPlot } from 'lucide-react';
 import { getAreaDisplay } from '@/utils/propertyDisplay';
+import { trackWhatsappClick, trackMapClick } from '@/utils/analytics';
 
 const PropertyGallery = ({ images = [], property }) => {
   if (images.length === 0) return null;
@@ -141,7 +142,7 @@ const PropertyGallery = ({ images = [], property }) => {
               )}`}
                  target="_blank" rel="noopener noreferrer"
                  className="inline-flex items-center gap-2 text-[#b8b8b8] hover:text-white transition-colors text-[16px] mb-4"
-                 itemProp="address" itemScope itemType="https://schema.org/PostalAddress" onClick={() => { if (typeof window !== 'undefined' && window.gtag) { window.gtag('event', 'click_maps', { component: 'property_gallery', property_id: property?._id || '', property_name: property?.name || '' }); } }}>
+                 itemProp="address" itemScope itemType="https://schema.org/PostalAddress" onClick={() => trackMapClick({ cta_location: 'property_gallery', context: 'property', property_id: property?._id || property?.id, property_type: property?.type, operation: property?.operation, location: property?.location?.city || property?.location?.neighborhood || property?.location?.state })}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="var(--color-brand)" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
@@ -214,7 +215,7 @@ const PropertyGallery = ({ images = [], property }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full text-white text-[15px] font-normal uppercase tracking-wider text-center py-3 px-[24px] rounded-[8px] transition-colors"
-                  onClick={() => { if (typeof window !== 'undefined' && window.gtag) { window.gtag('event', 'click_whatsapp', { component: 'property_gallery', property_id: property?._id || '', property_name: property?.name || '', number: '5493547563911' }); } }}
+                  onClick={() => trackWhatsappClick({ cta_location: 'property_gallery', context: 'property', property_id: property?._id || property?.id, property_type: property?.type, operation: property?.operation, location: property?.location?.city || property?.location?.neighborhood || property?.location?.state, number: '5493547563911' })}
                   style={{
                     backgroundImage: 'linear-gradient(135deg, var(--color-brand), var(--color-brand), var(--color-brand-dark), var(--color-brand-dark))',
                     backgroundSize: '400% 100%',

@@ -2,10 +2,12 @@
 
 import { useEffect } from 'react';
 import Script from 'next/script';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { shouldTrackPath } from '@/utils/analytics';
 
 export default function GoogleAnalytics({ analyticsId, facebookPixelId }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -15,18 +17,25 @@ export default function GoogleAnalytics({ analyticsId, facebookPixelId }) {
     
     if (!allowedHosts.includes(hostname)) return;
 
-    // Track Google Analytics page views
+    // Track Google Analytics page views manually
     if (analyticsId && window.gtag) {
-      window.gtag('config', analyticsId, {
-        page_path: pathname,
-      });
+      if (shouldTrackPath(pathname)) {
+        const query = searchParams?.toString();
+        const pagePath = query ? `${pathname}?${query}` : pathname;
+
+        window.gtag('event', 'page_view', {
+          page_path: pagePath,
+          page_location: window.location.href,
+          page_title: document.title,
+        });
+      }
     }
 
     // Track Facebook Pixel page views
     if (facebookPixelId && window.fbq) {
       window.fbq('track', 'PageView');
     }
-  }, [pathname, analyticsId, facebookPixelId]);
+  }, [pathname, searchParams, analyticsId, facebookPixelId]);
 
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
@@ -52,8 +61,7 @@ export default function GoogleAnalytics({ analyticsId, facebookPixelId }) {
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
                 gtag('config', '${analyticsId}', {
-                  page_path: window.location.pathname,
-                  send_page_view: true,
+                  send_page_view: false,
                 });
               `,
             }}

@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import addMessage from '@/app/actions/addMessage';
 import SubmitMessageButton from './SubmitMessageButton';
 import SectionTitle from '@/components/shared/SectionTitle';
+import { trackContactFormSubmitted } from '@/utils/analytics';
 
 const PropertyContactForm = ({ property }) => {
   const { data: session } = useSession();
@@ -14,7 +15,10 @@ const PropertyContactForm = ({ property }) => {
 
   useEffect(() => {
     if (state.error) toast.error(state.error);
-    if (state.submitted) toast.success('Mensaje enviado');
+    if (state.submitted) {
+      toast.success('Mensaje enviado');
+      trackContactFormSubmitted({ form_name: 'contact', form_location: 'property_detail' });
+    }
   }, [state]);
 
   if (!session) {

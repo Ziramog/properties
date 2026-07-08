@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaSearch } from 'react-icons/fa';
+import { trackSearchUsed } from '@/utils/analytics';
 
 const PropertyFilters = ({ variant = 'hero' }) => {
   const router = useRouter();
@@ -29,6 +30,12 @@ const PropertyFilters = ({ variant = 'hero' }) => {
     if (filters.minPrice) params.set('minPrice', filters.minPrice);
     if (filters.maxPrice) params.set('maxPrice', filters.maxPrice);
     if (filters.bedrooms) params.set('bedrooms', filters.bedrooms);
+
+    trackSearchUsed({
+      property_type: filters.type !== 'Todos' ? filters.type : undefined,
+      location: (filters.city !== 'Ciudad' && filters.city !== 'Todas las ciudades') ? filters.city : undefined,
+    });
+
     const query = params.toString();
     router.push(`/properties${query ? `?${query}` : ''}`);
   };

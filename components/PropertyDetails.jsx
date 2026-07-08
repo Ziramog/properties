@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { trackPropertyViewed } from '@/utils/analytics';
 import CheckIcon from './icons/CheckIcon';
 import ShareButtons from './ShareButtons';
 import ScrollReveal from '@/components/shared/ScrollReveal';
@@ -27,6 +28,10 @@ const ReadMoreText = ({ text, maxChars = 400 }) => {
 
 
 const PropertyDetails = ({ property }) => {
+  useEffect(() => {
+    if (property) trackPropertyViewed(property);
+  }, [property?._id || property?.id]);
+
   const coveredArea = property.covered_area;
   const operationLabel =
     property.operation === 'venta' ? 'Venta' :
