@@ -121,9 +121,9 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
                 }}>
                   <ul className="bg-black rounded-[6px] min-w-[200px] text-center shadow-[0_8px_14px_-3px_rgba(255,255,255,0.1)] mt-2">
                     {[
+                      { label: 'Campos', query: 'type=Campo' },
                       { label: 'Casas', query: 'type=Casa' },
                       { label: 'Departamentos', query: 'type=Departamento' },
-                      { label: 'Campos', query: 'type=Campo' },
                       { label: 'Inmuebles Comerciales', query: 'type=Inmueble+Comercial' },
                       { label: 'Terrenos', query: 'type=Terreno' },
                       { label: 'Todas las propiedades', query: '' },
@@ -267,9 +267,9 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
               </button>
               <div className={`overflow-hidden transition-all duration-300 ${mobileSubOpen ? 'max-h-[300px] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
                 {[
+                  { href: '/properties?type=Campo', label: 'Campos' },
                   { href: '/properties?type=Casa', label: 'Casas' },
                   { href: '/properties?type=Departamento', label: 'Departamentos' },
-                  { href: '/properties?type=Campo', label: 'Campos' },
                   { href: '/properties?type=Inmueble+Comercial', label: 'Inmuebles Comerciales' },
                   { href: '/properties?type=Terreno', label: 'Terrenos' },
                   { href: '/properties', label: 'Todas las propiedades' },
