@@ -57,7 +57,7 @@ const PropertyGallery = ({ images = [], property }) => {
                         src={images[0]?.url}
                         alt={property?.name || ''}
                         fill
-                        className="object-contain transition-transform duration-300 ease-in-out group-hover:scale-110"
+                        className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
                         sizes="(max-width: 768px) 100vw, 40vw"
                         priority={true}
                       />
@@ -89,7 +89,7 @@ const PropertyGallery = ({ images = [], property }) => {
                         <div ref={ref} onClick={open}
                              className="relative group flex-shrink-0 w-[130px] h-[86px] cursor-pointer overflow-hidden">
                           <Image src={image?.url} alt="" fill
-                                 className="object-contain transition-transform duration-300 ease-in-out group-hover:scale-110"
+                                 className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
                                  sizes="130px" loading="lazy" />
                           <div className="absolute inset-0 bg-white/0 group-hover:bg-white/60 transition-all duration-300 ease-in-out pointer-events-none" />
                         </div>
@@ -105,7 +105,7 @@ const PropertyGallery = ({ images = [], property }) => {
                         <div ref={ref} onClick={open}
                              className="relative group cursor-pointer overflow-hidden bg-[#111] aspect-[16/9]">
                           <Image src={image?.url} alt="" fill
-                                 className="object-contain transition-transform duration-300 ease-in-out group-hover:scale-110"
+                                 className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
                                  sizes="20vw" loading="lazy" />
                           <div className="absolute inset-0 bg-white/0 group-hover:bg-white/60 transition-all duration-300 ease-in-out pointer-events-none" />
                         </div>
