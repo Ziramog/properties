@@ -132,3 +132,12 @@ export function trackSearchUsed(params = {}) {
     query_length: params.query ? String(params.query).length : 0,
   });
 }
+
+export function trackSocialClick(params = {}) {
+  trackEvent('click_social', {
+    contact_channel: params.channel || 'social',
+    cta_location: params.cta_location,
+    component: params.cta_location,
+    context: params.context || 'general',
+  });
+}

@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { FaWhatsapp } from 'react-icons/fa';
 import { MapPin } from 'lucide-react';
 import { generateWhatsAppLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/utils/whatsapp';
-import { trackWhatsappClick, trackMapClick, trackContactFormSubmitted } from '@/utils/analytics';
+import { trackWhatsappClick, trackMapClick, trackContactFormSubmitted, trackSocialClick } from '@/utils/analytics';
 
 const Footer = ({ 
   footerDescription = 'En Roggero & Roma te acompañamos en cada paso. Nuestra experiencia asegura las mejores oportunidades del mercado inmobiliario.',
@@ -392,7 +392,7 @@ const Footer = ({
                 </a>
               </li>
               <li>
-                <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Facebook" onClick={() => { if (typeof window !== 'undefined' && window.gtag) { window.gtag('event', 'click_facebook', { component: 'footer_mobile' }); } }}>
+                <a href="https://www.facebook.com/roggeroyroma" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-white/[0.15] hover:bg-[var(--color-brand)] transition-all duration-300" aria-label="Facebook" onClick={() => trackSocialClick({ channel: 'facebook', cta_location: 'footer_mobile', context: 'social' })}>
                   <img src="/senada/images/icons/ico_facebook.svg" alt="facebook" className="w-5 h-5" style={{ filter: 'brightness(0) invert(1)' }} />
                 </a>
               </li>
