@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { trackPropertyViewed } from '@/utils/analytics';
+import { useSession } from 'next-auth/react';
 import CheckIcon from './icons/CheckIcon';
 import ShareButtons from './ShareButtons';
 import ScrollReveal from '@/components/shared/ScrollReveal';
@@ -28,9 +29,12 @@ const ReadMoreText = ({ text, maxChars = 400 }) => {
 
 
 const PropertyDetails = ({ property }) => {
+  const { data: session, status } = useSession();
+  
   useEffect(() => {
-    if (property) trackPropertyViewed(property);
-  }, [property?._id || property?.id]);
+    if (status === 'loading') return;
+    if (property) trackPropertyViewed(property, session?.user?.role);
+  }, [property?._id || property?.id, status]);
 
   const coveredArea = property.covered_area;
   const operationLabel =

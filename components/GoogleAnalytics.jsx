@@ -1,33 +1,42 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { shouldTrackPath } from '@/utils/analytics';
+import { canTrackAnalytics } from '@/utils/analytics';
+import { useSession } from 'next-auth/react';
 
 export default function GoogleAnalytics({ analyticsId, facebookPixelId }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { data: session, status } = useSession();
+  const trackedPathRef = useRef(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
-    const hostname = window.location.hostname;
-    const allowedHosts = ['localhost', 'roggeroyroma.com', 'www.roggeroyroma.com', 'roggeroyroma.com.ar', 'www.roggeroyroma.com.ar'];
+    window.__ANALYTICS_SESSION_READY__ = status !== 'loading';
+    if (status === 'loading') return;
+
+    window.__USER_ROLE__ = session?.user?.role || null;
     
-    if (!allowedHosts.includes(hostname)) return;
+    const hostname = window.location.hostname;
+    const role = window.__USER_ROLE__;
+
+    const query = searchParams?.toString();
+    const pagePath = query ? `${pathname}?${query}` : pathname;
 
     // Track Google Analytics page views manually
     if (analyticsId && window.gtag) {
-      if (shouldTrackPath(pathname)) {
-        const query = searchParams?.toString();
-        const pagePath = query ? `${pathname}?${query}` : pathname;
-
-        window.gtag('event', 'page_view', {
-          page_path: pagePath,
-          page_location: window.location.href,
-          page_title: document.title,
-        });
+      if (trackedPathRef.current !== pagePath) {
+        if (canTrackAnalytics({ host: hostname, pathname, role })) {
+          window.gtag('event', 'page_view', {
+            page_path: pagePath,
+            page_location: window.location.href,
+            page_title: document.title,
+          });
+        }
+        trackedPathRef.current = pagePath;
       }
     }
 
@@ -35,11 +44,11 @@ export default function GoogleAnalytics({ analyticsId, facebookPixelId }) {
     if (facebookPixelId && window.fbq) {
       window.fbq('track', 'PageView');
     }
-  }, [pathname, searchParams, analyticsId, facebookPixelId]);
+  }, [pathname, searchParams, analyticsId, facebookPixelId, session, status]);
 
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-    const allowedHosts = ['localhost', 'roggeroyroma.com', 'www.roggeroyroma.com', 'roggeroyroma.com.ar', 'www.roggeroyroma.com.ar'];
+    const allowedHosts = ['localhost', 'roggeroyroma.com', 'www.roggeroyroma.com', 'roggeroyroma.com.ar', 'www.roggeroyroma.com.ar', '127.0.0.1'];
     if (!allowedHosts.includes(hostname)) return null;
   }
 

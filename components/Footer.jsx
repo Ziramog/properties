@@ -85,10 +85,10 @@ const Footer = ({
               <div className="flex items-start gap-[5px] py-[5px]">
                 <img src="/senada/images/icons/ico_phone.svg" alt="phone" className="w-[17px] h-[17px] mt-[2px]" style={{ filter: 'brightness(0) invert(1)' }} />
                 <div className="flex flex-col gap-[2px]">
-                  <a href={`https://wa.me/${contactPhone.replace(/\D/g, '')}`} className="text-[13px] text-white font-light hover:text-white/70 transition-colors" onClick={() => trackWhatsappClick({ cta_location: 'footer', number: contactPhone })}>
+                  <a href={`https://wa.me/${contactPhone.replace(/\D/g, '')}`} className="text-[13px] text-white font-light hover:text-white/70 transition-colors" onClick={() => trackWhatsappClick({ cta_location: 'footer' })}>
                     {contactPhone.replace(/(\d{2})(\d{4})$/, '$1-$2')}
                   </a>
-                  <a href="https://wa.me/5493547509413" className="text-[13px] text-white font-light hover:text-white/70 transition-colors" onClick={() => trackWhatsappClick({ cta_location: 'footer', number: '5493547509413' })}>
+                  <a href="https://wa.me/5493547509413" className="text-[13px] text-white font-light hover:text-white/70 transition-colors" onClick={() => trackWhatsappClick({ cta_location: 'footer' })}>
                     +54 9 3547 50-9413
                   </a>
                 </div>

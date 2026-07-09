@@ -215,7 +215,7 @@ const PropertyGallery = ({ images = [], property }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full text-white text-[15px] font-normal uppercase tracking-wider text-center py-3 px-[24px] rounded-[8px] transition-colors"
-                  onClick={() => trackWhatsappClick({ cta_location: 'property_gallery', context: 'property', property_id: property?._id || property?.id, property_type: property?.type, operation: property?.operation, location: property?.location?.city || property?.location?.neighborhood || property?.location?.state, number: '5493547563911' })}
+                  onClick={() => trackWhatsappClick({ cta_location: 'property_gallery', context: 'property', property_id: property?._id || property?.id, property_type: property?.type, operation: property?.operation, location: property?.location?.city || property?.location?.neighborhood || property?.location?.state })}
                   style={{
                     backgroundImage: 'linear-gradient(135deg, var(--color-brand), var(--color-brand), var(--color-brand-dark), var(--color-brand-dark))',
                     backgroundSize: '400% 100%',
