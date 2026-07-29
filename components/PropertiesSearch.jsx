@@ -1,6 +1,7 @@
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { interpretSearchTerm } from '@/utils/searchSemantics';
 
 const TIPO_OPTIONS = [
   { value: '', label: '' },
@@ -173,11 +174,18 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
       alert('Por favor, selecioná al menos un filtro para buscar.');
       return;
     }
+    
+    // Interpretación Semántica
+    const interpreted = interpretSearchTerm(filters.term || '');
+    const finalTerm = interpreted.term;
+    const finalType = interpreted.type || (filters.tipo && filters.tipo !== 'Todos' ? filters.tipo : null);
+    const finalOp = interpreted.operation || (filters.operation && filters.operation !== 'Todos' ? filters.operation : null);
+    
     const params = new URLSearchParams();
-    if (filters.term) params.set('term', filters.term);
+    if (finalTerm) params.set('term', finalTerm);
     if (filters.address) params.set('address', filters.address);
-    if (filters.tipo) params.set('type', filters.tipo);
-    if (filters.operation) params.set('operation', filters.operation);
+    if (finalType) params.set('type', finalType);
+    if (finalOp) params.set('operation', finalOp);
     if (filters.area) params.set('area', filters.area);
     if (filters.price) {
       const [min, max] = filters.price.split('-');
@@ -189,9 +197,15 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     if (filters['property-type']?.length) params.set('propertyType', filters['property-type'].join('|'));
     if (filters.status?.length) params.set('status', filters.status.join('|'));
     if (filters.sort) params.set('sort', filters.sort);
+    
     const query = params.toString();
     if (onFilter) {
-      onFilter(filters);
+      onFilter({
+        ...filters,
+        term: finalTerm,
+        tipo: finalType,
+        operation: finalOp
+      });
     } else {
       window.location.href = `/properties${query ? `?${query}` : ''}`;
     }

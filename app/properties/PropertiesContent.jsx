@@ -10,18 +10,32 @@ import CategoryMap from '@/components/CategoryMap';
 import MapErrorBoundary from '@/components/shared/MapErrorBoundary';
 import { getSessionUser } from '@/utils/getSessionUser';
 import ScrollToResults from '@/components/ScrollToResults';
+import { interpretSearchTerm } from '@/utils/searchSemantics';
 
 export default async function PropertiesContent({ searchParams, subtitle }) {
   await connectDB();
 
-  const { pageSize = 9, page = 1, type, term, minPrice, maxPrice, bedrooms, baths, operation, area, propertyType, status, sort, favoritos, granInversion } = searchParams;
+  let { pageSize = 9, page = 1, type, term, minPrice, maxPrice, bedrooms, baths, operation, area, propertyType, status, sort, favoritos, granInversion } = searchParams;
+
+  // Semantic interpretation fallback (in case user hits URL directly)
+  if (term && term !== 'Ciudad') {
+    const interpreted = interpretSearchTerm(term);
+    if (interpreted.type && (!type || type === 'Todos')) type = interpreted.type;
+    if (interpreted.operation && (!operation || operation === 'Todos')) operation = interpreted.operation;
+    term = interpreted.term || '';
+  }
 
   const filter = { is_published: { $ne: false } };
 
   if (granInversion !== 'true') {
     if (type && type !== 'Todos') filter.type = type;
   }
-  if (term && term !== 'Ciudad') {
+  
+  if (operation && operation !== 'Todos') {
+    filter.operation = operation.toLowerCase();
+  }
+
+  if (term && term !== 'Ciudad' && term.trim() !== '') {
     const termRegex = new RegExp(term, 'i');
     filter.$or = [
       { name: termRegex },
