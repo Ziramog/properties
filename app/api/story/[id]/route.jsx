@@ -4,6 +4,8 @@ import Property from '@/models/Property';
 import mongoose from 'mongoose';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 async function getPropertyByIdOrSlug(id) {
   if (mongoose.Types.ObjectId.isValid(id)) {
