@@ -23,8 +23,10 @@ const formatPrice = (price) => {
 };
 
 export async function GET(request, { params }) {
+  try {
   await connectDB();
-  const property = await getPropertyByIdOrSlug(params.id);
+  const { id } = await params;
+  const property = await getPropertyByIdOrSlug(id);
 
   if (!property) {
     return new Response('Not found', { status: 404 });
@@ -40,7 +42,7 @@ export async function GET(request, { params }) {
     height: 1920,
   };
 
-  const domain = process.env.NEXT_PUBLIC_DOMAIN || 'https://properties-srs5.vercel.app';
+  const domain = process.env.NEXT_PUBLIC_DOMAIN || 'https://properties.roggeroyroma.com';
   // Usar siempre el isotipo oficial
   const isoLogoUrl = `${domain}/images/ISOTIPO%20R&R-Photoroom.png`;
   const frameUrl = `${domain}/images/story-frame.jpg`;
@@ -334,4 +336,11 @@ export async function GET(request, { params }) {
       ...size,
     }
   );
+  } catch (error) {
+    console.error('Error generating story image:', error);
+    return new Response(JSON.stringify({ error: 'Error generating story image' }), { 
+      status: 500, 
+      headers: { 'Content-Type': 'application/json' } 
+    });
+  }
 }

@@ -12,11 +12,18 @@ export default function StoryShareButton({ property }) {
     setIsSharing(true);
     try {
       const storyUrl = `/api/story/${property._id || property.id}?template=${selectedTemplate}`;
+      const response = await fetch(storyUrl);
       
+      if (!response.ok) {
+        throw new Error(`Error generando imagen: ${response.status}`);
+      }
+      
+      const blob = await response.blob();
+      const fileName = `roggero-roma-${property._id || property.id}-story.png`;
+      
+      // Try native share on mobile
       if (navigator.share && navigator.canShare) {
-        const response = await fetch(storyUrl);
-        const blob = await response.blob();
-        const file = new File([blob], `roggero-roma-${property._id || property.id}-story.png`, { type: 'image/png' });
+        const file = new File([blob], fileName, { type: 'image/png' });
         
         if (navigator.canShare({ files: [file] })) {
           await navigator.share({
@@ -31,14 +38,23 @@ export default function StoryShareButton({ property }) {
         }
       }
       
-      // Fallback for desktop or when share is not supported
-      window.open(storyUrl, '_blank');
-      toast.info('Imagen abierta. Podés guardarla y compartirla.');
+      // Fallback: download file directly
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success('Imagen descargada');
       setIsOpen(false);
       
     } catch (error) {
-      console.error('Error sharing', error);
-      toast.error('Ocurrió un error al intentar compartir');
+      if (error.name !== 'AbortError') {
+        console.error('Error sharing', error);
+        toast.error('Ocurrió un error al generar la imagen. Intentá de nuevo.');
+      }
     }
     setIsSharing(false);
   };
