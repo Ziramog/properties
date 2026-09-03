@@ -2,6 +2,8 @@ import { ImageResponse } from 'next/og';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import mongoose from 'mongoose';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -35,17 +37,31 @@ export async function GET(request, { params }) {
   const { searchParams } = new URL(request.url);
   const template = searchParams.get('template') || '1';
 
-  const imageUrl = property.images?.[0]?.url || 'https://via.placeholder.com/1080x1920?text=Roggero+y+Roma';
+  const imageUrl = property.images?.[0]?.url;
 
   const size = {
     width: 1080,
     height: 1920,
   };
 
-  const domain = process.env.NEXT_PUBLIC_DOMAIN || 'https://properties.roggeroyroma.com';
-  // Usar siempre el isotipo oficial
-  const isoLogoUrl = `${domain}/images/ISOTIPO%20R&R-Photoroom.png`;
-  const frameUrl = `${domain}/images/story-frame.jpg`;
+  // Read static assets from filesystem (avoids Vercel self-referencing HTTP deadlock)
+  let isoLogoUrl;
+  try {
+    const logoData = await readFile(join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-Photoroom.png'));
+    isoLogoUrl = `data:image/png;base64,${logoData.toString('base64')}`;
+  } catch {
+    const domain = process.env.NEXT_PUBLIC_DOMAIN || 'https://properties.roggeroyroma.com';
+    isoLogoUrl = `${domain}/images/ISOTIPO%20R%26R-Photoroom.png`;
+  }
+
+  let frameUrl;
+  try {
+    const frameData = await readFile(join(process.cwd(), 'public', 'images', 'story-frame.jpg'));
+    frameUrl = `data:image/jpeg;base64,${frameData.toString('base64')}`;
+  } catch {
+    const domain = process.env.NEXT_PUBLIC_DOMAIN || 'https://properties.roggeroyroma.com';
+    frameUrl = `${domain}/images/story-frame.jpg`;
+  }
 
   const getAreaDisplay = () => {
     if (property.covered_area) return `${property.covered_area.toLocaleString('es-AR')} m² cub`;
@@ -59,9 +75,10 @@ export async function GET(request, { params }) {
 
   // TEMPLATE 3: COLLAGE DINÁMICO
   if (template === '3') {
-    const mainImg = property.images?.[0]?.url || 'https://via.placeholder.com/1080x1000';
-    const thumb1 = property.images?.[1]?.url || 'https://via.placeholder.com/540x920';
-    const thumb2 = property.images?.[2]?.url || 'https://via.placeholder.com/540x920';
+    const imgs = property.images || [];
+    const mainImg = imgs[0]?.url || imageUrl;
+    const thumb1 = imgs[1]?.url || imgs[0]?.url || imageUrl;
+    const thumb2 = imgs[2]?.url || imgs[1]?.url || imgs[0]?.url || imageUrl;
 
     return new ImageResponse(
       (
@@ -131,7 +148,7 @@ export async function GET(request, { params }) {
 
   // TEMPLATE 2: EDITORIAL (MAGAZINE) WITH AI FRAME
   if (template === '2') {
-    const mainImg = property.images?.[0]?.url || 'https://via.placeholder.com/1080x1080';
+    const mainImg = property.images?.[0]?.url || imageUrl;
 
     return new ImageResponse(
       (
