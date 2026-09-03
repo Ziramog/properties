@@ -37,6 +37,15 @@ async function toDataUrl(url) {
   return `data:${contentType};base64,${base64}`;
 }
 
+// Force ImageResponse to fully render before returning — catches Satori errors in try-catch
+async function renderImage(jsx, options) {
+  const imgResponse = new ImageResponse(jsx, options);
+  const buffer = await imgResponse.arrayBuffer();
+  return new Response(buffer, {
+    headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=3600' },
+  });
+}
+
 export async function GET(request, { params }) {
   try {
   await connectDB();
@@ -82,7 +91,7 @@ export async function GET(request, { params }) {
     const thumb1 = imgs[1]?.url ? await toDataUrl(imgs[1].url) : imageUrl;
     const thumb2 = imgs[2]?.url ? await toDataUrl(imgs[2].url) : thumb1;
 
-    return new ImageResponse(
+    return await renderImage(
       (
         <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', backgroundColor: '#FFFFFF', position: 'relative', fontFamily: 'sans-serif' }}>
           
@@ -152,7 +161,7 @@ export async function GET(request, { params }) {
   if (template === '2') {
     const mainImg = imageUrl;
     const frameUrl = await toDataUrl(`${origin}/images/story-frame.jpg`);
-    return new ImageResponse(
+    return await renderImage(
       (
         <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', fontFamily: 'sans-serif' }}>
           
@@ -247,7 +256,7 @@ export async function GET(request, { params }) {
   }
 
   // TEMPLATE 1: INMERSIVO (FULL-SCREEN)
-  return new ImageResponse(
+  return await renderImage(
     (
       <div
         style={{
