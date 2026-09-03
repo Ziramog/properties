@@ -39,7 +39,7 @@ export default function StoryShareButton({ property }) {
     } catch (error) {
       if (error.name !== 'AbortError') {
         console.error('Error sharing', error);
-        toast.error('Ocurrió un error al generar la imagen. Intentá de nuevo.');
+        toast.error(`Error: ${error.message}`);
       }
     }
     setIsSharing(false);
