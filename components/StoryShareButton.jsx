@@ -24,23 +24,8 @@ export default function StoryShareButton({ property }) {
       const blob = await response.blob();
       const fileName = `roggero-roma-${property._id || property.id}-story.png`;
       
-      // Try native share on mobile
-      if (navigator.share && navigator.canShare) {
-        const file = new File([blob], fileName, { type: 'image/png' });
-        
-        if (navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            files: [file],
-            title: property.name || 'Propiedad en Roggero & Roma',
-            text: '¡Mirá esta propiedad increíble en Roggero & Roma!',
-          });
-          toast.success('Compartido exitosamente');
-          setIsSharing(false);
-          return;
-        }
-      }
-      
-      // Fallback: download file directly
+      // Download file directly
+      // Note: navigator.share is blocked by mobile browsers if called after an async fetch
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
