@@ -22,6 +22,15 @@ const formatPrice = (price) => {
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(rawPrice);
 };
 
+async function toDataUrl(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Failed to fetch image: ${url} (${res.status})`);
+  const contentType = res.headers.get('content-type') || 'image/png';
+  const buffer = await res.arrayBuffer();
+  const base64 = Buffer.from(buffer).toString('base64');
+  return `data:${contentType};base64,${base64}`;
+}
+
 export async function GET(request, { params }) {
   try {
   await connectDB();
@@ -35,18 +44,20 @@ export async function GET(request, { params }) {
   const { searchParams } = new URL(request.url);
   const template = searchParams.get('template') || '1';
 
-  const imageUrl = property.images?.[0]?.url;
-
   const size = {
     width: 1080,
     height: 1920,
   };
 
-  // Derive origin from the incoming request (always correct in any environment)
-  // Static files in public/ are served by Vercel's CDN directly — no serverless deadlock
+  // Derive origin from the incoming request
   const origin = new URL(request.url).origin;
-  const isoLogoUrl = `${origin}/images/ISOTIPO%20R%26R-Photoroom.png`;
-  const frameUrl = `${origin}/images/story-frame.jpg`;
+
+  // Pre-fetch ALL images as data URLs so Satori doesn't need HTTP during streaming
+  // (streaming errors are uncatchable by try-catch)
+  const isoLogoUrl = await toDataUrl(`${origin}/images/ISOTIPO%20R%26R-Photoroom.png`);
+  const imageUrl = property.images?.[0]?.url 
+    ? await toDataUrl(property.images[0].url) 
+    : null;
 
   const getAreaDisplay = () => {
     if (property.covered_area) return `${property.covered_area.toLocaleString('es-AR')} m² cub`;
@@ -55,15 +66,15 @@ export async function GET(request, { params }) {
   };
   const areaLabel = getAreaDisplay();
 
-  const brandColor = '#A47D4C'; // Elegant gold-ish color
+  const brandColor = '#A47D4C';
   const darkColor = '#0F172A';
 
   // TEMPLATE 3: COLLAGE DINÁMICO
   if (template === '3') {
     const imgs = property.images || [];
-    const mainImg = imgs[0]?.url || imageUrl;
-    const thumb1 = imgs[1]?.url || imgs[0]?.url || imageUrl;
-    const thumb2 = imgs[2]?.url || imgs[1]?.url || imgs[0]?.url || imageUrl;
+    const mainImg = imageUrl;
+    const thumb1 = imgs[1]?.url ? await toDataUrl(imgs[1].url) : imageUrl;
+    const thumb2 = imgs[2]?.url ? await toDataUrl(imgs[2].url) : (imgs[1]?.url ? await toDataUrl(imgs[1].url) : imageUrl);
 
     return new ImageResponse(
       (
@@ -133,8 +144,8 @@ export async function GET(request, { params }) {
 
   // TEMPLATE 2: EDITORIAL (MAGAZINE) WITH AI FRAME
   if (template === '2') {
-    const mainImg = property.images?.[0]?.url || imageUrl;
-
+    const mainImg = imageUrl;
+    const frameUrl = await toDataUrl(`${origin}/images/story-frame.jpg`);
     return new ImageResponse(
       (
         <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', fontFamily: 'sans-serif' }}>
