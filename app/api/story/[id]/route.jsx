@@ -21,10 +21,16 @@ const formatPrice = (price) => {
   if (!rawPrice) return 'Consultar';
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(rawPrice);
 };
+// Optimize Cloudinary URLs: resize to max width and reduce quality for Satori rendering
+function optimizeImageUrl(url, width = 1080) {
+  if (!url || !url.includes('cloudinary.com')) return url;
+  return url.replace('/upload/', `/upload/w_${width},q_70,f_jpg/`);
+}
 
 async function toDataUrl(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to fetch image: ${url} (${res.status})`);
+  const optimized = optimizeImageUrl(url);
+  const res = await fetch(optimized);
+  if (!res.ok) throw new Error(`Failed to fetch image: ${optimized} (${res.status})`);
   const contentType = res.headers.get('content-type') || 'image/png';
   const buffer = await res.arrayBuffer();
   const base64 = Buffer.from(buffer).toString('base64');
@@ -74,7 +80,7 @@ export async function GET(request, { params }) {
     const imgs = property.images || [];
     const mainImg = imageUrl;
     const thumb1 = imgs[1]?.url ? await toDataUrl(imgs[1].url) : imageUrl;
-    const thumb2 = imgs[2]?.url ? await toDataUrl(imgs[2].url) : (imgs[1]?.url ? await toDataUrl(imgs[1].url) : imageUrl);
+    const thumb2 = imgs[2]?.url ? await toDataUrl(imgs[2].url) : thumb1;
 
     return new ImageResponse(
       (
