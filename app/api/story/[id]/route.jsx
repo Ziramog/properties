@@ -2,6 +2,8 @@ import { ImageResponse } from 'next/og';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import mongoose from 'mongoose';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -64,12 +66,9 @@ export async function GET(request, { params }) {
     height: 1920,
   };
 
-  // Derive origin from the incoming request
-  const origin = new URL(request.url).origin;
-
-  // Pre-fetch ALL images as data URLs so Satori doesn't need HTTP during streaming
-  // (streaming errors are uncatchable by try-catch)
-  const isoLogoUrl = await toDataUrl(`${origin}/images/ISOTIPO%20R%26R-Photoroom.png`);
+  // Read static files directly from filesystem to prevent Vercel self-request deadlocks
+  const logoBuffer = readFileSync(join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-Photoroom.png'));
+  const isoLogoUrl = `data:image/png;base64,${logoBuffer.toString('base64')}`;
   const imageUrl = property.images?.[0]?.url 
     ? await toDataUrl(property.images[0].url) 
     : null;
@@ -160,7 +159,8 @@ export async function GET(request, { params }) {
   // TEMPLATE 2: EDITORIAL (MAGAZINE) WITH AI FRAME
   if (template === '2') {
     const mainImg = imageUrl;
-    const frameUrl = await toDataUrl(`${origin}/images/story-frame.jpg`);
+    const frameBuffer = readFileSync(join(process.cwd(), 'public', 'images', 'story-frame.jpg'));
+    const frameUrl = `data:image/jpeg;base64,${frameBuffer.toString('base64')}`;
     return await renderImage(
       (
         <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', fontFamily: 'sans-serif' }}>
