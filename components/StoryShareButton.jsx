@@ -15,7 +15,12 @@ export default function StoryShareButton({ property }) {
       const response = await fetch(storyUrl);
       
       if (!response.ok) {
-        throw new Error(`Error generando imagen: ${response.status}`);
+        let errMsg = `Error generando imagen: ${response.status}`;
+        try {
+          const errData = await response.json();
+          errMsg = errData.message || errMsg;
+        } catch {}
+        throw new Error(errMsg);
       }
       
       const blob = await response.blob();

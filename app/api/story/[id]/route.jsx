@@ -2,8 +2,6 @@ import { ImageResponse } from 'next/og';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import mongoose from 'mongoose';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -44,24 +42,11 @@ export async function GET(request, { params }) {
     height: 1920,
   };
 
-  // Read static assets from filesystem (avoids Vercel self-referencing HTTP deadlock)
-  let isoLogoUrl;
-  try {
-    const logoData = await readFile(join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-Photoroom.png'));
-    isoLogoUrl = `data:image/png;base64,${logoData.toString('base64')}`;
-  } catch {
-    const domain = process.env.NEXT_PUBLIC_DOMAIN || 'https://properties.roggeroyroma.com';
-    isoLogoUrl = `${domain}/images/ISOTIPO%20R%26R-Photoroom.png`;
-  }
-
-  let frameUrl;
-  try {
-    const frameData = await readFile(join(process.cwd(), 'public', 'images', 'story-frame.jpg'));
-    frameUrl = `data:image/jpeg;base64,${frameData.toString('base64')}`;
-  } catch {
-    const domain = process.env.NEXT_PUBLIC_DOMAIN || 'https://properties.roggeroyroma.com';
-    frameUrl = `${domain}/images/story-frame.jpg`;
-  }
+  // Derive origin from the incoming request (always correct in any environment)
+  // Static files in public/ are served by Vercel's CDN directly — no serverless deadlock
+  const origin = new URL(request.url).origin;
+  const isoLogoUrl = `${origin}/images/ISOTIPO%20R%26R-Photoroom.png`;
+  const frameUrl = `${origin}/images/story-frame.jpg`;
 
   const getAreaDisplay = () => {
     if (property.covered_area) return `${property.covered_area.toLocaleString('es-AR')} m² cub`;
@@ -152,7 +137,7 @@ export async function GET(request, { params }) {
 
     return new ImageResponse(
       (
-        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', fontFamily: 'serif' }}>
+        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', fontFamily: 'sans-serif' }}>
           
           {/* AI Generated Frame Background */}
           <img src={frameUrl} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }} />
@@ -355,7 +340,11 @@ export async function GET(request, { params }) {
   );
   } catch (error) {
     console.error('Error generating story image:', error);
-    return new Response(JSON.stringify({ error: 'Error generating story image' }), { 
+    return new Response(JSON.stringify({ 
+      error: 'Error generating story image', 
+      message: error.message,
+      stack: error.stack?.split('\n').slice(0, 5).join('\n')
+    }), { 
       status: 500, 
       headers: { 'Content-Type': 'application/json' } 
     });
