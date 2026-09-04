@@ -110,9 +110,11 @@ const PropertyDetails = ({ property }) => {
                 <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6 mt-auto">
                   <span className="text-[16px] uppercase text-[#999] block text-center mb-4">Compartir</span>
                   <ShareButtons property={property} />
-                  <div className="mt-6">
-                    <StoryShareButton property={property} />
-                  </div>
+                  {session?.user?.role === 'admin' && (
+                    <div className="mt-6">
+                      <StoryShareButton property={property} />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -129,9 +131,11 @@ const PropertyDetails = ({ property }) => {
                 <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6 mt-auto">
                   <span className="text-[16px] uppercase text-[#999] block text-center mb-4">Compartir</span>
                   <ShareButtons property={property} />
-                  <div className="mt-6">
-                    <StoryShareButton property={property} />
-                  </div>
+                  {session?.user?.role === 'admin' && (
+                    <div className="mt-6">
+                      <StoryShareButton property={property} />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

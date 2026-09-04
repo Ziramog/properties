@@ -120,7 +120,7 @@ export async function GET(request, { params }) {
 
         {/* Top Isotipo Center */}
         <div style={{ position: 'absolute', top: 80, left: 0, width: '100%', display: 'flex', justifyContent: 'center', zIndex: 20 }}>
-          <img src={isoLogoUrl} width={160} height={160} style={{ objectFit: 'contain', filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.5))' }} />
+          <img src={isoLogoUrl} width={320} height={320} style={{ objectFit: 'contain', filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.5))' }} />
         </div>
 
         {/* Content - Bottom Aligned */}
