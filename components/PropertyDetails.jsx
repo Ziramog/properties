@@ -144,52 +144,21 @@ const PropertyDetails = ({ property }) => {
 
         {/* Right: Sidebar — 30% */}
         <div className="w-full md:w-[30%] flex flex-col gap-[20px]">
-          {/* Additional Info */}
-          {(property.square_feet || property.operation || coveredArea || property.garage != null || property.titles_status) && (
+          {/* Servicios */}
+          {property.amenities && property.amenities.length > 0 && (
             <div className="bg-white rounded-none overflow-hidden">
               <div className="px-4 md:px-[50px] pt-[40px] pb-[40px]">
                 <div>
-                  <SectionTitle>Información Adicional</SectionTitle>
+                  <SectionTitle>Servicios</SectionTitle>
                 </div>
                 <ScrollReveal>
-                  <ul>
-                  {coveredArea && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
-                      <span className="text-[14px] text-[#888]">Sup. Cubierta</span>
-                      <span className="text-[14px] font-normal text-[#0F172A]">{coveredArea.toLocaleString('es-AR')} m²</span>
-                    </li>
-                  )}
-                  {property.square_feet && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
-                      <span className="text-[14px] text-[#888]">Sup. Terreno</span>
-                      <span className="text-[14px] font-normal text-[#0F172A]">{property.square_feet.toLocaleString('es-AR')} m²</span>
-                    </li>
-                  )}
-                  {property.garage != null && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
-                      <span className="text-[14px] text-[#888]">Cochera</span>
-                      <span className="text-[14px] font-normal text-[#0F172A]">{property.garage} {property.garage === 1 ? 'lugar' : 'lugares'}</span>
-                    </li>
-                  )}
-                  {property.operation && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
-                      <span className="text-[14px] text-[#888]">Operación</span>
-                      <span className="text-[14px] font-normal text-[#0F172A]">{operationLabel}</span>
-                    </li>
-                  )}
-                  {property.titles_status && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
-                      <span className="text-[14px] text-[#888]">Estado de Títulos</span>
-                      <span className="text-[14px] font-normal text-[#0F172A] text-right">{property.titles_status}</span>
-                    </li>
-                  )}
-                  {property.amenities && property.amenities.length > 0 && (
-                    <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
-                      <span className="text-[14px] text-[#888]">Comodidades</span>
-                      <span className="text-[14px] font-normal text-[#0F172A] text-right">{property.amenities.join(', ')}</span>
-                    </li>
-                  )}
-                  </ul>
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {property.amenities.map((amenity) => (
+                      <div key={amenity} className="px-4 py-2 rounded-md border border-[#e2e8f0] text-[14px] bg-[#f8fafc] text-[#334155] font-medium">
+                        {amenity}
+                      </div>
+                    ))}
+                  </div>
                 </ScrollReveal>
               </div>
             </div>
