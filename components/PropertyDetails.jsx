@@ -152,13 +152,14 @@ const PropertyDetails = ({ property }) => {
                   <SectionTitle>Servicios</SectionTitle>
                 </div>
                 <ScrollReveal>
-                  <div className="flex flex-wrap gap-2 mt-4">
+                  <ul>
                     {property.amenities.map((amenity) => (
-                      <div key={amenity} className="px-4 py-2 rounded-md border border-[#e2e8f0] text-[14px] bg-[#f8fafc] text-[#334155] font-medium">
-                        {amenity}
-                      </div>
+                      <li key={amenity} className="flex items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[15px] rounded-none odd:bg-[#f6f6f6]">
+                        <CheckIcon className="w-[18px] h-[18px] text-[var(--color-brand)]" />
+                        <span className="text-[14px] font-normal text-[#0F172A]">{amenity}</span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </ScrollReveal>
               </div>
             </div>
