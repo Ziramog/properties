@@ -161,7 +161,7 @@ const PropertyDetails = ({ property }) => {
                   )}
                   {property.square_feet && (
                     <li className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
-                      <span className="text-[14px] text-[#888]">Sup. Total</span>
+                      <span className="text-[14px] text-[#888]">Sup. Terreno</span>
                       <span className="text-[14px] font-normal text-[#0F172A]">{property.square_feet.toLocaleString('es-AR')} m²</span>
                     </li>
                   )}

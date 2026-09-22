@@ -350,7 +350,7 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
           <input type='number' id='baths' name='baths' className={inputClass} defaultValue={property.baths} />
         </div>
         <div className='flex-1 min-w-[30%]'>
-          <label className={labelClass}>Sup. Total (m²)</label>
+          <label className={labelClass}>Sup. Terreno (m²)</label>
           <input type='number' id='square_feet' name='square_feet' className={inputClass} defaultValue={property.square_feet} />
         </div>
         {!isLandOrCommercial && (

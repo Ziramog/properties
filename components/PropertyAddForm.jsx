@@ -288,7 +288,7 @@ const PropertyAddForm = ({ customLabels = [] }) => {
           <input type='number' id='baths' name='baths' className={inputClass} required={!isLandOrCommercial} />
         </div>
         <div className='flex-1 min-w-[30%]'>
-          <label htmlFor='square_feet' className={labelClass}>Sup. Total (m²)</label>
+          <label htmlFor='square_feet' className={labelClass}>Sup. Terreno (m²)</label>
           <input type='number' id='square_feet' name='square_feet' className={inputClass} required />
         </div>
         {!isLandOrCommercial && (
