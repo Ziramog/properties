@@ -150,7 +150,7 @@ const PropertyDetails = ({ property }) => {
             <div className="bg-white rounded-none overflow-hidden">
               <div className="px-4 md:px-[50px] pt-[40px] pb-[40px]">
                 <div>
-                  <SectionTitle>Servicios</SectionTitle>
+                  <SectionTitle>Servicios Destacados</SectionTitle>
                 </div>
                 <ScrollReveal>
                   <ul>
