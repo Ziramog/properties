@@ -168,14 +168,16 @@ const PropertyGallery = ({ images = [], property }) => {
                     {baths}
                   </span>
                 )}
-                {displayArea && (
-                  <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-normal text-[16px] md:text-[22px]">
-                    {isLand ? (
-                      <LandPlot className="w-5 h-5 md:w-[30px] md:h-[25px] text-white" strokeWidth={1.5} />
-                    ) : (
-                      <img src="/senada/images/icons/ico_sqfoot.svg" alt="" className="w-5 h-5 md:w-[30px] md:h-[25px]" />
-                    )}
-                    {displayArea}
+                {property?.square_feet && (
+                  <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-normal text-[16px] md:text-[22px]" title="Sup. Terreno">
+                    <LandPlot className="w-5 h-5 md:w-[30px] md:h-[25px] text-white" strokeWidth={1.5} />
+                    {property.square_feet >= 10000 ? `${(property.square_feet / 10000).toFixed((property.square_feet / 10000) % 1 === 0 ? 0 : 1)} has` : `${property.square_feet.toLocaleString('es-AR')} m²`}
+                  </span>
+                )}
+                {property?.covered_area && (
+                  <span className="flex items-center gap-[6px] md:gap-[10px] text-white font-normal text-[16px] md:text-[22px]" title="Sup. Cubierta">
+                    <img src="/senada/images/icons/ico_sqfoot.svg" alt="Sup. Cubierta" className="w-5 h-5 md:w-[30px] md:h-[25px]" />
+                    {property.covered_area.toLocaleString('es-AR')} m²
                   </span>
                 )}
               </div>

@@ -48,7 +48,8 @@ const PropertyDetails = ({ property }) => {
 
   const featureItems = [
     { label: 'Precio', value: numericPrice ? `U$D ${numericPrice.toLocaleString('es-AR')}` : 'Consultar' },
-    { label: 'Superficie', value: getAreaDisplay(property) },
+    { label: 'Sup. Terreno', value: property.square_feet ? (property.square_feet >= 10000 ? `${(property.square_feet / 10000).toFixed((property.square_feet / 10000) % 1 === 0 ? 0 : 1)} has` : `${property.square_feet.toLocaleString('es-AR')} m²`) : null },
+    { label: 'Sup. Cubierta', value: property.covered_area ? `${property.covered_area.toLocaleString('es-AR')} m²` : null },
     { label: 'Dormitorios', value: property.beds },
     { label: 'Baños', value: property.baths },
     { label: 'Cochera', value: property.garage != null ? property.garage : null },
