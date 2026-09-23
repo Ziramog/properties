@@ -340,21 +340,21 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
       </div>
 
       {/* Características */}
-      <div className='mb-4 flex flex-wrap gap-3'>
-        <div className='flex-1 min-w-[30%]'>
+      <div className='mb-4 grid grid-cols-2 gap-3'>
+        <div>
           <label className={labelClass}>Dormitorios</label>
           <input type='number' id='beds' name='beds' className={inputClass} defaultValue={property.beds} />
         </div>
-        <div className='flex-1 min-w-[30%]'>
+        <div>
           <label className={labelClass}>Baños</label>
           <input type='number' id='baths' name='baths' className={inputClass} defaultValue={property.baths} />
         </div>
-        <div className='flex-1 min-w-[30%]'>
+        <div>
           <label className={labelClass}>Sup. Terreno (m²)</label>
           <input type='number' id='square_feet' name='square_feet' className={inputClass} defaultValue={property.square_feet} />
         </div>
         {!isLandOrCommercial && (
-          <div className='flex-1 min-w-[30%]'>
+          <div>
             <label className={labelClass}>Sup. Cubierta (m²)</label>
             <input type='number' id='covered_area' name='covered_area' className={inputClass} defaultValue={property.covered_area} />
           </div>
