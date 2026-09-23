@@ -155,9 +155,9 @@ const PropertyDetails = ({ property }) => {
                 <ScrollReveal>
                   <ul>
                     {property.amenities.map((amenity) => (
-                      <li key={amenity} className="flex items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[15px] rounded-none odd:bg-[#f6f6f6]">
-                        <CheckIcon className="w-[18px] h-[18px] text-[var(--color-brand)]" />
+                      <li key={amenity} className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
                         <span className="text-[14px] font-normal text-[#0F172A]">{amenity}</span>
+                        <CheckIcon className="w-[18px] h-[18px] text-black" />
                       </li>
                     ))}
                   </ul>
