@@ -142,7 +142,7 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
               Sobre Nosotros
             </Link>
 
-            {session && (
+            {session && (session.user?.role === 'admin' || session.user?.role === 'superadmin') && (
               <Link href="/admin" className="text-white hover:text-[var(--color-brand)] transition-colors text-[15px] font-normal tracking-[0.02em] uppercase">
                 Panel de Control
               </Link>
@@ -291,7 +291,7 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
             </div>
 
             {/* PANEL DE CONTROL */}
-            {session && (
+            {session && (session.user?.role === 'admin' || session.user?.role === 'superadmin') && (
               <div className={`border-b border-white/[.08] ${isMobileMenuOpen ? 'mobile-item' : ''}`} style={{ animationDelay: '0.6s' }}>
                 <Link href="/admin" className="block text-white text-[22px] py-[15px] hover:text-[var(--color-brand)] transition-colors" style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400 }} onClick={() => setIsMobileMenuOpen(false)}>
                   Panel de control
