@@ -40,11 +40,12 @@ async function addProperty(prevState, formData) {
     }
 
     // Create the propertyData object with embedded seller_info
+    const rawPrice = formData.get('price');
     const propertyData = {
       type: formData.get('type'),
       name: formData.get('name'),
       description: formData.get('description'),
-      price: formData.get('operation') === 'alquiler' || formData.get('price') === 'Consultar' || !formData.get('price') ? 'Consultar' : `${formData.get('price_currency') || 'USD'} ${formData.get('price')}`,
+      price: rawPrice === 'Consultar' || !rawPrice ? 'Consultar' : `${formData.get('price_currency') || 'USD'} ${rawPrice}`,
       location: {
         street: formData.get('location.street'),
         city: formData.get('location.city'),

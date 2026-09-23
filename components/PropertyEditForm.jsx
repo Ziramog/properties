@@ -363,23 +363,17 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
 
       {/* Precio */}
       <div className='mb-6'>
-        <label className={labelClass}>Precio de Venta</label>
+        <label className={labelClass}>Precio</label>
         <div className='flex gap-2 items-start'>
-          <select name='price_currency' className={`${inputClass} !w-[110px] flex-shrink-0`} disabled={operation === 'alquiler'} defaultValue={(() => { const p = property.price || ''; if (p.startsWith('$')) return '$'; if (p.startsWith('ARS')) return 'ARS'; return 'USD'; })()}>
+          <select name='price_currency' className={`${inputClass} !w-[110px] flex-shrink-0`} defaultValue={(() => { const p = property.price || ''; if (p.startsWith('$')) return '$'; if (p.startsWith('ARS')) return 'ARS'; return 'USD'; })()}>
             <option value='USD'>U$D</option>
             <option value='$'>$</option>
             <option value='ARS'>ARS</option>
           </select>
           <div className='flex-1'>
-            {operation === 'alquiler' ? (
-              <input type='text' name='price' className={`${inputClass} bg-[#222] text-gray-500`} value='Consultar' readOnly />
-            ) : (
-              <input type='text' name='price' className={inputClass} placeholder='Ej: 502,000' defaultValue={String(property.price || '').replace(/^[A-Z$]+\s*/i, '')} />
-            )}
+            <input type='text' name='price' className={inputClass} placeholder='Ej: 502,000' defaultValue={String(property.price || '').replace(/^[A-Z$]+\s*/i, '')} />
             <p className={helperClass}>
-              {operation === 'alquiler' 
-                ? 'Para alquileres, el precio se fija en "Consultar".' 
-                : 'Ej: 502000 — Escribí solo números. Usá coma para miles. Escribí "Consultar" si no querés publicar el precio.'}
+              Ej: 502000 — Escribí solo números. Usá coma para miles. Escribí "Consultar" si no querés publicar el precio.
             </p>
           </div>
         </div>
@@ -432,6 +426,7 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
               ['Estacionamiento', 'Estacionamiento'],
               ['Ascensor', 'Ascensor'],
               ['Balcón/Patio', 'Balcón / Patio'],
+              ['Oficina / Privado', 'Oficina / Privado'],
               ['Hidromasaje', 'Hidromasaje'],
               ['Acceso Discapacitados', 'Acceso Discapacitados'],
             ].map(([val, label]) => (

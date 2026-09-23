@@ -123,7 +123,7 @@ const PropertyAddForm = ({ customLabels = [] }) => {
 
   const [operation, setOperation] = useState('venta');
   const [type, setType] = useState('');
-  const isLandOrCommercial = ['Terreno', 'Campo', 'Gran Inversión', 'Inmueble Comercial'].includes(type);
+  const isLandOrCommercial = ['Terreno', 'Campo', 'Gran Inversión'].includes(type);
   const [isGenerating, setIsGenerating] = useState(false);
   const formRef = useRef(null);
   const [description, setDescription] = useState('');
@@ -301,23 +301,17 @@ const PropertyAddForm = ({ customLabels = [] }) => {
 
       {/* Precio */}
       <div className='mb-6'>
-        <label className={labelClass}>Precio de Venta</label>
+        <label className={labelClass}>Precio</label>
         <div className='flex gap-2 items-start'>
-          <select name='price_currency' className={`${inputClass} !w-[110px] flex-shrink-0`} disabled={operation === 'alquiler'}>
+          <select name='price_currency' className={`${inputClass} !w-[110px] flex-shrink-0`}>
             <option value='USD'>U$D</option>
             <option value='$'>$</option>
             <option value='ARS'>ARS</option>
           </select>
           <div className='flex-1'>
-            {operation === 'alquiler' ? (
-              <input type='text' name='price' className={`${inputClass} bg-[#222] text-gray-500`} value='Consultar' readOnly />
-            ) : (
-              <input type='text' name='price' className={inputClass} placeholder='Ej: 502000' />
-            )}
+            <input type='text' name='price' className={inputClass} placeholder='Ej: 502000' />
             <p className={helperClass}>
-              {operation === 'alquiler' 
-                ? 'Para alquileres, el precio se fija en "Consultar".' 
-                : 'Ej: 502000 — Escribí solo números. Usá coma para miles. Escribí "Consultar" si no querés publicar el precio.'}
+              Ej: 502000 — Escribí solo números. Usá coma para miles. Escribí "Consultar" si no querés publicar el precio.
             </p>
           </div>
         </div>
@@ -370,6 +364,7 @@ const PropertyAddForm = ({ customLabels = [] }) => {
               ['Estacionamiento', 'Estacionamiento'],
               ['Ascensor', 'Ascensor'],
               ['Balcón/Patio', 'Balcón / Patio'],
+              ['Oficina / Privado', 'Oficina / Privado'],
               ['Hidromasaje', 'Hidromasaje'],
               ['Acceso Discapacitados', 'Acceso Discapacitados'],
             ].map(([val, label]) => (
