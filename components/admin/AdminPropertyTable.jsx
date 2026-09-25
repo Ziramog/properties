@@ -239,7 +239,7 @@ const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = 
                 </td>
                 <td className="px-2 md:px-4 py-3 text-center">
                   <button onClick={() => handleToggleFeatured(prop._id)}
-                    className={`text-lg transition-colors ${prop.is_featured ? 'text-[var(--color-brand)]' : 'text-[#444] hover:text-[var(--color-brand)]'}`}
+                    className={`text-lg transition-colors ${prop.is_featured ? 'text-[var(--color-brand)]' : 'text-[#444] md:hover:text-[var(--color-brand)]'}`}
                     title={prop.is_featured ? 'Quitar destacada' : 'Marcar destacada'}
                   >★</button>
                 </td>
@@ -334,7 +334,7 @@ const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = 
             <div className="flex items-center justify-between pt-2 border-t border-[#222]">
               <div className="flex items-center gap-4">
                 <button onClick={() => handleToggleFeatured(prop._id)}
-                  className={`text-lg transition-colors ${prop.is_featured ? 'text-[var(--color-brand)]' : 'text-[#444] hover:text-[var(--color-brand)]'}`}
+                  className={`text-lg transition-colors ${prop.is_featured ? 'text-[var(--color-brand)]' : 'text-[#444] md:hover:text-[var(--color-brand)]'}`}
                   title={prop.is_featured ? 'Quitar destacada' : 'Marcar destacada'}
                 >★</button>
                 <button onClick={() => handleTogglePublished(prop._id)}
