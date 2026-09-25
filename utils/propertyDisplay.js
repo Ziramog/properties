@@ -31,16 +31,28 @@ export function getAreaDisplay(property) {
  * Return a formatted price string.
  */
 export function getPriceDisplay(property) {
-  if (property.price) {
-    // Handle both string ('USD 320,000') and number prices
+  if (property.price && property.price !== 'Consultar') {
+    let currencyStr = 'U$D';
+    if (typeof property.price === 'string') {
+      const match = property.price.trim().match(/^([A-Z$]+)\s*(.*)$/i);
+      if (match && match[1]) {
+        currencyStr = match[1].toUpperCase() === 'USD' ? 'U$D' : match[1];
+      }
+    }
+
     let num = typeof property.price === 'number'
       ? property.price
-      : parseFloat(property.price.replace(/[^0-9.]/g, ''));
-    if (!isNaN(num) && num >= 1000) {
-      const k = num / 1000;
-      return `U$D ${k % 1 === 0 ? k : k.toFixed(k < 10 ? 2 : 1)}k`;
+      : parseFloat(String(property.price).replace(/[^0-9.]/g, ''));
+      
+    if (!isNaN(num)) {
+      if (num >= 1000 && currencyStr === 'U$D') {
+        const k = num / 1000;
+        return `${currencyStr} ${k % 1 === 0 ? k : k.toFixed(k < 10 ? 2 : 1)}k`;
+      }
+      return `${currencyStr} ${num.toLocaleString('es-AR')}`;
     }
-    if (!isNaN(num)) return `U$D ${num.toLocaleString('es-AR')}`;
+    
+    if (typeof property.price === 'string') return property.price;
   }
   if (property.rates?.monthly) return `U$D ${property.rates.monthly.toLocaleString()}/mes`;
   if (property.rates?.weekly) return `U$D ${property.rates.weekly.toLocaleString()}/sem`;
