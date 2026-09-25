@@ -82,7 +82,7 @@ export function getStatusBadge(property) {
     }
   }
 
-  return STATUS_BADGE_MAP[property.status] || null;
+  return STATUS_BADGE_MAP[property.status] || { label: property.status, color: 'bg-[var(--color-brand)]' };
 }
 
 /**
