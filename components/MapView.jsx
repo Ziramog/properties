@@ -4,6 +4,7 @@ import Map, { Marker, Popup, useMap } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { getPropertyImage } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
+import { parsePrice } from '@/utils/priceUtils';
 
 // ── Known city coordinates (geocoding fallback) ──
 const knownCities = {
@@ -81,12 +82,13 @@ function MapViewControls({ mapRef, geocodedProps }) {
 function formatPrice(property) {
   const priceStr = property.price;
   if (!priceStr) return '?';
-  const cleaned = priceStr.replace(/[^0-9]/g, '');
-  const num = parseInt(cleaned, 10);
-  if (isNaN(num)) return '?';
-  if (num >= 1000000) return `USD $${(num / 1000000).toFixed(1)}M`;
-  if (num >= 1000) return `USD ${Math.round(num / 1000)}k`;
-  return `USD $${num}`;
+  const { currency, numericPrice } = parsePrice(priceStr);
+  if (!numericPrice) return '?';
+  const prefix = currency === 'USD' ? 'USD $' : 'ARS $';
+  
+  if (numericPrice >= 1000000) return `${prefix}${(numericPrice / 1000000).toFixed(1)}M`;
+  if (numericPrice >= 1000) return `${prefix}${Math.round(numericPrice / 1000)}k`;
+  return `${prefix}${numericPrice}`;
 }
 
 import MapProvider from '@/components/shared/MapProvider';

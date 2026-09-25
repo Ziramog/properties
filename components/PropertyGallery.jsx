@@ -4,6 +4,7 @@ import { Gallery, Item } from 'react-photoswipe-gallery';
 import { LayoutGrid, LandPlot } from 'lucide-react';
 import { getAreaDisplay } from '@/utils/propertyDisplay';
 import { trackWhatsappClick, trackMapClick } from '@/utils/analytics';
+import { parsePrice, formatPriceDisplay } from '@/utils/priceUtils';
 
 const PropertyGallery = ({ images = [], property }) => {
   if (images.length === 0) return null;
@@ -13,7 +14,8 @@ const PropertyGallery = ({ images = [], property }) => {
   const displayArea = getAreaDisplay(property);
   const isLand = ['Terreno', 'Campo', 'Gran Inversión'].includes(property?.type);
   const rawPrice = property?.price;
-  const numericPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.-]/g, '')) : null;
+  const { currency: priceCurrency, numericPrice } = parsePrice(rawPrice);
+  const displayPrice = formatPriceDisplay(rawPrice);
 
   const operationLabel =
     property?.operation === 'venta' ? 'Venta' :
@@ -204,11 +206,9 @@ const PropertyGallery = ({ images = [], property }) => {
                 <h2 className="text-[28px] md:text-[40px] text-white font-normal mb-[20px]"
                     style={{ fontFamily: 'var(--font-heading)' }}
                     itemProp="offers" itemScope itemType="https://schema.org/Offer">
-                  <meta itemProp="priceCurrency" content="USD" />
-                  <span itemProp="price" content={numericPrice}>
-                    {numericPrice
-                      ? `U$D ${numericPrice.toLocaleString('es-AR')}`
-                      : 'Consultar'}
+                  <meta itemProp="priceCurrency" content={priceCurrency} />
+                  <span itemProp="price" content={numericPrice || 0}>
+                    {displayPrice}
                   </span>
                 </h2>
 

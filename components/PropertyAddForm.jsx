@@ -305,7 +305,6 @@ const PropertyAddForm = ({ customLabels = [] }) => {
         <div className='flex gap-2 items-start'>
           <select name='price_currency' className={`${inputClass} !w-[110px] flex-shrink-0`}>
             <option value='USD'>U$D</option>
-            <option value='$'>$</option>
             <option value='ARS'>ARS</option>
           </select>
           <div className='flex-1'>

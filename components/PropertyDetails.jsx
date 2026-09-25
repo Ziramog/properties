@@ -8,6 +8,7 @@ import StoryShareButton from './StoryShareButton';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import SectionTitle from '@/components/shared/SectionTitle';
 import { getAreaDisplay } from '@/utils/propertyDisplay';
+import { formatPriceDisplay } from '@/utils/priceUtils';
 
 const ReadMoreText = ({ text, maxChars = 400 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -44,10 +45,10 @@ const PropertyDetails = ({ property }) => {
     property.operation === 'compra' ? 'Compra' : '';
 
   const rawPrice = property.price;
-  const numericPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.-]/g, '')) : null;
+  const displayPrice = formatPriceDisplay(rawPrice);
 
   const featureItems = [
-    { label: 'Precio', value: numericPrice ? `U$D ${numericPrice.toLocaleString('es-AR')}` : 'Consultar' },
+    { label: 'Precio', value: displayPrice },
     { label: 'Sup. Terreno', value: property.square_feet ? (property.square_feet >= 10000 ? `${(property.square_feet / 10000).toFixed((property.square_feet / 10000) % 1 === 0 ? 0 : 1)} has` : `${property.square_feet.toLocaleString('es-AR')} m²`) : null },
     { label: 'Sup. Cubierta', value: property.covered_area ? `${property.covered_area.toLocaleString('es-AR')} m²` : null },
     { label: 'Dormitorios', value: property.beds },
