@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import deleteProperty from '@/app/actions/deleteProperty';
@@ -17,6 +17,11 @@ const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = 
   const [filterGranInversion, setFilterGranInversion] = useState(defaultGranInversion ? 'yes' : '');
   const [filterPublished, setFilterPublished] = useState(defaultPublished);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  // Sync state with props when data is refreshed from server
+  useEffect(() => {
+    setItems(properties);
+  }, [properties]);
 
   const filtered = useMemo(() => {
     let result = items;
@@ -56,7 +61,7 @@ const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = 
     });
     const data = await res.json();
     if (data.success) {
-      setItems(prev => prev.map(p => p._id === id ? { ...p, is_featured: !p.is_featured } : p));
+      setItems(prev => prev.map(p => p._id === id ? { ...p, is_featured: data.is_featured } : p));
       toast.success(data.is_featured ? 'Destacada' : 'No destacada');
       router.refresh();
     }
