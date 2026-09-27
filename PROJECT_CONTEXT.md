@@ -51,3 +51,8 @@
    - Luego, se envían directamente desde el navegador a **Cloudinary** usando un _upload preset unsigned_.
    - Las _Server Actions_ (`addProperty`, `updateProperty`) solo reciben las URLs finales, evadiendo por completo la carga binaria en Vercel.
    - Volver a activar la optimización de Next.js o permitir la subida binaria al servidor podría disparar los límites y el consumo de CPU en Vercel (implementado originalmente en el commit `b24637f`). Queda estrictamente prohibido revertir este pipeline sin análisis previo.
+4. **Almacenamiento de Despliegues en Vercel (Deployment Storage):** 
+   - Vercel almacena para cada commit/deploy el código fuente, los artefactos estáticos (`public/`) y los bundles de funciones Serverless.
+   - En septiembre 2026 se detectó un consumo acumulado de 18 GB en 23 despliegues debido a videos pesados no utilizados (~251 MB) e imágenes en `public/images/`.
+   - Se purgaron 21 deploys obsoletos en Vercel CLI y se removieron de Git los archivos en desuso, reduciendo `public/` de 306 MB a 57 MB.
+   - **Regla estricta:** No subir archivos de video o medios pesados a la carpeta `public/`. Los videos o assets de gran tamaño deben alojarse externamente (Cloudinary / CDN) o comprimirse rigurosamente para evitar inflar el tamaño de los snapshots de deployment.
