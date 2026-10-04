@@ -7,6 +7,7 @@ import { Suspense } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { Cormorant_Garamond } from 'next/font/google';
 import localFont from 'next/font/local';
+import Script from 'next/script';
 import 'react-toastify/dist/ReactToastify.css';
 import '@/assets/styles/globals.css';
 import 'photoswipe/dist/photoswipe.css';
@@ -105,6 +106,7 @@ const MainLayout = async ({ children }) => {
             <Suspense fallback={null}>
               <GoogleAnalytics analyticsId={siteConfig.analyticsId} facebookPixelId={siteConfig.facebookPixelId} />
             </Suspense>
+            <Script src="https://news.google.com/swg/js/v1/publisher.js" strategy="lazyOnload" />
           </body>
         </html>
       </GlobalProvider>
