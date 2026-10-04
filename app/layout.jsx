@@ -42,7 +42,7 @@ const cormorantGaramond = Cormorant_Garamond({
 });
 
 export const metadata = {
-  metadataBase: new URL('https://properties-srs5.vercel.app'),
+  metadataBase: new URL('https://roggeroyroma.com'),
   title: {
     template: '%s · Roggero & Roma',
     default: 'Roggero & Roma | Negocios Inmobiliarios en Alta Gracia, Córdoba',
