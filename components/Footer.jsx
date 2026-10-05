@@ -233,22 +233,19 @@ const Footer = ({
                 </a>
               </li>
             </ul>
-            <div className="flex items-center gap-6">
-              <div google-add-preferred-source-btn="true" data-theme="dark"></div>
-              <p className="text-white/50 text-[14px] uppercase font-bold">
-                Powered by{' '}
-                <a href="https://www.wolfim.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-white transition-colors">
-                  <Image
-                    src="/images/wolfim studio white-Photoroom.png"
-                    alt="Wolfim Studio"
-                    width={80}
-                    height={30}
-                    style={{ height: '22px', width: 'auto' }}
-                    className="opacity-50 hover:opacity-80 transition-opacity"
-                  />
-                </a>
-              </p>
-            </div>
+            <p className="text-white/50 text-[14px] uppercase font-bold">
+              Powered by{' '}
+              <a href="https://www.wolfim.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-white transition-colors">
+                <Image
+                  src="/images/wolfim studio white-Photoroom.png"
+                  alt="Wolfim Studio"
+                  width={80}
+                  height={30}
+                  style={{ height: '22px', width: 'auto' }}
+                  className="opacity-50 hover:opacity-80 transition-opacity"
+                />
+              </a>
+            </p>
           </div>
         </div>
       </div>
@@ -405,22 +402,19 @@ const Footer = ({
                 </a>
               </li>
             </ul>
-            <div className="flex flex-col items-center gap-4 mt-2">
-              <div google-add-preferred-source-btn="true" data-theme="dark"></div>
-              <p className="text-[14px] text-white/40">
-                Powered by{' '}
-                <a href="https://www.wolfim.com" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition-colors">
-                  <Image
-                    src="/images/wolfim studio white-Photoroom.png"
-                    alt="Wolfim Studio"
-                    width={80}
-                    height={22}
-                    style={{ height: '18px', width: 'auto' }}
-                    className="opacity-60 inline-block align-middle"
-                  />
-                </a>
-              </p>
-            </div>
+            <p className="text-[14px] text-white/40">
+              Powered by{' '}
+              <a href="https://www.wolfim.com" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition-colors">
+                <Image
+                  src="/images/wolfim studio white-Photoroom.png"
+                  alt="Wolfim Studio"
+                  width={80}
+                  height={22}
+                  style={{ height: '18px', width: 'auto' }}
+                  className="opacity-60 inline-block align-middle"
+                />
+              </a>
+            </p>
           </div>
         </div>
       </div>
