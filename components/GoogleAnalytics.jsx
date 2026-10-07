@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { canTrackAnalytics } from '@/utils/analytics';
+import { canTrackAnalytics, TRACKING_HOSTS } from '@/utils/analytics';
 import { useSession } from 'next-auth/react';
 
 export default function GoogleAnalytics({ analyticsId, facebookPixelId }) {
@@ -48,8 +48,7 @@ export default function GoogleAnalytics({ analyticsId, facebookPixelId }) {
 
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-    const allowedHosts = ['localhost', 'roggeroyroma.com', 'www.roggeroyroma.com', 'roggeroyroma.com.ar', 'www.roggeroyroma.com.ar', '127.0.0.1'];
-    if (!allowedHosts.includes(hostname)) return null;
+    if (!TRACKING_HOSTS.includes(hostname)) return null;
   }
 
   return (

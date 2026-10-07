@@ -1,13 +1,18 @@
 export const isBrowser = () => typeof window !== 'undefined';
 
+export const TRACKING_HOSTS = [
+  'roggeroyroma.com',
+  'www.roggeroyroma.com',
+  'roggeroyroma.com.ar',
+  'www.roggeroyroma.com.ar',
+  'localhost',
+  '127.0.0.1',
+];
+
+const warnedHosts = new Set();
+
 export function isAllowedTrackingHost(hostname) {
-  const allowedHosts = [
-    'roggeroyroma.com.ar',
-    'www.roggeroyroma.com.ar',
-    'localhost',
-    '127.0.0.1'
-  ];
-  return allowedHosts.includes(hostname);
+  return TRACKING_HOSTS.includes(hostname);
 }
 
 export function isInternalTrackingRole(role) {
@@ -23,7 +28,13 @@ export function shouldTrackPath(pathname = '') {
 }
 
 export function canTrackAnalytics({ host, pathname, role }) {
-  if (host && !isAllowedTrackingHost(host)) return false;
+  if (host && !isAllowedTrackingHost(host)) {
+    if (!warnedHosts.has(host)) {
+      console.warn(`[analytics] host no permitido: ${host} — evento descartado`);
+      warnedHosts.add(host);
+    }
+    return false;
+  }
   if (!shouldTrackPath(pathname)) return false;
   if (isInternalTrackingRole(role)) return false;
   return true;
