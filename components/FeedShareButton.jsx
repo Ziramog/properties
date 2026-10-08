@@ -44,10 +44,42 @@ export default function FeedShareButton({ property }) {
 
   const handleShare = async () => {
     try {
+      // 1. Generar el texto para el feed
+      const formatPrice = (price) => {
+        if (!price) return 'Consultar';
+        const rawPrice = String(price).replace(/[^0-9]/g, '');
+        if (!rawPrice) return 'Consultar';
+        return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(rawPrice);
+      };
+
+      const title = property.name || property.type || 'Propiedad';
+      const operation = property.operation ? property.operation.toUpperCase() : 'DISPONIBLE';
+      const price = formatPrice(property.price);
+      const location = [property.location?.city, property.location?.state].filter(Boolean).join(', ');
+      
+      const features = [];
+      if (property.covered_area) features.push(`📐 ${property.covered_area} m² cub`);
+      if (property.beds) features.push(`🛏️ ${property.beds} Dormitorios`);
+      if (property.baths) features.push(`🛁 ${property.baths} Baños`);
+
+      let description = property.description || '';
+      if (description.length > 400) description = description.slice(0, 400) + '...';
+
+      const caption = `🏠 ${title} en ${operation}\n📍 ${location}\n💰 ${price}\n\n✨ Características:\n${features.join(' | ')}\n\n📝 ${description}\n\n🔗 Más info en roggeroyroma.com.ar\n#BienesRaices #Inmobiliaria #RoggeroYRoma #${property.location?.city?.replace(/\s+/g, '') || 'Propiedades'}`;
+
+      // 2. Copiar al portapapeles (workaround porque Instagram iOS suele ignorar el text del share)
+      try {
+        await navigator.clipboard.writeText(caption);
+        toast.info('Texto copiado al portapapeles. ¡Pégalo en Instagram!');
+      } catch (err) {
+        console.log('Clipboard fallback:', err);
+      }
+
       if (navigator.canShare && navigator.canShare({ files: filesToShare })) {
         await navigator.share({
           files: filesToShare,
           title: 'Carrusel de Propiedad',
+          text: caption
         });
         // Volver al estado inicial luego de compartir por si quiere hacerlo de nuevo
         setStatus('idle');
