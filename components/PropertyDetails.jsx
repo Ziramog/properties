@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import CheckIcon from './icons/CheckIcon';
 import ShareButtons from './ShareButtons';
 import StoryShareButton from './StoryShareButton';
+import FeedShareButton from './FeedShareButton';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import SectionTitle from '@/components/shared/SectionTitle';
 import { getAreaDisplay } from '@/utils/propertyDisplay';
@@ -112,9 +113,10 @@ const PropertyDetails = ({ property }) => {
                 <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6 mt-auto">
                   <span className="text-[16px] uppercase text-[#999] block text-center mb-4">Compartir</span>
                   <ShareButtons property={property} />
-                  {session?.user?.role === 'admin' && (
+                  {session?.user?.role === 'superadmin' && (
                     <div className="mt-6">
                       <StoryShareButton property={property} />
+                      <FeedShareButton property={property} />
                     </div>
                   )}
                 </div>
@@ -133,9 +135,10 @@ const PropertyDetails = ({ property }) => {
                 <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6 mt-auto">
                   <span className="text-[16px] uppercase text-[#999] block text-center mb-4">Compartir</span>
                   <ShareButtons property={property} />
-                  {session?.user?.role === 'admin' && (
+                  {session?.user?.role === 'superadmin' && (
                     <div className="mt-6">
                       <StoryShareButton property={property} />
+                      <FeedShareButton property={property} />
                     </div>
                   )}
                 </div>
@@ -151,7 +154,7 @@ const PropertyDetails = ({ property }) => {
             <div className="bg-white rounded-none overflow-hidden">
               <div className="px-4 md:px-[50px] pt-[40px] pb-[40px]">
                 <div>
-                  <SectionTitle>Servicios Destacados</SectionTitle>
+                  <SectionTitle>Servicios</SectionTitle>
                 </div>
                 <ScrollReveal>
                   <ul>
