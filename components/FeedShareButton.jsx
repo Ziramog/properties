@@ -8,8 +8,8 @@ export default function FeedShareButton({ property }) {
   const [progress, setProgress] = useState(0);
   const [filesToShare, setFilesToShare] = useState([]);
 
-  // Limitar a máximo 10 fotos (límite de carrusel de Instagram)
-  const maxImages = Math.min(property.images?.length || 0, 10);
+  // Limitar a máximo 7 fotos (coincidiendo con las fotos mostradas en la grilla negra principal)
+  const maxImages = Math.min(property.images?.length || 0, 7);
   if (maxImages === 0) return null;
 
   const handlePrepare = async () => {
