@@ -9,6 +9,7 @@ import { generateDescription } from '@/app/actions/generateDescription';
 import LocationPickerMap from '@/components/shared/LocationPickerMap';
 import FullScreenLoader from '@/components/shared/FullScreenLoader';
 import CustomLabelsManager from '@/components/admin/CustomLabelsManager';
+import PropertyImageSorter from '@/components/admin/PropertyImageSorter';
 
 const SubmitButton = ({ isUploading, isSuccess, error, onCloseError }) => {
   const disabled = isUploading || isSuccess;
@@ -37,6 +38,7 @@ const PropertyAddForm = ({ customLabels = [] }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState('active');
+  const [imageItems, setImageItems] = useState([]);
 
   const getDefaultExpiration = () => {
     const date = new Date();
@@ -54,44 +56,50 @@ const PropertyAddForm = ({ customLabels = [] }) => {
 
     try {
       const formData = new FormData(e.currentTarget);
-      const imageFiles = formData.getAll('images');
-      
-      if (imageFiles.length > 0 && imageFiles[0].size > 0) {
-        formData.delete('images');
-        const options = { maxSizeMB: 0.6, maxWidthOrHeight: 1600, useWebWorker: true };
-        for (const file of imageFiles) {
-          if (file.name === '' || file.size === 0) continue;
-          let fileToUpload = file;
-          try {
-            fileToUpload = await imageCompression(file, options);
-          } catch (compressError) {
-            console.error('Error compressing image:', compressError);
-          }
-          
-          // Upload directly to Cloudinary
-          const uploadData = new FormData();
-          uploadData.append('file', fileToUpload);
-          uploadData.append('upload_preset', 'property_pulse_unsigned');
-          
-          const uploadRes = await fetch('https://api.cloudinary.com/v1_1/dunkbcery/image/upload', {
-            method: 'POST',
-            body: uploadData
-          });
-          
-          if (!uploadRes.ok) {
-            throw new Error('Fallo al subir imagen a Cloudinary');
-          }
-          
-          const cloudinaryResult = await uploadRes.json();
-          formData.append('uploadedImages', JSON.stringify({
-            url: cloudinaryResult.secure_url,
-            public_id: cloudinaryResult.public_id
-          }));
+      formData.delete('images');
+
+      if (imageItems.length === 0) {
+        const msg = 'Es necesario seleccionar al menos una foto de la propiedad.';
+        setError(msg);
+        toast.error(msg);
+        setIsUploading(false);
+        return;
+      }
+
+      const options = { maxSizeMB: 0.6, maxWidthOrHeight: 1600, useWebWorker: true };
+      for (const item of imageItems) {
+        const file = item.file;
+        if (!file || file.name === '' || file.size === 0) continue;
+        let fileToUpload = file;
+        try {
+          fileToUpload = await imageCompression(file, options);
+        } catch (compressError) {
+          console.error('Error compressing image:', compressError);
         }
+        
+        // Upload directly to Cloudinary
+        const uploadData = new FormData();
+        uploadData.append('file', fileToUpload);
+        uploadData.append('upload_preset', 'property_pulse_unsigned');
+        
+        const uploadRes = await fetch('https://api.cloudinary.com/v1_1/dunkbcery/image/upload', {
+          method: 'POST',
+          body: uploadData
+        });
+        
+        if (!uploadRes.ok) {
+          throw new Error('Fallo al subir imagen a Cloudinary');
+        }
+        
+        const cloudinaryResult = await uploadRes.json();
+        formData.append('uploadedImages', JSON.stringify({
+          url: cloudinaryResult.secure_url,
+          public_id: cloudinaryResult.public_id
+        }));
       }
 
       if (formData.getAll('uploadedImages').length === 0) {
-        throw new Error(`DEBUG LOCAL: No se subió ninguna imagen a Cloudinary. imageFiles.length=${imageFiles.length}, imageFiles[0].size=${imageFiles[0]?.size}`);
+        throw new Error('No se pudo subir ninguna imagen a Cloudinary.');
       }
 
       const result = await addProperty({}, formData);
@@ -384,13 +392,14 @@ const PropertyAddForm = ({ customLabels = [] }) => {
 
       {/* Imagenes */}
       <div className='mb-8'>
-        <label htmlFor='images' className={labelClass}>
+        <label className={labelClass}>
           Imágenes de la Propiedad
         </label>
-        <div className="border-2 border-dashed border-[#333] hover:border-[var(--color-brand)] transition-colors bg-[#111] rounded-lg p-6 text-center">
-          <input type='file' id='images' name='images' className='w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-bold file:bg-[#222] file:text-white hover:file:bg-[#333] cursor-pointer' accept='image/*' multiple required />
-          <p className={helperClass + ' mt-2'}>Puedes seleccionar múltiples imágenes. Límite sugerido: 4 fotos destacadas.</p>
-        </div>
+        <PropertyImageSorter
+          items={imageItems}
+          setItems={setImageItems}
+          helperClass={helperClass}
+        />
       </div>
 
       <SubmitButton 

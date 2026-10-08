@@ -56,17 +56,6 @@ async function updateProperty(prevState, formData) {
       (img) => !removedImages.includes(getImageUrl(img))
     );
 
-    const orderedImagesList = formData.getAll('orderedImages').filter(Boolean);
-    if (orderedImagesList.length > 0) {
-      currentImages.sort((a, b) => {
-        const indexA = orderedImagesList.indexOf(getImageUrl(a));
-        const indexB = orderedImagesList.indexOf(getImageUrl(b));
-        const posA = indexA === -1 ? 999 : indexA;
-        const posB = indexB === -1 ? 999 : indexB;
-        return posA - posB;
-      });
-    }
-
     const uploadedImagesJson = formData.getAll('uploadedImages');
     
     if (uploadedImagesJson && uploadedImagesJson.length > 0) {
@@ -77,6 +66,17 @@ async function updateProperty(prevState, formData) {
         console.error("Error parsing uploaded images JSON", err);
         return { error: 'Error al procesar las imágenes subidas.' };
       }
+    }
+
+    const orderedImagesList = formData.getAll('orderedImages').filter(Boolean);
+    if (orderedImagesList.length > 0) {
+      currentImages.sort((a, b) => {
+        const indexA = orderedImagesList.indexOf(getImageUrl(a));
+        const indexB = orderedImagesList.indexOf(getImageUrl(b));
+        const posA = indexA === -1 ? 999 : indexA;
+        const posB = indexB === -1 ? 999 : indexB;
+        return posA - posB;
+      });
     }
 
     if (currentImages.length === 0) {
