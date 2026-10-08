@@ -71,16 +71,29 @@ export async function GET(request, { params }) {
 
     const logoBuffer = readFileSync(join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-Photoroom.png'));
     const isoLogoUrl = `data:image/png;base64,${logoBuffer.toString('base64')}`;
+    
+    // Load icons
+    const bedIconBuffer = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_bed.svg'));
+    const bathIconBuffer = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_bath.svg'));
+    const sqftIconBuffer = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_sqfoot.svg'));
+    
+    const bedIconUrl = `data:image/svg+xml;base64,${bedIconBuffer.toString('base64')}`;
+    const bathIconUrl = `data:image/svg+xml;base64,${bathIconBuffer.toString('base64')}`;
+    const sqftIconUrl = `data:image/svg+xml;base64,${sqftIconBuffer.toString('base64')}`;
+
     const imageUrl = imageToUse?.url ? await toDataUrl(imageToUse.url) : null;
 
     const getAreaDisplay = () => {
-      if (property.covered_area) return `${property.covered_area.toLocaleString('es-AR')} m² cub`;
-      if (property.square_feet) return `${property.square_feet.toLocaleString('es-AR')} m² tot`;
+      if (property.covered_area) return `${property.covered_area.toLocaleString('es-AR')} m²`;
+      if (property.square_feet) return `${property.square_feet.toLocaleString('es-AR')} m²`;
       return null;
     };
     const areaLabel = getAreaDisplay();
 
     const brandColor = '#A47D4C';
+
+    const locationLine1 = property.location?.street || property.name || 'Propiedad Exclusiva';
+    const locationLine2 = [property.location?.city, property.location?.state].filter(Boolean).join(', ');
 
     return await renderImage(
       (
@@ -100,90 +113,90 @@ export async function GET(request, { params }) {
             <img src={imageUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
 
-          {/* Top Gradient Overlay */}
+          {/* Top Gradient Overlay - Always present so the logo is visible */}
           <div style={{
-            position: 'absolute', top: 0, left: 0, width: '100%', height: '40%',
-            backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)',
+            position: 'absolute', top: 0, left: 0, width: '100%', height: '30%',
+            backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)',
             display: 'flex'
           }} />
 
-          {/* Bottom Gradient Overlay */}
-          <div style={{
-            position: 'absolute', bottom: 0, left: 0, width: '100%', height: '60%',
-            backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 30%, transparent 100%)',
-            display: 'flex'
-          }} />
-
-          {/* Top Isotipo Center */}
-          <div style={{ position: 'absolute', top: 60, left: 0, width: '100%', display: 'flex', justifyContent: 'center', zIndex: 20 }}>
-            <img src={isoLogoUrl} width={250} height={250} style={{ objectFit: 'contain', filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.5))' }} />
-          </div>
-
-          {/* Content - Bottom Aligned */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              width: '100%',
-              padding: '50px 30px',
-              zIndex: 20
-            }}
-          >
+          {/* Bottom Gradient Overlay - Only on first photo */}
+          {index === 0 && (
             <div style={{
-              backgroundColor: brandColor,
-              color: '#FFFFFF',
-              fontSize: 22,
-              fontWeight: 'bold',
-              padding: '10px 24px',
-              borderRadius: '24px',
-              textTransform: 'uppercase',
-              letterSpacing: '2px',
-              marginBottom: '20px',
-              boxShadow: '0 10px 20px rgba(0,0,0,0.3)'
-            }}>
-              {property.operation ? (property.operation === 'venta' ? 'VENTA' : property.operation.toUpperCase()) : 'DISPONIBLE'}
-            </div>
+              position: 'absolute', bottom: 0, left: 0, width: '100%', height: '50%',
+              backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, transparent 100%)',
+              display: 'flex'
+            }} />
+          )}
 
-            <h2 style={{ color: '#FFFFFF', fontSize: 100, fontWeight: '900', margin: '0 0 10px 0', textShadow: '0 4px 20px rgba(0,0,0,0.6)', textAlign: 'center' }}>
-              {formatPrice(property.price)}
-            </h2>
-            
-            <h1 style={{ color: '#E2E8F0', fontSize: 50, fontWeight: 'bold', margin: '0 0 20px 0', lineHeight: 1.2, textAlign: 'center', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
-              {property.name || property.type || 'Propiedad Exclusiva'}
-            </h1>
-            
-            <p style={{ color: '#CBD5E1', fontSize: 30, margin: '0 0 35px 0', textShadow: '0 2px 10px rgba(0,0,0,0.5)', letterSpacing: '2px', textTransform: 'uppercase' }}>
-              {property.location?.city || ''}
-            </p>
-
-            <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', marginBottom: '40px', justifyContent: 'center' }}>
-              {areaLabel && (
-                <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.15)', padding: '12px 24px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)' }}>
-                  <span style={{ color: '#FFFFFF', fontSize: 24, fontWeight: '500' }}>{areaLabel}</span>
-                </div>
-              )}
-              {property.beds > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.15)', padding: '12px 24px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)' }}>
-                  <span style={{ color: '#FFFFFF', fontSize: 24, fontWeight: '500' }}>{property.beds} Dorms</span>
-                </div>
-              )}
-              {property.baths > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.15)', padding: '12px 24px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)' }}>
-                  <span style={{ color: '#FFFFFF', fontSize: 24, fontWeight: '500' }}>{property.baths} Baños</span>
-                </div>
-              )}
-            </div>
-            
-            <div style={{ width: '80%', height: '1px', backgroundColor: 'rgba(255,255,255,0.3)', marginBottom: '25px' }}></div>
-            
-            <p style={{ color: brandColor, fontSize: 24, letterSpacing: '3px', textTransform: 'uppercase', margin: 0, textAlign: 'center', fontWeight: 'bold' }}>
-              roggeroyroma.com.ar
-            </p>
+          {/* Top Isotipo Center - 5px padding from top */}
+          <div style={{ position: 'absolute', top: 5, left: 0, width: '100%', display: 'flex', justifyContent: 'center', zIndex: 20 }}>
+            <img src={isoLogoUrl} width={250} height={250} style={{ objectFit: 'contain', filter: 'drop-shadow(0px 5px 10px rgba(0,0,0,0.5))' }} />
           </div>
+
+          {/* Content - Bottom Aligned - ONLY ON FIRST PHOTO */}
+          {index === 0 && (
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                padding: '60px 50px',
+                zIndex: 20
+              }}
+            >
+              {/* Row 1: Direccion | Precio */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '30px', width: '100%' }}>
+                
+                {/* Direccion (Left) */}
+                <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '55%' }}>
+                  <span style={{ color: brandColor, fontSize: 30, fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '10px' }}>
+                    {property.operation ? (property.operation === 'venta' ? 'VENTA' : property.operation.toUpperCase()) : 'DISPONIBLE'}
+                  </span>
+                  <span style={{ color: '#FFFFFF', fontSize: 55, fontWeight: 'bold', lineHeight: 1.1, textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+                    {locationLine1}
+                  </span>
+                  <span style={{ color: '#CBD5E1', fontSize: 35, marginTop: '10px', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+                    {locationLine2}
+                  </span>
+                </div>
+
+                {/* Precio (Right) */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', maxWidth: '40%' }}>
+                  <span style={{ color: '#FFFFFF', fontSize: 75, fontWeight: '900', textShadow: '0 4px 20px rgba(0,0,0,0.6)' }}>
+                    {formatPrice(property.price)}
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ width: '100%', height: '2px', backgroundColor: 'rgba(255,255,255,0.2)', marginBottom: '35px' }}></div>
+
+              {/* Row 2: Iconos */}
+              <div style={{ display: 'flex', gap: '40px', alignItems: 'center' }}>
+                {property.beds > 0 && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    <img src={bedIconUrl} width={45} height={45} />
+                    <span style={{ color: '#FFFFFF', fontSize: 38, fontWeight: '500' }}>{property.beds}</span>
+                  </div>
+                )}
+                {property.baths > 0 && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    <img src={bathIconUrl} width={45} height={45} />
+                    <span style={{ color: '#FFFFFF', fontSize: 38, fontWeight: '500' }}>{property.baths}</span>
+                  </div>
+                )}
+                {areaLabel && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    <img src={sqftIconUrl} width={45} height={45} />
+                    <span style={{ color: '#FFFFFF', fontSize: 38, fontWeight: '500' }}>{areaLabel}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       ),
       {
