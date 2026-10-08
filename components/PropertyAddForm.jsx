@@ -323,10 +323,14 @@ const PropertyAddForm = ({ customLabels = [] }) => {
           <h3 className="text-sm font-semibold text-gray-400 mb-3">Básicos</h3>
           <div className="flex flex-wrap gap-2 mb-6">
             {[
-              ['Agua Corriente', 'Agua Corriente'],
+              ['Agua de pozo', 'Agua de pozo'],
+              ['Agua de Red', 'Agua de Red'],
               ['Gas Natural', 'Gas Natural'],
-              ['Internet / Wifi', 'Internet / Wifi'],
+              ['Gas Envasado', 'Gas Envasado'],
+              ['Gas deposito Zepelin', 'Gas deposito Zepelin'],
               ['Luz', 'Luz / Energía'],
+              ['Energia Solar', 'Energia Solar'],
+              ['Internet / Wifi', 'Internet / Wifi'],
               ['Cloaca', 'Cloaca'],
               ['Pavimento', 'Pavimento'],
             ].map(([val, label]) => (

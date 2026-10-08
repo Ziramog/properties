@@ -160,7 +160,7 @@ const PropertyDetails = ({ property }) => {
                   <ul>
                     {property.amenities.map((amenity) => (
                       <li key={amenity} className="flex justify-between items-center px-5 py-[10px] mb-[5px] text-[16px] gap-[10px] rounded-none odd:bg-[#f6f6f6]">
-                        <span className="text-[14px] font-normal text-[#0F172A]">{amenity}</span>
+                        <span className="text-[14px] font-normal text-[#0F172A]">{amenity === 'Agua Corriente' ? 'Agua de Red' : amenity}</span>
                         <CheckIcon className="w-[18px] h-[18px] text-black" />
                       </li>
                     ))}

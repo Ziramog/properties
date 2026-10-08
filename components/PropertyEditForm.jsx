@@ -224,6 +224,16 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
   const inputClass = 'bg-[#111] border border-[#333] text-white rounded w-full py-2 px-3 focus:outline-none focus:border-[var(--color-brand)] focus:ring-1 focus:ring-[var(--color-brand)] transition-colors';
   const labelClass = 'block text-white/80 font-bold mb-2 text-sm';
   const helperClass = 'text-[11px] text-gray-500 mt-1';
+  const hasAmenity = (val) => {
+    if (!property.amenities || !Array.isArray(property.amenities)) return false;
+    if (property.amenities.includes(val)) return true;
+    const lowerVal = val.toLowerCase();
+    if (lowerVal === 'agua de red' && (property.amenities.includes('Agua Corriente') || property.amenities.includes('Agua'))) return true;
+    if (lowerVal === 'gas natural' && property.amenities.includes('Gas')) return true;
+    if (lowerVal === 'energia solar' && (property.amenities.includes('Energía Solar') || property.amenities.includes('Luz Solar'))) return true;
+    if (lowerVal === 'gas deposito zepelin' && property.amenities.some(a => typeof a === 'string' && (a.toLowerCase().includes('zepelin') || a.toLowerCase().includes('zeppelin')))) return true;
+    return property.amenities.some(a => typeof a === 'string' && a.toLowerCase() === lowerVal);
+  };
 
   return (
     <form ref={formRef} onSubmit={handleSubmit}>
@@ -385,15 +395,19 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
           <h3 className="text-sm font-semibold text-gray-400 mb-3">Básicos</h3>
           <div className="flex flex-wrap gap-2 mb-6">
             {[
-              ['Agua Corriente', 'Agua Corriente'],
+              ['Agua de pozo', 'Agua de pozo'],
+              ['Agua de Red', 'Agua de Red'],
               ['Gas Natural', 'Gas Natural'],
-              ['Internet / Wifi', 'Internet / Wifi'],
+              ['Gas Envasado', 'Gas Envasado'],
+              ['Gas deposito Zepelin', 'Gas deposito Zepelin'],
               ['Luz', 'Luz / Energía'],
+              ['Energia Solar', 'Energia Solar'],
+              ['Internet / Wifi', 'Internet / Wifi'],
               ['Cloaca', 'Cloaca'],
               ['Pavimento', 'Pavimento'],
             ].map(([val, label]) => (
               <label key={val} className="cursor-pointer">
-                <input type='checkbox' name='amenities' value={val} className='peer sr-only' defaultChecked={property.amenities?.includes(val)} />
+                <input type='checkbox' name='amenities' value={val} className='peer sr-only' defaultChecked={hasAmenity(val)} />
                 <div className='px-3 py-1.5 rounded-md border border-[#444] text-sm bg-[#222] text-white/80 hover:bg-[#333] peer-checked:bg-[var(--color-brand)] peer-checked:text-white peer-checked:border-[var(--color-brand)] transition-colors'>
                   {label}
                 </div>
@@ -409,7 +423,7 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
               ['Cámaras', 'Cámaras (CCTV)'],
             ].map(([val, label]) => (
               <label key={val} className="cursor-pointer">
-                <input type='checkbox' name='amenities' value={val} className='peer sr-only' defaultChecked={property.amenities?.includes(val)} />
+                <input type='checkbox' name='amenities' value={val} className='peer sr-only' defaultChecked={hasAmenity(val)} />
                 <div className='px-3 py-1.5 rounded-md border border-[#444] text-sm bg-[#222] text-white/80 hover:bg-[#333] peer-checked:bg-[var(--color-brand)] peer-checked:text-white peer-checked:border-[var(--color-brand)] transition-colors'>
                   {label}
                 </div>
@@ -430,7 +444,7 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
               ['Acceso Discapacitados', 'Acceso Discapacitados'],
             ].map(([val, label]) => (
               <label key={val} className="cursor-pointer">
-                <input type='checkbox' name='amenities' value={val} className='peer sr-only' defaultChecked={property.amenities?.includes(val)} />
+                <input type='checkbox' name='amenities' value={val} className='peer sr-only' defaultChecked={hasAmenity(val)} />
                 <div className='px-3 py-1.5 rounded-md border border-[#444] text-sm bg-[#222] text-white/80 hover:bg-[#333] peer-checked:bg-[var(--color-brand)] peer-checked:text-white peer-checked:border-[var(--color-brand)] transition-colors'>
                   {label}
                 </div>
