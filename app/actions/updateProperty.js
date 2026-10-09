@@ -128,6 +128,7 @@ async function updateProperty(prevState, formData) {
       operation: formData.get('operation'),
       status: formData.get('status'),
       images: currentImages,
+      gallery_order: formData.getAll('galleryOrder').filter(Boolean),
     });
 
     if (prop.status === 'NUEVA' && formData.get('badgeExpiresAt')) {

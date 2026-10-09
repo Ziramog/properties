@@ -77,6 +77,11 @@ const PropertySchema = new Schema(
         public_id: { type: String, required: true },
       },
     ],
+    gallery_order: [
+      {
+        type: String,
+      },
+    ],
     is_featured: {
       type: Boolean,
       default: false,

@@ -50,17 +50,29 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
 
   const router = useRouter();
 
-  const [imageItems, setImageItems] = useState(() =>
-    (property.images || []).map((img, idx) => {
-      const url = typeof img === 'string' ? img : img?.url;
-      return {
-        id: `existing_${idx}_${url}`,
-        type: 'existing',
-        url,
-        original: img,
-      };
-    })
-  );
+  const initialImageItems = (property.images || []).map((img, idx) => {
+    const url = typeof img === 'string' ? img : img?.url;
+    return {
+      id: `existing_${idx}_${url}`,
+      type: 'existing',
+      url,
+      original: img,
+    };
+  });
+
+  const [imageItems, setImageItems] = useState(initialImageItems);
+  const [galleryOrderIds, setGalleryOrderIds] = useState(() => {
+    const savedOrder = property.gallery_order || [];
+    if (!savedOrder.length) return initialImageItems.map((it) => it.id);
+    const sorted = [...initialImageItems].sort((a, b) => {
+      const idxA = savedOrder.indexOf(a.url);
+      const idxB = savedOrder.indexOf(b.url);
+      const posA = idxA === -1 ? 999 : idxA;
+      const posB = idxB === -1 ? 999 : idxB;
+      return posA - posB;
+    });
+    return sorted.map((it) => it.id);
+  });
   const [removedImages, setRemovedImages] = useState([]);
 
   const handleRemoveExisting = (imgUrl) => {
@@ -72,15 +84,17 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
     const originalImg = (property.images || []).find(
       (img) => (typeof img === 'string' ? img : img?.url) === imgUrl
     );
+    const restoredId = `existing_restored_${Date.now()}_${imgUrl}`;
     setImageItems((prev) => [
       ...prev,
       {
-        id: `existing_restored_${Date.now()}_${imgUrl}`,
+        id: restoredId,
         type: 'existing',
         url: imgUrl,
         original: originalImg || imgUrl,
       },
     ]);
+    setGalleryOrderIds((prev) => [...prev, restoredId]);
   };
 
   const handleSubmit = async (e) => {
@@ -93,6 +107,7 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
       const formData = new FormData(e.currentTarget);
       formData.delete('images');
       formData.delete('orderedImages');
+      formData.delete('galleryOrder');
       formData.delete('removedImages');
 
       if (imageItems.length === 0) {
@@ -104,9 +119,11 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
       }
 
       const options = { maxSizeMB: 0.6, maxWidthOrHeight: 1600, useWebWorker: true };
+      const idToUrlMap = {};
 
       for (const item of imageItems) {
         if (item.type === 'existing') {
+          idToUrlMap[item.id] = item.url;
           formData.append('orderedImages', item.url);
         } else if (item.type === 'new' && item.file) {
           const file = item.file;
@@ -140,9 +157,24 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
               public_id: cloudinaryResult.public_id,
             })
           );
+          idToUrlMap[item.id] = cloudinaryResult.secure_url;
           formData.append('orderedImages', cloudinaryResult.secure_url);
         }
       }
+
+      const effectiveGalleryIds =
+        galleryOrderIds && galleryOrderIds.length > 0
+          ? [
+              ...galleryOrderIds.filter((id) => idToUrlMap[id]),
+              ...imageItems.map((it) => it.id).filter((id) => !galleryOrderIds.includes(id) && idToUrlMap[id]),
+            ]
+          : imageItems.map((it) => it.id);
+
+      effectiveGalleryIds.forEach((id) => {
+        if (idToUrlMap[id]) {
+          formData.append('galleryOrder', idToUrlMap[id]);
+        }
+      });
 
       removedImages.forEach((imgUrl) => formData.append('removedImages', imgUrl));
 
@@ -456,6 +488,8 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
         <PropertyImageSorter
           items={imageItems}
           setItems={setImageItems}
+          galleryOrderIds={galleryOrderIds}
+          setGalleryOrderIds={setGalleryOrderIds}
           removedImages={removedImages}
           onRemoveExisting={handleRemoveExisting}
           onUndoRemoveExisting={handleUndoRemoveExisting}

@@ -39,6 +39,7 @@ const PropertyAddForm = ({ customLabels = [] }) => {
   const [error, setError] = useState(null);
   const [status, setStatus] = useState('active');
   const [imageItems, setImageItems] = useState([]);
+  const [galleryOrderIds, setGalleryOrderIds] = useState([]);
 
   const getDefaultExpiration = () => {
     const date = new Date();
@@ -57,6 +58,7 @@ const PropertyAddForm = ({ customLabels = [] }) => {
     try {
       const formData = new FormData(e.currentTarget);
       formData.delete('images');
+      formData.delete('galleryOrder');
 
       if (imageItems.length === 0) {
         const msg = 'Es necesario seleccionar al menos una foto de la propiedad.';
@@ -67,6 +69,8 @@ const PropertyAddForm = ({ customLabels = [] }) => {
       }
 
       const options = { maxSizeMB: 0.6, maxWidthOrHeight: 1600, useWebWorker: true };
+      const idToUrlMap = {};
+
       for (const item of imageItems) {
         const file = item.file;
         if (!file || file.name === '' || file.size === 0) continue;
@@ -92,6 +96,7 @@ const PropertyAddForm = ({ customLabels = [] }) => {
         }
         
         const cloudinaryResult = await uploadRes.json();
+        idToUrlMap[item.id] = cloudinaryResult.secure_url;
         formData.append('uploadedImages', JSON.stringify({
           url: cloudinaryResult.secure_url,
           public_id: cloudinaryResult.public_id
@@ -101,6 +106,20 @@ const PropertyAddForm = ({ customLabels = [] }) => {
       if (formData.getAll('uploadedImages').length === 0) {
         throw new Error('No se pudo subir ninguna imagen a Cloudinary.');
       }
+
+      const effectiveGalleryIds =
+        galleryOrderIds && galleryOrderIds.length > 0
+          ? [
+              ...galleryOrderIds.filter((id) => idToUrlMap[id]),
+              ...imageItems.map((it) => it.id).filter((id) => !galleryOrderIds.includes(id) && idToUrlMap[id]),
+            ]
+          : imageItems.map((it) => it.id);
+
+      effectiveGalleryIds.forEach((id) => {
+        if (idToUrlMap[id]) {
+          formData.append('galleryOrder', idToUrlMap[id]);
+        }
+      });
 
       const result = await addProperty({}, formData);
 
@@ -398,6 +417,8 @@ const PropertyAddForm = ({ customLabels = [] }) => {
         <PropertyImageSorter
           items={imageItems}
           setItems={setImageItems}
+          galleryOrderIds={galleryOrderIds}
+          setGalleryOrderIds={setGalleryOrderIds}
           helperClass={helperClass}
         />
       </div>

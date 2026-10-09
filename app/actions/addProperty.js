@@ -95,7 +95,12 @@ async function addProperty(prevState, formData) {
       return { error: 'Máximo 30 imágenes por propiedad.' };
     }
 
+    const galleryOrderList = formData.getAll('galleryOrder').filter(Boolean);
     propertyData.images = imageUrls;
+    propertyData.gallery_order =
+      galleryOrderList.length > 0
+        ? galleryOrderList
+        : imageUrls.map((img) => img.url).filter(Boolean);
 
     const newProperty = new Property(propertyData);
     await newProperty.save();
