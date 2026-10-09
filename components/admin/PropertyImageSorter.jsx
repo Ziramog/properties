@@ -1,15 +1,27 @@
 'use client';
 import { useState } from 'react';
 import Image from 'next/image';
+import {
+  Star,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Trash2,
+  Hash,
+  Check,
+  RotateCcw,
+  ArrowUpToLine,
+} from 'lucide-react';
 
 const getTopGridLabel = (index) => {
-  if (index === 0) return 'PORTADA (MAIN)';
-  return `MINI ${index}`;
+  if (index === 0) return 'Portada';
+  return `Mini ${index}`;
 };
 
 const getTopGridColorClass = (index) => {
   if (index === 0) return 'bg-[var(--color-brand)] text-white';
-  return 'bg-blue-600 text-white';
+  return 'bg-[#222] text-gray-200 border-t border-[#333]';
 };
 
 const PropertyImageSorter = ({
@@ -27,7 +39,6 @@ const PropertyImageSorter = ({
   const [dragOverIdx, setDragOverIdx] = useState(null);
   const [isNumberingMode, setIsNumberingMode] = useState(false);
   const [numberedIds, setNumberedIds] = useState([]);
-  // Track how many slots are actively in the top grid (up to 7)
   const [topGridCount, setTopGridCount] = useState(7);
 
   // Gallery ALWAYS contains the total of photos in its own independent order
@@ -45,7 +56,6 @@ const PropertyImageSorter = ({
   const topGridIdSet = new Set(topGridItems.map((it) => it.id));
 
   // Ensure galleryOrderIds is snapshotted before modifying `items` (Top Grid)
-  // so that any change in Top Grid NEVER alters the Gallery order.
   const ensureGallerySnapshot = () => {
     if (setGalleryOrderIds && (!galleryOrderIds || galleryOrderIds.length === 0)) {
       setGalleryOrderIds(items.map((it) => it.id));
@@ -61,7 +71,6 @@ const PropertyImageSorter = ({
     setActiveTab(tab);
   };
 
-  // Move an item within the active tab
   const moveTopGridItem = (fromIdx, toIdx) => {
     if (
       fromIdx === toIdx ||
@@ -98,7 +107,7 @@ const PropertyImageSorter = ({
     }
   };
 
-  // Remove a photo from the Top Grid (does NOT delete it from the Gallery total!)
+  // Remove a photo from the Top Grid (does NOT delete it from the Gallery total)
   const removeFromTopGridOnly = (itemId) => {
     if (effectiveTopCount <= 1) return;
     ensureGallerySnapshot();
@@ -122,7 +131,6 @@ const PropertyImageSorter = ({
     } else if (currentTop.length < 7) {
       newTop = [...currentTop, target];
     } else {
-      // Replace the 7th slot (MINI 6) with the newly chosen photo
       newTop = [...currentTop.slice(0, 6), target];
     }
     const newTopIds = new Set(newTop.map((it) => it.id));
@@ -131,7 +139,7 @@ const PropertyImageSorter = ({
     setItems([...newTop, ...rest]);
   };
 
-  // Handle adding new files from input (adds to the total pool)
+  // Handle adding new files from input
   const handleFilesSelected = (e) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
@@ -144,10 +152,7 @@ const PropertyImageSorter = ({
       file,
     }));
 
-    setItems((prev) => {
-      const next = [...prev, ...newEntries];
-      return next;
-    });
+    setItems((prev) => [...prev, ...newEntries]);
     setTopGridCount((prev) => Math.max(prev, Math.min(7, items.length + newEntries.length)));
     if (setGalleryOrderIds) {
       setGalleryOrderIds((prev) => {
@@ -190,7 +195,7 @@ const PropertyImageSorter = ({
         return prev.filter((id) => id !== itemId);
       }
       if (activeTab === 'top' && prev.length >= 7) {
-        return prev; // Top Grid holds max 7 photos
+        return prev;
       }
       return [...prev, itemId];
     });
@@ -258,56 +263,56 @@ const PropertyImageSorter = ({
   const getTopGridRank = (itemId) => {
     const idx = topGridItems.findIndex((it) => it.id === itemId);
     if (idx === -1) return null;
-    return idx === 0 ? '#1 Portada' : `#${idx + 1} Mini ${idx}`;
+    return idx === 0 ? '#1 Portada' : `#${idx + 1}`;
   };
 
   return (
     <div className="space-y-4">
       {/* Mode Tabs: Grid Superior vs Galería Inferior */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-[#121212] p-1.5 rounded-lg border border-[#2a2a2a]">
+      <div className="grid grid-cols-2 gap-2 bg-[#121212] p-1.5 rounded-lg border border-[#2a2a2a]">
         <button
           type="button"
           onClick={() => switchTab('top')}
-          className={`flex flex-col items-start p-3 rounded-md text-left transition-all border ${
+          className={`flex flex-col items-start p-2.5 sm:p-3 rounded-md text-left transition-all border ${
             activeTab === 'top'
               ? 'bg-[#1f1a14] border-[var(--color-brand)] text-white shadow'
               : 'bg-transparent border-transparent text-gray-400 hover:bg-[#1a1a1a] hover:text-white'
           }`}
         >
-          <div className="flex items-center justify-between w-full">
-            <span className="text-sm font-bold flex items-center gap-1.5">
-              <span>🌟</span>
-              <span>1. Grid Superior (Portada + 6 Mini)</span>
+          <div className="flex items-center justify-between w-full gap-1">
+            <span className="text-xs sm:text-sm font-bold flex items-center gap-1.5 truncate">
+              <Star className={`w-4 h-4 flex-shrink-0 ${activeTab === 'top' ? 'text-[var(--color-brand)] fill-current' : 'text-gray-500'}`} />
+              <span className="truncate">1. Grid Superior</span>
             </span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--color-brand)]/20 text-[var(--color-brand)] border border-[var(--color-brand)]/40">
-              {topGridItems.length} de 7 lugares
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[var(--color-brand)]/20 text-[var(--color-brand)] border border-[var(--color-brand)]/40 flex-shrink-0">
+              {topGridItems.length}/7
             </span>
           </div>
-          <span className="text-[11px] text-gray-400 mt-1">
-            Seleccioná y ordená solo las 7 fotos del mosaico superior (sin afectar la Galería).
+          <span className="hidden sm:block text-[11px] text-gray-400 mt-1">
+            Portada + 6 miniaturas del encabezado (sin afectar Galería).
           </span>
         </button>
 
         <button
           type="button"
           onClick={() => switchTab('gallery')}
-          className={`flex flex-col items-start p-3 rounded-md text-left transition-all border ${
+          className={`flex flex-col items-start p-2.5 sm:p-3 rounded-md text-left transition-all border ${
             activeTab === 'gallery'
-              ? 'bg-[#141c24] border-blue-500 text-white shadow'
+              ? 'bg-[#181818] border-white/40 text-white shadow'
               : 'bg-transparent border-transparent text-gray-400 hover:bg-[#1a1a1a] hover:text-white'
           }`}
         >
-          <div className="flex items-center justify-between w-full">
-            <span className="text-sm font-bold flex items-center gap-1.5">
-              <span>🖼️</span>
-              <span>2. Galería Inferior (Total de Fotos)</span>
+          <div className="flex items-center justify-between w-full gap-1">
+            <span className="text-xs sm:text-sm font-bold flex items-center gap-1.5 truncate">
+              <Hash className="w-4 h-4 flex-shrink-0 text-gray-400" />
+              <span className="truncate">2. Galería Total</span>
             </span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/40">
-              Total: {galleryItems.length} fotos
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-gray-200 border border-white/20 flex-shrink-0">
+              {galleryItems.length}
             </span>
           </div>
-          <span className="text-[11px] text-gray-400 mt-1">
-            Contiene siempre el total de fotos con su propio orden independiente.
+          <span className="hidden sm:block text-[11px] text-gray-400 mt-1">
+            Contiene siempre el total de fotos con su propio orden.
           </span>
         </button>
       </div>
@@ -317,13 +322,13 @@ const PropertyImageSorter = ({
          ========================================================= */}
       {activeTab === 'top' && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#161616] border border-[#2a2a2a] p-3.5 rounded-lg">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#161616] border border-[#2a2a2a] p-3 rounded-lg">
             <div>
-              <p className="text-white text-sm font-bold">
-                Fotos del Grid Superior ({topGridItems.length} de 7)
+              <p className="text-white text-xs sm:text-sm font-bold">
+                Grid Superior ({topGridItems.length} de 7)
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Elegí qué 7 fotos del total van arriba y su orden (<span className="text-[var(--color-brand)] font-semibold">#1 Portada</span> y <span className="text-blue-400 font-semibold">#2 a #7 Miniaturas</span>). La Galería Inferior conserva siempre el total con su propio orden.
+              <p className="text-[11px] text-gray-400 mt-0.5">
+                Tocá <Star className="w-3 h-3 inline text-gray-300" /> para elegir la <span className="text-[var(--color-brand)] font-semibold">Portada (#1)</span> o <X className="w-3 h-3 inline text-gray-300" /> para quitar del Grid.
               </p>
             </div>
 
@@ -331,28 +336,25 @@ const PropertyImageSorter = ({
               <button
                 type="button"
                 onClick={startNumberingMode}
-                className="flex-shrink-0 bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-xs font-bold px-3.5 py-2 rounded-md transition-colors flex items-center justify-center gap-1.5 shadow"
+                className="flex-shrink-0 bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-xs font-bold px-3 py-2 rounded-md transition-colors flex items-center justify-center gap-1.5 shadow"
               >
-                <span>🔢</span>
-                <span>Elegir las 7 del Grid tocando (1 a 7)</span>
+                <Hash className="w-3.5 h-3.5" />
+                <span>Elegir las 7 tocando (1 a 7)</span>
               </button>
             )}
           </div>
 
           {isNumberingMode ? (
-            /* Numbering Mode for Top Grid: shows ALL photos from galleryItems so user can tap any 7 */
+            /* Numbering Mode for Top Grid */
             <div className="space-y-3">
-              <div className="p-4 rounded-lg bg-[#1e1a14] border-2 border-[var(--color-brand)] space-y-2">
+              <div className="p-3.5 rounded-lg bg-[#1e1a14] border-2 border-[var(--color-brand)] space-y-2">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
-                    <p className="text-white text-sm font-bold flex items-center gap-2">
+                    <p className="text-white text-xs sm:text-sm font-bold flex items-center gap-2">
                       <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-[var(--color-brand)] text-white text-xs">
-                        {numberedIds.length} / 7
+                        {numberedIds.length}/7
                       </span>
-                      Tocá hasta 7 fotos del total para armar el Grid Superior (1° Portada, 2° a 7° Miniaturas)
-                    </p>
-                    <p className="text-xs text-gray-300 mt-1">
-                      Esto solo define las 7 fotos de arriba. El orden de la Galería Inferior queda intacto.
+                      Tocá hasta 7 fotos para el Grid Superior (1° Portada, 2° a 7° Miniaturas)
                     </p>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
@@ -360,22 +362,24 @@ const PropertyImageSorter = ({
                       type="button"
                       onClick={applyNumberingOrder}
                       disabled={numberedIds.length === 0}
-                      className="bg-green-600 hover:bg-green-500 disabled:opacity-40 text-white text-xs font-bold px-3.5 py-2 rounded-md transition-colors"
+                      className="bg-green-600 hover:bg-green-500 disabled:opacity-40 text-white text-xs font-bold px-3 py-1.5 rounded-md transition-colors flex items-center gap-1"
                     >
-                      ✓ Aplicar al Grid ({numberedIds.length})
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Aplicar ({numberedIds.length})</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setNumberedIds([])}
                       disabled={numberedIds.length === 0}
-                      className="bg-[#2a2a2a] hover:bg-[#3a3a3a] disabled:opacity-40 text-white text-xs font-semibold px-3 py-2 rounded-md transition-colors"
+                      className="bg-[#2a2a2a] hover:bg-[#3a3a3a] disabled:opacity-40 text-white text-xs font-semibold px-2.5 py-1.5 rounded-md transition-colors"
+                      title="Reiniciar"
                     >
-                      ↺ Reiniciar
+                      <RotateCcw className="w-3.5 h-3.5" />
                     </button>
                     <button
                       type="button"
                       onClick={cancelNumberingMode}
-                      className="bg-transparent border border-[#555] hover:bg-[#2a2a2a] text-gray-300 text-xs font-semibold px-3 py-2 rounded-md transition-colors"
+                      className="bg-transparent border border-[#555] hover:bg-[#2a2a2a] text-gray-300 text-xs font-semibold px-2.5 py-1.5 rounded-md transition-colors"
                     >
                       Cancelar
                     </button>
@@ -383,7 +387,7 @@ const PropertyImageSorter = ({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
                 {galleryItems.map((item, idx) => {
                   const numberedOrder = numberedIds.indexOf(item.id);
                   const isSelected = numberedOrder !== -1;
@@ -397,7 +401,7 @@ const PropertyImageSorter = ({
                           : 'border-[#333] opacity-80 hover:opacity-100'
                       } bg-[#141414]`}
                     >
-                      <div className="relative w-full h-36 bg-[#0d0d0d]">
+                      <div className="relative w-full h-32 sm:h-36 bg-[#0d0d0d]">
                         {item.type === 'existing' ? (
                           <Image
                             src={item.url}
@@ -415,20 +419,28 @@ const PropertyImageSorter = ({
                         )}
                         <div
                           className={`absolute inset-0 flex flex-col items-center justify-center transition-colors ${
-                            isSelected ? 'bg-black/50' : 'bg-black/20 hover:bg-black/35'
+                            isSelected ? 'bg-black/50' : 'bg-black/20'
                           }`}
                         >
                           <div
-                            className={`w-11 h-11 rounded-full flex items-center justify-center text-lg font-extrabold shadow-lg border-2 ${
+                            className={`w-10 h-10 rounded-full flex items-center justify-center text-base font-extrabold shadow-lg border-2 ${
                               isSelected
-                                ? 'bg-[var(--color-brand)] text-white border-white scale-110'
+                                ? numberedOrder === 0
+                                  ? 'bg-[var(--color-brand)] text-white border-white scale-110'
+                                  : 'bg-[#222] text-white border-white scale-105'
                                 : 'bg-black/60 text-white/70 border-white/50'
                             }`}
                           >
                             {isSelected ? numberedOrder + 1 : '+'}
                           </div>
                           {isSelected && (
-                            <span className="mt-1 bg-black/80 text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                            <span
+                              className={`mt-1 text-[10px] font-bold px-2 py-0.5 rounded ${
+                                numberedOrder === 0
+                                  ? 'bg-[var(--color-brand)] text-white'
+                                  : 'bg-black/80 text-gray-200'
+                              }`}
+                            >
                               {numberedOrder === 0 ? 'PORTADA' : `MINI ${numberedOrder}`}
                             </span>
                           )}
@@ -443,18 +455,19 @@ const PropertyImageSorter = ({
             <>
               {/* Active 7 Slots of Top Grid */}
               {topGridItems.length > 0 && (
-                <div className="bg-[#141414] border border-[#2a2a2a] p-3.5 rounded-lg space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-brand)]">
-                      🌟 Las {topGridItems.length} fotos seleccionadas en el Grid Superior
+                <div className="bg-[#141414] border border-[#2a2a2a] p-3 rounded-lg space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
+                      Las {topGridItems.length} fotos en el Grid Superior
                     </span>
-                    <span className="text-[11px] text-gray-400">
-                      Arrastrá o usá ◀ ▶ para cambiar el orden entre las 7
+                    <span className="hidden sm:inline text-[11px] text-gray-400">
+                      Solo la #1 (Portada) se destaca en color
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-3">
                     {topGridItems.map((item, i) => {
+                      const isCover = i === 0;
                       const isBeingDragged = draggedIdx === i;
                       const isDragTarget = dragOverIdx === i && draggedIdx !== null && draggedIdx !== i;
 
@@ -471,12 +484,12 @@ const PropertyImageSorter = ({
                               ? 'border-[var(--color-brand)] ring-2 ring-[var(--color-brand)] scale-[1.02]'
                               : isBeingDragged
                               ? 'opacity-40 border-dashed border-gray-400'
-                              : i === 0
-                              ? 'border-[var(--color-brand)] ring-1 ring-[var(--color-brand)]'
-                              : 'border-blue-500/70'
+                              : isCover
+                              ? 'border-[var(--color-brand)] ring-2 ring-[var(--color-brand)]'
+                              : 'border-[#333]'
                           } bg-[#181818]`}
                         >
-                          <div className="relative w-full h-36 bg-[#0d0d0d]">
+                          <div className="relative w-full h-28 sm:h-36 bg-[#0d0d0d]">
                             {item.type === 'existing' ? (
                               <Image
                                 src={item.url}
@@ -493,36 +506,44 @@ const PropertyImageSorter = ({
                               />
                             )}
 
-                            {i > 0 ? (
+                            {/* Top-Left: Cover indicator (colorful ONLY for #1) or monochrome Star icon button for #2..#7 */}
+                            {isCover ? (
+                              <span
+                                className="absolute top-1.5 left-1.5 bg-[var(--color-brand)] text-white text-[10px] font-bold px-2 py-1 rounded-md shadow flex items-center gap-1"
+                                title="Esta foto es la Portada principal (#1)"
+                              >
+                                <Star className="w-3 h-3 fill-current" />
+                                <span>PORTADA</span>
+                              </span>
+                            ) : (
                               <button
                                 type="button"
                                 onClick={() => moveTopGridItem(i, 0)}
-                                className="absolute top-1.5 left-1.5 bg-black/80 hover:bg-[var(--color-brand)] text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 shadow transition-colors"
-                                title="Convertir en Portada (#1)"
+                                className="absolute top-1.5 left-1.5 w-7 h-7 bg-black/75 hover:bg-[var(--color-brand)] text-gray-300 hover:text-white border border-white/15 rounded-full flex items-center justify-center shadow transition-colors"
+                                title="Elegir como Portada (#1)"
+                                aria-label="Elegir como Portada"
                               >
-                                <span>⭐</span>
-                                <span>Portada</span>
+                                <Star className="w-3.5 h-3.5" />
                               </button>
-                            ) : (
-                              <span className="absolute top-1.5 left-1.5 bg-[var(--color-brand)] text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
-                                ⭐ PORTADA
-                              </span>
                             )}
 
+                            {/* Top-Right: Compact icon button to remove from Top Grid (no overlap!) */}
                             {topGridItems.length > 1 && (
                               <button
                                 type="button"
                                 onClick={() => removeFromTopGridOnly(item.id)}
-                                className="absolute top-1.5 right-1.5 bg-black/80 hover:bg-red-600 text-gray-200 hover:text-white text-[10px] font-bold px-2 py-0.5 rounded shadow transition-colors"
-                                title="Quitar del Grid Superior (sigue estando en la Galería Inferior)"
+                                className="absolute top-1.5 right-1.5 w-7 h-7 bg-black/75 hover:bg-red-600 text-gray-300 hover:text-white border border-white/15 rounded-full flex items-center justify-center shadow transition-colors"
+                                title="Quitar del Grid Superior (se mantiene en la Galería)"
+                                aria-label="Quitar del Grid Superior"
                               >
-                                Quitar del Grid
+                                <X className="w-3.5 h-3.5" />
                               </button>
                             )}
                           </div>
 
+                          {/* Bottom Bar: Colorful ONLY on #1 Portada; neutral dark on #2..#7 */}
                           <div
-                            className={`flex items-center justify-between px-1.5 py-1 text-[11px] font-bold ${getTopGridColorClass(
+                            className={`flex items-center justify-between px-1 py-1 text-[11px] font-bold ${getTopGridColorClass(
                               i
                             )}`}
                           >
@@ -530,17 +551,17 @@ const PropertyImageSorter = ({
                               type="button"
                               onClick={() => moveTopGridItem(i, i - 1)}
                               disabled={i === 0}
-                              className="w-6 h-6 flex items-center justify-center rounded hover:bg-black/25 disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
-                              title="Mover antes en el Grid"
+                              className="w-6 h-6 flex items-center justify-center rounded hover:bg-black/25 disabled:opacity-25 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+                              title="Mover a la izquierda"
                             >
-                              ◀
+                              <ChevronLeft className="w-4 h-4" />
                             </button>
 
                             <select
                               aria-label={`Posición en Grid Superior ${i + 1}`}
                               value={i}
                               onChange={(e) => moveTopGridItem(i, Number(e.target.value))}
-                              className="bg-transparent text-center font-bold text-[11px] cursor-pointer focus:outline-none hover:underline py-0.5"
+                              className="bg-transparent text-center font-bold text-[11px] cursor-pointer focus:outline-none py-0.5 truncate max-w-[110px]"
                             >
                               {topGridItems.map((_, posIdx) => (
                                 <option key={posIdx} value={posIdx} className="bg-[#181818] text-white">
@@ -553,10 +574,10 @@ const PropertyImageSorter = ({
                               type="button"
                               onClick={() => moveTopGridItem(i, i + 1)}
                               disabled={i === topGridItems.length - 1}
-                              className="w-6 h-6 flex items-center justify-center rounded hover:bg-black/25 disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
-                              title="Mover después en el Grid"
+                              className="w-6 h-6 flex items-center justify-center rounded hover:bg-black/25 disabled:opacity-25 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+                              title="Mover a la derecha"
                             >
-                              ▶
+                              <ChevronRight className="w-4 h-4" />
                             </button>
                           </div>
                         </div>
@@ -566,30 +587,33 @@ const PropertyImageSorter = ({
                 </div>
               )}
 
-              {/* Pool of all photos to pick from if user wants to swap/add into Top Grid */}
+              {/* Pool of all photos to pick from */}
               {galleryItems.length > 0 && (
-                <div className="bg-[#121212] border border-[#252525] p-3.5 rounded-lg space-y-2.5">
+                <div className="bg-[#121212] border border-[#252525] p-3 rounded-lg space-y-2.5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                     <span className="text-xs font-bold text-gray-300">
-                      Todas las fotos disponibles ({galleryItems.length}) — Elegí cuáles sumar o usar en el Grid Superior:
-                    </span>
-                    <span className="text-[11px] text-gray-500">
-                      Para ordenar la galería completa, pasá a la pestaña &ldquo;2. Galería Inferior&rdquo;
+                      Total de fotos ({galleryItems.length}) — Tocá <Plus className="w-3 h-3 inline" /> para subir al Grid o <Star className="w-3 h-3 inline" /> para hacer Portada:
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2.5">
+                  <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2">
                     {galleryItems.map((item, idx) => {
-                      const inTop = topGridIdSet.has(item.id);
-                      const rankLabel = getTopGridRank(item.id);
+                      const topIdx = topGridItems.findIndex((it) => it.id === item.id);
+                      const inTop = topIdx !== -1;
+                      const isCover = topIdx === 0;
+
                       return (
                         <div
                           key={`pool_${item.id}`}
                           className={`relative rounded-md overflow-hidden border transition-all ${
-                            inTop ? 'border-[var(--color-brand)]' : 'border-[#2a2a2a] opacity-80 hover:opacity-100'
+                            isCover
+                              ? 'border-[var(--color-brand)] ring-1 ring-[var(--color-brand)]'
+                              : inTop
+                              ? 'border-white/40'
+                              : 'border-[#2a2a2a]'
                           } bg-[#181818]`}
                         >
-                          <div className="relative w-full h-24 bg-[#0d0d0d]">
+                          <div className="relative w-full h-20 sm:h-24 bg-[#0d0d0d]">
                             {item.type === 'existing' ? (
                               <Image
                                 src={item.url}
@@ -607,24 +631,35 @@ const PropertyImageSorter = ({
                             )}
 
                             {inTop ? (
-                              <div className="absolute inset-x-0 bottom-0 bg-[var(--color-brand)]/95 text-white text-[10px] font-bold py-0.5 text-center">
-                                ✓ En Grid ({rankLabel})
+                              <div
+                                className={`absolute inset-x-0 bottom-0 text-[10px] font-bold py-0.5 text-center ${
+                                  isCover
+                                    ? 'bg-[var(--color-brand)] text-white'
+                                    : 'bg-black/80 text-gray-200'
+                                }`}
+                              >
+                                {isCover ? '★ #1 Portada' : `En Grid (#${topIdx + 1})`}
                               </div>
                             ) : (
-                              <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 p-1">
+                              /* Mobile & Desktop friendly icon buttons always accessible */
+                              <div className="absolute inset-x-0 top-1 px-1 flex items-center justify-between">
                                 <button
                                   type="button"
                                   onClick={() => addToTopGridFromPool(item.id, true)}
-                                  className="w-full bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[9px] font-bold py-1 rounded shadow"
+                                  className="w-6 h-6 bg-black/75 hover:bg-[var(--color-brand)] text-gray-300 hover:text-white rounded-full flex items-center justify-center shadow border border-white/15"
+                                  title="Usar como Portada (#1)"
+                                  aria-label="Usar como Portada"
                                 >
-                                  ⭐ Usar de Portada
+                                  <Star className="w-3 h-3" />
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => addToTopGridFromPool(item.id, false)}
-                                  className="w-full bg-blue-600 hover:bg-blue-500 text-white text-[9px] font-bold py-1 rounded shadow"
+                                  className="w-6 h-6 bg-black/75 hover:bg-white/20 text-white rounded-full flex items-center justify-center shadow border border-white/15"
+                                  title="Subir al Grid Superior"
+                                  aria-label="Subir al Grid Superior"
                                 >
-                                  + Subir al Grid
+                                  <Plus className="w-3.5 h-3.5" />
                                 </button>
                               </div>
                             )}
@@ -645,13 +680,13 @@ const PropertyImageSorter = ({
          ========================================================= */}
       {activeTab === 'gallery' && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#161616] border border-[#2a2a2a] p-3.5 rounded-lg">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#161616] border border-[#2a2a2a] p-3 rounded-lg">
             <div>
-              <p className="text-white text-sm font-bold">
-                Orden de la Galería Inferior (Total: {galleryItems.length} fotos)
+              <p className="text-white text-xs sm:text-sm font-bold">
+                Galería Inferior (Total: {galleryItems.length} fotos)
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">
-                La Galería Inferior <strong>contiene siempre el total de fotos</strong>. Ordenalas libremente sin que cambie el Grid Superior.
+              <p className="text-[11px] text-gray-400 mt-0.5">
+                Contiene siempre el total de fotos con su propio orden independiente del Grid Superior.
               </p>
             </div>
 
@@ -659,26 +694,23 @@ const PropertyImageSorter = ({
               <button
                 type="button"
                 onClick={startNumberingMode}
-                className="flex-shrink-0 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3.5 py-2 rounded-md transition-colors flex items-center justify-center gap-1.5 shadow"
+                className="flex-shrink-0 bg-[#2a2a2a] hover:bg-[#383838] border border-white/20 text-white text-xs font-bold px-3 py-2 rounded-md transition-colors flex items-center justify-center gap-1.5 shadow"
               >
-                <span>🔢</span>
+                <Hash className="w-3.5 h-3.5" />
                 <span>Ordenar Galería tocando (1, 2, 3...)</span>
               </button>
             )}
           </div>
 
           {isNumberingMode && (
-            <div className="p-4 rounded-lg bg-[#131b24] border-2 border-blue-500 space-y-2">
+            <div className="p-3.5 rounded-lg bg-[#181818] border-2 border-white/40 space-y-2">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <p className="text-white text-sm font-bold flex items-center gap-2">
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white text-xs">
+                  <p className="text-white text-xs sm:text-sm font-bold flex items-center gap-2">
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white text-black text-xs">
                       {numberedIds.length}
                     </span>
                     Tocá las fotos en el orden en que querés que aparezcan en la Galería Inferior
-                  </p>
-                  <p className="text-xs text-gray-300 mt-1">
-                    Las que no toques quedarán detrás manteniendo su orden actual. El Grid Superior no se modifica.
                   </p>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
@@ -686,22 +718,24 @@ const PropertyImageSorter = ({
                     type="button"
                     onClick={applyNumberingOrder}
                     disabled={numberedIds.length === 0}
-                    className="bg-green-600 hover:bg-green-500 disabled:opacity-40 text-white text-xs font-bold px-3.5 py-2 rounded-md transition-colors"
+                    className="bg-green-600 hover:bg-green-500 disabled:opacity-40 text-white text-xs font-bold px-3 py-1.5 rounded-md transition-colors flex items-center gap-1"
                   >
-                    ✓ Aplicar orden ({numberedIds.length})
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Aplicar ({numberedIds.length})</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setNumberedIds([])}
                     disabled={numberedIds.length === 0}
-                    className="bg-[#2a2a2a] hover:bg-[#3a3a3a] disabled:opacity-40 text-white text-xs font-semibold px-3 py-2 rounded-md transition-colors"
+                    className="bg-[#2a2a2a] hover:bg-[#3a3a3a] disabled:opacity-40 text-white text-xs font-semibold px-2.5 py-1.5 rounded-md transition-colors"
+                    title="Reiniciar"
                   >
-                    ↺ Reiniciar
+                    <RotateCcw className="w-3.5 h-3.5" />
                   </button>
                   <button
                     type="button"
                     onClick={cancelNumberingMode}
-                    className="bg-transparent border border-[#555] hover:bg-[#2a2a2a] text-gray-300 text-xs font-semibold px-3 py-2 rounded-md transition-colors"
+                    className="bg-transparent border border-[#555] hover:bg-[#2a2a2a] text-gray-300 text-xs font-semibold px-2.5 py-1.5 rounded-md transition-colors"
                   >
                     Cancelar
                   </button>
@@ -711,7 +745,7 @@ const PropertyImageSorter = ({
           )}
 
           {galleryItems.length > 0 && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-3">
               {galleryItems.map((item, i) => {
                 const numberedOrder = numberedIds.indexOf(item.id);
                 const isSelectedInNumbering = numberedOrder !== -1;
@@ -733,16 +767,16 @@ const PropertyImageSorter = ({
                     className={`relative rounded-lg overflow-hidden border transition-all select-none ${
                       isNumberingMode
                         ? isSelectedInNumbering
-                          ? 'border-blue-500 ring-2 ring-blue-500 cursor-pointer'
+                          ? 'border-white ring-2 ring-white cursor-pointer'
                           : 'border-[#333] hover:border-gray-400 cursor-pointer opacity-80 hover:opacity-100'
                         : isDragTarget
-                        ? 'border-blue-500 ring-2 ring-blue-500 scale-[1.02]'
+                        ? 'border-white ring-2 ring-white scale-[1.02]'
                         : isBeingDragged
                         ? 'opacity-40 border-dashed border-gray-400'
                         : 'border-[#333]'
                     } bg-[#141414]`}
                   >
-                    <div className="relative w-full h-36 bg-[#0d0d0d]">
+                    <div className="relative w-full h-28 sm:h-36 bg-[#0d0d0d]">
                       {item.type === 'existing' ? (
                         <Image
                           src={item.url}
@@ -766,21 +800,21 @@ const PropertyImageSorter = ({
                       )}
 
                       {topRank && !isNumberingMode && (
-                        <span className="absolute bottom-1.5 left-1.5 bg-black/80 text-amber-300 border border-amber-500/40 font-semibold text-[9px] px-1.5 py-0.5 rounded">
-                          🌟 Grid Sup: {topRank}
+                        <span className="absolute bottom-1.5 left-1.5 bg-black/80 text-gray-200 border border-white/20 font-semibold text-[9px] px-1.5 py-0.5 rounded">
+                          Grid: {topRank}
                         </span>
                       )}
 
                       {isNumberingMode && (
                         <div
                           className={`absolute inset-0 flex items-center justify-center transition-colors ${
-                            isSelectedInNumbering ? 'bg-black/45' : 'bg-black/15 hover:bg-black/30'
+                            isSelectedInNumbering ? 'bg-black/45' : 'bg-black/15'
                           }`}
                         >
                           <div
-                            className={`w-11 h-11 rounded-full flex items-center justify-center text-lg font-extrabold shadow-lg border-2 ${
+                            className={`w-10 h-10 rounded-full flex items-center justify-center text-base font-extrabold shadow-lg border-2 ${
                               isSelectedInNumbering
-                                ? 'bg-blue-600 text-white border-white scale-110'
+                                ? 'bg-white text-black border-white scale-110'
                                 : 'bg-black/60 text-white/70 border-white/50'
                             }`}
                           >
@@ -798,11 +832,11 @@ const PropertyImageSorter = ({
                                 e.stopPropagation();
                                 moveGalleryItem(i, 0);
                               }}
-                              className="absolute top-1.5 left-1.5 bg-black/80 hover:bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 shadow transition-colors"
-                              title="Mandar al puesto #1 de la Galería Inferior"
+                              className="absolute top-1.5 left-1.5 w-7 h-7 bg-black/75 hover:bg-white/20 text-gray-200 rounded-full flex items-center justify-center shadow border border-white/15 transition-colors"
+                              title="Enviar al puesto #1 de la Galería"
+                              aria-label="Enviar al puesto 1 de la Galería"
                             >
-                              <span>⏫</span>
-                              <span>1° en Galería</span>
+                              <ArrowUpToLine className="w-3.5 h-3.5" />
                             </button>
                           )}
 
@@ -812,16 +846,17 @@ const PropertyImageSorter = ({
                               e.stopPropagation();
                               handleDeletePhotoCompletely(item.id);
                             }}
-                            className="absolute top-1.5 right-1.5 w-6 h-6 bg-red-600/90 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow transition-colors"
+                            className="absolute top-1.5 right-1.5 w-7 h-7 bg-black/75 hover:bg-red-600 text-gray-300 hover:text-white rounded-full flex items-center justify-center shadow border border-white/15 transition-colors"
                             title="Eliminar foto de la propiedad"
+                            aria-label="Eliminar foto de la propiedad"
                           >
-                            ×
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </>
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between px-1.5 py-1 text-[11px] font-bold bg-[#1e293b] text-white">
+                    <div className="flex items-center justify-between px-1 py-1 text-[11px] font-bold bg-[#222] text-gray-200 border-t border-[#333]">
                       {!isNumberingMode ? (
                         <>
                           <button
@@ -831,10 +866,10 @@ const PropertyImageSorter = ({
                               moveGalleryItem(i, i - 1);
                             }}
                             disabled={i === 0}
-                            className="w-6 h-6 flex items-center justify-center rounded hover:bg-black/25 disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
-                            title="Mover antes en Galería"
+                            className="w-6 h-6 flex items-center justify-center rounded hover:bg-black/25 disabled:opacity-25 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+                            title="Mover antes"
                           >
-                            ◀
+                            <ChevronLeft className="w-4 h-4" />
                           </button>
 
                           <select
@@ -842,11 +877,11 @@ const PropertyImageSorter = ({
                             value={i}
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) => moveGalleryItem(i, Number(e.target.value))}
-                            className="bg-transparent text-center font-bold text-[11px] cursor-pointer focus:outline-none hover:underline py-0.5"
+                            className="bg-transparent text-center font-bold text-[11px] cursor-pointer focus:outline-none py-0.5 truncate max-w-[110px]"
                           >
                             {galleryItems.map((_, posIdx) => (
                               <option key={posIdx} value={posIdx} className="bg-[#181818] text-white">
-                                #{posIdx + 1} de {galleryItems.length} en Galería
+                                #{posIdx + 1} de {galleryItems.length}
                               </option>
                             ))}
                           </select>
@@ -858,15 +893,15 @@ const PropertyImageSorter = ({
                               moveGalleryItem(i, i + 1);
                             }}
                             disabled={i === galleryItems.length - 1}
-                            className="w-6 h-6 flex items-center justify-center rounded hover:bg-black/25 disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
-                            title="Mover después en Galería"
+                            className="w-6 h-6 flex items-center justify-center rounded hover:bg-black/25 disabled:opacity-25 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+                            title="Mover después"
                           >
-                            ▶
+                            <ChevronRight className="w-4 h-4" />
                           </button>
                         </>
                       ) : (
                         <div className="w-full text-center py-0.5">
-                          Actual: #{i + 1} en Galería
+                          #{i + 1} en Galería
                         </div>
                       )}
                     </div>
@@ -882,7 +917,7 @@ const PropertyImageSorter = ({
       {removedImages.length > 0 && onUndoRemoveExisting && (
         <div className="flex flex-wrap gap-2 p-3 bg-red-950/20 border border-red-900/50 rounded-lg">
           <span className="text-xs text-red-400 font-semibold mr-1 flex items-center">
-            Fotos marcadas para eliminar al guardar ({removedImages.length}):
+            Eliminadas ({removedImages.length}):
           </span>
           {removedImages.map((url, idx) => (
             <button
@@ -912,11 +947,7 @@ const PropertyImageSorter = ({
           htmlFor="property_images_input"
           className="cursor-pointer text-[var(--color-brand)] hover:text-white text-sm font-bold flex items-center justify-center gap-2 transition-colors"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="17 8 12 3 7 8" />
-            <line x1="12" y1="3" x2="12" y2="15" />
-          </svg>
+          <Plus className="w-5 h-5" />
           <span>{items.length > 0 ? 'Agregar más fotos al total' : 'Seleccionar fotos de la propiedad'}</span>
         </label>
         <p className={helperClass}>
