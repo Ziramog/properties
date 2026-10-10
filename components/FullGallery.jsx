@@ -6,7 +6,13 @@ const FullGallery = ({ images = [], propertyName }) => {
   if (images.length === 0) return null;
 
   return (
-    <Gallery options={{ bgOpacity: 0.95, padding: { top: 80, bottom: 80, left: 20, right: 20 } }}>
+    <Gallery
+      options={{
+        bgOpacity: 0.95,
+        padding: { top: 80, bottom: 80, left: 20, right: 20 },
+        showHideAnimationType: 'fade',
+      }}
+    >
       <section className="rounded-none md:rounded-[30px] overflow-hidden mx-[-16px] md:mx-0">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-[5px]">
             {images.map((image, index) => (
