@@ -277,3 +277,12 @@
   font-size: 13px !important;
   font-weight: 500 !important;
 }
+
+/* ============================================
+   PHOTOSWIPE LIGHTBOX OVERRIDES
+   Prevent placeholder with height:auto from overflowing before removal
+   ============================================ */
+.pswp__img--placeholder {
+  display: none !important;
+}
+

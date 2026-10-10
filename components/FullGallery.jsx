@@ -16,7 +16,7 @@ const FullGallery = ({ images = [], propertyName }) => {
       <section className="rounded-none md:rounded-[30px] overflow-hidden mx-[-16px] md:mx-0">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-[5px]">
             {images.map((image, index) => (
-              <Item key={index} original={image?.url} thumbnail={image?.url} width="1920" height="1280">
+              <Item key={index} original={image?.url} width="1920" height="1280">
                 {({ ref, open }) => (
                   <div
                     ref={ref}
