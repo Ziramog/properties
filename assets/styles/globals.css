@@ -280,9 +280,15 @@
 
 /* ============================================
    PHOTOSWIPE LIGHTBOX OVERRIDES
-   Prevent placeholder with height:auto from overflowing before removal
+   - Prevent placeholder with height:auto from overflowing before removal
+   - Preserve natural aspect ratio so images never stretch or distort
    ============================================ */
 .pswp__img--placeholder {
   display: none !important;
 }
+
+.pswp__img {
+  object-fit: contain !important;
+}
+
 
