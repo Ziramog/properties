@@ -128,13 +128,16 @@ function parseStoryTitleAndCondition(property) {
   // 2. Parse Title into clean commercial representation without arbitrary cuts
   let cleanTitle = rawName;
 
+  // Clean quotes around building names: EDIFICIO "LAS PIRCAS" -> EDIFICIO LAS PIRCAS
+  cleanTitle = cleanTitle.replace(/EDIFICIO\s+["“]([^"”]+)["”]/gi, 'EDIFICIO $1');
+
   if (cleanTitle.includes(',')) {
     const parts = cleanTitle.split(',').map((s) => s.trim()).filter(Boolean);
 
     // If it's simply a 2-part address + neighborhood (e.g. "Las Rosas 1100, B° El Golf")
     if (parts.length === 2 && !/^c[oó]rdoba$/i.test(parts[0]) && !/permuta|canje/i.test(parts[1])) {
       return {
-        title: rawName,
+        title: cleanTitle,
         condition,
       };
     }
@@ -147,9 +150,9 @@ function parseStoryTitleAndCondition(property) {
       return true;
     });
 
-    // Look for property type descriptor (e.g. "Casa de 2 dormitorios", "Lote de 1.216 m2")
+    // Look for property type descriptor (e.g. "Casa de 2 dormitorios", "DPTO 1\"F\"")
     const typePartIndex = filteredParts.findIndex((p) =>
-      /casa|depto|departamento|lote|terreno|campo|chacra|galp[oó]n|oficina|local/i.test(p)
+      /casa|dpto|depto|departamento|lote|terreno|campo|chacra|galp[oó]n|oficina|local/i.test(p)
     );
 
     if (typePartIndex !== -1) {
@@ -161,8 +164,10 @@ function parseStoryTitleAndCondition(property) {
       if (hasEmbeddedLocation) {
         cleanTitle = typePart;
       } else if (otherParts.length > 0) {
-        const specificPart = otherParts.find((p) => p.toLowerCase() !== city) || otherParts[0];
-        cleanTitle = `${typePart} · ${specificPart}`;
+        cleanTitle = filteredParts.join(' · ');
+        if (/^dpto\s+[^·]+·\s*torre/i.test(cleanTitle)) {
+          cleanTitle = cleanTitle.replace(/^(dpto\s+[^·]+?)\s*·\s*(torre)/i, '$1, $2');
+        }
       } else {
         cleanTitle = typePart;
       }
@@ -370,16 +375,35 @@ export async function GET(request, { params }) {
       const data = extractStoryDataV2_3(property);
       const corporateOrange = '#F26B2E';
 
-      // Load PT Serif Bold font for editorial headings
-      const fontPath = join(process.cwd(), 'assets', 'fonts', 'pt-serif', 'PTSerif-Bold.ttf');
-      let fontOptions = [];
-      if (existsSync(fontPath)) {
-        const ptSerifBuffer = readFileSync(fontPath);
+      // Load PT Serif Bold and Montserrat fonts for exact editorial typography match
+      const fontOptions = [];
+      const ptSerifPath = join(process.cwd(), 'assets', 'fonts', 'pt-serif', 'PTSerif-Bold.ttf');
+      if (existsSync(ptSerifPath)) {
         fontOptions.push({
           name: 'PT Serif',
-          data: ptSerifBuffer,
+          data: readFileSync(ptSerifPath),
           style: 'normal',
           weight: 700,
+        });
+      }
+
+      const montserratBoldPath = join(process.cwd(), 'assets', 'fonts', 'montserrat', 'Montserrat-Bold.woff');
+      if (existsSync(montserratBoldPath)) {
+        fontOptions.push({
+          name: 'Montserrat',
+          data: readFileSync(montserratBoldPath),
+          style: 'normal',
+          weight: 700,
+        });
+      }
+
+      const montserratRegularPath = join(process.cwd(), 'assets', 'fonts', 'montserrat', 'Montserrat-Regular.woff');
+      if (existsSync(montserratRegularPath)) {
+        fontOptions.push({
+          name: 'Montserrat',
+          data: readFileSync(montserratRegularPath),
+          style: 'normal',
+          weight: 400,
         });
       }
 
@@ -395,7 +419,7 @@ export async function GET(request, { params }) {
               display: 'flex',
               flexDirection: 'column',
               backgroundColor: '#0B0D10',
-              fontFamily: 'sans-serif',
+              fontFamily: '"Montserrat", sans-serif',
               position: 'relative',
             }}
           >
@@ -435,7 +459,7 @@ export async function GET(request, { params }) {
             <div
               style={{
                 position: 'absolute',
-                top: 70,
+                top: 65,
                 left: 0,
                 width: '100%',
                 display: 'flex',
@@ -452,63 +476,51 @@ export async function GET(request, { params }) {
                 style={{
                   objectFit: 'contain',
                   filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
-                  marginBottom: '12px',
+                  marginBottom: '10px',
                 }}
               />
 
               <span
                 style={{
                   color: '#FFFFFF',
-                  fontSize: 38,
-                  fontFamily: '"PT Serif", serif',
+                  fontSize: 34,
+                  fontFamily: '"Montserrat", sans-serif',
                   fontWeight: 700,
-                  letterSpacing: '3px',
+                  letterSpacing: '3.5px',
                   textTransform: 'uppercase',
                   textAlign: 'center',
                   textShadow: '0 2px 10px rgba(0,0,0,0.9)',
-                  marginBottom: '4px',
+                  marginBottom: '6px',
                 }}
               >
                 SILVIA ROGGERO & ROMA
               </span>
 
-              <span
-                style={{
-                  color: '#FFFFFF',
-                  fontSize: 24,
-                  fontWeight: 700,
-                  letterSpacing: '6px',
-                  fontFamily: 'sans-serif',
-                  textTransform: 'uppercase',
-                  textAlign: 'center',
-                  textShadow: '0 2px 8px rgba(0,0,0,0.9)',
-                }}
-              >
-                NEGOCIOS INMOBILIARIOS
-              </span>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '8px' }}>
-                <div style={{ width: '45px', height: '1.5px', backgroundColor: corporateOrange }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div style={{ width: '40px', height: '2px', backgroundColor: corporateOrange }} />
                 <span
                   style={{
-                    color: '#CBD5E1',
-                    fontSize: 16,
-                    fontWeight: 600,
-                    letterSpacing: '3.5px',
+                    color: '#FFFFFF',
+                    fontSize: 18,
+                    fontWeight: 700,
+                    letterSpacing: '4.5px',
+                    fontFamily: '"Montserrat", sans-serif',
                     textTransform: 'uppercase',
+                    textAlign: 'center',
+                    textShadow: '0 2px 8px rgba(0,0,0,0.9)',
                   }}
                 >
-                  ALTA GRACIA, CÓRDOBA · ARGENTINA
+                  NEGOCIOS INMOBILIARIOS
                 </span>
-                <div style={{ width: '45px', height: '1.5px', backgroundColor: corporateOrange }} />
+                <div style={{ width: '40px', height: '2px', backgroundColor: corporateOrange }} />
               </div>
             </div>
 
-            {/* ZONA 2: Etiquetas de la Publicación (Cuadradas, más grandes, Top-Left como en Imagen 2) */}
+            {/* ZONA 2: Etiquetas de la Publicación (Top-Left) */}
             <div
               style={{
                 position: 'absolute',
-                top: 335,
+                top: 320,
                 left: 65,
                 display: 'flex',
                 gap: '12px',
@@ -519,10 +531,10 @@ export async function GET(request, { params }) {
                 <div
                   key={idx}
                   style={{
-                    backgroundColor: b.isPrimary ? corporateOrange : 'rgba(11, 13, 16, 0.8)',
-                    border: b.isPrimary ? 'none' : '1.5px solid rgba(255, 255, 255, 0.45)',
-                    padding: '14px 28px',
-                    borderRadius: '8px',
+                    backgroundColor: b.isPrimary ? corporateOrange : 'rgba(20, 26, 38, 0.85)',
+                    border: b.isPrimary ? 'none' : '1px solid rgba(255, 255, 255, 0.35)',
+                    padding: '12px 24px',
+                    borderRadius: '6px',
                     boxShadow: '0 6px 20px rgba(0, 0, 0, 0.55)',
                     display: 'flex',
                     alignItems: 'center',
@@ -531,10 +543,11 @@ export async function GET(request, { params }) {
                   <span
                     style={{
                       color: '#FFFFFF',
-                      fontSize: 28,
-                      fontWeight: 800,
-                      letterSpacing: '2.5px',
+                      fontSize: 24,
+                      fontWeight: 700,
+                      letterSpacing: '2px',
                       textTransform: 'uppercase',
+                      fontFamily: '"Montserrat", sans-serif',
                     }}
                   >
                     {b.text}
@@ -543,7 +556,7 @@ export async function GET(request, { params }) {
               ))}
             </div>
 
-            {/* ZONA 3: Bloque de Información Inferior (Bottom Safe Area 330px para controles nativos de Instagram) */}
+            {/* ZONA 3: Bloque de Información Inferior */}
             <div
               style={{
                 position: 'absolute',
@@ -552,7 +565,7 @@ export async function GET(request, { params }) {
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                padding: '0 65px 330px 65px',
+                padding: '0 65px 125px 65px',
                 zIndex: 20,
               }}
             >
@@ -571,37 +584,42 @@ export async function GET(request, { params }) {
                 {data.title}
               </h1>
 
-              {/* Ubicación con Pin Naranja de PropertyGallery */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
-                <svg
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={corporateOrange}
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                  <path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+              {/* Ubicación con Pin Naranja Sólido */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C10.6193 11.5 9.5 10.3807 9.5 9C9.5 7.61929 10.6193 6.5 12 6.5C13.3807 6.5 14.5 7.61929 14.5 9C14.5 10.3807 13.3807 11.5 12 11.5Z"
+                    fill={corporateOrange}
+                  />
                 </svg>
-                <span style={{ color: '#E2E8F0', fontSize: 28, fontWeight: 500 }}>
+                <span style={{ color: '#F1F5F9', fontSize: 26, fontWeight: 500, fontFamily: '"Montserrat", sans-serif' }}>
                   {data.locationFull}
                 </span>
               </div>
 
-              {/* Características — Estilo Mosaic Dark (PropertyGallery) con separación homogénea */}
+              {/* Separador fino bajo la ubicación */}
+              <div
+                style={{
+                  width: '100%',
+                  height: '1px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  marginBottom: '20px',
+                }}
+              />
+
+              {/* Características — Estilo Mosaic con divisores verticales */}
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '22px' }}>
                 {/* Terreno / Campo: Icono LandPlot de Lucide */}
                 {Boolean(data.isLand && data.areaDisplay) ? (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginRight: '40px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <svg
                       width="32"
                       height="32"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="#FFFFFF"
+                      stroke={corporateOrange}
                       strokeWidth="1.8"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -609,52 +627,63 @@ export async function GET(request, { params }) {
                       <path d="m12 8 6-3-6-3v10" />
                       <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
                       <path d="m6.49 12.85 11.02 6.3" />
-                      <path d="M17.51 12.85 6.5 19.15" />
+                      <path d="M17.51 12.85 6.49 19.15" />
                     </svg>
-                    <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600 }}>
+                    <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600, fontFamily: '"Montserrat", sans-serif' }}>
                       {data.areaDisplay}
                     </span>
                   </div>
                 ) : null}
 
-                {/* Vivienda: Dormitorios, Baños, Superficies con SVGs originales */}
+                {/* Vivienda: Dormitorios, Baños, Superficies con divisores verticales */}
                 {!data.isLand ? (
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     {Boolean(data.beds && data.beds > 0) ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginRight: '40px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <img src={assets.bedIconUrl} width={34} height={27} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600 }}>
+                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600, fontFamily: '"Montserrat", sans-serif' }}>
                           {data.beds} Dorms
                         </span>
                       </div>
                     ) : null}
 
+                    {Boolean(data.beds && data.beds > 0 && data.baths && data.baths > 0) ? (
+                      <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 24px' }} />
+                    ) : null}
+
                     {Boolean(data.baths && data.baths > 0) ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginRight: '40px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <img src={assets.bathIconUrl} width={32} height={25} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600 }}>
+                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600, fontFamily: '"Montserrat", sans-serif' }}>
                           {data.baths} Baños
                         </span>
                       </div>
                     ) : null}
 
+                    {Boolean((data.beds > 0 || data.baths > 0) && data.coveredAreaDisplay) ? (
+                      <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 24px' }} />
+                    ) : null}
+
                     {Boolean(data.coveredAreaDisplay) ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginRight: '40px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <img src={assets.sqftIconUrl} width={28} height={28} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600 }}>
+                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600, fontFamily: '"Montserrat", sans-serif' }}>
                           {data.coveredAreaDisplay}
                         </span>
                       </div>
                     ) : null}
 
-                    {Boolean(data.totalAreaDisplay && !data.coveredAreaDisplay) ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginRight: '40px' }}>
+                    {Boolean(!data.coveredAreaDisplay && data.totalAreaDisplay) ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        {(data.beds > 0 || data.baths > 0) ? (
+                          <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 24px' }} />
+                        ) : null}
                         <svg
                           width="32"
                           height="32"
                           viewBox="0 0 24 24"
                           fill="none"
-                          stroke="#FFFFFF"
+                          stroke={corporateOrange}
                           strokeWidth="1.8"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -662,9 +691,9 @@ export async function GET(request, { params }) {
                           <path d="m12 8 6-3-6-3v10" />
                           <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
                           <path d="m6.49 12.85 11.02 6.3" />
-                          <path d="M17.51 12.85 6.5 19.15" />
+                          <path d="M17.51 12.85 6.49 19.15" />
                         </svg>
-                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600 }}>
+                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600, fontFamily: '"Montserrat", sans-serif' }}>
                           {data.totalAreaDisplay}
                         </span>
                       </div>
@@ -673,22 +702,12 @@ export async function GET(request, { params }) {
                 ) : null}
               </div>
 
-              {/* Separador fino */}
-              <div
-                style={{
-                  width: '100%',
-                  height: '1.5px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.22)',
-                  marginBottom: '20px',
-                }}
-              />
-
               {/* Fila del Precio Prominente */}
-              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '20px' }}>
                 <span
                   style={{
                     color: corporateOrange,
-                    fontSize: 72,
+                    fontSize: 74,
                     fontFamily: '"PT Serif", serif',
                     fontWeight: 700,
                     letterSpacing: '1px',
@@ -699,22 +718,22 @@ export async function GET(request, { params }) {
                 </span>
               </div>
 
-              {/* Zona CTA Orientativa & Espacio para Sticker de Instagram */}
+              {/* Zona CTA Orientativa */}
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   width: '100%',
-                  backgroundColor: 'rgba(11, 13, 16, 0.65)',
-                  border: '1.5px solid rgba(242, 107, 46, 0.75)',
+                  backgroundColor: 'rgba(11, 13, 16, 0.8)',
+                  border: '1.5px solid #F26B2E',
                   borderRadius: '16px',
-                  padding: '16px 28px',
-                  boxShadow: '0 6px 20px rgba(0, 0, 0, 0.45)',
+                  padding: '18px 24px',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.55)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <svg width="38" height="38" viewBox="0 0 24 24" fill="none">
                     <path
                       d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.884 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.456 5.711 1.457h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 00-3.48-8.413z"
                       fill="#25D366"
@@ -728,11 +747,21 @@ export async function GET(request, { params }) {
                         fontWeight: 700,
                         letterSpacing: '1.5px',
                         textTransform: 'uppercase',
+                        fontFamily: '"Montserrat", sans-serif',
                       }}
                     >
                       CONSULTÁ POR WHATSAPP
                     </span>
-                    <span style={{ color: '#94A3B8', fontSize: 16, fontWeight: 500, letterSpacing: '0.5px' }}>
+                    <span
+                      style={{
+                        color: '#CBD5E1',
+                        fontSize: 18,
+                        fontWeight: 400,
+                        letterSpacing: '0.5px',
+                        fontFamily: '"Montserrat", sans-serif',
+                        marginTop: '2px',
+                      }}
+                    >
                       Tocá el sticker enlace o escribinos
                     </span>
                   </div>
@@ -743,14 +772,24 @@ export async function GET(request, { params }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    width: '42px',
-                    height: '42px',
+                    width: '46px',
+                    height: '46px',
                     borderRadius: '50%',
-                    backgroundColor: 'rgba(242, 107, 46, 0.2)',
+                    backgroundColor: 'rgba(242, 107, 46, 0.25)',
                   }}
                 >
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={corporateOrange} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M7 17L17 7M17 7H7M17 7V17" />
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke={corporateOrange}
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
                   </svg>
                 </div>
               </div>
