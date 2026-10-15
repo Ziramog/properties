@@ -59,17 +59,36 @@
 
 ## 7. Sistema de Generación de Historias para Redes (Story Engine)
 - **Endpoint:** `/api/story/[id]` (soporta query `?template=...`).
-- **Plantilla Predeterminada:** `rr-story-v2.2` (alineada al diseño de referencia en octubre 2026).
-- **Especificaciones Visuales:**
-  - Resolución: 1080 × 1920 px (9:16 vertical).
-  - Header: Isotipo blanco oficial en alta definición, «SILVIA ROGGERO & ROMA» (PT Serif Bold), descriptor «NEGOCIOS INMOBILIARIOS» y filete naranja con «ALTA GRACIA, CÓRDOBA · ARGENTINA».
-  - Etiquetas Dinámicas de Publicación: Ubicadas en la zona superior izquierda (top 335 px, left 65 px), con formato rectangular («cuadradas», border-radius 8 px) y texto ampliado (28 px bold). Reflejan fielmente los datos reales del inmueble (`is_featured` -> `DESTACADA`, `status` -> `PRECIO MEJORADO`, `APTO CRÉDITO`, `ÚLTIMA UNIDAD`, etc., y condiciones como `ACEPTA PERMUTA`).
-  - Iconos y Datos Técnicos: Reutilizan la iconografía de la sección «Mosaic Dark» de la galería de detalles (`PropertyGallery.jsx`): Pin naranja de ubicación, `LandPlot` para terrenos/fracciones con hectáreas/metros cuadrados, y `ico_bed`, `ico_bath`, `ico_sqfoot` para viviendas, dispuestos de forma limpia sobre el degradado sin cápsulas grises pesadas.
-  - Precio: Formateado en PT Serif Bold y resaltado en naranja corporativo `#F26B2E`.
-  - Botón «Ver más →»: Botón rectangular destacado en naranja corporativo que invita al seguidor a la acción.
-  - Enlace Directo (Mobile Web Share): Dado que los formatos de imagen estática (PNG) no admiten hipervínculos HTML embebidos en Instagram Stories, `StoryShareButton.jsx` copia automáticamente la URL canónica de la propiedad (`https://roggeroyroma.com.ar/properties/[id]`) al portapapeles al preparar la imagen, permitiendo al usuario pegar el enlace directamente en el Sticker de Enlace nativo de Instagram Stories sobre el botón «Ver más →».
+- **Plantilla Predeterminada:** `rr-story-v2.2` (Story V2 Final con integración de WhatsApp y zonas seguras de Instagram).
+- **Especificaciones Visuales e Identidad Gráfica:**
+  - **Resolución:** 1080 × 1920 px (9:16 vertical nativo).
+  - **Zonas Seguras (Safe Areas):**
+    - Zona Superior (0 a 250 px): Protegida para la interfaz nativa de Instagram (barra de progreso, avatar, nombre de usuario y botón cerrar). El Header institucional queda enmarcado entre `top: 70px` y `top: 220px`.
+    - Zona Inferior (1590 a 1920 px, margen de 330 px): Protegida para la barra de respuesta nativa de Instagram («Enviar mensaje», «Me gusta», «Compartir»). Todo el contenido editorial se sitúa por encima de los 330 px.
+    - Zona de Sticker de Enlace: Entre `bottom: 330px` y el precio, reservando un área limpia y despejada para que el operador coloque el Sticker «Enlace» de Instagram sin tapar información crítica.
+  - **Header Institucional:** Isotipo blanco oficial en alta definición con sombra, «SILVIA ROGGERO & ROMA» (PT Serif Bold, 38 px), descriptor «NEGOCIOS INMOBILIARIOS» (sans-serif bold, 24 px) y filete naranja con «ALTA GRACIA, CÓRDOBA · ARGENTINA».
+  - **Etiquetas Dinámicas de Publicación:** Ubicadas en la zona superior izquierda (`top: 310px, left: 65px`), con formato rectangular (`borderRadius: 8px`), sombra y texto de alto contraste (26 px bold). Reflejan fielmente los datos reales del inmueble (`DESTACADA`, `APTO CRÉDITO`, `PRECIO MEJORADO`, `ACEPTA PERMUTA`, etc.).
+  - **Iconos Oficiales del Sitio (Mosaic Dark):**
+    - Reutilización de los SVGs originales (`ico_bed.svg`, `ico_bath.svg`, `ico_sqfoot.svg` y `LandPlot` de `lucide-react`) con grosor de trazo calibrado (`stroke-width: 1.8`) para renderizado nítido en alta resolución.
+    - Separación explícita homogénea (`marginRight: 40px`).
+    - Eliminación completa de ceros sueltos (`0`): validación estricta numérica y guardas booleanas que garantizan que inmuebles sin dormitorios/baños o con valor 0 solo muestren superficie de terreno sin campos fantasma.
+  - **Precio:** Prominente y en renglón exclusivo en PT Serif Bold (`fontSize: 72px`), coloreado en naranja corporativo `#F26B2E`. Compatible con USD (`USD / U$D`), ARS (`$`) y propiedades sin precio informado (`Consultar`).
+  - **Rediseño del CTA («CONSULTÁ POR WHATSAPP»):**
+    - Se eliminó el gran botón gráfico falso «Ver más →» que prometía una interacción web inexistente en el PNG.
+    - Se incorporó una barra orientativa elegante (`rgba(11, 13, 16, 0.65)` con borde `1.5px solid rgba(242, 107, 46, 0.75)` y `borderRadius: 16px`) con isotipo oficial de WhatsApp (`#25D366`), el texto `CONSULTÁ POR WHATSAPP` y la micro-guía `Tocá el sticker enlace o escribinos`, acompañada de un indicador sutil de flecha.
+    - Si el operador agrega el sticker nativo, este se fusiona naturalmente con esta zona. Si no lo agrega, la pieza conserva un balance editorial completo y profesional.
+- **Contacto por WhatsApp Contextualizado (`utils/whatsapp.js`):**
+  - Número canónico internacional: `5493547563911` (`wa.me/5493547563911`).
+  - Mensaje contextualizado con título, localidad y enlace canónico de la ficha pública:
+    `Hola, estoy interesado en la propiedad [Nombre], [Localidad], publicada por Roggero & Roma. Quisiera recibir más información: https://roggeroyroma.com.ar/properties/[id]`
+  - Codificación segura con `encodeURIComponent` sin caracteres rotos ni variables indefinidas.
+- **Flujo Móvil de Dos Acciones (`StoryShareButton.jsx`):**
+  - **Acción 1 (Preparar Historia):** Genera la imagen vía API, descarga el blob y genera el enlace contextualizado de WhatsApp. Intenta copiar automáticamente el enlace al portapapeles.
+  - **Acción 2 (Compartir a Instagram):** Invoca la Web Share API (`navigator.share({ files: [fileToShare] })`) **sin incluir el parámetro `url`**, lo que garantiza que iOS Safari y Android Chrome abran directamente el editor de Historias de Instagram con la imagen cargada en el lienzo en lugar de degradar a compartir enlace de texto.
+  - **Botón Explícito de Respaldo:** Proporciona el botón secundario «Copiar enlace de WhatsApp» con confirmación visual interactiva (`¡Enlace de WhatsApp Copiado!`), permitiendo al operador copiar o re-copiar el enlace en cualquier momento si el portapapeles automático fue bloqueado por políticas del navegador.
+  - **Descarga Alternativa:** Si el navegador no soporta Web Share API, descarga el archivo PNG directamente al almacenamiento local del dispositivo.
 - **Compatibilidad hacia atrás (Query params):**
-  - Predeterminada (sin query, `template=1`, `template=v2.2`, `template=rr-story-v2.2`): Story V2.2 Refinada.
+  - Predeterminada (sin query, `template=v2.2`, `template=rr-story-v2.2`): Story V2 Final (WhatsApp CTA + Safe Areas).
   - `template=rr-story-v2.1`: Story V2.1.
   - `template=rr-story-v2`: Story V2.0.
   - `template=v1` o `template=legacy`: Plantilla clásica original V1.

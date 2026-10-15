@@ -35,7 +35,13 @@ export function generateWhatsAppLink({ property, context = 'general', customMess
       typeof window !== 'undefined'
         ? `${window.location.origin}/properties/${property._id}`
         : `https://roggeroyroma.com.ar/properties/${property._id}`;
-    message = `Hola! Vi la propiedad "${property.name}" en Roggero & Roma y me gustaría recibir más información.\n\n${url}`;
+    if (context === 'story') {
+      const loc = [property.location?.city, property.location?.state].filter(Boolean).join(', ');
+      const locStr = loc ? `, ${loc}` : '';
+      message = `Hola, estoy interesado en la propiedad ${property.name || 'publicada'}${locStr}, publicada por Roggero & Roma. Quisiera recibir más información: ${url}`;
+    } else {
+      message = `Hola! Vi la propiedad "${property.name}" en Roggero & Roma y me gustaría recibir más información.\n\n${url}`;
+    }
   } else {
     message = MESSAGES[context] || MESSAGES.general;
   }

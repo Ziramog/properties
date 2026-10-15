@@ -268,8 +268,8 @@ function extractStoryDataV2_3(property) {
     totalAreaDisplay = `${property.square_feet.toLocaleString('es-AR')} m² tot`;
   }
 
-  const beds = !isLand && property.beds > 0 ? property.beds : null;
-  const baths = !isLand && property.baths > 0 ? property.baths : null;
+  const beds = !isLand && property.beds != null && Number(property.beds) > 0 ? Number(property.beds) : null;
+  const baths = !isLand && property.baths != null && Number(property.baths) > 0 ? Number(property.baths) : null;
 
   const badges = extractPublicationBadges(property);
   const priceDisplay = formatPriceDisplay(property.price);
@@ -342,14 +342,17 @@ export async function GET(request, { params }) {
 
     const imageUrl = property.images?.[0]?.url ? await toDataUrl(property.images[0].url) : null;
 
-    // Load icons
-    const bedIconBuffer = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_bed.svg'));
+    // Load icons with calibrated stroke for high-res 1080x1920
+    const rawBedSvg = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_bed.svg'), 'utf8');
+    const enhancedBedSvg = rawBedSvg.replace(/stroke-width="[^"]*"/g, 'stroke-width="1.8"');
+    const bedIconUrl = `data:image/svg+xml;base64,${Buffer.from(enhancedBedSvg).toString('base64')}`;
+
     const bathIconBuffer = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_bath.svg'));
-    const sqftIconBuffer = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_sqfoot.svg'));
-    
-    const bedIconUrl = `data:image/svg+xml;base64,${bedIconBuffer.toString('base64')}`;
     const bathIconUrl = `data:image/svg+xml;base64,${bathIconBuffer.toString('base64')}`;
-    const sqftIconUrl = `data:image/svg+xml;base64,${sqftIconBuffer.toString('base64')}`;
+
+    const rawSqftSvg = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_sqfoot.svg'), 'utf8');
+    const enhancedSqftSvg = rawSqftSvg.replace(/stroke-width="[^"]*"/g, 'stroke-width="1.8"');
+    const sqftIconUrl = `data:image/svg+xml;base64,${Buffer.from(enhancedSqftSvg).toString('base64')}`;
 
     const assets = {
       isoLogoUrl,
@@ -540,7 +543,7 @@ export async function GET(request, { params }) {
               ))}
             </div>
 
-            {/* ZONA 3: Bloque de Información Inferior (Bottom Safe Area 180px) */}
+            {/* ZONA 3: Bloque de Información Inferior (Bottom Safe Area 330px para controles nativos de Instagram) */}
             <div
               style={{
                 position: 'absolute',
@@ -549,7 +552,7 @@ export async function GET(request, { params }) {
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                padding: '0 65px 180px 65px',
+                padding: '0 65px 330px 65px',
                 zIndex: 20,
               }}
             >
@@ -571,8 +574,8 @@ export async function GET(request, { params }) {
               {/* Ubicación con Pin Naranja de PropertyGallery */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
                 <svg
-                  width="30"
-                  height="30"
+                  width="28"
+                  height="28"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke={corporateOrange}
@@ -583,16 +586,16 @@ export async function GET(request, { params }) {
                   <path d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                   <path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                 </svg>
-                <span style={{ color: '#E2E8F0', fontSize: 30, fontWeight: 500 }}>
+                <span style={{ color: '#E2E8F0', fontSize: 28, fontWeight: 500 }}>
                   {data.locationFull}
                 </span>
               </div>
 
-              {/* Características — Estilo Mosaic Dark (PropertyGallery) */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '35px', marginBottom: '22px' }}>
-                {/* Terreno: Icono LandPlot de Lucide */}
-                {data.isLand && data.areaDisplay && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              {/* Características — Estilo Mosaic Dark (PropertyGallery) con separación homogénea */}
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '22px' }}>
+                {/* Terreno / Campo: Icono LandPlot de Lucide */}
+                {Boolean(data.isLand && data.areaDisplay) ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginRight: '40px' }}>
                     <svg
                       width="32"
                       height="32"
@@ -612,37 +615,40 @@ export async function GET(request, { params }) {
                       {data.areaDisplay}
                     </span>
                   </div>
-                )}
+                ) : null}
 
-                {/* Vivienda: Dormitorios, Baños, Superficie */}
-                {!data.isLand && (
-                  <>
-                    {data.beds && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <img src={assets.bedIconUrl} width={28} height={28} />
+                {/* Vivienda: Dormitorios, Baños, Superficies con SVGs originales */}
+                {!data.isLand ? (
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {Boolean(data.beds && data.beds > 0) ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginRight: '40px' }}>
+                        <img src={assets.bedIconUrl} width={34} height={27} style={{ objectFit: 'contain' }} />
                         <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600 }}>
                           {data.beds} Dorms
                         </span>
                       </div>
-                    )}
-                    {data.baths && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <img src={assets.bathIconUrl} width={28} height={28} />
+                    ) : null}
+
+                    {Boolean(data.baths && data.baths > 0) ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginRight: '40px' }}>
+                        <img src={assets.bathIconUrl} width={32} height={25} style={{ objectFit: 'contain' }} />
                         <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600 }}>
                           {data.baths} Baños
                         </span>
                       </div>
-                    )}
-                    {data.coveredAreaDisplay && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <img src={assets.sqftIconUrl} width={28} height={28} />
+                    ) : null}
+
+                    {Boolean(data.coveredAreaDisplay) ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginRight: '40px' }}>
+                        <img src={assets.sqftIconUrl} width={28} height={28} style={{ objectFit: 'contain' }} />
                         <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600 }}>
                           {data.coveredAreaDisplay}
                         </span>
                       </div>
-                    )}
-                    {data.totalAreaDisplay && !data.coveredAreaDisplay && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    ) : null}
+
+                    {Boolean(data.totalAreaDisplay && !data.coveredAreaDisplay) ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginRight: '40px' }}>
                         <svg
                           width="32"
                           height="32"
@@ -662,9 +668,9 @@ export async function GET(request, { params }) {
                           {data.totalAreaDisplay}
                         </span>
                       </div>
-                    )}
-                  </>
-                )}
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
 
               {/* Separador fino */}
@@ -677,12 +683,12 @@ export async function GET(request, { params }) {
                 }}
               />
 
-              {/* Precio en Naranja Corporativo (como en Imagen 2) */}
-              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '22px' }}>
+              {/* Fila del Precio Prominente */}
+              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '16px' }}>
                 <span
                   style={{
                     color: corporateOrange,
-                    fontSize: 70,
+                    fontSize: 72,
                     fontFamily: '"PT Serif", serif',
                     fontWeight: 700,
                     letterSpacing: '1px',
@@ -693,29 +699,60 @@ export async function GET(request, { params }) {
                 </span>
               </div>
 
-              {/* Botón Ver Más */}
+              {/* Zona CTA Orientativa & Espacio para Sticker de Instagram */}
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  justifyContent: 'space-between',
                   width: '100%',
-                  backgroundColor: corporateOrange,
+                  backgroundColor: 'rgba(11, 13, 16, 0.65)',
+                  border: '1.5px solid rgba(242, 107, 46, 0.75)',
                   borderRadius: '16px',
-                  padding: '22px 0',
-                  boxShadow: '0 8px 24px rgba(242, 107, 46, 0.4)',
+                  padding: '16px 28px',
+                  boxShadow: '0 6px 20px rgba(0, 0, 0, 0.45)',
                 }}
               >
-                <span
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.884 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.456 5.711 1.457h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 00-3.48-8.413z"
+                      fill="#25D366"
+                    />
+                  </svg>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span
+                      style={{
+                        color: '#FFFFFF',
+                        fontSize: 24,
+                        fontWeight: 700,
+                        letterSpacing: '1.5px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      CONSULTÁ POR WHATSAPP
+                    </span>
+                    <span style={{ color: '#94A3B8', fontSize: 16, fontWeight: 500, letterSpacing: '0.5px' }}>
+                      Tocá el sticker enlace o escribinos
+                    </span>
+                  </div>
+                </div>
+
+                <div
                   style={{
-                    color: '#FFFFFF',
-                    fontSize: 36,
-                    fontWeight: 700,
-                    letterSpacing: '1px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '42px',
+                    height: '42px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(242, 107, 46, 0.2)',
                   }}
                 >
-                  Ver más →
-                </span>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={corporateOrange} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 17L17 7M17 7H7M17 7V17" />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
