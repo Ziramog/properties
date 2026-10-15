@@ -246,11 +246,14 @@ export async function GET(request, { params }) {
 
     const corporateOrange = '#F26B2E';
 
-    // Carga de logotipo oficial blanco
+    // Carga de logotipo oficial blanco (idéntico a historias con fallback)
+    const logoBuffer = readFileSync(join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-Photoroom.png'));
+    const isoLogoUrl = `data:image/png;base64,${logoBuffer.toString('base64')}`;
+
     const whiteLogoPath = join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-White.png');
     const isoWhiteLogoUrl = existsSync(whiteLogoPath)
       ? `data:image/png;base64,${readFileSync(whiteLogoPath).toString('base64')}`
-      : null;
+      : isoLogoUrl;
 
     const imageUrl = imageToUse?.url ? await toDataUrl(imageToUse.url) : null;
 
@@ -265,6 +268,7 @@ export async function GET(request, { params }) {
     const sqftIconUrl = `data:image/svg+xml;base64,${Buffer.from(rawSqftSvg.replace(/stroke-width="[^"]*"/g, 'stroke-width="1.8"')).toString('base64')}`;
 
     const assets = {
+      isoLogoUrl,
       isoWhiteLogoUrl,
       imageUrl,
       bedIconUrl,
@@ -310,7 +314,7 @@ export async function GET(request, { params }) {
     // CASO 1: IMAGEN INICIAL (index === 0) — Portada Editorial Feed
     // ========================================================
     if (index === 0) {
-      const titleFontSize = data.title.length > 45 ? 40 : data.title.length > 28 ? 46 : 52;
+      const titleFontSize = data.title.length > 45 ? 38 : data.title.length > 28 ? 44 : 50;
 
       return await renderImage(
         (
@@ -337,9 +341,9 @@ export async function GET(request, { params }) {
                 top: 0,
                 left: 0,
                 width: '100%',
-                height: '35%',
+                height: '38%',
                 backgroundImage:
-                  'linear-gradient(to bottom, rgba(11, 13, 16, 0.88) 0%, rgba(11, 13, 16, 0.45) 20%, transparent 35%)',
+                  'linear-gradient(to bottom, rgba(11, 13, 16, 0.92) 0%, rgba(11, 13, 16, 0.7) 18%, rgba(11, 13, 16, 0.3) 30%, transparent 38%)',
                 display: 'flex',
               }}
             />
@@ -351,18 +355,18 @@ export async function GET(request, { params }) {
                 bottom: 0,
                 left: 0,
                 width: '100%',
-                height: '65%',
+                height: '62%',
                 backgroundImage:
-                  'linear-gradient(to top, rgba(11, 13, 16, 0.98) 0%, rgba(11, 13, 16, 0.92) 28%, rgba(11, 13, 16, 0.55) 48%, transparent 65%)',
+                  'linear-gradient(to top, rgba(11, 13, 16, 0.98) 0%, rgba(11, 13, 16, 0.92) 28%, rgba(11, 13, 16, 0.5) 48%, transparent 62%)',
                 display: 'flex',
               }}
             />
 
-            {/* Header Institucional (Safe Zone: top 50px) */}
+            {/* Header Institucional (Safe Zone Feed: top 145px para garantizar visibilidad total en 1:1 y 4:5) */}
             <div
               style={{
                 position: 'absolute',
-                top: 50,
+                top: 145,
                 left: 0,
                 width: '100%',
                 display: 'flex',
@@ -371,26 +375,24 @@ export async function GET(request, { params }) {
                 zIndex: 20,
               }}
             >
-              {assets.isoWhiteLogoUrl && (
-                <img
-                  src={assets.isoWhiteLogoUrl}
-                  width={180}
-                  height={80}
-                  style={{
-                    objectFit: 'contain',
-                    filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
-                    marginBottom: '8px',
-                  }}
-                />
-              )}
+              <img
+                src={assets.isoWhiteLogoUrl}
+                width={200}
+                height={88}
+                style={{
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
+                  marginBottom: '8px',
+                }}
+              />
 
               <span
                 style={{
                   color: '#FFFFFF',
-                  fontSize: 28,
+                  fontSize: 30,
                   fontFamily: '"Montserrat", sans-serif',
                   fontWeight: 700,
-                  letterSpacing: '3px',
+                  letterSpacing: '3.5px',
                   textTransform: 'uppercase',
                   textAlign: 'center',
                   textShadow: '0 2px 10px rgba(0,0,0,0.9)',
@@ -400,14 +402,14 @@ export async function GET(request, { params }) {
                 SILVIA ROGGERO & ROMA
               </span>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '35px', height: '2px', backgroundColor: corporateOrange }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div style={{ width: '38px', height: '2px', backgroundColor: corporateOrange }} />
                 <span
                   style={{
                     color: '#FFFFFF',
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: 700,
-                    letterSpacing: '4px',
+                    letterSpacing: '4.5px',
                     fontFamily: '"Montserrat", sans-serif',
                     textTransform: 'uppercase',
                     textAlign: 'center',
@@ -416,15 +418,15 @@ export async function GET(request, { params }) {
                 >
                   NEGOCIOS INMOBILIARIOS
                 </span>
-                <div style={{ width: '35px', height: '2px', backgroundColor: corporateOrange }} />
+                <div style={{ width: '38px', height: '2px', backgroundColor: corporateOrange }} />
               </div>
             </div>
 
-            {/* Etiquetas (Badges) */}
+            {/* Etiquetas (Badges) — Ajustadas a la zona segura */}
             <div
               style={{
                 position: 'absolute',
-                top: 235,
+                top: 310,
                 left: 55,
                 display: 'flex',
                 gap: '10px',
@@ -460,7 +462,7 @@ export async function GET(request, { params }) {
               ))}
             </div>
 
-            {/* Bloque Editorial Inferior */}
+            {/* Bloque Editorial Inferior (Safe Zone: padding-bottom 145px para visibilidad en 1:1 y 4:5) */}
             <div
               style={{
                 position: 'absolute',
@@ -469,7 +471,7 @@ export async function GET(request, { params }) {
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                padding: '0 55px 50px 55px',
+                padding: '0 55px 145px 55px',
                 zIndex: 20,
               }}
             >
@@ -481,7 +483,7 @@ export async function GET(request, { params }) {
                   fontFamily: '"PT Serif", serif',
                   fontWeight: 700,
                   lineHeight: 1.15,
-                  margin: '0 0 12px 0',
+                  margin: '0 0 10px 0',
                   textShadow: '0 3px 14px rgba(0,0,0,0.9)',
                 }}
               >
@@ -489,7 +491,7 @@ export async function GET(request, { params }) {
               </h1>
 
               {/* Ubicación con Pin Naranja Sólido */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path
                     fillRule="evenodd"
@@ -509,12 +511,12 @@ export async function GET(request, { params }) {
                   width: '100%',
                   height: '1px',
                   backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  marginBottom: '16px',
+                  marginBottom: '14px',
                 }}
               />
 
               {/* Características con divisores verticales */}
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '18px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '14px' }}>
                 {Boolean(data.isLand && data.areaDisplay) ? (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <svg
@@ -605,11 +607,11 @@ export async function GET(request, { params }) {
               </div>
 
               {/* Fila del Precio Prominente */}
-              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '18px' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '14px' }}>
                 <span
                   style={{
                     color: corporateOrange,
-                    fontSize: 66,
+                    fontSize: 62,
                     fontFamily: '"PT Serif", serif',
                     fontWeight: 700,
                     letterSpacing: '1px',
@@ -627,15 +629,15 @@ export async function GET(request, { params }) {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   width: '100%',
-                  backgroundColor: 'rgba(11, 13, 16, 0.8)',
+                  backgroundColor: 'rgba(11, 13, 16, 0.85)',
                   border: '1.5px solid #F26B2E',
-                  borderRadius: '14px',
-                  padding: '14px 22px',
+                  borderRadius: '12px',
+                  padding: '12px 20px',
                   boxShadow: '0 6px 20px rgba(0, 0, 0, 0.55)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
                     <path
                       d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.884 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.456 5.711 1.457h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 00-3.48-8.413z"
                       fill="#25D366"
@@ -645,7 +647,7 @@ export async function GET(request, { params }) {
                     <span
                       style={{
                         color: '#FFFFFF',
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: 700,
                         letterSpacing: '1px',
                         textTransform: 'uppercase',
@@ -657,7 +659,7 @@ export async function GET(request, { params }) {
                     <span
                       style={{
                         color: '#CBD5E1',
-                        fontSize: 15,
+                        fontSize: 14,
                         fontWeight: 400,
                         letterSpacing: '0.5px',
                         fontFamily: '"Montserrat", sans-serif',
@@ -674,15 +676,15 @@ export async function GET(request, { params }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    width: '40px',
-                    height: '40px',
+                    width: '36px',
+                    height: '36px',
                     borderRadius: '50%',
                     backgroundColor: 'rgba(242, 107, 46, 0.25)',
                   }}
                 >
                   <svg
-                    width="22"
-                    height="22"
+                    width="20"
+                    height="20"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke={corporateOrange}
@@ -734,9 +736,9 @@ export async function GET(request, { params }) {
               top: 0,
               left: 0,
               width: '100%',
-              height: '24%',
+              height: '32%',
               backgroundImage:
-                'linear-gradient(to bottom, rgba(11, 13, 16, 0.8) 0%, rgba(11, 13, 16, 0.25) 12%, transparent 24%)',
+                'linear-gradient(to bottom, rgba(11, 13, 16, 0.88) 0%, rgba(11, 13, 16, 0.4) 18%, transparent 32%)',
               display: 'flex',
             }}
           />
@@ -748,18 +750,18 @@ export async function GET(request, { params }) {
               bottom: 0,
               left: 0,
               width: '100%',
-              height: '24%',
+              height: '32%',
               backgroundImage:
-                'linear-gradient(to top, rgba(11, 13, 16, 0.85) 0%, rgba(11, 13, 16, 0.3) 12%, transparent 24%)',
+                'linear-gradient(to top, rgba(11, 13, 16, 0.9) 0%, rgba(11, 13, 16, 0.4) 18%, transparent 32%)',
               display: 'flex',
             }}
           />
 
-          {/* Top Center: SOLO Isologo Blanco (Safe Zone 55px, nunca se corta) */}
+          {/* Top Center: SOLO Isologo Blanco (Safe Zone Feed: top 145px para garantizar visibilidad total en 1:1 y 4:5) */}
           <div
             style={{
               position: 'absolute',
-              top: 55,
+              top: 145,
               left: 0,
               width: '100%',
               display: 'flex',
@@ -767,20 +769,18 @@ export async function GET(request, { params }) {
               zIndex: 20,
             }}
           >
-            {assets.isoWhiteLogoUrl && (
-              <img
-                src={assets.isoWhiteLogoUrl}
-                width={190}
-                height={84}
-                style={{
-                  objectFit: 'contain',
-                  filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
-                }}
-              />
-            )}
+            <img
+              src={assets.isoWhiteLogoUrl}
+              width={200}
+              height={88}
+              style={{
+                objectFit: 'contain',
+                filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
+              }}
+            />
           </div>
 
-          {/* Bottom Center: SOLO Título de la Propiedad */}
+          {/* Bottom Center: SOLO Título de la Propiedad (Safe Zone Feed: padding-bottom 145px) */}
           <div
             style={{
               position: 'absolute',
@@ -790,7 +790,7 @@ export async function GET(request, { params }) {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              padding: '0 50px 50px 50px',
+              padding: '0 50px 145px 50px',
               zIndex: 20,
             }}
           >
