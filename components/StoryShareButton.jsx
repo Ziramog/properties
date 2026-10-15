@@ -28,7 +28,15 @@ export default function StoryShareButton({ property }) {
       
       setFileToShare(file);
       setStatus('ready');
-      toast.success('¡Historia lista para compartir!');
+
+      // Copiar automáticamente el enlace directo de la propiedad para el Sticker de Instagram
+      const propertyUrl = `https://roggeroyroma.com.ar/properties/${property._id || property.id}`;
+      try {
+        await navigator.clipboard.writeText(propertyUrl);
+        toast.success('¡Historia lista! Link directo copiado al portapapeles para tu sticker.');
+      } catch {
+        toast.success('¡Historia lista para compartir!');
+      }
       
     } catch (error) {
       if (error.name !== 'AbortError') {
@@ -41,10 +49,16 @@ export default function StoryShareButton({ property }) {
 
   const handleShare = async () => {
     try {
+      const propertyUrl = `https://roggeroyroma.com.ar/properties/${property._id || property.id}`;
+      try {
+        await navigator.clipboard.writeText(propertyUrl);
+      } catch {}
+
       if (navigator.canShare && navigator.canShare({ files: [fileToShare] })) {
         await navigator.share({
           files: [fileToShare],
-          title: 'Historia de Propiedad',
+          title: property.name || 'Propiedad en Roggero & Roma',
+          url: propertyUrl,
         });
         setStatus('idle');
         setFileToShare(null);

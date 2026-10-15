@@ -59,18 +59,19 @@
 
 ## 7. Sistema de Generación de Historias para Redes (Story Engine)
 - **Endpoint:** `/api/story/[id]` (soporta query `?template=...`).
-- **Plantilla Predeterminada:** `rr-story-v2.2` (aprobada en octubre 2026).
+- **Plantilla Predeterminada:** `rr-story-v2.2` (alineada al diseño de referencia en octubre 2026).
 - **Especificaciones Visuales:**
   - Resolución: 1080 × 1920 px (9:16 vertical).
-  - Identidad: Isotipo R&R oficial ampliado (240 × 106 px, +50% ancho, `#F26B2E`), «SILVIA ROGGERO & ROMA» (42 px, PT Serif Bold), descriptor «NEGOCIOS INMOBILIARIOS» (28 px, blanco sólido).
-  - Tipografía editorial: `PTSerif-Bold.ttf` alojada localmente en `assets/fonts/pt-serif/`.
-  - Zonas seguras para Instagram Stories: Margen superior de 175 px (evita superposición con avatar y usuario) y margen inferior de 185 px (evita barra de comentarios y botones nativos).
-  - Badges adaptativos: Manejo de títulos largos, separación de condiciones comerciales (ej. `VENTA` + `ACEPTA PERMUTA`) y formato de superficies para lotes (`has` / `m²`) y viviendas (`m² cub` / `m² tot`).
-  - Footer comercial: `ROGGEROYROMA.COM.AR` destacado en 36 px con naranja corporativo `#F26B2E`.
+  - Header: Isotipo blanco oficial en alta definición, «SILVIA ROGGERO & ROMA» (PT Serif Bold), descriptor «NEGOCIOS INMOBILIARIOS» y filete naranja con «ALTA GRACIA, CÓRDOBA · ARGENTINA».
+  - Etiquetas Dinámicas de Publicación: Ubicadas en la zona superior izquierda (top 335 px, left 65 px), con formato rectangular («cuadradas», border-radius 8 px) y texto ampliado (28 px bold). Reflejan fielmente los datos reales del inmueble (`is_featured` -> `DESTACADA`, `status` -> `PRECIO MEJORADO`, `APTO CRÉDITO`, `ÚLTIMA UNIDAD`, etc., y condiciones como `ACEPTA PERMUTA`).
+  - Iconos y Datos Técnicos: Reutilizan la iconografía de la sección «Mosaic Dark» de la galería de detalles (`PropertyGallery.jsx`): Pin naranja de ubicación, `LandPlot` para terrenos/fracciones con hectáreas/metros cuadrados, y `ico_bed`, `ico_bath`, `ico_sqfoot` para viviendas, dispuestos de forma limpia sobre el degradado sin cápsulas grises pesadas.
+  - Precio: Formateado en PT Serif Bold y resaltado en naranja corporativo `#F26B2E`.
+  - Botón «Ver más →»: Botón rectangular destacado en naranja corporativo que invita al seguidor a la acción.
+  - Enlace Directo (Mobile Web Share): Dado que los formatos de imagen estática (PNG) no admiten hipervínculos HTML embebidos en Instagram Stories, `StoryShareButton.jsx` copia automáticamente la URL canónica de la propiedad (`https://roggeroyroma.com.ar/properties/[id]`) al portapapeles al preparar la imagen, permitiendo al usuario pegar el enlace directamente en el Sticker de Enlace nativo de Instagram Stories sobre el botón «Ver más →».
 - **Compatibilidad hacia atrás (Query params):**
-  - Predeterminada (sin query, `template=1`, `template=v2.2`, `template=rr-story-v2.2`): Story V2.2 (Alternativa A).
-  - `template=rr-story-v2.2-b`: Story V2.2 (Alternativa B: Isotipo blanco con filete naranja).
+  - Predeterminada (sin query, `template=1`, `template=v2.2`, `template=rr-story-v2.2`): Story V2.2 Refinada.
   - `template=rr-story-v2.1`: Story V2.1.
   - `template=rr-story-v2`: Story V2.0.
   - `template=v1` o `template=legacy`: Plantilla clásica original V1.
+
 

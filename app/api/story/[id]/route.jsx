@@ -192,6 +192,108 @@ function extractStoryDataV2_1(property) {
   };
 }
 
+function extractPublicationBadges(property) {
+  const badges = [];
+
+  // 1. Featured badge
+  if (property.is_featured) {
+    badges.push({ text: 'DESTACADA', isPrimary: true });
+  }
+
+  // 2. Status badge from publication
+  const statusMap = {
+    'PRECIO MEJORADO': 'PRECIO MEJORADO',
+    'ULTIMA UNIDAD': 'ÚLTIMA UNIDAD',
+    'UNICO EN SU TIPO': 'ÚNICA EN SU TIPO',
+    'MEJOR PRECIO': 'MEJOR PRECIO',
+    'NUEVA': 'NUEVA',
+    'EXCELENTE PRECIO': 'EXCELENTE PRECIO',
+    'AMOBLADA': 'AMOBLADA',
+    'APTA CREDITO': 'APTO CRÉDITO',
+    'APTO CREDITO': 'APTO CRÉDITO',
+  };
+
+  if (property.status && property.status !== 'active') {
+    const label = statusMap[property.status] || property.status.toUpperCase();
+    badges.push({
+      text: label,
+      isPrimary: badges.length === 0,
+    });
+  }
+
+  // 3. Commercial condition (permuta, etc.)
+  const rawText = `${property.name || ''} ${property.description || ''}`;
+  if (/permuta|canje|toma menor|toma veh[ií]culo/i.test(rawText)) {
+    if (!badges.some((b) => b.text.includes('PERMUTA'))) {
+      badges.push({ text: 'ACEPTA PERMUTA', isPrimary: badges.length === 0 });
+    }
+  }
+
+  // 4. Default to Operation if no badge
+  if (badges.length === 0) {
+    const op = property.operation === 'alquiler' ? 'ALQUILER' : 'VENTA';
+    badges.push({ text: op, isPrimary: true });
+  }
+
+  return badges;
+}
+
+function extractStoryDataV2_3(property) {
+  const isLand =
+    ['Terreno', 'Lote', 'Campo', 'Chacra'].includes(property.type) ||
+    /lote|terreno|fracci[oó]n|campo/i.test(property.name || '') ||
+    /lote|terreno/i.test(property.type || '');
+
+  let areaDisplay = null;
+  if (isLand) {
+    if (property.square_feet != null && property.square_feet > 0) {
+      if (property.square_feet >= 10000) {
+        const has = property.square_feet / 10000;
+        areaDisplay = `${has >= 1 ? has.toFixed(has % 1 === 0 ? 0 : 1) : has.toFixed(2)} has`;
+      } else {
+        areaDisplay = `${property.square_feet.toLocaleString('es-AR')} m²`;
+      }
+    } else if (property.covered_area != null && property.covered_area > 0) {
+      areaDisplay = `${property.covered_area.toLocaleString('es-AR')} m²`;
+    }
+  }
+
+  let coveredAreaDisplay = null;
+  if (!isLand && property.covered_area != null && property.covered_area > 0) {
+    coveredAreaDisplay = `${property.covered_area.toLocaleString('es-AR')} m² cub`;
+  }
+
+  let totalAreaDisplay = null;
+  if (!isLand && property.square_feet != null && property.square_feet > 0) {
+    totalAreaDisplay = `${property.square_feet.toLocaleString('es-AR')} m² tot`;
+  }
+
+  const beds = !isLand && property.beds > 0 ? property.beds : null;
+  const baths = !isLand && property.baths > 0 ? property.baths : null;
+
+  const badges = extractPublicationBadges(property);
+  const priceDisplay = formatPriceDisplay(property.price);
+  const { title } = parseStoryTitleAndCondition(property);
+
+  const street = property.location?.street?.trim();
+  const city = property.location?.city?.trim() || 'Alta Gracia';
+  const state = property.location?.state?.trim() || 'Córdoba';
+  const locationFull = [street, city, state].filter(Boolean).join(', ');
+
+  return {
+    title,
+    locationFull,
+    badges,
+    priceDisplay,
+    isLand,
+    areaDisplay,
+    coveredAreaDisplay,
+    totalAreaDisplay,
+    beds,
+    baths,
+  };
+}
+
 export async function GET(request, { params }) {
   try {
     await connectDB();
@@ -259,10 +361,10 @@ export async function GET(request, { params }) {
     };
 
     // ==========================================
-    // PLANTILLA V2.2: rr-story-v2.2 (REFINAMIENTO DEFINITIVO)
+    // PLANTILLA V2.2: rr-story-v2.2 (REFINAMIENTO DEFINITIVO SEGÚN REFERENCIA)
     // ==========================================
     if (isV2_2) {
-      const data = extractStoryDataV2_1(property);
+      const data = extractStoryDataV2_3(property);
       const corporateOrange = '#F26B2E';
 
       // Load PT Serif Bold font for editorial headings
@@ -279,23 +381,7 @@ export async function GET(request, { params }) {
       }
 
       // Title adaptive sizing
-      const titleFontSize = data.title.length > 48 ? 44 : (data.title.length > 32 ? 54 : 66);
-
-      const pillStyle = {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        backgroundColor: 'rgba(255, 255, 255, 0.16)',
-        border: '1.5px solid rgba(255, 255, 255, 0.28)',
-        padding: '12px 26px',
-        borderRadius: '35px',
-      };
-
-      const pillTextStyle = {
-        color: '#FFFFFF',
-        fontSize: 26,
-        fontWeight: 700,
-      };
+      const titleFontSize = data.title.length > 50 ? 46 : (data.title.length > 32 ? 56 : 66);
 
       return await renderImage(
         (
@@ -315,21 +401,21 @@ export async function GET(request, { params }) {
               <img src={assets.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
 
-            {/* ZONA 3: Overlays Calibrados V2.2 */}
-            {/* Overlay Superior con gradiente oscuro controlado que sostiene la marca sobre cualquier cielo o pared */}
+            {/* Overlays Calibrados */}
+            {/* Overlay Superior para sostener el Header institucional sobre cielos o fachadas */}
             <div
               style={{
                 position: 'absolute',
                 top: 0,
                 left: 0,
                 width: '100%',
-                height: '42%',
-                backgroundImage: 'linear-gradient(to bottom, rgba(11, 13, 16, 0.95) 0%, rgba(11, 13, 16, 0.84) 20%, rgba(11, 13, 16, 0.40) 32%, transparent 42%)',
+                height: '35%',
+                backgroundImage: 'linear-gradient(to bottom, rgba(11, 13, 16, 0.88) 0%, rgba(11, 13, 16, 0.45) 20%, transparent 35%)',
                 display: 'flex',
               }}
             />
 
-            {/* Overlay Inferior en Degradado Editorial para lectura protegida */}
+            {/* Overlay Inferior para sostener los datos editoriales */}
             <div
               style={{
                 position: 'absolute',
@@ -337,16 +423,16 @@ export async function GET(request, { params }) {
                 left: 0,
                 width: '100%',
                 height: '62%',
-                backgroundImage: 'linear-gradient(to top, rgba(11, 13, 16, 0.98) 0%, rgba(11, 13, 16, 0.90) 24%, rgba(11, 13, 16, 0.45) 44%, transparent 62%)',
+                backgroundImage: 'linear-gradient(to top, rgba(11, 13, 16, 0.98) 0%, rgba(11, 13, 16, 0.92) 28%, rgba(11, 13, 16, 0.55) 48%, transparent 62%)',
                 display: 'flex',
               }}
             />
 
-            {/* ZONA 1: Header / Bloque Institucional Unificado (Zonas Seguras Top 175px) */}
+            {/* ZONA 1: Header Institucional (Top Center) */}
             <div
               style={{
                 position: 'absolute',
-                top: 175,
+                top: 70,
                 left: 0,
                 width: '100%',
                 display: 'flex',
@@ -355,217 +441,280 @@ export async function GET(request, { params }) {
                 zIndex: 20,
               }}
             >
-              {/* Isotipo: 240px × 106px (Alternativa A: Naranja corporativo / Alternativa B: Blanco oficial) */}
+              {/* Isotipo: blanco oficial en alta definición con sombra */}
               <img
-                src={variantB ? assets.isoWhiteLogoUrl : assets.isoLogoUrl}
-                width={240}
-                height={106}
+                src={assets.isoWhiteLogoUrl}
+                width={220}
+                height={98}
                 style={{
                   objectFit: 'contain',
+                  filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
+                  marginBottom: '12px',
                 }}
               />
 
-              {/* Nombre Institucional y Descriptor como una sola unidad */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 14 }}>
+              <span
+                style={{
+                  color: '#FFFFFF',
+                  fontSize: 38,
+                  fontFamily: '"PT Serif", serif',
+                  fontWeight: 700,
+                  letterSpacing: '3px',
+                  textTransform: 'uppercase',
+                  textAlign: 'center',
+                  textShadow: '0 2px 10px rgba(0,0,0,0.9)',
+                  marginBottom: '4px',
+                }}
+              >
+                SILVIA ROGGERO & ROMA
+              </span>
+
+              <span
+                style={{
+                  color: '#FFFFFF',
+                  fontSize: 24,
+                  fontWeight: 700,
+                  letterSpacing: '6px',
+                  fontFamily: 'sans-serif',
+                  textTransform: 'uppercase',
+                  textAlign: 'center',
+                  textShadow: '0 2px 8px rgba(0,0,0,0.9)',
+                }}
+              >
+                NEGOCIOS INMOBILIARIOS
+              </span>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '8px' }}>
+                <div style={{ width: '45px', height: '1.5px', backgroundColor: corporateOrange }} />
                 <span
                   style={{
-                    color: '#FFFFFF',
-                    fontSize: 42,
-                    fontWeight: 700,
-                    letterSpacing: '2.5px',
-                    fontFamily: '"PT Serif", serif',
+                    color: '#CBD5E1',
+                    fontSize: 16,
+                    fontWeight: 600,
+                    letterSpacing: '3.5px',
                     textTransform: 'uppercase',
-                    textShadow: '0 2px 14px rgba(0,0,0,0.92)',
                   }}
                 >
-                  SILVIA ROGGERO & ROMA
+                  ALTA GRACIA, CÓRDOBA · ARGENTINA
                 </span>
-
-                {/* Alternativa B incluye filete naranja refinado */}
-                {variantB && (
-                  <div
-                    style={{
-                      width: '120px',
-                      height: '2px',
-                      backgroundColor: corporateOrange,
-                      marginTop: '8px',
-                      marginBottom: '4px',
-                    }}
-                  />
-                )}
-
-                <span
-                  style={{
-                    color: '#FFFFFF',
-                    fontSize: 28,
-                    fontWeight: 700,
-                    letterSpacing: '4px',
-                    fontFamily: 'sans-serif',
-                    textTransform: 'uppercase',
-                    marginTop: variantB ? 4 : 6,
-                    textShadow: '0 2px 10px rgba(0,0,0,0.92)',
-                  }}
-                >
-                  NEGOCIOS INMOBILIARIOS
-                </span>
+                <div style={{ width: '45px', height: '1.5px', backgroundColor: corporateOrange }} />
               </div>
             </div>
 
-            {/* CONTENIDO PRINCIPAL INFERIOR (Zonas 4 a 9, Safe Margin Bottom 185px libre de UI de Instagram) */}
+            {/* ZONA 2: Etiquetas de la Publicación (Cuadradas, más grandes, Top-Left como en Imagen 2) */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 335,
+                left: 65,
+                display: 'flex',
+                gap: '12px',
+                zIndex: 20,
+              }}
+            >
+              {data.badges.map((b, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    backgroundColor: b.isPrimary ? corporateOrange : 'rgba(11, 13, 16, 0.8)',
+                    border: b.isPrimary ? 'none' : '1.5px solid rgba(255, 255, 255, 0.45)',
+                    padding: '14px 28px',
+                    borderRadius: '8px',
+                    boxShadow: '0 6px 20px rgba(0, 0, 0, 0.55)',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span
+                    style={{
+                      color: '#FFFFFF',
+                      fontSize: 28,
+                      fontWeight: 800,
+                      letterSpacing: '2.5px',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {b.text}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* ZONA 3: Bloque de Información Inferior (Bottom Safe Area 180px) */}
             <div
               style={{
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
                 width: '100%',
-                padding: '0 60px 185px 60px',
                 display: 'flex',
                 flexDirection: 'column',
+                padding: '0 65px 180px 65px',
                 zIndex: 20,
               }}
             >
-              {/* ZONA 4: Badges de Operación y Condición Comercial */}
-              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                <div
-                  style={{
-                    backgroundColor: corporateOrange,
-                    color: '#FFFFFF',
-                    fontSize: 18,
-                    fontWeight: 800,
-                    padding: '8px 24px',
-                    borderRadius: '24px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '2px',
-                  }}
-                >
-                  {data.operation}
-                </div>
-
-                {data.condition && (
-                  <div
-                    style={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.18)',
-                      border: '1.5px solid rgba(255, 255, 255, 0.40)',
-                      color: '#FFFFFF',
-                      fontSize: 16,
-                      fontWeight: 700,
-                      padding: '8px 22px',
-                      borderRadius: '24px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '2px',
-                    }}
-                  >
-                    {data.condition}
-                  </div>
-                )}
-              </div>
-
-              {/* ZONA 5: Precio (Máxima Jerarquía Editorial en PT Serif Bold) */}
-              <div
-                style={{
-                  color: '#FFFFFF',
-                  fontSize: 106,
-                  fontFamily: '"PT Serif", serif',
-                  fontWeight: 700,
-                  lineHeight: 1.0,
-                  marginBottom: '16px',
-                }}
-              >
-                {data.priceDisplay}
-              </div>
-
-              {/* ZONA 6: Título Comercial / Dirección (+22% tamaño adaptativo) */}
-              <div
+              {/* Título */}
+              <h1
                 style={{
                   color: '#FFFFFF',
                   fontSize: titleFontSize,
+                  fontFamily: '"PT Serif", serif',
                   fontWeight: 700,
                   lineHeight: 1.15,
-                  marginBottom: '12px',
+                  margin: '0 0 16px 0',
+                  textShadow: '0 3px 14px rgba(0,0,0,0.9)',
                 }}
               >
                 {data.title}
+              </h1>
+
+              {/* Ubicación con Pin Naranja de PropertyGallery */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
+                <svg
+                  width="30"
+                  height="30"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke={corporateOrange}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                  <path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                </svg>
+                <span style={{ color: '#E2E8F0', fontSize: 30, fontWeight: 500 }}>
+                  {data.locationFull}
+                </span>
               </div>
 
-              {/* ZONA 7: Localidad */}
-              <div
-                style={{
-                  color: '#E2E8F0',
-                  fontSize: 26,
-                  letterSpacing: '3px',
-                  textTransform: 'uppercase',
-                  fontWeight: 700,
-                  marginBottom: '28px',
-                }}
-              >
-                {data.locality}
-              </div>
+              {/* Características — Estilo Mosaic Dark (PropertyGallery) */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '35px', marginBottom: '22px' }}>
+                {/* Terreno: Icono LandPlot de Lucide */}
+                {data.isLand && data.areaDisplay && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#FFFFFF"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m12 8 6-3-6-3v10" />
+                      <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
+                      <path d="m6.49 12.85 11.02 6.3" />
+                      <path d="M17.51 12.85 6.5 19.15" />
+                    </svg>
+                    <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600 }}>
+                      {data.areaDisplay}
+                    </span>
+                  </div>
+                )}
 
-              {/* ZONA 8: Datos Técnicos Dinámicos (Pills de alta legibilidad móvil) */}
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  gap: '16px',
-                  alignItems: 'center',
-                  marginBottom: '32px',
-                  flexWrap: 'wrap',
-                }}
-              >
-                {/* Terreno / Lote: Solo superficie con ícono vectorial SVG */}
-                {data.isLand ? (
-                  data.areaDisplay && (
-                    <div style={pillStyle}>
-                      <img src={assets.sqftIconUrl} width={32} height={32} />
-                      <span style={pillTextStyle}>{data.areaDisplay}</span>
-                    </div>
-                  )
-                ) : (
-                  /* Casa / Depto: Dorms, Baños, Superficie */
+                {/* Vivienda: Dormitorios, Baños, Superficie */}
+                {!data.isLand && (
                   <>
                     {data.beds && (
-                      <div style={pillStyle}>
-                        <img src={assets.bedIconUrl} width={32} height={32} />
-                        <span style={pillTextStyle}>{data.beds} Dorms</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <img src={assets.bedIconUrl} width={28} height={28} />
+                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600 }}>
+                          {data.beds} Dorms
+                        </span>
                       </div>
                     )}
                     {data.baths && (
-                      <div style={pillStyle}>
-                        <img src={assets.bathIconUrl} width={32} height={32} />
-                        <span style={pillTextStyle}>{data.baths} Baños</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <img src={assets.bathIconUrl} width={28} height={28} />
+                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600 }}>
+                          {data.baths} Baños
+                        </span>
                       </div>
                     )}
-                    {data.areaDisplay && (
-                      <div style={pillStyle}>
-                        <img src={assets.sqftIconUrl} width={32} height={32} />
-                        <span style={pillTextStyle}>{data.areaDisplay}</span>
+                    {data.coveredAreaDisplay && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <img src={assets.sqftIconUrl} width={28} height={28} />
+                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600 }}>
+                          {data.coveredAreaDisplay}
+                        </span>
+                      </div>
+                    )}
+                    {data.totalAreaDisplay && !data.coveredAreaDisplay && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <svg
+                          width="32"
+                          height="32"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#FFFFFF"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="m12 8 6-3-6-3v10" />
+                          <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
+                          <path d="m6.49 12.85 11.02 6.3" />
+                          <path d="M17.51 12.85 6.5 19.15" />
+                        </svg>
+                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600 }}>
+                          {data.totalAreaDisplay}
+                        </span>
                       </div>
                     )}
                   </>
                 )}
               </div>
 
-              {/* ZONA 9: Cierre de Marca y Dominio (36px, legible directamente en móvil sin zoom) */}
-              <div style={{ width: '100%', height: '1.5px', backgroundColor: 'rgba(255, 255, 255, 0.25)', marginBottom: '20px' }} />
+              {/* Separador fino */}
+              <div
+                style={{
+                  width: '100%',
+                  height: '1.5px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.22)',
+                  marginBottom: '20px',
+                }}
+              />
+
+              {/* Precio en Naranja Corporativo (como en Imagen 2) */}
+              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '22px' }}>
+                <span
+                  style={{
+                    color: corporateOrange,
+                    fontSize: 70,
+                    fontFamily: '"PT Serif", serif',
+                    fontWeight: 700,
+                    letterSpacing: '1px',
+                    textShadow: '0 2px 10px rgba(0,0,0,0.6)',
+                  }}
+                >
+                  {data.priceDisplay}
+                </span>
+              </div>
+
+              {/* Botón Ver Más */}
               <div
                 style={{
                   display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'center',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   width: '100%',
+                  backgroundColor: corporateOrange,
+                  borderRadius: '16px',
+                  padding: '22px 0',
+                  boxShadow: '0 8px 24px rgba(242, 107, 46, 0.4)',
                 }}
               >
                 <span
                   style={{
-                    color: corporateOrange,
+                    color: '#FFFFFF',
                     fontSize: 36,
-                    letterSpacing: '4px',
-                    textTransform: 'uppercase',
-                    fontWeight: 800,
+                    fontWeight: 700,
+                    letterSpacing: '1px',
                   }}
                 >
-                  ROGGEROYROMA.COM.AR
+                  Ver más →
                 </span>
               </div>
             </div>
