@@ -56,3 +56,21 @@
    - En septiembre 2026 se detectó un consumo acumulado de 18 GB en 23 despliegues debido a videos pesados no utilizados (~251 MB) e imágenes en `public/images/`.
    - Se purgaron 21 deploys obsoletos en Vercel CLI y se removieron de Git los archivos en desuso, reduciendo `public/` de 306 MB a 57 MB.
    - **Regla estricta:** No subir archivos de video o medios pesados a la carpeta `public/`. Los videos o assets de gran tamaño deben alojarse externamente (Cloudinary / CDN) o comprimirse rigurosamente para evitar inflar el tamaño de los snapshots de deployment.
+
+## 7. Sistema de Generación de Historias para Redes (Story Engine)
+- **Endpoint:** `/api/story/[id]` (soporta query `?template=...`).
+- **Plantilla Predeterminada:** `rr-story-v2.2` (aprobada en octubre 2026).
+- **Especificaciones Visuales:**
+  - Resolución: 1080 × 1920 px (9:16 vertical).
+  - Identidad: Isotipo R&R oficial ampliado (240 × 106 px, +50% ancho, `#F26B2E`), «SILVIA ROGGERO & ROMA» (42 px, PT Serif Bold), descriptor «NEGOCIOS INMOBILIARIOS» (28 px, blanco sólido).
+  - Tipografía editorial: `PTSerif-Bold.ttf` alojada localmente en `assets/fonts/pt-serif/`.
+  - Zonas seguras para Instagram Stories: Margen superior de 175 px (evita superposición con avatar y usuario) y margen inferior de 185 px (evita barra de comentarios y botones nativos).
+  - Badges adaptativos: Manejo de títulos largos, separación de condiciones comerciales (ej. `VENTA` + `ACEPTA PERMUTA`) y formato de superficies para lotes (`has` / `m²`) y viviendas (`m² cub` / `m² tot`).
+  - Footer comercial: `ROGGEROYROMA.COM.AR` destacado en 36 px con naranja corporativo `#F26B2E`.
+- **Compatibilidad hacia atrás (Query params):**
+  - Predeterminada (sin query, `template=1`, `template=v2.2`, `template=rr-story-v2.2`): Story V2.2 (Alternativa A).
+  - `template=rr-story-v2.2-b`: Story V2.2 (Alternativa B: Isotipo blanco con filete naranja).
+  - `template=rr-story-v2.1`: Story V2.1.
+  - `template=rr-story-v2`: Story V2.0.
+  - `template=v1` o `template=legacy`: Plantilla clásica original V1.
+

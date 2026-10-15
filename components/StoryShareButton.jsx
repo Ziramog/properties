@@ -10,7 +10,7 @@ export default function StoryShareButton({ property }) {
   const handlePrepare = async () => {
     setStatus('preparing');
     try {
-      const storyUrl = `/api/story/${property._id || property.id}?template=1`;
+      const storyUrl = `/api/story/${property._id || property.id}?template=rr-story-v2.2`;
       const response = await fetch(storyUrl);
       
       if (!response.ok) {

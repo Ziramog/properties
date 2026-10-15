@@ -2,8 +2,11 @@ import { ImageResponse } from 'next/og';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import mongoose from 'mongoose';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { getSessionUser } from '@/utils/getSessionUser';
+import { isAdmin } from '@/utils/isAdmin';
+import { formatPriceDisplay } from '@/utils/priceUtils';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -17,16 +20,17 @@ async function getPropertyByIdOrSlug(id) {
   return null;
 }
 
-const formatPrice = (price) => {
+const formatPriceLegacy = (price) => {
   if (!price) return 'Consultar';
   const rawPrice = String(price).replace(/[^0-9]/g, '');
   if (!rawPrice) return 'Consultar';
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(rawPrice);
 };
+
 // Optimize Cloudinary URLs: resize to max width and reduce quality for Satori rendering
 function optimizeImageUrl(url, width = 1080) {
   if (!url || !url.includes('cloudinary.com')) return url;
-  return url.replace('/upload/', `/upload/w_${width},q_70,f_jpg/`);
+  return url.replace('/upload/', `/upload/w_${width},q_75,f_jpg/`);
 }
 
 async function toDataUrl(url) {
@@ -39,7 +43,6 @@ async function toDataUrl(url) {
   return `data:${contentType};base64,${base64}`;
 }
 
-// Force ImageResponse to fully render before returning — catches Satori errors in try-catch
 async function renderImage(jsx, options) {
   const imgResponse = new ImageResponse(jsx, options);
   const buffer = await imgResponse.arrayBuffer();
@@ -48,161 +51,1333 @@ async function renderImage(jsx, options) {
   });
 }
 
-export async function GET(request, { params }) {
-  try {
-  await connectDB();
-  const { id } = await params;
-  const property = await getPropertyByIdOrSlug(id);
+function extractStoryData(property) {
+  const operation = property.operation
+    ? (property.operation === 'venta' ? 'VENTA' : property.operation.toUpperCase())
+    : 'DISPONIBLE';
 
-  if (!property) {
-    return new Response('Not found', { status: 404 });
+  const priceDisplay = formatPriceDisplay(property.price);
+
+  const isLand = ['Terreno', 'Lote', 'Campo', 'Chacra'].includes(property.type) ||
+    /lote|terreno|fracci[oó]n|campo/i.test(property.name || '') ||
+    /lote|terreno/i.test(property.type || '');
+
+  let areaDisplay = null;
+  if (isLand) {
+    if (property.square_feet != null && property.square_feet > 0) {
+      if (property.square_feet >= 10000) {
+        const has = property.square_feet / 10000;
+        areaDisplay = `${has >= 1 ? has.toFixed(has % 1 === 0 ? 0 : 1) : has.toFixed(2)} has`;
+      } else {
+        areaDisplay = `${property.square_feet.toLocaleString('es-AR')} m²`;
+      }
+    } else if (property.covered_area != null && property.covered_area > 0) {
+      areaDisplay = `${property.covered_area.toLocaleString('es-AR')} m²`;
+    }
+  } else {
+    if (property.covered_area != null && property.covered_area > 0) {
+      areaDisplay = `${property.covered_area.toLocaleString('es-AR')} m² cub`;
+    } else if (property.square_feet != null && property.square_feet > 0) {
+      areaDisplay = `${property.square_feet.toLocaleString('es-AR')} m² tot`;
+    }
   }
 
-  const { searchParams } = new URL(request.url);
-  const template = searchParams.get('template') || '1';
+  const beds = (!isLand && property.beds > 0) ? property.beds : null;
+  const baths = (!isLand && property.baths > 0) ? property.baths : null;
 
-  const size = {
-    width: 1080,
-    height: 1920,
+  let rawTitle = property.name || property.location?.street || property.type || 'Propiedad Exclusiva';
+  if (rawTitle.length > 72) {
+    rawTitle = rawTitle.slice(0, 69).trim() + '...';
+  }
+
+  const locality = [property.location?.city || 'Alta Gracia', property.location?.state || 'Córdoba']
+    .filter(Boolean)
+    .join(' · ')
+    .toUpperCase();
+
+  return {
+    operation,
+    priceDisplay,
+    isLand,
+    areaDisplay,
+    beds,
+    baths,
+    title: rawTitle,
+    locality,
   };
+}
 
-  // Read static files directly from filesystem to prevent Vercel self-request deadlocks
-  const logoBuffer = readFileSync(join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-Photoroom.png'));
-  const isoLogoUrl = `data:image/png;base64,${logoBuffer.toString('base64')}`;
-  const imageUrl = property.images?.[0]?.url 
-    ? await toDataUrl(property.images[0].url) 
-    : null;
+function parseStoryTitleAndCondition(property) {
+  const rawName = (property.name || '').trim();
+  const rawDesc = (property.description || '').trim();
+  const allText = `${rawName} ${rawDesc}`;
+  const city = (property.location?.city || '').trim().toLowerCase();
 
-  const getAreaDisplay = () => {
-    if (property.covered_area) return `${property.covered_area.toLocaleString('es-AR')} m² cub`;
-    if (property.square_feet) return `${property.square_feet.toLocaleString('es-AR')} m² tot`;
-    return null;
+  // 1. Detect Commercial Conditions confirmed by property data
+  let condition = null;
+  if (/permuta|canje|toma menor|toma veh[ií]culo/i.test(allText)) {
+    condition = 'Acepta permuta';
+  } else if (/apto cr[eé]dito/i.test(allText)) {
+    condition = 'Apto crédito';
+  } else if (/en construcci[oó]n|en pozo/i.test(allText)) {
+    condition = 'En pozo';
+  } else if (/escritura inmediata|con escritura/i.test(allText) && ['Terreno', 'Lote'].includes(property.type)) {
+    condition = 'Con escritura';
+  }
+
+  // 2. Parse Title into clean commercial representation without arbitrary cuts
+  let cleanTitle = rawName;
+
+  if (cleanTitle.includes(',')) {
+    const parts = cleanTitle.split(',').map((s) => s.trim()).filter(Boolean);
+
+    // If it's simply a 2-part address + neighborhood (e.g. "Las Rosas 1100, B° El Golf")
+    if (parts.length === 2 && !/^c[oó]rdoba$/i.test(parts[0]) && !/permuta|canje/i.test(parts[1])) {
+      return {
+        title: rawName,
+        condition,
+      };
+    }
+
+    // Filter out redundant province/state or condition text that became a badge
+    const filteredParts = parts.filter((part) => {
+      if (/^c[oó]rdoba$/i.test(part)) return false;
+      if (/permuta|canje|toma/i.test(part)) return false;
+      if (/^en venta$/i.test(part)) return false;
+      return true;
+    });
+
+    // Look for property type descriptor (e.g. "Casa de 2 dormitorios", "Lote de 1.216 m2")
+    const typePartIndex = filteredParts.findIndex((p) =>
+      /casa|depto|departamento|lote|terreno|campo|chacra|galp[oó]n|oficina|local/i.test(p)
+    );
+
+    if (typePartIndex !== -1) {
+      const typePart = filteredParts[typePartIndex];
+      const otherParts = filteredParts.filter((_, idx) => idx !== typePartIndex);
+
+      const hasEmbeddedLocation = /en |sobre |b° |barrio /i.test(typePart);
+
+      if (hasEmbeddedLocation) {
+        cleanTitle = typePart;
+      } else if (otherParts.length > 0) {
+        const specificPart = otherParts.find((p) => p.toLowerCase() !== city) || otherParts[0];
+        cleanTitle = `${typePart} · ${specificPart}`;
+      } else {
+        cleanTitle = typePart;
+      }
+    } else {
+      cleanTitle = filteredParts.join(' · ');
+    }
+  }
+
+  if (!cleanTitle || cleanTitle.length < 5) {
+    cleanTitle = property.location?.street || property.type || 'Propiedad Exclusiva';
+  }
+
+  return {
+    title: cleanTitle,
+    condition,
   };
-  const areaLabel = getAreaDisplay();
+}
 
-  const brandColor = '#A47D4C';
-  const darkColor = '#0F172A';
+function extractStoryDataV2_1(property) {
+  const base = extractStoryData(property);
+  const { title, condition } = parseStoryTitleAndCondition(property);
 
+  return {
+    ...base,
+    title,
+    condition,
+  };
+}
 
+export async function GET(request, { params }) {
+  try {
+    await connectDB();
+    const { id } = await params;
+    const property = await getPropertyByIdOrSlug(id);
 
-  // TEMPLATE 1: INMERSIVO (FULL-SCREEN)
-  return await renderImage(
-    (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: '#0B0D10',
-          fontFamily: 'sans-serif',
-          position: 'relative',
-        }}
-      >
-        {/* Full Background Image */}
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex' }}>
-          <img src={imageUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        </div>
+    if (!property) {
+      return new Response('Not found', { status: 404 });
+    }
 
-        {/* Top Gradient Overlay */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, width: '100%', height: '40%',
-          backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)',
-          display: 'flex'
-        }} />
+    // User authorization check
+    const sessionUser = await getSessionUser();
+    const internalSecret = request.headers.get('x-internal-secret');
+    const isAuthorized = isAdmin(sessionUser) ||
+      (internalSecret && internalSecret === process.env.NEXTAUTH_SECRET) ||
+      (process.env.NODE_ENV === 'development' && request.headers.get('x-allow-dev') === '1');
 
-        {/* Bottom Gradient Overlay */}
-        <div style={{
-          position: 'absolute', bottom: 0, left: 0, width: '100%', height: '60%',
-          backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 30%, transparent 100%)',
-          display: 'flex'
-        }} />
+    if (!isAuthorized) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
 
-        {/* Top Isotipo Center */}
-        <div style={{ position: 'absolute', top: 80, left: 0, width: '100%', display: 'flex', justifyContent: 'center', zIndex: 20 }}>
-          <img src={isoLogoUrl} width={320} height={320} style={{ objectFit: 'contain', filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.5))' }} />
-        </div>
+    const { searchParams } = new URL(request.url);
+    const template = searchParams.get('template') || 'rr-story-v2.2';
+    const isV1 = template === 'v1' || template === 'legacy';
+    const isV2_1 = template === 'rr-story-v2.1' || template === 'v2.1';
+    const isV2 = template === 'rr-story-v2' || template === 'v2';
+    const isV2_2 = !isV1 && !isV2_1 && !isV2;
+    const variantB = template === 'rr-story-v2.2-b' || template === 'v2.2-b' || template.endsWith('-b') || searchParams.get('variant') === 'b';
 
-        {/* Content - Bottom Aligned */}
+    const size = {
+      width: 1080,
+      height: 1920,
+    };
+
+    // Load static assets
+    const logoBuffer = readFileSync(join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-Photoroom.png'));
+    const isoLogoUrl = `data:image/png;base64,${logoBuffer.toString('base64')}`;
+
+    const whiteLogoPath = join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-White.png');
+    const isoWhiteLogoUrl = existsSync(whiteLogoPath)
+      ? `data:image/png;base64,${readFileSync(whiteLogoPath).toString('base64')}`
+      : isoLogoUrl;
+
+    const imageUrl = property.images?.[0]?.url ? await toDataUrl(property.images[0].url) : null;
+
+    // Load icons
+    const bedIconBuffer = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_bed.svg'));
+    const bathIconBuffer = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_bath.svg'));
+    const sqftIconBuffer = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_sqfoot.svg'));
+    
+    const bedIconUrl = `data:image/svg+xml;base64,${bedIconBuffer.toString('base64')}`;
+    const bathIconUrl = `data:image/svg+xml;base64,${bathIconBuffer.toString('base64')}`;
+    const sqftIconUrl = `data:image/svg+xml;base64,${sqftIconBuffer.toString('base64')}`;
+
+    const assets = {
+      isoLogoUrl,
+      isoWhiteLogoUrl,
+      imageUrl,
+      bedIconUrl,
+      bathIconUrl,
+      sqftIconUrl,
+    };
+
+    // ==========================================
+    // PLANTILLA V2.2: rr-story-v2.2 (REFINAMIENTO DEFINITIVO)
+    // ==========================================
+    if (isV2_2) {
+      const data = extractStoryDataV2_1(property);
+      const corporateOrange = '#F26B2E';
+
+      // Load PT Serif Bold font for editorial headings
+      const fontPath = join(process.cwd(), 'assets', 'fonts', 'pt-serif', 'PTSerif-Bold.ttf');
+      let fontOptions = [];
+      if (existsSync(fontPath)) {
+        const ptSerifBuffer = readFileSync(fontPath);
+        fontOptions.push({
+          name: 'PT Serif',
+          data: ptSerifBuffer,
+          style: 'normal',
+          weight: 700,
+        });
+      }
+
+      // Title adaptive sizing
+      const titleFontSize = data.title.length > 48 ? 44 : (data.title.length > 32 ? 54 : 66);
+
+      const pillStyle = {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        backgroundColor: 'rgba(255, 255, 255, 0.16)',
+        border: '1.5px solid rgba(255, 255, 255, 0.28)',
+        padding: '12px 26px',
+        borderRadius: '35px',
+      };
+
+      const pillTextStyle = {
+        color: '#FFFFFF',
+        fontSize: 26,
+        fontWeight: 700,
+      };
+
+      return await renderImage(
+        (
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: '#0B0D10',
+              fontFamily: 'sans-serif',
+              position: 'relative',
+            }}
+          >
+            {/* ZONA 2: Fotografía Protagonista Real */}
+            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex' }}>
+              <img src={assets.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+
+            {/* ZONA 3: Overlays Calibrados V2.2 */}
+            {/* Overlay Superior con gradiente oscuro controlado que sostiene la marca sobre cualquier cielo o pared */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '42%',
+                backgroundImage: 'linear-gradient(to bottom, rgba(11, 13, 16, 0.95) 0%, rgba(11, 13, 16, 0.84) 20%, rgba(11, 13, 16, 0.40) 32%, transparent 42%)',
+                display: 'flex',
+              }}
+            />
+
+            {/* Overlay Inferior en Degradado Editorial para lectura protegida */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '62%',
+                backgroundImage: 'linear-gradient(to top, rgba(11, 13, 16, 0.98) 0%, rgba(11, 13, 16, 0.90) 24%, rgba(11, 13, 16, 0.45) 44%, transparent 62%)',
+                display: 'flex',
+              }}
+            />
+
+            {/* ZONA 1: Header / Bloque Institucional Unificado (Zonas Seguras Top 175px) */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 175,
+                left: 0,
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                zIndex: 20,
+              }}
+            >
+              {/* Isotipo: 240px × 106px (Alternativa A: Naranja corporativo / Alternativa B: Blanco oficial) */}
+              <img
+                src={variantB ? assets.isoWhiteLogoUrl : assets.isoLogoUrl}
+                width={240}
+                height={106}
+                style={{
+                  objectFit: 'contain',
+                }}
+              />
+
+              {/* Nombre Institucional y Descriptor como una sola unidad */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 14 }}>
+                <span
+                  style={{
+                    color: '#FFFFFF',
+                    fontSize: 42,
+                    fontWeight: 700,
+                    letterSpacing: '2.5px',
+                    fontFamily: '"PT Serif", serif',
+                    textTransform: 'uppercase',
+                    textShadow: '0 2px 14px rgba(0,0,0,0.92)',
+                  }}
+                >
+                  SILVIA ROGGERO & ROMA
+                </span>
+
+                {/* Alternativa B incluye filete naranja refinado */}
+                {variantB && (
+                  <div
+                    style={{
+                      width: '120px',
+                      height: '2px',
+                      backgroundColor: corporateOrange,
+                      marginTop: '8px',
+                      marginBottom: '4px',
+                    }}
+                  />
+                )}
+
+                <span
+                  style={{
+                    color: '#FFFFFF',
+                    fontSize: 28,
+                    fontWeight: 700,
+                    letterSpacing: '4px',
+                    fontFamily: 'sans-serif',
+                    textTransform: 'uppercase',
+                    marginTop: variantB ? 4 : 6,
+                    textShadow: '0 2px 10px rgba(0,0,0,0.92)',
+                  }}
+                >
+                  NEGOCIOS INMOBILIARIOS
+                </span>
+              </div>
+            </div>
+
+            {/* CONTENIDO PRINCIPAL INFERIOR (Zonas 4 a 9, Safe Margin Bottom 185px libre de UI de Instagram) */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                padding: '0 60px 185px 60px',
+                display: 'flex',
+                flexDirection: 'column',
+                zIndex: 20,
+              }}
+            >
+              {/* ZONA 4: Badges de Operación y Condición Comercial */}
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <div
+                  style={{
+                    backgroundColor: corporateOrange,
+                    color: '#FFFFFF',
+                    fontSize: 18,
+                    fontWeight: 800,
+                    padding: '8px 24px',
+                    borderRadius: '24px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '2px',
+                  }}
+                >
+                  {data.operation}
+                </div>
+
+                {data.condition && (
+                  <div
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.18)',
+                      border: '1.5px solid rgba(255, 255, 255, 0.40)',
+                      color: '#FFFFFF',
+                      fontSize: 16,
+                      fontWeight: 700,
+                      padding: '8px 22px',
+                      borderRadius: '24px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '2px',
+                    }}
+                  >
+                    {data.condition}
+                  </div>
+                )}
+              </div>
+
+              {/* ZONA 5: Precio (Máxima Jerarquía Editorial en PT Serif Bold) */}
+              <div
+                style={{
+                  color: '#FFFFFF',
+                  fontSize: 106,
+                  fontFamily: '"PT Serif", serif',
+                  fontWeight: 700,
+                  lineHeight: 1.0,
+                  marginBottom: '16px',
+                }}
+              >
+                {data.priceDisplay}
+              </div>
+
+              {/* ZONA 6: Título Comercial / Dirección (+22% tamaño adaptativo) */}
+              <div
+                style={{
+                  color: '#FFFFFF',
+                  fontSize: titleFontSize,
+                  fontWeight: 700,
+                  lineHeight: 1.15,
+                  marginBottom: '12px',
+                }}
+              >
+                {data.title}
+              </div>
+
+              {/* ZONA 7: Localidad */}
+              <div
+                style={{
+                  color: '#E2E8F0',
+                  fontSize: 26,
+                  letterSpacing: '3px',
+                  textTransform: 'uppercase',
+                  fontWeight: 700,
+                  marginBottom: '28px',
+                }}
+              >
+                {data.locality}
+              </div>
+
+              {/* ZONA 8: Datos Técnicos Dinámicos (Pills de alta legibilidad móvil) */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: '16px',
+                  alignItems: 'center',
+                  marginBottom: '32px',
+                  flexWrap: 'wrap',
+                }}
+              >
+                {/* Terreno / Lote: Solo superficie con ícono vectorial SVG */}
+                {data.isLand ? (
+                  data.areaDisplay && (
+                    <div style={pillStyle}>
+                      <img src={assets.sqftIconUrl} width={32} height={32} />
+                      <span style={pillTextStyle}>{data.areaDisplay}</span>
+                    </div>
+                  )
+                ) : (
+                  /* Casa / Depto: Dorms, Baños, Superficie */
+                  <>
+                    {data.beds && (
+                      <div style={pillStyle}>
+                        <img src={assets.bedIconUrl} width={32} height={32} />
+                        <span style={pillTextStyle}>{data.beds} Dorms</span>
+                      </div>
+                    )}
+                    {data.baths && (
+                      <div style={pillStyle}>
+                        <img src={assets.bathIconUrl} width={32} height={32} />
+                        <span style={pillTextStyle}>{data.baths} Baños</span>
+                      </div>
+                    )}
+                    {data.areaDisplay && (
+                      <div style={pillStyle}>
+                        <img src={assets.sqftIconUrl} width={32} height={32} />
+                        <span style={pillTextStyle}>{data.areaDisplay}</span>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* ZONA 9: Cierre de Marca y Dominio (36px, legible directamente en móvil sin zoom) */}
+              <div style={{ width: '100%', height: '1.5px', backgroundColor: 'rgba(255, 255, 255, 0.25)', marginBottom: '20px' }} />
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                }}
+              >
+                <span
+                  style={{
+                    color: corporateOrange,
+                    fontSize: 36,
+                    letterSpacing: '4px',
+                    textTransform: 'uppercase',
+                    fontWeight: 800,
+                  }}
+                >
+                  ROGGEROYROMA.COM.AR
+                </span>
+              </div>
+            </div>
+          </div>
+        ),
+        {
+          ...size,
+          fonts: fontOptions,
+        }
+      );
+    }
+
+    // ==========================================
+    // PLANTILLA V2.1: rr-story-v2.1 (REFINAMIENTO EDITORIAL)
+    // ==========================================
+    if (isV2_1) {
+      const data = extractStoryDataV2_1(property);
+      const corporateOrange = '#F26B2E';
+
+      // Load PT Serif Bold font for editorial headings
+      const fontPath = join(process.cwd(), 'assets', 'fonts', 'pt-serif', 'PTSerif-Bold.ttf');
+      let fontOptions = [];
+      if (existsSync(fontPath)) {
+        const ptSerifBuffer = readFileSync(fontPath);
+        fontOptions.push({
+          name: 'PT Serif',
+          data: ptSerifBuffer,
+          style: 'normal',
+          weight: 700,
+        });
+      }
+
+      // Title adaptive sizing (+20-25% from V2)
+      const titleFontSize = data.title.length > 48 ? 44 : (data.title.length > 32 ? 54 : 66);
+
+      const pillStyle = {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        backgroundColor: 'rgba(255, 255, 255, 0.16)',
+        border: '1.5px solid rgba(255, 255, 255, 0.28)',
+        padding: '12px 26px',
+        borderRadius: '35px',
+      };
+
+      const pillTextStyle = {
+        color: '#FFFFFF',
+        fontSize: 26,
+        fontWeight: 700,
+      };
+
+      return await renderImage(
+        (
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: '#0B0D10',
+              fontFamily: 'sans-serif',
+              position: 'relative',
+            }}
+          >
+            {/* ZONA 2: Fotografía Protagonista Real */}
+            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex' }}>
+              <img src={assets.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+
+            {/* ZONA 3: Overlays Calibrados V2.1 */}
+            {/* Overlay Superior con gradiente denso detrás del logo para cielos claros y fachadas */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '40%',
+                backgroundImage: 'linear-gradient(to bottom, rgba(11, 13, 16, 0.94) 0%, rgba(11, 13, 16, 0.78) 16%, rgba(11, 13, 16, 0.40) 28%, transparent 40%)',
+                display: 'flex',
+              }}
+            />
+
+            {/* Overlay Inferior en Degradado Editorial */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '60%',
+                backgroundImage: 'linear-gradient(to top, rgba(11, 13, 16, 0.97) 0%, rgba(11, 13, 16, 0.88) 22%, rgba(11, 13, 16, 0.40) 42%, transparent 60%)',
+                display: 'flex',
+              }}
+            />
+
+            {/* ZONA 1: Header / Marca Integrado (+45% tamaño de isotipo, mayor legibilidad) */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 120,
+                left: 0,
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                zIndex: 20,
+              }}
+            >
+              <img
+                src={assets.isoLogoUrl}
+                width={160}
+                height={160}
+                style={{
+                  objectFit: 'contain',
+                }}
+              />
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 12 }}>
+                <span
+                  style={{
+                    color: '#FFFFFF',
+                    fontSize: 25,
+                    fontWeight: 800,
+                    letterSpacing: '5px',
+                    textTransform: 'uppercase',
+                    textShadow: '0 2px 10px rgba(0,0,0,0.85)',
+                  }}
+                >
+                  SILVIA ROGGERO & ROMA
+                </span>
+                <span
+                  style={{
+                    color: corporateOrange,
+                    fontSize: 16,
+                    fontWeight: 700,
+                    letterSpacing: '7px',
+                    textTransform: 'uppercase',
+                    marginTop: 4,
+                    textShadow: '0 2px 8px rgba(0,0,0,0.85)',
+                  }}
+                >
+                  NEGOCIOS INMOBILIARIOS
+                </span>
+              </div>
+            </div>
+
+            {/* CONTENIDO PRINCIPAL INFERIOR (Zonas 4 a 9) */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                padding: '0 60px 135px 60px',
+                display: 'flex',
+                flexDirection: 'column',
+                zIndex: 20,
+              }}
+            >
+              {/* ZONA 4: Badges de Operación y Condición Comercial */}
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <div
+                  style={{
+                    backgroundColor: corporateOrange,
+                    color: '#FFFFFF',
+                    fontSize: 17,
+                    fontWeight: 800,
+                    padding: '8px 22px',
+                    borderRadius: '24px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '2px',
+                  }}
+                >
+                  {data.operation}
+                </div>
+
+                {data.condition && (
+                  <div
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.18)',
+                      border: '1.5px solid rgba(255, 255, 255, 0.40)',
+                      color: '#FFFFFF',
+                      fontSize: 16,
+                      fontWeight: 700,
+                      padding: '7px 20px',
+                      borderRadius: '24px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '2px',
+                    }}
+                  >
+                    {data.condition}
+                  </div>
+                )}
+              </div>
+
+              {/* ZONA 5: Precio (+20% con tipografía Serif PT Serif Bold) */}
+              <div
+                style={{
+                  color: '#FFFFFF',
+                  fontSize: 104,
+                  fontFamily: '"PT Serif", serif',
+                  fontWeight: 700,
+                  lineHeight: 1.0,
+                  marginBottom: '16px',
+                }}
+              >
+                {data.priceDisplay}
+              </div>
+
+              {/* ZONA 6: Título / Dirección (+20-25% tamaño, adaptativo) */}
+              <div
+                style={{
+                  color: '#FFFFFF',
+                  fontSize: titleFontSize,
+                  fontWeight: 700,
+                  lineHeight: 1.15,
+                  marginBottom: '12px',
+                }}
+              >
+                {data.title}
+              </div>
+
+              {/* ZONA 7: Localidad */}
+              <div
+                style={{
+                  color: '#E2E8F0',
+                  fontSize: 25,
+                  letterSpacing: '3px',
+                  textTransform: 'uppercase',
+                  fontWeight: 700,
+                  marginBottom: '26px',
+                }}
+              >
+                {data.locality}
+              </div>
+
+              {/* ZONA 8: Datos Técnicos Dinámicos (Pills más legibles con íconos vectoriales) */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: '16px',
+                  alignItems: 'center',
+                  marginBottom: '32px',
+                  flexWrap: 'wrap',
+                }}
+              >
+                {/* Si es Terreno/Lote/Campo: Solo superficie */}
+                {data.isLand ? (
+                  data.areaDisplay && (
+                    <div style={pillStyle}>
+                      <img src={assets.sqftIconUrl} width={32} height={32} />
+                      <span style={pillTextStyle}>{data.areaDisplay}</span>
+                    </div>
+                  )
+                ) : (
+                  /* Si es Casa / Departamento / Comercial */
+                  <>
+                    {data.beds && (
+                      <div style={pillStyle}>
+                        <img src={assets.bedIconUrl} width={32} height={32} />
+                        <span style={pillTextStyle}>{data.beds} Dorms</span>
+                      </div>
+                    )}
+                    {data.baths && (
+                      <div style={pillStyle}>
+                        <img src={assets.bathIconUrl} width={32} height={32} />
+                        <span style={pillTextStyle}>{data.baths} Baños</span>
+                      </div>
+                    )}
+                    {data.areaDisplay && (
+                      <div style={pillStyle}>
+                        <img src={assets.sqftIconUrl} width={32} height={32} />
+                        <span style={pillTextStyle}>{data.areaDisplay}</span>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* ZONA 9: Pie de publicación / Cierre de Marca (Limpio, sin "Propiedades Exclusivas", alta legibilidad mobile) */}
+              <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255, 255, 255, 0.22)', marginBottom: '18px' }} />
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                }}
+              >
+                <span
+                  style={{
+                    color: corporateOrange,
+                    fontSize: 24,
+                    letterSpacing: '5px',
+                    textTransform: 'uppercase',
+                    fontWeight: 800,
+                  }}
+                >
+                  ROGGEROYROMA.COM.AR
+                </span>
+              </div>
+            </div>
+          </div>
+        ),
+        {
+          ...size,
+          fonts: fontOptions,
+        }
+      );
+    }
+
+    // ==========================================
+    // PLANTILLA V2: rr-story-v2 (NUEVO REDISEÑO)
+    // ==========================================
+    if (isV2) {
+      const data = extractStoryData(property);
+      const corporateOrange = '#F26B2E';
+
+      // Load PT Serif Bold font for editorial headings
+      const fontPath = join(process.cwd(), 'assets', 'fonts', 'pt-serif', 'PTSerif-Bold.ttf');
+      let fontOptions = [];
+      if (existsSync(fontPath)) {
+        const ptSerifBuffer = readFileSync(fontPath);
+        fontOptions.push({
+          name: 'PT Serif',
+          data: ptSerifBuffer,
+          style: 'normal',
+          weight: 700,
+        });
+      }
+
+      // Title adaptive sizing
+      const titleFontSize = data.title.length > 50 ? 38 : (data.title.length > 28 ? 46 : 54);
+
+      const pillStyle = {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        backgroundColor: 'rgba(255,255,255,0.12)',
+        border: '1px solid rgba(255,255,255,0.22)',
+        padding: '10px 22px',
+        borderRadius: '30px',
+      };
+
+      const pillTextStyle = {
+        color: '#FFFFFF',
+        fontSize: 22,
+        fontWeight: 600,
+      };
+
+      return await renderImage(
+        (
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: '#0B0D10',
+              fontFamily: 'sans-serif',
+              position: 'relative',
+            }}
+          >
+            {/* ZONA 2: Fotografía Protagonista Real */}
+            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex' }}>
+              <img src={assets.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+
+            {/* ZONA 3: Overlays Calibrados */}
+            {/* Overlay Superior Sutil para sostener el branding sin oscurecer la foto */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '32%',
+                backgroundImage: 'linear-gradient(to bottom, rgba(11, 13, 16, 0.78) 0%, rgba(11, 13, 16, 0.35) 15%, transparent 32%)',
+                display: 'flex',
+              }}
+            />
+
+            {/* Overlay Inferior en Degradado Editorial para lectura impecable */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '62%',
+                backgroundImage: 'linear-gradient(to top, rgba(11, 13, 16, 0.98) 0%, rgba(11, 13, 16, 0.90) 25%, rgba(11, 13, 16, 0.45) 45%, transparent 62%)',
+                display: 'flex',
+              }}
+            />
+
+            {/* ZONA 1: Header / Marca Integrado (Sin barras pesadas, respetando zona segura) */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 130,
+                left: 0,
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                zIndex: 20,
+              }}
+            >
+              <img
+                src={assets.isoLogoUrl}
+                width={110}
+                height={110}
+                style={{
+                  objectFit: 'contain',
+                }}
+              />
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
+                <span
+                  style={{
+                    color: '#FFFFFF',
+                    fontSize: 18,
+                    fontWeight: 700,
+                    letterSpacing: '4px',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  SILVIA ROGGERO & ROMA
+                </span>
+                <span
+                  style={{
+                    color: corporateOrange,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    letterSpacing: '5px',
+                    textTransform: 'uppercase',
+                    marginTop: 3,
+                  }}
+                >
+                  NEGOCIOS INMOBILIARIOS
+                </span>
+              </div>
+            </div>
+
+            {/* CONTENIDO PRINCIPAL INFERIOR (Zonas 4 a 9) */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                padding: '0 55px 140px 55px',
+                display: 'flex',
+                flexDirection: 'column',
+                zIndex: 20,
+              }}
+            >
+              {/* ZONA 4: Badge de Operación */}
+              <div style={{ display: 'flex' }}>
+                <div
+                  style={{
+                    backgroundColor: corporateOrange,
+                    color: '#FFFFFF',
+                    fontSize: 15,
+                    fontWeight: 800,
+                    padding: '7px 20px',
+                    borderRadius: '20px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '2px',
+                    marginBottom: '18px',
+                  }}
+                >
+                  {data.operation}
+                </div>
+              </div>
+
+              {/* ZONA 5: Precio (Máxima Jerarquía con tipografía Serif) */}
+              <div
+                style={{
+                  color: '#FFFFFF',
+                  fontSize: 88,
+                  fontFamily: '"PT Serif", serif',
+                  fontWeight: 700,
+                  lineHeight: 1.0,
+                  marginBottom: '16px',
+                }}
+              >
+                {data.priceDisplay}
+              </div>
+
+              {/* ZONA 6: Título / Dirección Principal */}
+              <div
+                style={{
+                  color: '#FFFFFF',
+                  fontSize: titleFontSize,
+                  fontWeight: 700,
+                  lineHeight: 1.18,
+                  marginBottom: '10px',
+                }}
+              >
+                {data.title}
+              </div>
+
+              {/* ZONA 7: Localidad */}
+              <div
+                style={{
+                  color: '#CBD5E1',
+                  fontSize: 22,
+                  letterSpacing: '3px',
+                  textTransform: 'uppercase',
+                  fontWeight: 600,
+                  marginBottom: '26px',
+                }}
+              >
+                {data.locality}
+              </div>
+
+              {/* ZONA 8: Datos Técnicos Dinámicos */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: '14px',
+                  alignItems: 'center',
+                  marginBottom: '30px',
+                  flexWrap: 'wrap',
+                }}
+              >
+                {/* Si es Terreno/Lote/Campo: Solo superficie, nunca dormitorios ni baños */}
+                {data.isLand ? (
+                  data.areaDisplay && (
+                    <div style={pillStyle}>
+                      <img src={assets.sqftIconUrl} width={26} height={26} />
+                      <span style={pillTextStyle}>{data.areaDisplay}</span>
+                    </div>
+                  )
+                ) : (
+                  /* Si es Casa / Departamento / Comercial */
+                  <>
+                    {data.beds && (
+                      <div style={pillStyle}>
+                        <img src={assets.bedIconUrl} width={28} height={28} />
+                        <span style={pillTextStyle}>{data.beds} Dorms</span>
+                      </div>
+                    )}
+                    {data.baths && (
+                      <div style={pillStyle}>
+                        <img src={assets.bathIconUrl} width={28} height={28} />
+                        <span style={pillTextStyle}>{data.baths} Baños</span>
+                      </div>
+                    )}
+                    {data.areaDisplay && (
+                      <div style={pillStyle}>
+                        <img src={assets.sqftIconUrl} width={26} height={26} />
+                        <span style={pillTextStyle}>{data.areaDisplay}</span>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* ZONA 9: Cierre de Marca y Dominio */}
+              <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)', marginBottom: '18px' }} />
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                }}
+              >
+                <span
+                  style={{
+                    color: 'rgba(255,255,255,0.65)',
+                    fontSize: 15,
+                    letterSpacing: '2px',
+                    textTransform: 'uppercase',
+                    fontWeight: 500,
+                  }}
+                >
+                  PROPIEDADES EXCLUSIVAS
+                </span>
+                <span
+                  style={{
+                    color: corporateOrange,
+                    fontSize: 17,
+                    letterSpacing: '3px',
+                    textTransform: 'uppercase',
+                    fontWeight: 800,
+                  }}
+                >
+                  ROGGEROYROMA.COM.AR
+                </span>
+              </div>
+            </div>
+          </div>
+        ),
+        {
+          ...size,
+          fonts: fontOptions,
+        }
+      );
+    }
+
+    // ==========================================
+    // PLANTILLA V1: LEGACY PRESERVADA (DEFAULT)
+    // ==========================================
+    const getAreaDisplayV1 = () => {
+      if (property.covered_area) return `${property.covered_area.toLocaleString('es-AR')} m² cub`;
+      if (property.square_feet) return `${property.square_feet.toLocaleString('es-AR')} m² tot`;
+      return null;
+    };
+    const areaLabelV1 = getAreaDisplayV1();
+    const brandColorV1 = '#A47D4C';
+
+    return await renderImage(
+      (
         <div
           style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
+            width: '100%',
+            height: '100%',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%',
-            padding: '60px 40px',
-            zIndex: 20
+            backgroundColor: '#0B0D10',
+            fontFamily: 'sans-serif',
+            position: 'relative',
           }}
         >
-          <div style={{
-            backgroundColor: brandColor,
-            color: '#FFFFFF',
-            fontSize: 26,
-            fontWeight: 'bold',
-            padding: '12px 30px',
-            borderRadius: '30px',
-            textTransform: 'uppercase',
-            letterSpacing: '2px',
-            marginBottom: '30px',
-            boxShadow: '0 10px 20px rgba(0,0,0,0.3)'
-          }}>
-            {property.operation ? (property.operation === 'venta' ? 'VENTA' : property.operation.toUpperCase()) : 'DISPONIBLE'}
+          {/* Full Background Image */}
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex' }}>
+            <img src={assets.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
 
-          <h2 style={{ color: '#FFFFFF', fontSize: 130, fontWeight: '900', margin: '0 0 15px 0', textShadow: '0 4px 20px rgba(0,0,0,0.6)', textAlign: 'center' }}>
-            {formatPrice(property.price)}
-          </h2>
-          
-          <h1 style={{ color: '#E2E8F0', fontSize: 65, fontWeight: 'bold', margin: '0 0 25px 0', lineHeight: 1.2, textAlign: 'center', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
-            {property.name || property.type || 'Propiedad Exclusiva'}
-          </h1>
-          
-          <p style={{ color: '#CBD5E1', fontSize: 40, margin: '0 0 45px 0', textShadow: '0 2px 10px rgba(0,0,0,0.5)', letterSpacing: '2px', textTransform: 'uppercase' }}>
-            {property.location?.city || ''}
-          </p>
+          {/* Top Gradient Overlay */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '40%',
+              backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)',
+              display: 'flex',
+            }}
+          />
 
-          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', marginBottom: '50px', justifyContent: 'center' }}>
-            {areaLabel && (
-              <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.15)', padding: '15px 30px', borderRadius: '40px', border: '1px solid rgba(255,255,255,0.3)' }}>
-                <span style={{ color: '#FFFFFF', fontSize: 32, fontWeight: '500' }}>{areaLabel}</span>
-              </div>
-            )}
-            {property.beds > 0 && (
-              <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.15)', padding: '15px 30px', borderRadius: '40px', border: '1px solid rgba(255,255,255,0.3)' }}>
-                <span style={{ color: '#FFFFFF', fontSize: 32, fontWeight: '500' }}>{property.beds} Dorms</span>
-              </div>
-            )}
-            {property.baths > 0 && (
-              <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.15)', padding: '15px 30px', borderRadius: '40px', border: '1px solid rgba(255,255,255,0.3)' }}>
-                <span style={{ color: '#FFFFFF', fontSize: 32, fontWeight: '500' }}>{property.baths} Baños</span>
-              </div>
-            )}
+          {/* Bottom Gradient Overlay */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              width: '100%',
+              height: '60%',
+              backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 30%, transparent 100%)',
+              display: 'flex',
+            }}
+          />
+
+          {/* Top Isotipo Center */}
+          <div style={{ position: 'absolute', top: 80, left: 0, width: '100%', display: 'flex', justifyContent: 'center', zIndex: 20 }}>
+            <img src={assets.isoLogoUrl} width={320} height={320} style={{ objectFit: 'contain' }} />
           </div>
-          
-          <div style={{ width: '80%', height: '1px', backgroundColor: 'rgba(255,255,255,0.3)', marginBottom: '30px' }}></div>
-          
-          <p style={{ color: brandColor, fontSize: 32, letterSpacing: '4px', textTransform: 'uppercase', margin: 0, textAlign: 'center', fontWeight: 'bold' }}>
-            roggeroyroma.com.ar
-          </p>
+
+          {/* Content - Bottom Aligned */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: '100%',
+              padding: '60px 40px',
+              zIndex: 20,
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: brandColorV1,
+                color: '#FFFFFF',
+                fontSize: 26,
+                fontWeight: 'bold',
+                padding: '12px 30px',
+                borderRadius: '30px',
+                textTransform: 'uppercase',
+                letterSpacing: '2px',
+                marginBottom: '30px',
+              }}
+            >
+              {property.operation ? (property.operation === 'venta' ? 'VENTA' : property.operation.toUpperCase()) : 'DISPONIBLE'}
+            </div>
+
+            <h2
+              style={{
+                color: '#FFFFFF',
+                fontSize: 130,
+                fontWeight: '900',
+                margin: '0 0 15px 0',
+                textAlign: 'center',
+              }}
+            >
+              {formatPriceLegacy(property.price)}
+            </h2>
+
+            <h1
+              style={{
+                color: '#E2E8F0',
+                fontSize: 65,
+                fontWeight: 'bold',
+                margin: '0 0 25px 0',
+                lineHeight: 1.2,
+                textAlign: 'center',
+              }}
+            >
+              {property.name || property.type || 'Propiedad Exclusiva'}
+            </h1>
+
+            <p
+              style={{
+                color: '#CBD5E1',
+                fontSize: 40,
+                margin: '0 0 45px 0',
+                letterSpacing: '2px',
+                textTransform: 'uppercase',
+              }}
+            >
+              {property.location?.city || ''}
+            </p>
+
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', marginBottom: '50px', justifyContent: 'center' }}>
+              {areaLabelV1 && (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(255,255,255,0.15)',
+                    padding: '15px 30px',
+                    borderRadius: '40px',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                  }}
+                >
+                  <span style={{ color: '#FFFFFF', fontSize: 32, fontWeight: '500' }}>{areaLabelV1}</span>
+                </div>
+              )}
+              {property.beds > 0 && (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(255,255,255,0.15)',
+                    padding: '15px 30px',
+                    borderRadius: '40px',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                  }}
+                >
+                  <span style={{ color: '#FFFFFF', fontSize: 32, fontWeight: '500' }}>{property.beds} Dorms</span>
+                </div>
+              )}
+              {property.baths > 0 && (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(255,255,255,0.15)',
+                    padding: '15px 30px',
+                    borderRadius: '40px',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                  }}
+                >
+                  <span style={{ color: '#FFFFFF', fontSize: 32, fontWeight: '500' }}>{property.baths} Baños</span>
+                </div>
+              )}
+            </div>
+
+            <div style={{ width: '80%', height: '1px', backgroundColor: 'rgba(255,255,255,0.3)', marginBottom: '30px' }} />
+
+            <p
+              style={{
+                color: brandColorV1,
+                fontSize: 32,
+                letterSpacing: '4px',
+                textTransform: 'uppercase',
+                margin: 0,
+                textAlign: 'center',
+                fontWeight: 'bold',
+              }}
+            >
+              roggeroyroma.com.ar
+            </p>
+          </div>
         </div>
-      </div>
-    ),
-    {
-      ...size,
-    }
-  );
+      ),
+      {
+        ...size,
+      }
+    );
   } catch (error) {
     console.error('Error generating story image:', error);
-    return new Response(JSON.stringify({ 
-      error: 'Error generating story image', 
-      message: error.message,
-      stack: error.stack?.split('\n').slice(0, 5).join('\n')
-    }), { 
-      status: 500, 
-      headers: { 'Content-Type': 'application/json' } 
-    });
+    return new Response(
+      JSON.stringify({
+        error: 'Error generating story image',
+        message: error.message,
+        stack: error.stack?.split('\n').slice(0, 5).join('\n'),
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   }
 }

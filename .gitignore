@@ -60,3 +60,11 @@ scripts/normalize-data.js
 scripts/test-images.js
 scripts/test-type.js
 scripts/update-type.js
+
+# Story test artifacts & comparatives
+/public/story-v*
+/public/laminas*
+/public/mobile-sim
+*comparacion_story_*.pdf
+
+
