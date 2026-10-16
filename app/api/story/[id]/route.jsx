@@ -27,17 +27,17 @@ const formatPriceLegacy = (price) => {
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(rawPrice);
 };
 
-// Optimize Cloudinary URLs: resize to max width and reduce quality for Satori rendering
-function optimizeImageUrl(url, width = 1080) {
+// Devuelve la URL original limpia sin consumir créditos de transformación en Cloudinary
+function optimizeImageUrl(url) {
   if (!url || !url.includes('cloudinary.com')) return url;
-  return url.replace('/upload/', `/upload/w_${width},q_75,f_jpg/`);
+  return url.replace(/\/upload\/[^/]+\/(v\d+\/)/, '/upload/$1');
 }
 
 async function toDataUrl(url) {
-  const optimized = optimizeImageUrl(url);
-  const res = await fetch(optimized);
-  if (!res.ok) throw new Error(`Failed to fetch image: ${optimized} (${res.status})`);
-  const contentType = res.headers.get('content-type') || 'image/png';
+  const cleanUrl = optimizeImageUrl(url);
+  const res = await fetch(cleanUrl);
+  if (!res.ok) throw new Error(`Failed to fetch image: ${cleanUrl} (${res.status})`);
+  const contentType = res.headers.get('content-type') || 'image/jpeg';
   const buffer = await res.arrayBuffer();
   const base64 = Buffer.from(buffer).toString('base64');
   return `data:${contentType};base64,${base64}`;
@@ -299,7 +299,7 @@ function extractStoryDataV2_3(property) {
   };
 }
 
-export async function GET(request, { params }) {
+async function handleStoryRequest(request, { params }, clientImageBase64 = null) {
   try {
     await connectDB();
     const { id } = await params;
@@ -345,7 +345,15 @@ export async function GET(request, { params }) {
       ? `data:image/png;base64,${readFileSync(whiteLogoPath).toString('base64')}`
       : isoLogoUrl;
 
-    const imageUrl = property.images?.[0]?.url ? await toDataUrl(property.images[0].url) : null;
+    // Si el navegador ya recortó y mejoró la imagen en <canvas>, se usa directamente sin hacer fetch
+    const firstImg = property.images?.[0];
+    const rawImgUrl = typeof firstImg === 'string' ? firstImg : firstImg?.url;
+    const imageUrl =
+      clientImageBase64 && clientImageBase64.startsWith('data:image/')
+        ? clientImageBase64
+        : rawImgUrl
+          ? await toDataUrl(rawImgUrl)
+          : null;
 
     // Load icons with calibrated stroke for high-res 1080x1920
     const rawBedSvg = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_bed.svg'), 'utf8');
@@ -1606,3 +1614,17 @@ export async function GET(request, { params }) {
     );
   }
 }
+
+export async function GET(request, context) {
+  return handleStoryRequest(request, context, null);
+}
+
+export async function POST(request, context) {
+  let imageBase64 = null;
+  try {
+    const body = await request.json();
+    imageBase64 = body?.imageBase64 || null;
+  } catch {}
+  return handleStoryRequest(request, context, imageBase64);
+}
+

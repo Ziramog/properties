@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Share2, Share, Copy, Check } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
+import { processImageInBrowser } from '@/utils/processImageInBrowser';
 
 export default function StoryShareButton({ property }) {
   const [status, setStatus] = useState('idle'); // 'idle', 'preparing', 'ready'
@@ -16,8 +17,22 @@ export default function StoryShareButton({ property }) {
     setStatus('preparing');
     setLinkCopied(false);
     try {
+      const firstImg = property?.images?.[0];
+      const rawImgUrl = typeof firstImg === 'string' ? firstImg : firstImg?.url;
+
+      // Procesar el recorte c_fill (1080x1920) y nitidez en el navegador del usuario (0 créditos Cloudinary)
+      const imageBase64 = rawImgUrl
+        ? await processImageInBrowser(rawImgUrl, 1080, 1920)
+        : null;
+
       const storyUrl = `/api/story/${property._id || property.id}?template=rr-story-v2.2`;
-      const response = await fetch(storyUrl);
+      const response = imageBase64
+        ? await fetch(storyUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ imageBase64 }),
+          })
+        : await fetch(storyUrl);
 
       if (!response.ok) {
         let errMsg = `Error generando imagen: ${response.status}`;

@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Layers, Share } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { processImageInBrowser } from '@/utils/processImageInBrowser';
 
 export default function FeedShareButton({ property }) {
   const [status, setStatus] = useState('idle'); // 'idle', 'preparing', 'ready'
@@ -19,8 +20,22 @@ export default function FeedShareButton({ property }) {
 
     try {
       for (let i = 0; i < maxImages; i++) {
+        const imgEntry = property?.images?.[i] || property?.images?.[0];
+        const rawImgUrl = typeof imgEntry === 'string' ? imgEntry : imgEntry?.url;
+
+        // Procesar el recorte c_fill (1080x1350) y nitidez en el navegador del usuario (0 créditos Cloudinary)
+        const imageBase64 = rawImgUrl
+          ? await processImageInBrowser(rawImgUrl, 1080, 1350)
+          : null;
+
         const url = `/api/feed/${property._id || property.id}?index=${i}`;
-        const response = await fetch(url);
+        const response = imageBase64
+          ? await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ imageBase64 }),
+            })
+          : await fetch(url);
         
         if (!response.ok) {
           throw new Error(`Error en foto ${i+1}`);

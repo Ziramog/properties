@@ -18,16 +18,17 @@ async function getPropertyByIdOrSlug(id) {
   return null;
 }
 
-function optimizeImageUrl(url, width = 1080) {
+// Devuelve la URL original limpia sin consumir créditos de transformación en Cloudinary
+function optimizeImageUrl(url) {
   if (!url || !url.includes('cloudinary.com')) return url;
-  return url.replace('/upload/', `/upload/w_${width},q_75,f_jpg/`);
+  return url.replace(/\/upload\/[^/]+\/(v\d+\/)/, '/upload/$1');
 }
 
 async function toDataUrl(url) {
-  const optimized = optimizeImageUrl(url);
-  const res = await fetch(optimized);
-  if (!res.ok) throw new Error(`Failed to fetch image: ${optimized} (${res.status})`);
-  const contentType = res.headers.get('content-type') || 'image/png';
+  const cleanUrl = optimizeImageUrl(url);
+  const res = await fetch(cleanUrl);
+  if (!res.ok) throw new Error(`Failed to fetch image: ${cleanUrl} (${res.status})`);
+  const contentType = res.headers.get('content-type') || 'image/jpeg';
   const buffer = await res.arrayBuffer();
   const base64 = Buffer.from(buffer).toString('base64');
   return `data:${contentType};base64,${base64}`;
@@ -224,7 +225,7 @@ function extractFeedData(property) {
   };
 }
 
-export async function GET(request, { params }) {
+async function handleFeedRequest(request, { params }, clientImageBase64 = null) {
   try {
     await connectDB();
     const { id } = await params;
@@ -255,7 +256,14 @@ export async function GET(request, { params }) {
       ? `data:image/png;base64,${readFileSync(whiteLogoPath).toString('base64')}`
       : isoLogoUrl;
 
-    const imageUrl = imageToUse?.url ? await toDataUrl(imageToUse.url) : null;
+    // Si el navegador ya recortó y mejoró la imagen en <canvas>, se usa directamente sin hacer fetch
+    const rawImgUrl = typeof imageToUse === 'string' ? imageToUse : imageToUse?.url;
+    const imageUrl =
+      clientImageBase64 && clientImageBase64.startsWith('data:image/')
+        ? clientImageBase64
+        : rawImgUrl
+          ? await toDataUrl(rawImgUrl)
+          : null;
 
     // Íconos SVG oficiales con trazo calibrado
     const rawBedSvg = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_bed.svg'), 'utf8');
@@ -844,3 +852,17 @@ export async function GET(request, { params }) {
     );
   }
 }
+
+export async function GET(request, context) {
+  return handleFeedRequest(request, context, null);
+}
+
+export async function POST(request, context) {
+  let imageBase64 = null;
+  try {
+    const body = await request.json();
+    imageBase64 = body?.imageBase64 || null;
+  } catch {}
+  return handleFeedRequest(request, context, imageBase64);
+}
+

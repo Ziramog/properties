@@ -134,16 +134,12 @@ flowchart TD
     end
 ```
 
-### Detalle de la Optimización de Imágenes para Satori
-Para evitar errores de timeout o consumo excesivo de memoria en Vercel durante el renderizado SVG/Canvas de Satori, tanto en [`/api/feed/[id]`](file:///c:/Projects/property-pulse-nextjs/app/api/feed/[id]/route.jsx) como en [`/api/story/[id]`](file:///c:/Projects/property-pulse-nextjs/app/api/story/[id]/route.jsx) se implementa:
+### Detalle de la Optimización de Imágenes para Satori (Client-Side Canvas, 0 Créditos Cloudinary)
+Para obtener máxima nitidez en Instagram sin gastar créditos de transformación en el plan Free de Cloudinary, el procesamiento fotográfico se realiza **100% en el navegador del usuario** mediante [`utils/processImageInBrowser.js`](file:///c:/Projects/property-pulse-nextjs/utils/processImageInBrowser.js):
 
-```javascript
-function optimizeImageUrl(url, width = 1080) {
-  if (!url || !url.includes('cloudinary.com')) return url;
-  return url.replace('/upload/', `/upload/w_${width},q_70,f_jpg/`);
-}
-```
-Esto fuerza a Cloudinary a entregar una imagen previamente escalada a 1080px de ancho con compresión JPG al 70%, acelerando la conversión a Base64 y evitando que Satori procese archivos pesados de 4K o 10MB.
+1. **Descarga limpia (0 créditos de transformación)**: El navegador carga la URL original limpia de Cloudinary con `crossOrigin = 'anonymous'` (reutilizando la caché del navegador).
+2. **Recorte `c_fill` y Reescalado de Alta Calidad en `<canvas>`**: Se calcula matemáticamente el recorte centrado a `1080×1920` (Story) o `1080×1350` (Feed) aplicando `imageSmoothingQuality = 'high'` y `ctx.filter = 'contrast(1.04) saturate(1.03)'`.
+3. **Envío en Base64 (`jpeg` al 92%)**: [`StoryShareButton.jsx`](file:///c:/Projects/property-pulse-nextjs/components/StoryShareButton.jsx) y [`FeedShareButton.jsx`](file:///c:/Projects/property-pulse-nextjs/components/FeedShareButton.jsx) envían el `imageBase64` vía `POST` a [`/api/story/[id]`](file:///c:/Projects/property-pulse-nextjs/app/api/story/[id]/route.jsx) y [`/api/feed/[id]`](file:///c:/Projects/property-pulse-nextjs/app/api/feed/[id]/route.jsx), evitando que Satori reescale miniaturas o que el servidor haga peticiones adicionales a Cloudinary. En caso de llamada `GET` directa, el servidor consume la URL original limpia sin parámetros `w_1080,q_75`.
 
 ---
 
@@ -151,12 +147,13 @@ Esto fuerza a Cloudinary a entregar una imagen previamente escalada a 1080px de 
 
 | Archivo / Ruta | Tipo | Responsabilidad en el Sistema de Publicación |
 |---|---|---|
-| [`components/StoryShareButton.jsx`](file:///c:/Projects/property-pulse-nextjs/components/StoryShareButton.jsx) | Client Component | Maneja el estado (`idle`, `preparing`, `ready`), solicita el render a la API, crea el `File` binario y dispara la Web Share API o descarga el PNG. |
-| [`components/FeedShareButton.jsx`](file:///c:/Projects/property-pulse-nextjs/components/FeedShareButton.jsx) | Client Component | Itera hasta 7 fotos de la propiedad, solicita las imágenes vía API con índice, genera el caption comercial con hashtags, copia al portapapeles y abre el share nativo. |
+| [`utils/processImageInBrowser.js`](file:///c:/Projects/property-pulse-nextjs/utils/processImageInBrowser.js) | Client Utility | Recorta (`c_fill`), aplica suavizado bicúbico/Lanczos (`high`) y micro-contraste en `<canvas>` local exportando Base64 JPEG al 92% con 0 créditos de Cloudinary. |
+| [`components/StoryShareButton.jsx`](file:///c:/Projects/property-pulse-nextjs/components/StoryShareButton.jsx) | Client Component | Procesa la foto en `<canvas>` (`1080×1920`), solicita el render vía `POST` a la API, crea el `File` binario y dispara la Web Share API o descarga el PNG. |
+| [`components/FeedShareButton.jsx`](file:///c:/Projects/property-pulse-nextjs/components/FeedShareButton.jsx) | Client Component | Itera hasta 7 fotos de la propiedad procesándolas en `<canvas>` (`1080×1350`), solicita las imágenes vía `POST` a la API, genera el caption comercial con hashtags, copia al portapapeles y abre el share nativo. |
 | [`components/ShareButtons.jsx`](file:///c:/Projects/property-pulse-nextjs/components/ShareButtons.jsx) | Client Component | Iconos y enlaces directos para compartir en Facebook, Twitter/X, LinkedIn y WhatsApp. |
 | [`components/PropertyDetails.jsx`](file:///c:/Projects/property-pulse-nextjs/components/PropertyDetails.jsx#L116-L121) | Client Component | Integra los botones sociales y aplica la condición de seguridad de rol: `{session?.user?.role === 'superadmin' && ...}`. |
-| [`app/api/story/[id]/route.jsx`](file:///c:/Projects/property-pulse-nextjs/app/api/story/[id]/route.jsx) | Route Handler (`next/og`) | Genera dinámicamente la imagen de Story 1080×1920 con datos de MongoDB y Cloudinary. |
-| [`app/api/feed/[id]/route.jsx`](file:///c:/Projects/property-pulse-nextjs/app/api/feed/[id]/route.jsx) | Route Handler (`next/og`) | Genera dinámicamente cada slide del Feed 1080×1350 según el parámetro `?index=0..6`. |
+| [`app/api/story/[id]/route.jsx`](file:///c:/Projects/property-pulse-nextjs/app/api/story/[id]/route.jsx) | Route Handler (`next/og`) | Genera dinámicamente la imagen de Story 1080×1920 (`GET` y `POST`) con datos de MongoDB y el Base64 pre-procesado. |
+| [`app/api/feed/[id]/route.jsx`](file:///c:/Projects/property-pulse-nextjs/app/api/feed/[id]/route.jsx) | Route Handler (`next/og`) | Genera dinámicamente cada slide del Feed 1080×1350 (`GET` y `POST`) según el parámetro `?index=0..6`. |
 | [`app/api/admin/toggle-published/route.js`](file:///c:/Projects/property-pulse-nextjs/app/api/admin/toggle-published/route.js) | Route Handler | Cambia el estado `is_published` de la propiedad y revalida las rutas con `revalidatePath`. |
 | [`app/api/admin/toggle-featured/route.js`](file:///c:/Projects/property-pulse-nextjs/app/api/admin/toggle-featured/route.js) | Route Handler | Alterna la propiedad como destacada (`is_featured`) para secciones principales. |
 | [`models/Property.js`](file:///c:/Projects/property-pulse-nextjs/models/Property.js) | Mongoose Schema | Esquema de datos: define `is_published`, `is_featured`, `status`, `badgeExpiresAt`, `images`, `gallery_order`. |
