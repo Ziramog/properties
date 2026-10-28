@@ -6,6 +6,10 @@ import { usePathname } from 'next/navigation';
 const AdminLayout = ({ children }) => {
   const pathname = usePathname();
 
+  if (pathname.startsWith('/admin/social-studio')) {
+    return <div className="min-h-screen bg-[#0d263d] w-full">{children}</div>;
+  }
+
   let backLink = '/admin';
   let backText = 'Volver al Panel';
 

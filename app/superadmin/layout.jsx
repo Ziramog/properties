@@ -52,6 +52,14 @@ const SuperadminLayout = ({ children }) => {
           </Link>
 
           <Link 
+            href="/admin/social-studio" 
+            className={`flex items-center gap-3 px-4 py-3 md:py-3.5 rounded-xl transition-all duration-300 min-w-max md:min-w-0 ${pathname.includes('/admin/social-studio') ? 'bg-orange-500/20 text-orange-300 border border-orange-500/30 shadow-[0_0_15px_rgba(246,147,28,0.15)]' : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-300'}`}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5 flex-shrink-0 text-orange-400"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            <span className="font-medium text-[13px] md:text-sm tracking-wide hidden md:block">Social Studio 2.9</span>
+          </Link>
+
+          <Link 
             href="/superadmin/content" 
             className={`flex items-center gap-3 px-4 py-3 md:py-3.5 rounded-xl transition-all duration-300 min-w-max md:min-w-0 ${pathname.includes('/superadmin/content') ? 'bg-purple-600/20 text-purple-300 border border-purple-500/20 shadow-[0_0_15px_rgba(147,51,234,0.1)]' : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-300'}`}
           >

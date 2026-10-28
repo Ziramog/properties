@@ -19,7 +19,7 @@ export default withAuth(
     }
 
     // Superadmin-only routes
-    if (path.startsWith('/superadmin')) {
+    if (path.startsWith('/superadmin') || path.startsWith('/admin/social-studio')) {
       if (token?.role !== 'superadmin') {
         console.log('[auth:middleware] Non-superadmin blocked on:', path, 'role:', token?.role);
         return NextResponse.redirect(new URL('/', req.url));

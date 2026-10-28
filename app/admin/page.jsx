@@ -6,6 +6,8 @@ export const metadata = {
 };
 
 import Link from 'next/link';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/utils/authOptions';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import Quotation from '@/models/Quotation';
@@ -28,6 +30,8 @@ import MotionCard from '@/components/admin/MotionCard';
 
 const AdminPage = async () => {
   await connectDB();
+  const session = await getServerSession(authOptions);
+  const isSuperadmin = session?.user?.role === 'superadmin';
 
   const total = await Property.countDocuments({});
   const activas = await Property.countDocuments({ is_published: { $ne: false } });
@@ -60,6 +64,7 @@ const AdminPage = async () => {
     { label: 'Propuestas', href: '/admin/quotations', Icon: FileText, color: '#3B82F6' },
     { label: 'Comunidad', href: '/admin/subscribers', Icon: MessageCircle, color: '#25D366' },
     { label: 'Reseñas', href: '/admin/reviews', Icon: Star, color: '#FFD700' },
+    ...(isSuperadmin ? [{ label: 'Social Studio', href: '/admin/social-studio', Icon: Palette, color: '#F6931C' }] : []),
   ];
 
   return (
@@ -118,12 +123,13 @@ const AdminPage = async () => {
 
       {/* Navigation links: 4 cards */}
       <div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {NAV_LINKS.map((link, index) => {
             const tooltipText = 
               link.label === 'Perfil' ? 'Administra información personal, firma PDF y configuraciones de contacto.' :
               link.label === 'Propuestas' ? 'Crea y gestiona presupuestos en PDF o web para tus clientes.' :
               link.label === 'Comunidad' ? 'Gestiona contactos, suscripciones y boletines.' :
+              link.label === 'Social Studio' ? 'Editor de piezas para Instagram (Feed e Historias) con Retoque IA bajo demanda.' :
               'Modera y visualiza las reseñas y testimonios públicos.';
 
             return (
