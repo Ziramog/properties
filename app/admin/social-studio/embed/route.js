@@ -3,11 +3,13 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
+import connectDB from '@/config/database';
 import fs from 'fs';
 import path from 'path';
 
 export async function GET() {
   try {
+    await connectDB();
     const session = await getServerSession(authOptions);
     if (!session || session.user?.role !== 'superadmin') {
       return new NextResponse('Acceso no autorizado: requiere rol superadmin', { status: 403 });

@@ -1,5 +1,6 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
+import connectDB from '@/config/database';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
@@ -11,6 +12,7 @@ export const metadata = {
 };
 
 export default async function SocialStudioPage() {
+  await connectDB();
   const session = await getServerSession(authOptions);
 
   if (!session || session.user?.role !== 'superadmin') {

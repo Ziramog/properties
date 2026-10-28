@@ -4,12 +4,14 @@ export const maxDuration = 60; // 60 segundos timeout para generación IA
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
+import connectDB from '@/config/database';
 import OpenAI from 'openai';
 
 const SYSTEM_EDITORIAL_DIRECTIVE = `Retouch only the photographic background of the provided real estate composition. Use the full composition as a placement reference for the editorial title, logo and call-to-action, but never render any letters, words, logos or graphic controls. The output must be background-only. Make minimal local lighting and tonality corrections so that the existing typography will remain legible when the editor redraws it. Preserve the exact real building structure, doors, windows, geometry, landscape, materials, angles and perspective. Do not invent, add, remove or rearrange any property features. Keep the subject and camera framing consistent. Do not introduce orange/yellow tint or heavy global darkening unless specifically requested. Output a photographic raster with the requested aspect ratio; no text.`;
 
 export async function POST(request) {
   try {
+    await connectDB();
     // 1. Verificación estricta de sesión y rol Superadmin
     const session = await getServerSession(authOptions);
     if (!session || session.user?.role !== 'superadmin') {

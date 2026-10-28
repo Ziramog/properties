@@ -73,6 +73,7 @@ export const authOptions = {
     },
     async session({ session }) {
       try {
+        await connectDB();
         const user = await User.findOne({ email: session.user.email });
         if (!user) {
           console.error('[auth:session] CRITICAL: User not found for email:', session.user.email);

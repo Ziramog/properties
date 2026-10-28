@@ -24,7 +24,8 @@ import {
   Layers,
   CheckCircle,
   FileText,
-  MessageCircle
+  MessageCircle,
+  Palette
 } from 'lucide-react';
 import MotionCard from '@/components/admin/MotionCard';
 

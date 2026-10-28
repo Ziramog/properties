@@ -33,6 +33,9 @@ const nextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: '20mb',
+    outputFileTracingIncludes: {
+      '/admin/social-studio/embed': ['./data/social-studio/**/*'],
+    },
     },
   },
 };
