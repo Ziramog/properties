@@ -110,9 +110,9 @@
 - **Backend de Retoque IA:**
   - Endpoint: [`/api/social-studio/retouch`](file:///c:/Projects/property-pulse-nextjs/app/api/social-studio/retouch/route.js) (`POST`, `multipart/form-data`).
   - Autenticación: Valida sesión `superadmin`.
-  - Modelo: OpenAI `gpt-image-2` (`images.edit`) con entrada multi-imagen (`[background, sourcePhoto, reference]`), `size: 'auto'`, `quality: 'medium'`, `output_format: 'jpeg'` y `output_compression: 92`.
-  - Optimización de Payload para Vercel: El cliente serializa los tres lienzos de subida en JPEG (`quality: 0.94`, ~700 KB totales) para respetar holgadamente el límite de 4.5 MB de funciones Serverless en Vercel.
-  - Directiva editorial y arquitectónica innegociable: Retoque exclusivo del fondo fotográfico; prohibición estricta de generar tipografías, logotipos o alterar la estructura arquitectónica y aberturas reales del inmueble.
+  - Modelo: OpenAI `gpt-image-2` (`images.edit`) sobre el lienzo fotográfico limpio con `size: 'auto'`, `quality: 'medium'`, `output_format: 'jpeg'` y `output_compression: 92`.
+  - Prompt Dinámico de Overlay Difuso: El cliente envía las coordenadas exactas (`x, y, width, height, align`) de las capas activas (`logo`, `category`, `title`, `accent`, `support`, `cta`, `location`), y `buildRetouchPrompt(meta)` instruye a `gpt-image-2` para esculpir un **overlay oscuro profundo y ultra-difuso (60%–75% en el núcleo con transición orgánica amplia y sin bordes duros)** directamente detrás de la zona del logo y de la zona de títulos, manteniendo iluminada e intacta la arquitectura real de la propiedad.
+  - Optimización de Payload para Vercel: El cliente serializa los lienzos de subida en JPEG (`quality: 0.94`, ~700 KB totales) para respetar holgadamente el límite de 4.5 MB de funciones Serverless en Vercel.
   - Formato de respuesta: `{ imageDataUrl: "data:image/jpeg;base64,...", image_base64: "..." }`.
 - **Integraciones adoptadas de Wolfim Visual Studio + Asistente de Copy OpenAI:**
   - **Copy Editorial / Caption con IA:** Modal interactivo (`📝 Copy Post`) con contador en tiempo real de caracteres y palabras, guardado en el estado de cada pieza, copiado al portapapeles y botón **«✨ Redactar con IA»** conectado a [`/api/social-studio/generate-copy`](file:///c:/Projects/property-pulse-nextjs/app/api/social-studio/generate-copy/route.js) (`OpenAI gpt-4o-mini` en español rioplatense).
