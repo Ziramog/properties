@@ -104,16 +104,17 @@
   - Protegido en [`middleware.js`](file:///c:/Projects/property-pulse-nextjs/middleware.js) y validado en el Server Component vía `getServerSession(authOptions)`. Redirige a `/admin` ante intentos no autorizados.
   - Accesos en UI: tarjeta destacada en [`/admin`](file:///c:/Projects/property-pulse-nextjs/app/admin/page.jsx) (visible sólo para superadmin) y enlace directo en el sidebar de [`/superadmin`](file:///c:/Projects/property-pulse-nextjs/app/superadmin/layout.jsx).
 - **Arquitectura de Aislamiento:**
-  - El editor se almacena en `data/social-studio/Roggero_Roma_Social_Studio_2_9.html` y se sirve a través de la ruta interna segura [`/admin/social-studio/embed`](file:///c:/Projects/property-pulse-nextjs/app/admin/social-studio/embed/route.js).
-  - Previene conflictos de CSS global entre Tailwind CSS y el motor de dibujo canvas 2D del editor.
-  - Inyecta en el cliente `window.RR_AI_CONFIG = { enabled: true, endpoint: '/api/social-studio/retouch' };`.
+  - El editor se almacena en `data/social-studio/Roggero_Roma_Social_Studio_2_9.html` (con inclusión explícita en `outputFileTracingIncludes` dentro de `next.config.mjs`) y se sirve a través de la ruta interna segura [`/admin/social-studio/embed`](file:///c:/Projects/property-pulse-nextjs/app/admin/social-studio/embed/route.js).
+  - Montado en contenedor `fixed inset-0 z-[120]` en [`/admin/social-studio/page.jsx`](file:///c:/Projects/property-pulse-nextjs/app/admin/social-studio/page.jsx) para ocupar el 100% del viewport sin solaparse con el `Navbar` público, e integrado con tema oscuro completo (`#rrDarkTheme`).
+  - Inyecta en el cliente `window.RR_AI_CONFIG = { enabled: true, endpoint: '/api/social-studio/retouch', copyEndpoint: '/api/social-studio/generate-copy' };`.
 - **Backend de Retoque IA:**
   - Endpoint: [`/api/social-studio/retouch`](file:///c:/Projects/property-pulse-nextjs/app/api/social-studio/retouch/route.js) (`POST`, `multipart/form-data`).
   - Autenticación: Valida sesión `superadmin`.
-  - Modelo: OpenAI `gpt-image-2` (`images.edit`) con `size: 'auto'`, garantizando coincidencia con el aspect ratio del lienzo sin recortes imprevistos.
+  - Modelo: OpenAI `gpt-image-2` (`images.edit`) con entrada multi-imagen (`[background, sourcePhoto, reference]`), `size: 'auto'`, `quality: 'medium'`, `output_format: 'jpeg'` y `output_compression: 92`.
+  - Optimización de Payload para Vercel: El cliente serializa los tres lienzos de subida en JPEG (`quality: 0.94`, ~700 KB totales) para respetar holgadamente el límite de 4.5 MB de funciones Serverless en Vercel.
   - Directiva editorial y arquitectónica innegociable: Retoque exclusivo del fondo fotográfico; prohibición estricta de generar tipografías, logotipos o alterar la estructura arquitectónica y aberturas reales del inmueble.
-  - Formato de respuesta: `{ imageDataUrl: "data:image/png;base64,...", image_base64: "..." }`.
-- **Integraciones adoptadas de Wolfim Visual Studio:**
-  - **Copy Editorial / Caption:** Modal interactivo con contador en tiempo real de caracteres y palabras, guardado en el estado de cada pieza y copiado directo al portapapeles.
+  - Formato de respuesta: `{ imageDataUrl: "data:image/jpeg;base64,...", image_base64: "..." }`.
+- **Integraciones adoptadas de Wolfim Visual Studio + Asistente de Copy OpenAI:**
+  - **Copy Editorial / Caption con IA:** Modal interactivo (`📝 Copy Post`) con contador en tiempo real de caracteres y palabras, guardado en el estado de cada pieza, copiado al portapapeles y botón **«✨ Redactar con IA»** conectado a [`/api/social-studio/generate-copy`](file:///c:/Projects/property-pulse-nextjs/app/api/social-studio/generate-copy/route.js) (`OpenAI gpt-4o-mini` en español rioplatense).
   - **Zonas Seguras (Safe Zones):** Indicadores visuales calibrados para Instagram Stories y Facebook Cover.
   - **Preload determinista de tipografías:** Asegura carga completa de fuentes antes de la exportación a PNG/JPG.

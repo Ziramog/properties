@@ -72,7 +72,8 @@ button{border:1px solid var(--line);border-radius:6px;background:#fff;padding:9p
 <script>
 window.RR_AI_CONFIG = {
   enabled: true,
-  endpoint: '/api/social-studio/retouch'
+  endpoint: '/api/social-studio/retouch',
+  copyEndpoint: '/api/social-studio/generate-copy'
 };
 </script>
 <style id="rrDarkTheme">
@@ -411,19 +412,26 @@ button:hover:not(:disabled) {
 <input id="fileFontReg" type="file" accept=".ttf,.otf,.woff,.woff2,font/*" hidden>
 <input id="fileFontBold" type="file" accept=".ttf,.otf,.woff,.woff2,font/*" hidden>
 <div id="rrCopyModal" style="display:none;position:fixed;inset:0;background:rgba(5,8,14,.82);z-index:99990;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);">
-  <div style="background:#12161f;border-radius:12px;width:100%;max-width:580px;box-shadow:0 24px 64px rgba(0,0,0,.75);overflow:hidden;border:1px solid #2a3142;display:flex;flex-direction:column;color:#f1f5f9;">
+  <div style="background:#12161f;border-radius:12px;width:100%;max-width:600px;box-shadow:0 24px 64px rgba(0,0,0,.75);overflow:hidden;border:1px solid #2a3142;display:flex;flex-direction:column;color:#f1f5f9;">
     <div style="padding:14px 18px;background:#0d1017;border-bottom:1px solid #232836;color:#fff;display:flex;align-items:center;justify-content:space-between;">
       <div style="font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;">
-        <span style="color:#F6931C;">📝</span> Copy Editorial de Publicación
+        <span style="color:#F6931C;">📝</span> Copy Editorial de Publicación · OpenAI
       </div>
       <button id="closeCopyModal" style="background:transparent;border:0;color:#94a3b8;font-size:22px;cursor:pointer;line-height:1;padding:0 6px;">&times;</button>
     </div>
     <div style="padding:18px;display:flex;flex-direction:column;gap:12px;">
+      <div style="background:#161b26;border:1px solid #262d3d;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;">
+        <label style="font-size:11px;font-weight:700;color:#fb923c;text-transform:uppercase;letter-spacing:.4px;">Asistente IA (OpenAI GPT-4o mini)</label>
+        <div style="display:flex;gap:8px;">
+          <input id="copyContextInput" type="text" placeholder="Opcional: detalles extra (ej. 3 dormitorios, barrio Pellegrini, apto crédito...)" style="flex:1;background:#090b10;border:1px solid #2a3142;border-radius:6px;padding:8px 10px;font-size:12px;color:#f1f5f9;outline:none;">
+          <button id="btnAiGenerateCopy" style="padding:8px 14px;background:#f6931c;border:0;color:#fff;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;">✨ Redactar con IA</button>
+        </div>
+      </div>
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <label style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;">Texto para Feed / Historias</label>
         <span id="copyStats" style="font-size:11px;color:#94a3b8;font-family:monospace;">0 caracteres · 0 palabras</span>
       </div>
-      <textarea id="copyTextarea" rows="10" placeholder="Escribí aquí el texto, hashtags o llamada a la acción de esta publicación..." style="width:100%;background:#090b10;border:1px solid #2a3142;border-radius:8px;padding:12px;font-family:inherit;font-size:13px;line-height:1.5;resize:vertical;outline:none;box-sizing:border-box;color:#f1f5f9;"></textarea>
+      <textarea id="copyTextarea" rows="10" placeholder="Escribí aquí el texto o hacé clic en «✨ Redactar con IA» para generarlo a partir de los titulares de la pieza activa..." style="width:100%;background:#090b10;border:1px solid #2a3142;border-radius:8px;padding:12px;font-family:inherit;font-size:13px;line-height:1.5;resize:vertical;outline:none;box-sizing:border-box;color:#f1f5f9;"></textarea>
       <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid #232836;">
         <span id="copySuccessMsg" style="font-size:12px;color:#4ade80;font-weight:700;display:none;">✓ ¡Texto copiado al portapapeles!</span>
         <div style="margin-left:auto;display:flex;gap:8px;">
@@ -592,15 +600,15 @@ ${z.aiOriginal?'<button class="ai-secondary" data-ai="revert" style="margin-top:
 function aiMakeCanvas(kind,img){const t=document.createElement('canvas');t.width=W;t.height=H;const c=t.getContext('2d');if(kind==='reference'){drawCanvas(c,true);}else if(kind==='photo'){drawPhoto(c,{...p(),brightness:100,contrast:100,saturation:100},true);}else if(kind==='background'){drawPhoto(c,p(),true);drawGradient(c,p());}else if(kind==='proposal'){c.drawImage(img,0,0,W,H);for(const layer of p().layers)drawLayer(c,layer,true);}return t;}
 function aiThumb(t){const o=document.createElement('canvas');o.width=480;o.height=Math.round(o.width*t.height/t.width);o.getContext('2d').drawImage(t,0,0,o.width,o.height);return o.toDataURL('image/jpeg',0.85);}
 function aiReqMeta(i){return {schema:'rr-ai-retouch-v1',pieceIndex:i,pieceName:NAMES[i],width:W,height:H,area:aiFocuses[i]||'titles',instruction:(aiPrompts[i]||AI_DEFAULT_PROMPT).trim(),brandOrange,assets:{reference:'reference.png',background:'background.png',sourcePhoto:'source-photo.png'},constraints:{type:'photographic-background-only',preserveRealProperty:true,forbidText:true,forbidLogos:true,preserveComposition:true,noBuildingGeometryChanges:true,outputAspectRatio:`${W}:${H}`,acceptanceRequiresHuman:true}};}
-async function aiPreparedAssets(i){if(!p().photoKey||!photoImages[p().photoKey]?.naturalWidth)throw Error('Primero cargá una fotografía en esta pieza.');const before=aiMakeCanvas('reference'),background=aiMakeCanvas('background'),photo=aiMakeCanvas('photo');const meta=aiReqMeta(i);const [bRef,bBack,bSource]=await Promise.all([blobOf(before,'png'),blobOf(background,'png'),blobOf(photo,'png')]);return {meta,images:[{name:'reference.png',blob:bRef},{name:'background.png',blob:bBack},{name:'source-photo.png',blob:bSource}]};}
+async function aiPreparedAssets(i,forUpload=false){if(!p().photoKey||!photoImages[p().photoKey]?.naturalWidth)throw Error('Primero cargá una fotografía en esta pieza.');const before=aiMakeCanvas('reference'),background=aiMakeCanvas('background'),photo=aiMakeCanvas('photo');const meta=aiReqMeta(i);const fmt=forUpload?'jpeg':'png';const [bRef,bBack,bSource]=await Promise.all([blobOf(before,fmt),blobOf(background,fmt),blobOf(photo,fmt)]);return {meta,images:[{name:'reference.png',blob:bRef},{name:'background.png',blob:bBack},{name:'source-photo.png',blob:bSource}]};}
 async function aiPackage(){if(aiGenerating)return;aiPrompts[active]=$('#aiPrompt')?.value||AI_DEFAULT_PROMPT;aiFocuses[active]=$('#aiFocus')?.value||'titles';try{const index=active;const {meta,images}=await aiPreparedAssets(index);const files=[{name:'request.json',data:new TextEncoder().encode(JSON.stringify(meta,null,2))}];for(const img of images)files.push({name:img.name,data:new Uint8Array(await img.blob.arrayBuffer())});download(makeZip(files),`RR_Retoque_IA_${studio()}_${index}_${W}x${H}.zip`);status('Paquete de retoque generado: fondo sin textos, foto de referencia e instrucciones.');}catch(err){status(err.message);alert(err.message);}}
 function aiLoadedImage(data){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error('La imagen retocada no pudo abrirse.'));img.src=data;});}
-async function aiAcceptCandidateData(data,idx=active,signature=null){if(idx!==active)throw Error('Volvé a la pieza original para cargar este resultado.');const img=await aiLoadedImage(data);const sourceRatio=W/H;const ratio=img.naturalWidth/img.naturalHeight;if(Math.abs(sourceRatio-ratio)/sourceRatio>.012)throw Error(`Proporción incompatible: se espera ${W} × ${H} (${(sourceRatio).toFixed(3)}), recibida ${img.naturalWidth} × ${img.naturalHeight}. No se recorta automáticamente.`);
+async function aiAcceptCandidateData(data,idx=active,signature=null){if(idx!==active)throw Error('Volvé a la pieza original para cargar este resultado.');const img=await aiLoadedImage(data);const sourceRatio=W/H;const ratio=img.naturalWidth/img.naturalHeight;if(Math.abs(sourceRatio-ratio)/sourceRatio>.035)throw Error(`Proporción incompatible: se espera ${W} × ${H} (${(sourceRatio).toFixed(3)}), recibida ${img.naturalWidth} × ${img.naturalHeight}. No se recorta automáticamente.`);
 const t=document.createElement('canvas');t.width=W;t.height=H;t.getContext('2d').drawImage(img,0,0,W,H);const normalized=t.toDataURL('image/png');const normalizedImage=await aiLoadedImage(normalized);
 const before=aiThumb(aiMakeCanvas('reference'));
 const after=aiThumb(aiMakeCanvas('proposal',normalizedImage));aiCandidates[idx]={imageData:normalized,img:normalizedImage,beforePreview:before,afterPreview:after,width:W,height:H,sourceSignature:signature||aiSnapshot(p())};aiPreviewMode='after';inspectTab('ai');status('Retoque recibido. Compará antes/después y aprobalo únicamente si la propiedad sigue siendo fiel.');}
 async function aiImport(file){if(!file)return;if(!/^image\/(png|jpeg|webp)$/i.test(file.type)&&!/\.(png|jpe?g|webp)$/i.test(file.name||'')){status('Usá una imagen PNG, JPG o WebP para el retoque.');return;}try{await aiAcceptCandidateData(await fileData(file));}catch(err){status(err.message);alert('No se pudo incorporar el retoque: '+err.message);}}
-async function aiGenerate(){if(aiGenerating||!aiConnected())return;const i=active;aiPrompts[i]=$('#aiPrompt')?.value||AI_DEFAULT_PROMPT;aiFocuses[i]=$('#aiFocus')?.value||'titles';const currentSignature=aiSnapshot(p());aiGenerating=true;drawInspector();status('Solicitando retoque fotográfico al servidor…');try{const {meta,images}=await aiPreparedAssets(i);const form=new FormData();form.append('metadata',JSON.stringify(meta));for(const f of images)form.append(f.name,f.blob,f.name);const endpoint=AI_CONFIG().endpoint||'/api/social-studio/retouch';if(!endpoint.startsWith('/')||endpoint.startsWith('//'))throw Error('El endpoint debe ser una ruta interna del mismo sitio.');const resp=await fetch(endpoint,{method:'POST',body:form,credentials:'same-origin'});if(!resp.ok)throw Error('El servicio devolvió '+resp.status);const result=await resp.json();const data=result.imageDataUrl||(result.image_base64?`data:image/png;base64,${result.image_base64}`:null);if(!data||!/^data:image\/(png|jpeg|webp);base64,/i.test(data))throw Error('El servidor no devolvió una imagen en el contrato esperado.');if(active!==i||aiSnapshot(p())!==currentSignature)throw Error('La pieza cambió durante la generación: resultado no aplicado. Volvé a generar para evitar desajustes.');await aiAcceptCandidateData(data,i,currentSignature);}catch(e){status('Retoque IA no disponible: '+e.message);alert('No se completó el retoque: '+e.message);}finally{aiGenerating=false;if(panel==='ai')drawInspector();}}
+async function aiGenerate(){if(aiGenerating||!aiConnected())return;const i=active;aiPrompts[i]=$('#aiPrompt')?.value||AI_DEFAULT_PROMPT;aiFocuses[i]=$('#aiFocus')?.value||'titles';const currentSignature=aiSnapshot(p());aiGenerating=true;drawInspector();status('Solicitando retoque fotográfico al servidor…');try{const {meta,images}=await aiPreparedAssets(i,true);const form=new FormData();form.append('metadata',JSON.stringify(meta));for(const f of images)form.append(f.name,f.blob,f.name);const endpoint=AI_CONFIG().endpoint||'/api/social-studio/retouch';if(!endpoint.startsWith('/')||endpoint.startsWith('//'))throw Error('El endpoint debe ser una ruta interna del mismo sitio.');const resp=await fetch(endpoint,{method:'POST',body:form,credentials:'same-origin'});if(!resp.ok){const errObj=await resp.json().catch(()=>({}));throw Error(errObj.error||('El servicio devolvió '+resp.status));}const result=await resp.json();const data=result.imageDataUrl||(result.image_base64?`data:image/png;base64,${result.image_base64}`:null);if(!data||!/^data:image\/(png|jpeg|webp);base64,/i.test(data))throw Error('El servidor no devolvió una imagen en el contrato esperado.');if(active!==i||aiSnapshot(p())!==currentSignature)throw Error('La pieza cambió durante la generación: resultado no aplicado. Volvé a generar para evitar desajustes.');await aiAcceptCandidateData(data,i,currentSignature);}catch(e){status('Retoque IA no disponible: '+e.message);alert('No se completó el retoque: '+e.message);}finally{aiGenerating=false;if(panel==='ai')drawInspector();}}
 function aiApprove(){const c=aiCandidates[active];if(!c)return;if(aiSnapshot(p())!==c.sourceSignature){alert('La pieza fue modificada después de generar la propuesta. Volvé a importar o generar el retoque para no perder esos ajustes.');return;}if(!confirm('¿Aplicar esta fotografía retocada a la pieza actual? Los textos y el logo seguirán editables; los overlays de fondo se desactivarán para evitar doble tratamiento. Podrás restaurar el fondo previo.'))return;const idx=active,key=`ai_retouch_${Date.now()}_${idx}`;assets[key]={data:c.imageData,name:`Retoque aprobado ${NAMES[idx]}`,origin:'ai-retouch'};photoImages[key]=c.img;mutate(()=>{const z=p();if(!z.aiOriginal){z.aiOriginal={photoKey:z.photoKey,zoom:z.zoom,panX:z.panX,panY:z.panY,global:z.global,top:z.top,topHeight:z.topHeight,middle:z.middle,middleY:z.middleY,middleX:z.middleX,middleHeight:z.middleHeight,middleWidth:z.middleWidth,bottom:z.bottom,bottomHeight:z.bottomHeight,brightness:z.brightness,contrast:z.contrast,saturation:z.saturation};}z.aiRetouch={date:new Date().toISOString(),focus:aiFocuses[idx]||'titles',instruction:aiPrompts[idx]||AI_DEFAULT_PROMPT};z.photoKey=key;z.zoom=1;z.panX=0;z.panY=0;z.global=0;z.top=0;z.middle=0;z.bottom=0;z.brightness=100;z.contrast=100;z.saturation=100;});delete aiCandidates[idx];inspectTab('ai');status('Retoque aprobado en esta pieza, con original reversible. Textos y logo siguen editables.');}
 function aiRevert(){const z=p();if(!z.aiOriginal)return;if(!confirm('¿Restaurar el fondo y los overlays previos al retoque?'))return;mutate(()=>{Object.assign(p(),p().aiOriginal);delete p().aiOriginal;delete p().aiRetouch;});delete aiCandidates[active];inspectTab('ai');status('Fondo y overlays anteriores restaurados.');}
 function aiAct(action){if(action==='generate'){aiGenerate();return;}if(action==='package'){aiPackage();return;}if(action==='import'){openFile('fileAIRetouch');return;}if(action==='approve'){aiApprove();return;}if(action==='revert'){aiRevert();return;}if(action==='discard'){delete aiCandidates[active];inspectTab('ai');status('Propuesta descartada sin modificar la pieza.');return;}if(action==='before'||action==='after'){aiPreviewMode=action;drawInspector();return;}}
@@ -865,6 +873,8 @@ applyBrandColor();syncAll();try{loadProject(JSON.parse(document.getElementById('
 try {
   const copyModal = document.getElementById('rrCopyModal');
   const copyTextarea = document.getElementById('copyTextarea');
+  const copyContextInput = document.getElementById('copyContextInput');
+  const btnAiGenerateCopy = document.getElementById('btnAiGenerateCopy');
   const copyStats = document.getElementById('copyStats');
   const copySuccessMsg = document.getElementById('copySuccessMsg');
   const openCopyBtn = document.getElementById('openCopyBtn');
@@ -894,6 +904,53 @@ try {
     if (copyModal) copyModal.style.display = 'none';
   }
 
+  async function generateCopyWithAI() {
+    if (!btnAiGenerateCopy || !copyTextarea) return;
+    const currentPiece = p();
+    if (!currentPiece) return;
+    const getLayerText = (id) => {
+      const l = (currentPiece.layers || []).find(x => x.id === id);
+      return l && l.visible !== false ? (l.text || '') : '';
+    };
+    const origLabel = btnAiGenerateCopy.textContent;
+    btnAiGenerateCopy.disabled = true;
+    btnAiGenerateCopy.textContent = 'Redactando…';
+    try {
+      const resp = await fetch('/api/social-studio/generate-copy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          pieceName: currentPiece.name || NAMES[active] || '',
+          studioType: studio(),
+          category: getLayerText('category'),
+          title: getLayerText('title'),
+          accent: getLayerText('accent'),
+          support: getLayerText('support'),
+          cta: getLayerText('cta'),
+          location: getLayerText('location'),
+          customContext: copyContextInput ? copyContextInput.value.trim() : ''
+        })
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) throw new Error(data.error || ('Error ' + resp.status));
+      if (data.copy) {
+        copyTextarea.value = data.copy;
+        currentPiece.caption = data.copy;
+        updateCopyStats();
+        status('Copy editorial generado con OpenAI.');
+      }
+    } catch (err) {
+      alert('No se pudo generar el copy con IA: ' + err.message);
+    } finally {
+      btnAiGenerateCopy.disabled = false;
+      btnAiGenerateCopy.textContent = origLabel;
+    }
+  }
+
+  if (btnAiGenerateCopy) {
+    btnAiGenerateCopy.onclick = generateCopyWithAI;
+  }
   if (copyTextarea) {
     copyTextarea.addEventListener('input', () => {
       const currentPiece = p();
