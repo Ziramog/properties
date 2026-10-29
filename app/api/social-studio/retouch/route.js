@@ -12,28 +12,17 @@ function buildRetouchPrompt(meta) {
   const H = Number(meta.height) || 1350;
   const area = meta.area || 'titles_logo';
   const userInstruction = (meta.instruction || '').trim();
-  const tightBoxes = Array.isArray(meta.tightBoxes) ? meta.tightBoxes : [];
 
-  const boxDescriptions = tightBoxes
-    .map(
-      (b, idx) =>
-        `  - Zone ${idx + 1} (${b.label || b.id}): tight box x=${Math.round(b.x)}..${Math.round(b.x + b.w)}px, y=${Math.round(b.y)}..${Math.round(b.y + b.h)}px`
-    )
-    .join('\n');
-
-  return `You are a precision editorial photo retoucher for a real estate brand.
-Edit the provided real estate photograph (canvas ${W}x${H}) with STRICT LOCALIZED RESTRAINT:
+  return `You are an elite architectural and editorial photo retoucher for a luxury real estate brand.
+Edit the provided real estate photograph (canvas ${W}x${H}) with ULTRA-DIFFUSED, INVISIBLE-EDGE GRADATION:
 
 PRIMARY OBJECTIVE:
-Apply ONLY small, localized, soft-feathered dark cushions (35% to 45% subtle darkening, NEVER pitch black) strictly behind the exact bounding boxes of the text and logo listed below, while keeping 100% of the rest of the photograph at its EXACT original brightness, luminosity, sky color, and daytime/sunset exposure.
-
-TARGET TIGHT ZONES (darken ONLY inside these small localized boxes with a soft ~60px Gaussian feather):
-${boxDescriptions || `  - Logo box at top center and title lines on the left (focus: ${area})`}
+Create a completely natural, ultra-wide, imperceptible-edge atmospheric shadow gradation (like a soft optical graduated neutral-density filter in camera, 35% to 45% subtle tonal depth at the core with a massive 500px+ Gaussian feather transition) behind the top logo area and behind the left-center headline area (focus: ${area}), while keeping the rest of the photograph (75%+ of the frame) at its exact original brightness, color, and architectural clarity.
 
 CRITICAL RULES — DO NOT VIOLATE:
-1. DO NOT darken the overall photograph! Do NOT turn a bright sky, sunset, white house, or swimming pool dark outside the tight target boxes above. At least 75% to 85% of the image must retain its exact original brightness and natural colors.
-2. Do NOT apply full-width dark bands across the top or bottom of the image. The soft shadow cushion behind the logo must ONLY cover the width of the logo itself, leaving the sky to its left and right completely bright.
-3. The soft shadow cushion behind the titles and subtitles must ONLY cover the actual width of the words (not the full width of the photo), leaving the property and pool next to the text completely bright and untouched.
+1. NEVER draw visible dark ovals, circles, pills, boxes, or localized dark spots/stains! Any darkening must have an ultra-wide, 500px+ Gaussian falloff so the human eye can NEVER detect where the shadow starts or ends.
+2. NEVER darken the entire photograph globally or turn a bright interior/daytime scene dark.
+3. For the top logo zone, any darkening must feather smoothly from the very top edge (y=0) downward and outward with zero visible oval border on ceilings or skies.
 4. NEVER draw, render, or add any text, letters, words, numbers, logos, or buttons in the image. Output ONLY the clean background photograph.
 5. Preserve 100% of the real building architecture, geometry, materials, and perspective.
 - User guidance: ${userInstruction}`;
@@ -42,7 +31,6 @@ CRITICAL RULES — DO NOT VIOLATE:
 export async function POST(request) {
   try {
     await connectDB();
-    // 1. Verificación estricta de sesión y rol Superadmin
     const session = await getServerSession(authOptions);
     if (!session || session.user?.role !== 'superadmin') {
       return NextResponse.json(
@@ -58,7 +46,6 @@ export async function POST(request) {
       );
     }
 
-    // 2. Parseo de multipart/form-data
     const formData = await request.formData();
     const metadataStr = formData.get('metadata');
     if (!metadataStr) {
@@ -112,7 +99,7 @@ export async function POST(request) {
     const combinedPrompt = buildRetouchPrompt(meta);
 
     console.log(
-      `[SocialStudio-Retouch] Procesando pieza "${meta.pieceName || meta.pieceIndex}" (${meta.width}x${meta.height}) - Área: ${meta.area || 'titles_logo'} - Cajas: ${meta.tightBoxes?.length || 0}`
+      `[SocialStudio-Retouch] Procesando pieza "${meta.pieceName || meta.pieceIndex}" (${meta.width}x${meta.height}) - Área: ${meta.area || 'titles_logo'}`
     );
 
     const aiResponse = await openai.images.edit({

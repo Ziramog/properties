@@ -612,47 +612,51 @@ function aiTightBoxes(piece,focus='titles_logo'){
   return minX<maxX?{x:minX,y:minY,w:maxX-minX,h:maxY-minY}:null;
  };
  const layers=(piece.layers||[]).filter(l=>l&&l.visible);
- // 1. Bloque unificado del Logo
+ // 1. Bloque unificado del Logo (anclado al borde superior con radio extra-amplio sin borde ovalado visible)
  const logoL=layers.find(l=>l.type==='logo');
  if(logoL&&['titles_logo','logo','upper','general'].includes(focus)){
   let lw=logoL.width,lh=logoL.height,lx=logoL.x,ly=logoL.y;
   if(logoImage?.naturalWidth){const r=Math.min(logoL.width/logoImage.naturalWidth,logoL.height/logoImage.naturalHeight);lw=logoImage.naturalWidth*r;lh=logoImage.naturalHeight*r;lx=logoL.x+(logoL.width-lw)/2;ly=logoL.y+(logoL.height-lh)/2;}
-  boxes.push({id:'logo',label:'Logo',x:lx,y:ly,w:lw,h:lh,strength:0.70,padX:70,padY:45});
+  boxes.push({id:'logo',label:'Logo',x:lx,y:ly,w:lw,h:lh,cx:lx+lw/2,cy:Math.max(0,ly+lh*0.22),rx:Math.max(W*0.76,lw*1.95),ry:Math.max(H*0.27,(ly+lh)*1.65),strength:0.46});
  }
- // 2. Bloque unificado de Títulos (category + title + accent)
+ // 2. Bloque unificado de Títulos (category + title + accent) con transición Gaussiana de 650px+
  if(['titles_logo','titles','general','upper'].includes(focus)){
   const titleSpans=layers.filter(l=>['category','title','accent'].includes(l.id)).map(measureLayerSpan).filter(Boolean);
   if(titleSpans.length){
    const minX=Math.min(...titleSpans.map(b=>b.x)),maxX=Math.max(...titleSpans.map(b=>b.x+b.w));
    const minY=Math.min(...titleSpans.map(b=>b.y)),maxY=Math.max(...titleSpans.map(b=>b.y+b.h));
-   boxes.push({id:'titles',label:'Bloque de Títulos',x:minX,y:minY,w:maxX-minX,h:maxY-minY,strength:0.74,padX:85,padY:55});
+   const tw=maxX-minX,th=maxY-minY;
+   boxes.push({id:'titles',label:'Bloque de Títulos',x:minX,y:minY,w:tw,h:th,cx:minX+tw*0.42,cy:minY+th*0.50,rx:Math.max(W*0.64,tw*1.45),ry:Math.max(H*0.35,th*1.18),strength:0.48});
   }
  }
  // 3. Bloque unificado de Subtítulo / Apoyo (support)
  if(['titles_logo','titles','lower','general'].includes(focus)){
   const supL=layers.find(l=>l.id==='support');
   const supSpan=supL&&measureLayerSpan(supL);
-  if(supSpan)boxes.push({id:'support',label:'Subtítulo',x:supSpan.x,y:supSpan.y,w:supSpan.w,h:supSpan.h,strength:0.68,padX:70,padY:42});
+  if(supSpan)boxes.push({id:'support',label:'Subtítulo',x:supSpan.x,y:supSpan.y,w:supSpan.w,h:supSpan.h,cx:supSpan.x+supSpan.w*0.45,cy:supSpan.y+supSpan.h*0.50,rx:Math.max(W*0.62,supSpan.w*1.18),ry:Math.max(H*0.22,supSpan.h*2.4),strength:0.38});
  }
  // 4. Bloque de Ubicación (location)
  if(['titles_logo','lower','general'].includes(focus)){
   const locL=layers.find(l=>l.id==='location');
   const locSpan=locL&&measureLayerSpan(locL);
-  if(locSpan)boxes.push({id:'location',label:'Ubicación',x:locSpan.x,y:locSpan.y,w:locSpan.w,h:locSpan.h,strength:0.54,padX:55,padY:28});
+  if(locSpan)boxes.push({id:'location',label:'Ubicación',x:locSpan.x,y:locSpan.y,w:locSpan.w,h:locSpan.h,cx:locSpan.x+locSpan.w/2,cy:locSpan.y+locSpan.h/2,rx:Math.max(W*0.65,locSpan.w*1.1),ry:Math.max(H*0.15,locSpan.h*3.2),strength:0.30});
  }
  return boxes;
 }
 function aiDrawSoftBlock(ctx,b,alphaScale=1){
- const cx=b.x+b.w/2,cy=b.y+b.h/2,rx=b.w/2+b.padX*1.35,ry=b.h/2+b.padY*1.35;
+ const cx=b.cx??(b.x+b.w/2),cy=b.cy??(b.y+b.h/2),rx=b.rx||Math.max(W*0.6,b.w*1.4),ry=b.ry||Math.max(H*0.28,b.h*1.4);
  ctx.save();
  ctx.translate(cx,cy);
  ctx.scale(rx/ry,1);
  const g=ctx.createRadialGradient(0,0,0,0,0,ry);
- const a=Math.min(0.92,b.strength*alphaScale);
- g.addColorStop(0,`rgba(6,10,18,${a})`);
- g.addColorStop(0.42,`rgba(6,10,18,${(a*0.84).toFixed(3)})`);
- g.addColorStop(0.72,`rgba(6,10,18,${(a*0.42).toFixed(3)})`);
- g.addColorStop(1,'rgba(6,10,18,0)');
+ const peak=Math.min(0.68,b.strength*alphaScale);
+ const stops=16;
+ for(let i=0;i<=stops;i++){
+  const t=i/stops;
+  const curve=Math.exp(-3.1*t*t)*Math.pow(1-t,1.5);
+  const a=(peak*curve).toFixed(4);
+  g.addColorStop(t,`rgba(6,10,18,${a})`);
+ }
  ctx.fillStyle=g;
  ctx.fillRect(-ry,-ry,ry*2,ry*2);
  ctx.restore();
@@ -661,24 +665,17 @@ function aiCompositeLocalized(aiImg,piece,focus='titles_logo'){
  const base=aiMakeCanvas('photo'),out=document.createElement('canvas');out.width=W;out.height=H;
  const ctx=out.getContext('2d');ctx.drawImage(base,0,0,W,H);
  const boxes=aiTightBoxes(piece,focus);if(!boxes.length)return out;
- // 1. Máscara suave para integrar el retoque de gpt-image-2.5-sunburst estrictamente detrás de cada bloque
+ // 1. Máscara Gaussiana de 16 paradas sin bordes visibles para integrar sutilmente la textura IA (22%)
  const mask=document.createElement('canvas');mask.width=W;mask.height=H;
  const mctx=mask.getContext('2d');
- for(const b of boxes)aiDrawSoftBlock(mctx,b,1.1);
+ for(const b of boxes)aiDrawSoftBlock(mctx,b,0.9);
  const aiLayer=document.createElement('canvas');aiLayer.width=W;aiLayer.height=H;
- const actx=aiLayer.getContext('2d');actx.drawImage(aiImg,0,0,W,H);actx.globalCompositeOperation='destination-in';actx.globalAlpha=0.55;actx.drawImage(mask,0,0,W,H);
+ const actx=aiLayer.getContext('2d');actx.drawImage(aiImg,0,0,W,H);actx.globalCompositeOperation='destination-in';actx.globalAlpha=0.22;actx.drawImage(mask,0,0,W,H);
  ctx.drawImage(aiLayer,0,0,W,H);
- // 2. Doble pasada de almohadón oscuro ultra-difuso (halo exterior amplio + núcleo denso detrás de las letras y logo)
+ // 2. Única pasada de nube Gaussiana de 16 paradas de radio amplio (cero óvalos duros ni manchas recortadas)
  const cushion=document.createElement('canvas');cushion.width=W;cushion.height=H;
  const cctx=cushion.getContext('2d');
- for(const b of boxes)aiDrawSoftBlock(cctx,b,0.95);
- cctx.filter='blur(38px)';
- for(const b of boxes){
-  const bx=b.x-b.padX*0.35,by=b.y-b.padY*0.35,bw=b.w+b.padX*0.7,bh=b.h+b.padY*0.7;
-  cctx.fillStyle=`rgba(6,10,18,${(b.strength*0.62).toFixed(3)})`;
-  rrect(cctx,bx,by,bw,bh,Math.min(bw,bh)*0.45);
-  cctx.fill();
- }
+ for(const b of boxes)aiDrawSoftBlock(cctx,b,1.0);
  ctx.drawImage(cushion,0,0,W,H);
  return out;
 }
