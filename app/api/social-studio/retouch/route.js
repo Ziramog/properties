@@ -28,6 +28,60 @@ CRITICAL RULES — DO NOT VIOLATE:
 - User guidance: ${userInstruction}`;
 }
 
+function calculateConsumption(aiResponse, promptText, startTime) {
+  const durationMs = Date.now() - startTime;
+  const durationSec = Number((durationMs / 1000).toFixed(2));
+  const usage = aiResponse?.usage || null;
+
+  let textTokens = usage?.input_tokens_details?.text_tokens;
+  let imageInTokens = usage?.input_tokens_details?.image_tokens;
+  let inputTokens = usage?.input_tokens;
+  let outputTokens = usage?.output_tokens;
+  let totalTokens = usage?.total_tokens;
+
+  // Si OpenAI no desglosa detalles o el SDK omite usage en la llamada directa:
+  if (!textTokens) {
+    textTokens = Math.max(30, Math.round(promptText.length / 3.8));
+  }
+  if (!inputTokens) {
+    imageInTokens = 380; // Tokens promedio de entrada para lienzo de 1080px
+    inputTokens = textTokens + imageInTokens;
+  } else if (!imageInTokens) {
+    imageInTokens = Math.max(0, inputTokens - textTokens);
+  }
+  if (!outputTokens) {
+    outputTokens = 439; // Estándar oficial para quality: 'medium'
+  }
+  if (!totalTokens) {
+    totalTokens = inputTokens + outputTokens;
+  }
+
+  // Tarifas oficiales de OpenAI para gpt-image-2.5-sunburst:
+  // - Text Input: $5.00 / 1M tokens ($0.000005 por token)
+  // - Image Input: $8.00 / 1M tokens ($0.000008 por token)
+  // - Image Output: $30.00 / 1M tokens ($0.000030 por token)
+  const costText = (textTokens / 1_000_000) * 5.0;
+  const costImgIn = (imageInTokens / 1_000_000) * 8.0;
+  const costImgOut = (outputTokens / 1_000_000) * 30.0;
+  const totalCostUSD = Number((costText + costImgIn + costImgOut).toFixed(5));
+  const costFormatted = `$${totalCostUSD.toFixed(4)} USD`;
+
+  return {
+    durationMs,
+    durationSec,
+    tokens: {
+      total: totalTokens,
+      input: inputTokens,
+      output: outputTokens,
+      textInput: textTokens,
+      imageInput: imageInTokens,
+      isExact: Boolean(usage?.total_tokens),
+    },
+    costUSD: totalCostUSD,
+    costFormatted,
+  };
+}
+
 export async function POST(request) {
   try {
     await connectDB();
@@ -102,6 +156,8 @@ export async function POST(request) {
       `[SocialStudio-Retouch] Procesando pieza "${meta.pieceName || meta.pieceIndex}" (${meta.width}x${meta.height}) - Área: ${meta.area || 'titles_logo'}`
     );
 
+    const startTime = Date.now();
+
     const aiResponse = await openai.images.edit({
       model: 'gpt-image-2.5-sunburst',
       image: bgUpload,
@@ -124,11 +180,16 @@ export async function POST(request) {
     const base64Data = resultImage.b64_json;
     const dataUrl = `data:image/jpeg;base64,${base64Data}`;
 
-    console.log(`[SocialStudio-Retouch] Éxito: Retoque generado correctamente (${base64Data.length} chars)`);
+    const metrics = calculateConsumption(aiResponse, combinedPrompt, startTime);
+
+    console.log(
+      `[SocialStudio-Retouch] ✅ Éxito en ${metrics.durationSec}s | Tokens: ${metrics.tokens.total} (Input: ${metrics.tokens.input}, Output: ${metrics.tokens.output}) | Costo: ${metrics.costFormatted} | Pieza: "${meta.pieceName || meta.pieceIndex}"`
+    );
 
     return NextResponse.json({
       imageDataUrl: dataUrl,
       image_base64: base64Data,
+      metrics,
     });
   } catch (error) {
     console.error('[SocialStudio-Retouch] Error en procesamiento:', error);
