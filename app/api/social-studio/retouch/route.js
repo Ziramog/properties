@@ -12,62 +12,31 @@ function buildRetouchPrompt(meta) {
   const H = Number(meta.height) || 1350;
   const area = meta.area || 'titles_logo';
   const userInstruction = (meta.instruction || '').trim();
-  const layers = Array.isArray(meta.layers) ? meta.layers.filter((l) => l && l.visible !== false) : [];
+  const tightBoxes = Array.isArray(meta.tightBoxes) ? meta.tightBoxes : [];
 
-  const logoLayer = layers.find((l) => l.id === 'logo');
-  const titleLayers = layers.filter((l) => ['category', 'title', 'accent', 'support'].includes(l.id));
-  const bottomLayers = layers.filter((l) => ['cta', 'location'].includes(l.id));
+  const boxDescriptions = tightBoxes
+    .map(
+      (b, idx) =>
+        `  - Zone ${idx + 1} (${b.label || b.id}): tight box x=${Math.round(b.x)}..${Math.round(b.x + b.w)}px, y=${Math.round(b.y)}..${Math.round(b.y + b.h)}px`
+    )
+    .join('\n');
 
-  let logoZoneDesc = `Upper 22% of the frame (y = 0px to ${Math.round(H * 0.24)}px, centered horizontally)`;
-  if (logoLayer) {
-    const y1 = Math.max(0, Math.round(logoLayer.y - 30));
-    const y2 = Math.min(H, Math.round(logoLayer.y + (logoLayer.height || 160) + 40));
-    logoZoneDesc = `Top zone from y = ${y1}px to ${y2}px (${Math.round((y1 / H) * 100)}% to ${Math.round((y2 / H) * 100)}% from the top edge, x = ${Math.round(logoLayer.x)}px to ${Math.round(logoLayer.x + logoLayer.width)}px)`;
-  }
+  return `You are a precision editorial photo retoucher for a real estate brand.
+Edit the provided real estate photograph (canvas ${W}x${H}) with STRICT LOCALIZED RESTRAINT:
 
-  let titlesZoneDesc = `Middle and center-left area from y = ${Math.round(H * 0.26)}px to ${Math.round(H * 0.82)}px (26% to 82% vertical height), strongest on the left and center where large white and orange serif headlines sit`;
-  if (titleLayers.length > 0) {
-    const minY = Math.max(0, Math.min(...titleLayers.map((l) => l.y)) - 40);
-    const maxY = Math.min(H, Math.max(...titleLayers.map((l) => l.y + (l.height || 120))) + 45);
-    const align = titleLayers[0]?.align || 'left';
-    const horizFocus =
-      align === 'center'
-        ? 'centered horizontally across the middle of the frame'
-        : align === 'right'
-          ? 'strongest on the right side and center of the frame, feathering smoothly toward the left'
-          : 'strongest on the left side and center of the frame, feathering smoothly toward the right so the property remains bright';
-    titlesZoneDesc = `Headline & subtitle zone from y = ${Math.round(minY)}px to ${Math.round(maxY)}px (${Math.round((minY / H) * 100)}% to ${Math.round((maxY / H) * 100)}% vertical height), ${horizFocus}`;
-  }
+PRIMARY OBJECTIVE:
+Apply ONLY small, localized, soft-feathered dark cushions (35% to 45% subtle darkening, NEVER pitch black) strictly behind the exact bounding boxes of the text and logo listed below, while keeping 100% of the rest of the photograph at its EXACT original brightness, luminosity, sky color, and daytime/sunset exposure.
 
-  let bottomZoneDesc = `Lower 18% of the frame (y = ${Math.round(H * 0.82)}px to ${H}px)`;
-  if (bottomLayers.length > 0) {
-    const minY = Math.max(0, Math.min(...bottomLayers.map((l) => l.y)) - 30);
-    bottomZoneDesc = `Bottom footer/CTA zone from y = ${Math.round(minY)}px to ${H}px (${Math.round((minY / H) * 100)}% to 100% vertical height)`;
-  }
+TARGET TIGHT ZONES (darken ONLY inside these small localized boxes with a soft ~60px Gaussian feather):
+${boxDescriptions || `  - Logo box at top center and title lines on the left (focus: ${area})`}
 
-  let targetZonesBlock = '';
-  if (area === 'logo' || area === 'upper') {
-    targetZonesBlock = `1. LOGO / UPPER ZONE (${logoZoneDesc}): Apply a deep, ultra-diffused dark graduated overlay (60% to 75% darkness at the top fading smoothly downward) so the white brand logo will have 100% crystal-clear contrast.`;
-  } else if (area === 'lower') {
-    targetZonesBlock = `1. LOWER / FOOTER ZONE (${bottomZoneDesc}): Apply a deep, ultra-diffused dark graduated overlay from the bottom upward so bottom text and CTA stand out clearly.`;
-  } else {
-    // 'titles_logo', 'titles', 'general' -> Always protect BOTH the Logo zone and the Titles zone (plus subtle bottom footer vignette)
-    targetZonesBlock = `1. LOGO ZONE (${logoZoneDesc}): Apply a deep, ultra-diffused dark graduated overlay from the top edge downward (60% to 75% darkness at the top with a wide, silky-smooth feathering transition) so a white brand logo placed at the top stands out with crisp contrast against the sky or ceiling.
-2. TITLES ZONE (${titlesZoneDesc}): Apply a wide, deep, ultra-soft, deeply diffused dark radial/atmospheric shadow overlay (60% to 75% darkness at the core with a very wide, seamless organic feathering transition) behind the headline and subtitle zone so large white and orange serif typography will read with 100% perfection.
-3. FOOTER ZONE (${bottomZoneDesc}): Apply a soft, subtle dark bottom vignette so the location line at the bottom remains legible.`;
-  }
-
-  return `You are an expert architectural and editorial photo retoucher for a luxury real estate brand.
-Edit the provided real estate photograph (Image 1, canvas ${W}x${H}) to create a rich, deep, ultra-diffused dark overlay (smooth atmospheric shadow vignette / soft-feathered dark gradient, 60% to 75% darkness at the core with a very wide, seamless feathering transition) in the following zones so that white and orange editorial text and a white brand logo will be 100% legible when overlaid later by the editor:
-
-${targetZonesBlock}
-
-CRITICAL RULES:
-- The dark overlays must be clearly visible, deep, and ultra-diffused: zero hard borders, zero boxes, and zero sharp lines. Use smooth, wide organic gradient transitions like a professional graduated neutral-density (ND) filter and feathered radial burn in Lightroom/Capture One.
-- Keep the main focal area of the property (where there is no text) naturally illuminated so the contrast between the dark diffused text/logo zones and the lit property looks dramatic, editorial, and high-end.
-- NEVER draw, render, or add any text, letters, words, numbers, logos, watermarks, or buttons in the image. Output ONLY the clean retouched background photograph with the diffused dark overlays baked into the lighting.
-- Preserve the exact real building architecture, doors, windows, pool, garden, geometry, materials, and perspective without inventing or removing any architectural features.
-- Additional user guidance: ${userInstruction}`;
+CRITICAL RULES — DO NOT VIOLATE:
+1. DO NOT darken the overall photograph! Do NOT turn a bright sky, sunset, white house, or swimming pool dark outside the tight target boxes above. At least 75% to 85% of the image must retain its exact original brightness and natural colors.
+2. Do NOT apply full-width dark bands across the top or bottom of the image. The soft shadow cushion behind the logo must ONLY cover the width of the logo itself, leaving the sky to its left and right completely bright.
+3. The soft shadow cushion behind the titles and subtitles must ONLY cover the actual width of the words (not the full width of the photo), leaving the property and pool next to the text completely bright and untouched.
+4. NEVER draw, render, or add any text, letters, words, numbers, logos, or buttons in the image. Output ONLY the clean background photograph.
+5. Preserve 100% of the real building architecture, geometry, materials, and perspective.
+- User guidance: ${userInstruction}`;
 }
 
 export async function POST(request) {
@@ -116,8 +85,6 @@ export async function POST(request) {
       );
     }
 
-    // Usamos source-photo.png (o background.png) como lienzo fotográfico limpio sin letras
-    // para que gpt-image-2 esculpa el overlay oscuro ultra-difuso directamente sobre la foto real
     const photoFile = formData.get('source-photo.png') || formData.get('background.png');
 
     if (!photoFile || typeof photoFile.arrayBuffer !== 'function') {
@@ -127,7 +94,6 @@ export async function POST(request) {
       );
     }
 
-    // Límite de tamaño: 15MB
     const MAX_FILE_SIZE = 15 * 1024 * 1024;
     if (photoFile.size > MAX_FILE_SIZE) {
       return NextResponse.json(
@@ -146,7 +112,7 @@ export async function POST(request) {
     const combinedPrompt = buildRetouchPrompt(meta);
 
     console.log(
-      `[SocialStudio-Retouch] Procesando pieza "${meta.pieceName || meta.pieceIndex}" (${meta.width}x${meta.height}) - Área: ${meta.area || 'titles_logo'}`
+      `[SocialStudio-Retouch] Procesando pieza "${meta.pieceName || meta.pieceIndex}" (${meta.width}x${meta.height}) - Área: ${meta.area || 'titles_logo'} - Cajas: ${meta.tightBoxes?.length || 0}`
     );
 
     const aiResponse = await openai.images.edit({
@@ -173,7 +139,6 @@ export async function POST(request) {
 
     console.log(`[SocialStudio-Retouch] Éxito: Retoque generado correctamente (${base64Data.length} chars)`);
 
-    // 5. Retornar según el contrato del frontend 2.9
     return NextResponse.json({
       imageDataUrl: dataUrl,
       image_base64: base64Data,
