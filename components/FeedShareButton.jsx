@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Layers, Share } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { processImageInBrowser } from '@/utils/processImageInBrowser';
+import { convertBlobToJpeg } from '@/utils/convertBlobToJpeg';
 
 export default function FeedShareButton({ property }) {
   const [status, setStatus] = useState('idle'); // 'idle', 'preparing', 'ready'
@@ -42,7 +43,12 @@ export default function FeedShareButton({ property }) {
         }
         
         const blob = await response.blob();
-        const file = new File([blob], `carrusel-${i+1}.png`, { type: 'image/png' });
+
+        // Entregar JPEG sRGB 1080x1350 (liviano y estándar para Instagram); si falla, se usa el PNG original
+        const jpegBlob = await convertBlobToJpeg(blob, 1080, 1350, 0.92);
+        const file = jpegBlob
+          ? new File([jpegBlob], `carrusel-${i+1}.jpg`, { type: 'image/jpeg' })
+          : new File([blob], `carrusel-${i+1}.png`, { type: 'image/png' });
         generatedFiles.push(file);
         setProgress(i + 1);
 

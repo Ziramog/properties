@@ -747,39 +747,39 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             />
           </div>
 
-          {/* Degradado superior progresivo (24% = 324px, 0% -> 100% del contenedor para proteger el isologo) */}
+          {/* Degradado superior progresivo (34% = 459px, 0% -> 100% del contenedor; cubre el isologo ubicado en la zona segura central y sobrevive a un recorte 1:1) */}
           <div
             style={{
               position: 'absolute',
               top: 0,
               left: 0,
               width: '100%',
-              height: '24%',
+              height: '34%',
               backgroundImage:
-                'linear-gradient(to bottom, rgba(11, 13, 16, 0.76) 0%, rgba(11, 13, 16, 0.42) 45%, rgba(11, 13, 16, 0.10) 78%, rgba(11, 13, 16, 0) 100%)',
+                'linear-gradient(to bottom, rgba(11, 13, 16, 0.70) 0%, rgba(11, 13, 16, 0.62) 30%, rgba(11, 13, 16, 0.38) 55%, rgba(11, 13, 16, 0.12) 80%, rgba(11, 13, 16, 0) 100%)',
               display: 'flex',
             }}
           />
 
-          {/* Degradado inferior progresivo (26% = 351px, 0% -> 100% del contenedor para proteger título y ubicación) */}
+          {/* Degradado inferior progresivo (34% = 459px, 0% -> 100% del contenedor; cubre título y ubicación ubicados en la zona segura central) */}
           <div
             style={{
               position: 'absolute',
               bottom: 0,
               left: 0,
               width: '100%',
-              height: '26%',
+              height: '34%',
               backgroundImage:
-                'linear-gradient(to top, rgba(11, 13, 16, 0.84) 0%, rgba(11, 13, 16, 0.48) 45%, rgba(11, 13, 16, 0.12) 78%, rgba(11, 13, 16, 0) 100%)',
+                'linear-gradient(to top, rgba(11, 13, 16, 0.78) 0%, rgba(11, 13, 16, 0.68) 30%, rgba(11, 13, 16, 0.40) 55%, rgba(11, 13, 16, 0.12) 80%, rgba(11, 13, 16, 0) 100%)',
               display: 'flex',
             }}
           />
 
-          {/* Top Center: SOLO Isologo Blanco (top 64px idéntico a la portada para unidad visual absoluta) */}
+          {/* Top Center: SOLO Isologo Blanco (Safe Zone central: top 145px; se mantiene visible aunque Instagram recorte la lámina a 1:1, que quita 135px por lado) */}
           <div
             style={{
               position: 'absolute',
-              top: 64,
+              top: 145,
               left: 0,
               width: '100%',
               display: 'flex',
@@ -798,7 +798,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             />
           </div>
 
-          {/* Bottom Center: SOLO Título y Ubicación de la Propiedad (padding-bottom 62px en 4:5) */}
+          {/* Bottom Center: SOLO Título y Ubicación de la Propiedad (Safe Zone central: padding-bottom 145px; visible aunque Instagram recorte a 1:1) */}
           <div
             style={{
               position: 'absolute',
@@ -808,7 +808,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              padding: '0 55px 62px 55px',
+              padding: '0 55px 145px 55px',
               zIndex: 20,
             }}
           >
