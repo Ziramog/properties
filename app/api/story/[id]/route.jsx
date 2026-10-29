@@ -58,9 +58,17 @@ function extractStoryData(property) {
 
   const priceDisplay = formatPriceDisplay(property.price);
 
-  const isLand = ['Terreno', 'Lote', 'Campo', 'Chacra'].includes(property.type) ||
-    /lote|terreno|fracci[oó]n|campo/i.test(property.name || '') ||
-    /lote|terreno/i.test(property.type || '');
+  const isBuiltType =
+    ['Casa', 'Departamento', 'Dpto', 'Duplex', 'Dúplex', 'Chalet', 'Villa', 'Local', 'Oficina', 'Galpón', 'Galpon', 'Cochera', 'Edificio', 'Hotel'].includes(property.type) ||
+    Number(property.beds) > 0 ||
+    Number(property.baths) > 0 ||
+    (property.covered_area != null && Number(property.covered_area) > 0);
+
+  const isLand =
+    !isBuiltType &&
+    (['Terreno', 'Lote', 'Campo', 'Chacra'].includes(property.type) ||
+      /lote|terreno/i.test(property.type || '') ||
+      /lote|terreno|fracci[oó]n|campo/i.test(property.name || ''));
 
   let areaDisplay = null;
   if (isLand) {
@@ -244,10 +252,17 @@ function extractPublicationBadges(property) {
 }
 
 function extractStoryDataV2_3(property) {
+  const isBuiltType =
+    ['Casa', 'Departamento', 'Dpto', 'Duplex', 'Dúplex', 'Chalet', 'Villa', 'Local', 'Oficina', 'Galpón', 'Galpon', 'Cochera', 'Edificio', 'Hotel'].includes(property.type) ||
+    Number(property.beds) > 0 ||
+    Number(property.baths) > 0 ||
+    (property.covered_area != null && Number(property.covered_area) > 0);
+
   const isLand =
-    ['Terreno', 'Lote', 'Campo', 'Chacra'].includes(property.type) ||
-    /lote|terreno|fracci[oó]n|campo/i.test(property.name || '') ||
-    /lote|terreno/i.test(property.type || '');
+    !isBuiltType &&
+    (['Terreno', 'Lote', 'Campo', 'Chacra'].includes(property.type) ||
+      /lote|terreno/i.test(property.type || '') ||
+      /lote|terreno|fracci[oó]n|campo/i.test(property.name || ''));
 
   let areaDisplay = null;
   if (isLand) {
