@@ -661,6 +661,54 @@ function aiDrawSoftBlock(ctx,b,alphaScale=1){
  ctx.fillRect(-ry,-ry,ry*2,ry*2);
  ctx.restore();
 }
+// Parámetros de difusión ceñida a cada línea (plate) y halo suave de glifos (halo). El naranja (accent) y el título medio llevan más densidad.
+const AI_TXT_FX={category:{plate:0.36,halo:0.50},title:{plate:0.50,halo:0.62},accent:{plate:0.60,halo:0.74},support:{plate:0.44,halo:0.56},location:{plate:0.30,halo:0.46}};
+function aiTextIdsFor(focus){
+ const ids=[];
+ if(['titles_logo','titles','general','upper'].includes(focus))ids.push('category','title','accent');
+ if(['titles_logo','titles','lower','general'].includes(focus))ids.push('support');
+ if(['titles_logo','lower','general'].includes(focus))ids.push('location');
+ return ids;
+}
+function aiTextRuns(piece,ids){
+ const c=document.createElement('canvas').getContext('2d'),res=[];
+ for(const l of (piece.layers||[])){
+  if(!l||!l.visible||!ids.includes(l.id)||!['text','location'].includes(l.type))continue;
+  const arr=linesFor(c,l),lh=l.size*(l.id==='location'?1.1:1.13),lines=[];
+  c.font=font(l);
+  arr.forEach((s,idx)=>{if(!s||!s.trim())return;const tw=Math.min(l.width,c.measureText(s).width);const tx=l.align==='left'?l.x:l.align==='right'?l.x+l.width-tw:l.x+(l.width-tw)/2;lines.push({s,idx,tx,ty:l.y+idx*lh,tw,th:l.size*1.02});});
+  if(lines.length)res.push({l,lh,lines});
+ }
+ return res;
+}
+function aiBlurInto(dst,src,sigma,alpha){
+ const d=dst.getContext('2d');d.save();d.globalAlpha=alpha;
+ if(typeof d.filter==='string'){d.filter='blur('+Math.max(1,Math.round(sigma))+'px)';d.drawImage(src,0,0,W,H);d.filter='none';}
+ else{
+  // Fallback sin ctx.filter (Safari antiguo): reducción + ampliación con suavizado de alta calidad
+  const s=Math.max(2,sigma/2.5),sw=Math.max(8,Math.round(W/s)),sh=Math.max(8,Math.round(H/s));
+  const a=document.createElement('canvas');a.width=sw;a.height=sh;const ac=a.getContext('2d');ac.imageSmoothingEnabled=true;ac.imageSmoothingQuality='high';ac.drawImage(src,0,0,sw,sh);
+  d.imageSmoothingEnabled=true;d.imageSmoothingQuality='high';d.drawImage(a,0,0,W,H);
+ }
+ d.restore();
+}
+function aiTextDiffusion(out,piece,focus){
+ const runs=aiTextRuns(piece,aiTextIdsFor(focus));
+ for(const {l,lines} of runs){
+  const fx=AI_TXT_FX[l.id]||{plate:0.4,halo:0.5};
+  // 1. Difusión ceñida a la silueta de cada línea: rectángulos acolchados + blur Gaussiano amplio (sin bordes visibles)
+  const plate=document.createElement('canvas');plate.width=W;plate.height=H;const pc=plate.getContext('2d');pc.fillStyle='#05080e';
+  const px=l.size*0.55+26,py=l.size*0.32;
+  for(const r of lines)pc.fillRect(r.tx-px,r.ty-py,r.tw+px*2,r.th+py*2);
+  aiBlurInto(out,plate,Math.min(72,Math.max(24,l.size*0.58)),fx.plate);
+  // 2. Halo suave pegado a los glifos (sombra difusa) para separar blanco y naranja de fondos claros
+  const halo=document.createElement('canvas');halo.width=W;halo.height=H;const hc=halo.getContext('2d');
+  hc.font=font(l);hc.textBaseline='top';hc.textAlign=l.align;hc.fillStyle='#04070c';hc.strokeStyle='#04070c';hc.lineJoin='round';hc.lineWidth=Math.max(2,l.size*0.10)+(l.stroke||0);
+  const textx=l.align==='left'?l.x:l.align==='right'?l.x+l.width:l.x+l.width/2;
+  for(const r of lines){hc.strokeText(r.s,textx,r.ty,l.width);hc.fillText(r.s,textx,r.ty,l.width);}
+  aiBlurInto(out,halo,Math.min(20,Math.max(5,l.size*0.15)),fx.halo);
+ }
+}
 function aiCompositeLocalized(aiImg,piece,focus='titles_logo'){
  const base=aiMakeCanvas('photo'),out=document.createElement('canvas');out.width=W;out.height=H;
  const ctx=out.getContext('2d');ctx.drawImage(base,0,0,W,H);
@@ -677,6 +725,8 @@ function aiCompositeLocalized(aiImg,piece,focus='titles_logo'){
  const cctx=cushion.getContext('2d');
  for(const b of boxes)aiDrawSoftBlock(cctx,b,1.0);
  ctx.drawImage(cushion,0,0,W,H);
+ // 3. Difusión ceñida a cada línea de texto + halo suave de glifos (títulos medios y naranja reforzados)
+ aiTextDiffusion(out,piece,focus);
  return out;
 }
 function aiMakeCanvas(kind,img){const t=document.createElement('canvas');t.width=W;t.height=H;const c=t.getContext('2d');if(kind==='reference'){drawCanvas(c,true);}else if(kind==='photo'){drawPhoto(c,{...p(),brightness:100,contrast:100,saturation:100},true);}else if(kind==='background'){drawPhoto(c,p(),true);drawGradient(c,p());}else if(kind==='proposal'){c.drawImage(img,0,0,W,H);for(const layer of p().layers)drawLayer(c,{...layer,cloud:0},true);}return t;}
