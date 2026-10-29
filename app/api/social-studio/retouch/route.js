@@ -116,7 +116,7 @@ export async function POST(request) {
     );
 
     const aiResponse = await openai.images.edit({
-      model: 'gpt-image-2',
+      model: 'gpt-image-2.5-sunburst',
       image: bgUpload,
       prompt: combinedPrompt,
       size: 'auto',

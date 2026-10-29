@@ -583,7 +583,7 @@ const AI_CONFIG=()=>window.RR_AI_CONFIG||{};
 const aiConnected=()=>AI_CONFIG().enabled===true && /^https?:$/.test(location.protocol);
 const aiSnapshot=(z)=>JSON.stringify({photoKey:z.photoKey,zoom:z.zoom,panX:z.panX,panY:z.panY,global:z.global,top:z.top,topHeight:z.topHeight,middle:z.middle,middleY:z.middleY,middleX:z.middleX,middleHeight:z.middleHeight,middleWidth:z.middleWidth,bottom:z.bottom,bottomHeight:z.bottomHeight,brightness:z.brightness,contrast:z.contrast,saturation:z.saturation,layers:z.layers});
 function aiPanelMarkup(){const c=aiCandidates[active],z=p(),online=aiConnected();const prompt=aiPrompts[active]??AI_DEFAULT_PROMPT;const focus=aiFocuses[active]||'titles_logo';return `<section class="section"><h3>Retoque IA · bajo demanda</h3><div class="ai-panel-note"><b>Overlay difuso localizado (solo detrás de textos y logo).</b> Mantiene intacta la luminosidad general de la foto y aplica un sombreado suave únicamente detrás de los títulos, subtítulos y logo.</div>
-<div class="ai-state">${online?'Servicio OpenAI (gpt-image-2) activo.':'HTML local: servicio generativo pendiente de integrar en la web. El paquete de retoque y la importación manual sí funcionan.'}</div>
+<div class="ai-state">${online?'Motor OpenAI (gpt-image-2.5-sunburst) activo.':'HTML local: servicio generativo pendiente de integrar en la web. El paquete de retoque y la importación manual sí funcionan.'}</div>
 <div class="field ai-field"><label for="aiFocus">Área que necesita retoque</label><select id="aiFocus"><option value="titles_logo" ${focus==='titles_logo'?'selected':''}>Títulos, subtítulos y logo (recomendado)</option><option value="titles" ${focus==='titles'?'selected':''}>Solo títulos y subtítulos</option><option value="logo" ${focus==='logo'?'selected':''}>Solo zona del logo</option><option value="upper" ${focus==='upper'?'selected':''}>Tercio superior</option><option value="lower" ${focus==='lower'?'selected':''}>Tercio inferior</option><option value="general" ${focus==='general'?'selected':''}>Tratamiento general localizado</option></select></div>
 <div class="field ai-field"><label for="aiPrompt">Instrucción específica</label><textarea id="aiPrompt" rows="6" maxlength="1200" placeholder="Describí el problema visual exacto...">${esc(prompt)}</textarea></div>
 ${online?`<button class="ai-action-primary" data-ai="generate" ${aiGenerating?'disabled':''}>${aiGenerating?'Generando retoque…':'Generar retoque con IA'}</button>`:''}
@@ -599,45 +599,86 @@ ${z.aiOriginal?'<button class="ai-secondary" data-ai="revert" style="margin-top:
 <p class="ai-safe-note">La aprobación es reversible y se conserva al guardar el proyecto. No se altera la fotografía de origen almacenada en la biblioteca.</p></section>`;}
 function aiTightBoxes(piece,focus='titles_logo'){
  const mCan=document.createElement('canvas'),mCtx=mCan.getContext('2d'),boxes=[];
- for(const l of (piece.layers||[])){
-  if(!l||!l.visible)continue;
-  const isLogo=l.type==='logo',isTitle=['category','title','accent'].includes(l.id),isSupport=l.id==='support',isLocation=l.id==='location';
-  if(focus==='logo'&&!isLogo)continue;
-  if(focus==='titles'&&!(isTitle||isSupport))continue;
-  if(focus==='upper'&&!(isLogo||l.y<H*0.35))continue;
-  if(focus==='lower'&&!(l.y>H*0.62))continue;
-  if(isLogo){
-   let lw=l.width,lh=l.height,lx=l.x,ly=l.y;
-   if(logoImage?.naturalWidth){const r=Math.min(l.width/logoImage.naturalWidth,l.height/logoImage.naturalHeight);lw=logoImage.naturalWidth*r;lh=logoImage.naturalHeight*r;lx=l.x+(l.width-lw)/2;ly=l.y+(l.height-lh)/2;}
-   boxes.push({id:'logo',label:'Logo',x:lx,y:ly,w:lw,h:lh,strength:0.46,padX:46,padY:28});
-  }else if(isTitle||isSupport||isLocation){
-   mCtx.font=font(l);const arr=linesFor(mCtx,l),lh=l.size*(isLocation?1.1:1.13);
-   arr.forEach((s,idx)=>{
-    if(!s||!s.trim())return;
-    let tw=Math.min(l.width,Math.max(50,mCtx.measureText(s).width));
-    if(isLocation)tw=Math.min(l.width,tw+130);
-    const tx=l.align==='left'?l.x:l.align==='right'?l.x+l.width-tw:l.x+(l.width-tw)/2,ty=l.y+idx*lh,th=l.size*1.06;
-    const strength=(l.id==='title'||l.id==='accent')?0.48:isSupport?0.42:0.35;
-    const padX=Math.max(36,l.size*0.62),padY=Math.max(22,l.size*0.40);
-    boxes.push({id:l.id,label:l.id,x:tx,y:ty,w:tw,h:th,strength,padX,padY});
-   });
+ const measureLayerSpan=(l)=>{
+  mCtx.font=font(l);const arr=linesFor(mCtx,l),lh=l.size*(l.id==='location'?1.1:1.13);
+  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+  arr.forEach((s,idx)=>{
+   if(!s||!s.trim())return;
+   let tw=Math.min(l.width,Math.max(60,mCtx.measureText(s).width));
+   if(l.id==='location')tw=Math.min(l.width,tw+160);
+   const tx=l.align==='left'?l.x:l.align==='right'?l.x+l.width-tw:l.x+(l.width-tw)/2,ty=l.y+idx*lh,th=l.size*1.08;
+   minX=Math.min(minX,tx);maxX=Math.max(maxX,tx+tw);minY=Math.min(minY,ty);maxY=Math.max(maxY,ty+th);
+  });
+  return minX<maxX?{x:minX,y:minY,w:maxX-minX,h:maxY-minY}:null;
+ };
+ const layers=(piece.layers||[]).filter(l=>l&&l.visible);
+ // 1. Bloque unificado del Logo
+ const logoL=layers.find(l=>l.type==='logo');
+ if(logoL&&['titles_logo','logo','upper','general'].includes(focus)){
+  let lw=logoL.width,lh=logoL.height,lx=logoL.x,ly=logoL.y;
+  if(logoImage?.naturalWidth){const r=Math.min(logoL.width/logoImage.naturalWidth,logoL.height/logoImage.naturalHeight);lw=logoImage.naturalWidth*r;lh=logoImage.naturalHeight*r;lx=logoL.x+(logoL.width-lw)/2;ly=logoL.y+(logoL.height-lh)/2;}
+  boxes.push({id:'logo',label:'Logo',x:lx,y:ly,w:lw,h:lh,strength:0.70,padX:70,padY:45});
+ }
+ // 2. Bloque unificado de Títulos (category + title + accent)
+ if(['titles_logo','titles','general','upper'].includes(focus)){
+  const titleSpans=layers.filter(l=>['category','title','accent'].includes(l.id)).map(measureLayerSpan).filter(Boolean);
+  if(titleSpans.length){
+   const minX=Math.min(...titleSpans.map(b=>b.x)),maxX=Math.max(...titleSpans.map(b=>b.x+b.w));
+   const minY=Math.min(...titleSpans.map(b=>b.y)),maxY=Math.max(...titleSpans.map(b=>b.y+b.h));
+   boxes.push({id:'titles',label:'Bloque de Títulos',x:minX,y:minY,w:maxX-minX,h:maxY-minY,strength:0.74,padX:85,padY:55});
   }
  }
+ // 3. Bloque unificado de Subtítulo / Apoyo (support)
+ if(['titles_logo','titles','lower','general'].includes(focus)){
+  const supL=layers.find(l=>l.id==='support');
+  const supSpan=supL&&measureLayerSpan(supL);
+  if(supSpan)boxes.push({id:'support',label:'Subtítulo',x:supSpan.x,y:supSpan.y,w:supSpan.w,h:supSpan.h,strength:0.68,padX:70,padY:42});
+ }
+ // 4. Bloque de Ubicación (location)
+ if(['titles_logo','lower','general'].includes(focus)){
+  const locL=layers.find(l=>l.id==='location');
+  const locSpan=locL&&measureLayerSpan(locL);
+  if(locSpan)boxes.push({id:'location',label:'Ubicación',x:locSpan.x,y:locSpan.y,w:locSpan.w,h:locSpan.h,strength:0.54,padX:55,padY:28});
+ }
  return boxes;
+}
+function aiDrawSoftBlock(ctx,b,alphaScale=1){
+ const cx=b.x+b.w/2,cy=b.y+b.h/2,rx=b.w/2+b.padX*1.35,ry=b.h/2+b.padY*1.35;
+ ctx.save();
+ ctx.translate(cx,cy);
+ ctx.scale(rx/ry,1);
+ const g=ctx.createRadialGradient(0,0,0,0,0,ry);
+ const a=Math.min(0.92,b.strength*alphaScale);
+ g.addColorStop(0,`rgba(6,10,18,${a})`);
+ g.addColorStop(0.42,`rgba(6,10,18,${(a*0.84).toFixed(3)})`);
+ g.addColorStop(0.72,`rgba(6,10,18,${(a*0.42).toFixed(3)})`);
+ g.addColorStop(1,'rgba(6,10,18,0)');
+ ctx.fillStyle=g;
+ ctx.fillRect(-ry,-ry,ry*2,ry*2);
+ ctx.restore();
 }
 function aiCompositeLocalized(aiImg,piece,focus='titles_logo'){
  const base=aiMakeCanvas('photo'),out=document.createElement('canvas');out.width=W;out.height=H;
  const ctx=out.getContext('2d');ctx.drawImage(base,0,0,W,H);
  const boxes=aiTightBoxes(piece,focus);if(!boxes.length)return out;
+ // 1. Máscara suave para integrar el retoque de gpt-image-2.5-sunburst estrictamente detrás de cada bloque
  const mask=document.createElement('canvas');mask.width=W;mask.height=H;
- const mctx=mask.getContext('2d');mctx.filter='blur(40px)';
- for(const b of boxes){const bx=b.x-b.padX,by=b.y-b.padY,bw=b.w+b.padX*2,bh=b.h+b.padY*2;mctx.fillStyle=`rgba(0,0,0,${Math.min(0.6,b.strength*1.1)})`;rrect(mctx,bx,by,bw,bh,Math.min(bw,bh)*0.45);mctx.fill();}
+ const mctx=mask.getContext('2d');
+ for(const b of boxes)aiDrawSoftBlock(mctx,b,1.1);
  const aiLayer=document.createElement('canvas');aiLayer.width=W;aiLayer.height=H;
- const actx=aiLayer.getContext('2d');actx.drawImage(aiImg,0,0,W,H);actx.globalCompositeOperation='destination-in';actx.globalAlpha=0.32;actx.drawImage(mask,0,0,W,H);
+ const actx=aiLayer.getContext('2d');actx.drawImage(aiImg,0,0,W,H);actx.globalCompositeOperation='destination-in';actx.globalAlpha=0.55;actx.drawImage(mask,0,0,W,H);
  ctx.drawImage(aiLayer,0,0,W,H);
+ // 2. Doble pasada de almohadón oscuro ultra-difuso (halo exterior amplio + núcleo denso detrás de las letras y logo)
  const cushion=document.createElement('canvas');cushion.width=W;cushion.height=H;
- const cctx=cushion.getContext('2d');cctx.filter='blur(42px)';
- for(const b of boxes){const bx=b.x-b.padX,by=b.y-b.padY,bw=b.w+b.padX*2,bh=b.h+b.padY*2;cctx.fillStyle=`rgba(8,12,20,${b.strength})`;rrect(cctx,bx,by,bw,bh,Math.min(bw,bh)*0.48);cctx.fill();}
+ const cctx=cushion.getContext('2d');
+ for(const b of boxes)aiDrawSoftBlock(cctx,b,0.95);
+ cctx.filter='blur(38px)';
+ for(const b of boxes){
+  const bx=b.x-b.padX*0.35,by=b.y-b.padY*0.35,bw=b.w+b.padX*0.7,bh=b.h+b.padY*0.7;
+  cctx.fillStyle=`rgba(6,10,18,${(b.strength*0.62).toFixed(3)})`;
+  rrect(cctx,bx,by,bw,bh,Math.min(bw,bh)*0.45);
+  cctx.fill();
+ }
  ctx.drawImage(cushion,0,0,W,H);
  return out;
 }
