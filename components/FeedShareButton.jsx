@@ -45,11 +45,16 @@ export default function FeedShareButton({ property }) {
         const file = new File([blob], `carrusel-${i+1}.png`, { type: 'image/png' });
         generatedFiles.push(file);
         setProgress(i + 1);
+
+        // Breve pausa entre láminas para liberar memoria de canvas/GPU en navegadores móviles (iOS Safari / Chrome)
+        if (i < maxImages - 1) {
+          await new Promise((r) => setTimeout(r, 40));
+        }
       }
       
       setFilesToShare(generatedFiles);
       setStatus('ready');
-      toast.success('¡Fotos listas para compartir!');
+      toast.success('¡Carrusel 4:5 listo! En Instagram usá el modo Vertical (< >) en la 1ª foto.');
     } catch (error) {
       console.error(error);
       toast.error('Hubo un error al preparar el carrusel.');

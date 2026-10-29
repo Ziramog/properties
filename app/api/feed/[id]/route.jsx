@@ -337,44 +337,49 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               position: 'relative',
             }}
           >
-            {/* Fotografía principal */}
-            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex' }}>
-              <img src={assets.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            {/* Fotografía principal (4:5 nativo 1080x1350) */}
+            <div style={{ position: 'absolute', top: 0, left: 0, width: '1080px', height: '1350px', display: 'flex' }}>
+              <img
+                src={assets.imageUrl}
+                width={1080}
+                height={1350}
+                style={{ width: '1080px', height: '1350px', objectFit: 'cover' }}
+              />
             </div>
 
-            {/* Overlay Superior */}
+            {/* Overlay Superior (28% = 378px, difusión progresiva 0% -> 100% del bloque) */}
             <div
               style={{
                 position: 'absolute',
                 top: 0,
                 left: 0,
                 width: '100%',
-                height: '38%',
+                height: '28%',
                 backgroundImage:
-                  'linear-gradient(to bottom, rgba(11, 13, 16, 0.92) 0%, rgba(11, 13, 16, 0.7) 18%, rgba(11, 13, 16, 0.3) 30%, transparent 38%)',
+                  'linear-gradient(to bottom, rgba(11, 13, 16, 0.78) 0%, rgba(11, 13, 16, 0.45) 45%, rgba(11, 13, 16, 0.12) 78%, rgba(11, 13, 16, 0) 100%)',
                 display: 'flex',
               }}
             />
 
-            {/* Overlay Inferior */}
+            {/* Overlay Inferior (46% = 621px, difusión progresiva sin franja negra dura) */}
             <div
               style={{
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
                 width: '100%',
-                height: '62%',
+                height: '46%',
                 backgroundImage:
-                  'linear-gradient(to top, rgba(11, 13, 16, 0.98) 0%, rgba(11, 13, 16, 0.92) 28%, rgba(11, 13, 16, 0.5) 48%, transparent 62%)',
+                  'linear-gradient(to top, rgba(11, 13, 16, 0.88) 0%, rgba(11, 13, 16, 0.68) 42%, rgba(11, 13, 16, 0.28) 74%, rgba(11, 13, 16, 0) 100%)',
                 display: 'flex',
               }}
             />
 
-            {/* Header Institucional (Safe Zone Feed: top 145px para garantizar visibilidad total en 1:1 y 4:5) */}
+            {/* Header Institucional (Safe Zone Feed 4:5: top 64px, unificado en las 7 láminas) */}
             <div
               style={{
                 position: 'absolute',
-                top: 145,
+                top: 64,
                 left: 0,
                 width: '100%',
                 display: 'flex',
@@ -430,11 +435,11 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               </div>
             </div>
 
-            {/* Etiquetas (Badges) — Ajustadas a la zona segura */}
+            {/* Etiquetas (Badges) — Ajustadas al margen superior 4:5 */}
             <div
               style={{
                 position: 'absolute',
-                top: 310,
+                top: 232,
                 left: 55,
                 display: 'flex',
                 gap: '10px',
@@ -470,7 +475,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               ))}
             </div>
 
-            {/* Bloque Editorial Inferior (Safe Zone: padding-bottom 145px para visibilidad en 1:1 y 4:5) */}
+            {/* Bloque Editorial Inferior (Safe Zone Feed 4:5: padding-bottom 58px sin banda muerta) */}
             <div
               style={{
                 position: 'absolute',
@@ -479,7 +484,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                padding: '0 55px 145px 55px',
+                padding: '0 55px 58px 55px',
                 zIndex: 20,
               }}
             >
@@ -732,44 +737,49 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             position: 'relative',
           }}
         >
-          {/* Fotografía protagonista limpia */}
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex' }}>
-            <img src={assets.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          {/* Fotografía protagonista limpia (4:5 nativo 1080x1350) */}
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '1080px', height: '1350px', display: 'flex' }}>
+            <img
+              src={assets.imageUrl}
+              width={1080}
+              height={1350}
+              style={{ width: '1080px', height: '1350px', objectFit: 'cover' }}
+            />
           </div>
 
-          {/* Sutil degradado superior para el isologo */}
+          {/* Degradado superior progresivo (24% = 324px, 0% -> 100% del contenedor para proteger el isologo) */}
           <div
             style={{
               position: 'absolute',
               top: 0,
               left: 0,
               width: '100%',
-              height: '32%',
+              height: '24%',
               backgroundImage:
-                'linear-gradient(to bottom, rgba(11, 13, 16, 0.88) 0%, rgba(11, 13, 16, 0.4) 18%, transparent 32%)',
+                'linear-gradient(to bottom, rgba(11, 13, 16, 0.76) 0%, rgba(11, 13, 16, 0.42) 45%, rgba(11, 13, 16, 0.10) 78%, rgba(11, 13, 16, 0) 100%)',
               display: 'flex',
             }}
           />
 
-          {/* Sutil degradado inferior para el título */}
+          {/* Degradado inferior progresivo (26% = 351px, 0% -> 100% del contenedor para proteger título y ubicación) */}
           <div
             style={{
               position: 'absolute',
               bottom: 0,
               left: 0,
               width: '100%',
-              height: '32%',
+              height: '26%',
               backgroundImage:
-                'linear-gradient(to top, rgba(11, 13, 16, 0.9) 0%, rgba(11, 13, 16, 0.4) 18%, transparent 32%)',
+                'linear-gradient(to top, rgba(11, 13, 16, 0.84) 0%, rgba(11, 13, 16, 0.48) 45%, rgba(11, 13, 16, 0.12) 78%, rgba(11, 13, 16, 0) 100%)',
               display: 'flex',
             }}
           />
 
-          {/* Top Center: SOLO Isologo Blanco (Safe Zone Feed: top 145px para garantizar visibilidad total en 1:1 y 4:5) */}
+          {/* Top Center: SOLO Isologo Blanco (top 64px idéntico a la portada para unidad visual absoluta) */}
           <div
             style={{
               position: 'absolute',
-              top: 145,
+              top: 64,
               left: 0,
               width: '100%',
               display: 'flex',
@@ -788,7 +798,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             />
           </div>
 
-          {/* Bottom Center: SOLO Título de la Propiedad (Safe Zone Feed: padding-bottom 145px) */}
+          {/* Bottom Center: SOLO Título y Ubicación de la Propiedad (padding-bottom 62px en 4:5) */}
           <div
             style={{
               position: 'absolute',
@@ -798,7 +808,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              padding: '0 50px 145px 50px',
+              padding: '0 55px 62px 55px',
               zIndex: 20,
             }}
           >

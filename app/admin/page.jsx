@@ -130,7 +130,7 @@ const AdminPage = async () => {
               link.label === 'Perfil' ? 'Administra información personal, firma PDF y configuraciones de contacto.' :
               link.label === 'Propuestas' ? 'Crea y gestiona presupuestos en PDF o web para tus clientes.' :
               link.label === 'Comunidad' ? 'Gestiona contactos, suscripciones y boletines.' :
-              link.label === 'Social Studio' ? 'Editor de piezas para Instagram (Feed e Historias) con Retoque IA bajo demanda.' :
+              link.label === 'Social Studio' ? 'Social Media Development Suite: editor de piezas para Feed e Historias con Retoque IA bajo demanda.' :
               'Modera y visualiza las reseñas y testimonios públicos.';
 
             return (

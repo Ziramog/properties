@@ -122,6 +122,21 @@ button:hover:not(:disabled) {
   background: #0d1017 !important;
   border-bottom: 1px solid var(--line) !important;
 }
+.brand {
+  gap: 12px !important;
+}
+.studio-logo {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  background: linear-gradient(135deg, rgba(246, 147, 28, 0.22) 0%, rgba(217, 119, 6, 0.08) 100%) !important;
+  border: 1px solid rgba(246, 147, 28, 0.4) !important;
+  box-shadow: 0 2px 10px rgba(246, 147, 28, 0.18) !important;
+  flex-shrink: 0 !important;
+}
 .symbol {
   color: #ffffff !important;
   border-right: 1px solid #262c3a !important;
@@ -131,6 +146,9 @@ button:hover:not(:disabled) {
 }
 .brand-sub {
   color: #94a3b8 !important;
+  font-size: 9px !important;
+  letter-spacing: 1.5px !important;
+  font-weight: 700 !important;
 }
 .dropdown-menu {
   background: #141923 !important;
@@ -387,7 +405,7 @@ button:hover:not(:disabled) {
 </style>
 </head>
 <body>
-<header class="topbar"><div class="brand"><div class="symbol" aria-label="Identificador del editor">R&amp;R</div><div><div class="brand-name">ROGGERO &amp; ROMA</div><div class="brand-sub">S O C I A L &nbsp; S T U D I O &nbsp; 2.9</div></div></div>
+<header class="topbar"><div class="brand"><div class="studio-logo" title="Social Studio 2.9 · Social Media Development"><svg viewBox="0 0 24 24" fill="none" stroke="#f6931c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:19px;height:19px;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="2.8"></line></svg></div><div class="symbol" aria-label="Identificador del editor">R&amp;R</div><div><div class="brand-name">ROGGERO &amp; ROMA</div><div class="brand-sub">SOCIAL STUDIO 2.9 &nbsp;·&nbsp; SOCIAL MEDIA DEVELOPMENT</div></div></div>
 <div class="top-actions"><button id="undo" title="Deshacer (Ctrl+Z)">↶</button><button id="redo" title="Rehacer (Ctrl+Y)">↷</button><button id="toggleSafe">Guías</button><button id="toggleSquare" title="Previsualiza la adaptación real 1:1 sin cortar textos, logotipo ni ubicación">Vista cuadrada 1:1</button><button id="openJsonBtn">Abrir proyecto</button><button id="saveJson">Guardar proyecto</button><button id="openCopyBtn" title="Redactar y copiar texto para la publicación (Copy / Caption)" class="orange-outline" style="font-weight:600;">📝 Copy Post</button><div class="dropdown"><button id="exportMain" class="primary export-btn">Exportar PNG ▾</button><div id="exportMenu" class="dropdown-menu"><button data-export="png">PNG · 1080 × 1350</button><button data-export="jpg">JPG · 1080 × 1350</button><button data-export="square">PNG cuadrado adaptado · 1080 × 1080</button><button data-export="fbmeta" class="hide">PNG · 851 × 315 (Meta)</button><button data-export="zip">ZIP · 5 publicaciones</button></div></div></div></header>
 <div class="shell">
 <nav class="rail" aria-label="Navegación de los estudios">

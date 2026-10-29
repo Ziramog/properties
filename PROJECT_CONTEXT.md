@@ -95,9 +95,23 @@
 
 
 
+## 7.B. Sistema de Carrusel de Feed de 7 Imágenes (Feed Engine 4:5)
+
+- **Endpoint:** [`/api/feed/[id]`](file:///c:/Projects/property-pulse-nextjs/app/api/feed/%5Bid%5D/route.jsx) (`GET` y `POST` con `?index=0..6`).
+- **Formato Canónico:** **Portrait 4:5 nativo (`1080 × 1350 px`)** unificado en las 7 láminas del carrusel.
+- **Unificación Geométrica y de Difusión entre Portada (`index = 0`) y Láminas Secundarias (`index = 1..6`):**
+  - **Cero bandas negras muertas:** Se eliminaron los márgenes muertos de `145px` pensados para recorte cuadrado 1:1. En las 7 láminas el isologo blanco se ancla exactamente en `top: 64px` y el bloque editorial inferior cierra en `bottom: 58px` (Portada) / `bottom: 62px` (Secundarias).
+  - **Corrección matemática de gradientes en Satori (`0% -> 100%` del contenedor):**
+    - En **Portada (`index = 0`)**: el overlay superior ocupa `height: 28%` (`378px`, `rgba(11,13,16,0.78) 0% -> 0 100%`) y el inferior `height: 46%` (`621px`, `rgba(11,13,16,0.88) 0% -> 0 100%`), eliminando el bloque negro sólido de `235px` al pie.
+    - En **Secundarias (`index = 1..6`)**: el overlay superior ocupa `height: 24%` (`324px`, `rgba(11,13,16,0.76) 0% -> 0 100%`) y el inferior `height: 26%` (`351px`, `rgba(11,13,16,0.84) 0% -> 0 100%`). Se corrigió el bug donde `transparent 32%` dentro de un `div` de `height: 32%` extinguía el degradado a los `138px` antes de llegar al logo y al título.
+- **Estabilidad de Recorte `1080 × 1350` en Móviles ([`utils/processImageInBrowser.js`](file:///c:/Projects/property-pulse-nextjs/utils/processImageInBrowser.js) y [`components/FeedShareButton.jsx`](file:///c:/Projects/property-pulse-nextjs/components/FeedShareButton.jsx)):**
+  - Al generar 7 imágenes consecutivas en dispositivos móviles (especialmente iOS Safari / WebKit), [`processImageInBrowser`](file:///c:/Projects/property-pulse-nextjs/utils/processImageInBrowser.js) libera explícitamente la memoria de GPU/RAM tras cada exportación (`ctx.clearRect`, `canvas.width = 0`, `canvas.height = 0`, `img.src = ''`), incluye un reintento automático con pausa de `120ms` ante fallos de asignación y añade una pausa de `40ms` entre iteraciones en [`FeedShareButton.jsx`](file:///c:/Projects/property-pulse-nextjs/components/FeedShareButton.jsx).
+  - Además, el `<img />` de fondo en Satori declara dimensiones explícitas `width={1080} height={1350}` con `objectFit: 'cover'` para garantizar que incluso ante un eventual fallback al servidor las 7 láminas mantengan exactamente la relación `1080 × 1350` sin cambios de encuadre entre la foto 2 y la 3.
+
 ## 8. Social Studio 2.9 con Retoque IA (Editor Social Exclusivo Superadmin)
 
-- **Propósito:** Editor autónomo de composiciones para redes sociales de Roggero & Roma (5 piezas de Feed 1080×1350, 5 piezas de Historias 1080×1920 y 1 Portada Facebook 1702×630 / 851×315).
+- **Propósito:** Suite de **Social Media Development** y editor autónomo de composiciones para redes sociales de Roggero & Roma (5 piezas de Feed 1080×1350, 5 piezas de Historias 1080×1920 y 1 Portada Facebook 1702×630 / 851×315).
+- **Identidad de Marca:** Logotipo institucional de Social Studio (cámara social estilizada en naranja corporativo) y subtítulo «Social Media Development» en la barra superior del editor y en el header de Next.js.
 - **Ruta de Acceso:** [`/admin/social-studio`](file:///c:/Projects/property-pulse-nextjs/app/admin/social-studio/page.jsx).
 - **Control de Acceso y Seguridad:**
   - Exclusivo para usuarios con rol `superadmin`.
