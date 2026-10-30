@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
+import { isSocialStudioAuthorized } from '@/utils/socialStudioAuth';
 import connectDB from '@/config/database';
 import OpenAI from 'openai';
 
@@ -10,9 +11,9 @@ export async function POST(request) {
   try {
     await connectDB();
     const session = await getServerSession(authOptions);
-    if (!session || session.user?.role !== 'superadmin') {
+    if (!isSocialStudioAuthorized(session)) {
       return NextResponse.json(
-        { error: 'Acceso no autorizado: requiere rol superadmin' },
+        { error: 'Acceso no autorizado: requiere rol superadmin o administrador autorizado' },
         { status: 401 }
       );
     }

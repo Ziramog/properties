@@ -29,6 +29,7 @@ export const authOptions = {
           const mongoUser = await User.findOne({ email: oauthUser.email }).lean();
           if (mongoUser) {
             token.role = mongoUser.role;
+            token.email = mongoUser.email;
             token.id = mongoUser._id.toString();
             console.log('[auth:jwt] Set token.id:', token.id, 'token.role:', token.role);
           } else {

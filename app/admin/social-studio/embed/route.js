@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
+import { isSocialStudioAuthorized } from '@/utils/socialStudioAuth';
 import connectDB from '@/config/database';
 import fs from 'fs';
 import path from 'path';
@@ -11,8 +12,8 @@ export async function GET() {
   try {
     await connectDB();
     const session = await getServerSession(authOptions);
-    if (!session || session.user?.role !== 'superadmin') {
-      return new NextResponse('Acceso no autorizado: requiere rol superadmin', { status: 403 });
+    if (!isSocialStudioAuthorized(session)) {
+      return new NextResponse('Acceso no autorizado: requiere rol superadmin o administrador autorizado', { status: 403 });
     }
 
     const htmlPath = path.join(process.cwd(), 'data', 'social-studio', 'Roggero_Roma_Social_Studio_2_9.html');

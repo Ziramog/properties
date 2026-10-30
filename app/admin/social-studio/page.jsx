@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
 import connectDB from '@/config/database';
 import { redirect } from 'next/navigation';
+import { isSocialStudioAuthorized } from '@/utils/socialStudioAuth';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
@@ -15,9 +16,11 @@ export default async function SocialStudioPage() {
   await connectDB();
   const session = await getServerSession(authOptions);
 
-  if (!session || session.user?.role !== 'superadmin') {
+  if (!isSocialStudioAuthorized(session)) {
     redirect('/admin');
   }
+
+  const isSuperadmin = session?.user?.role === 'superadmin';
 
   return (
     <div className="fixed inset-0 z-[120] flex flex-col h-screen w-screen bg-[#090b10] overflow-hidden select-none">
@@ -52,7 +55,7 @@ export default async function SocialStudioPage() {
                 Social Media Development
               </span>
               <span className="bg-[#f6931c]/15 border border-[#f6931c]/40 text-[#fb923c] text-[9px] font-bold px-1.5 py-0.5 rounded tracking-widest uppercase">
-                Superadmin
+                {isSuperadmin ? 'Superadmin' : 'Admin'}
               </span>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
+import { isSocialStudioAuthorized } from '@/utils/socialStudioAuth';
 
 export default withAuth(
   function middleware(req) {
@@ -19,10 +20,18 @@ export default withAuth(
     }
 
     // Superadmin-only routes
-    if (path.startsWith('/superadmin') || path.startsWith('/admin/social-studio')) {
+    if (path.startsWith('/superadmin')) {
       if (token?.role !== 'superadmin') {
         console.log('[auth:middleware] Non-superadmin blocked on:', path, 'role:', token?.role);
         return NextResponse.redirect(new URL('/', req.url));
+      }
+    }
+
+    // Social Studio: Superadmin and authorized admin (Franco Roma)
+    if (path.startsWith('/admin/social-studio')) {
+      if (!isSocialStudioAuthorized(token)) {
+        console.log('[auth:middleware] Social Studio blocked for unauthorized user:', path, 'role:', token?.role, 'email:', token?.email);
+        return NextResponse.redirect(new URL('/admin', req.url));
       }
     }
 

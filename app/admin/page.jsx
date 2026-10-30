@@ -28,11 +28,13 @@ import {
   Palette
 } from 'lucide-react';
 import MotionCard from '@/components/admin/MotionCard';
+import { isSocialStudioAuthorized } from '@/utils/socialStudioAuth';
 
 const AdminPage = async () => {
   await connectDB();
   const session = await getServerSession(authOptions);
   const isSuperadmin = session?.user?.role === 'superadmin';
+  const canAccessSocialStudio = isSocialStudioAuthorized(session);
 
   const total = await Property.countDocuments({});
   const activas = await Property.countDocuments({ is_published: { $ne: false } });
@@ -65,7 +67,7 @@ const AdminPage = async () => {
     { label: 'Propuestas', href: '/admin/quotations', Icon: FileText, color: '#3B82F6' },
     { label: 'Comunidad', href: '/admin/subscribers', Icon: MessageCircle, color: '#25D366' },
     { label: 'Reseñas', href: '/admin/reviews', Icon: Star, color: '#FFD700' },
-    ...(isSuperadmin ? [{ label: 'Social Studio', href: '/admin/social-studio', Icon: Palette, color: '#F6931C' }] : []),
+    ...(canAccessSocialStudio ? [{ label: 'Social Studio', href: '/admin/social-studio', Icon: Palette, color: '#F6931C' }] : []),
   ];
 
   return (
