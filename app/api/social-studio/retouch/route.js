@@ -13,19 +13,23 @@ function buildRetouchPrompt(meta) {
   const H = Number(meta.height) || 1350;
   const area = meta.area || 'titles_logo';
   const userInstruction = (meta.instruction || '').trim();
+  const intensityPct = meta.intensity ? Math.round(meta.intensity * 100) : 35;
+  const minDepth = Math.max(16, Math.min(28, Math.round(intensityPct * 0.65)));
+  const maxDepth = Math.max(22, Math.min(35, Math.round(intensityPct * 0.85)));
 
   return `You are an elite architectural and editorial photo retoucher for a luxury real estate brand.
 Edit the provided real estate photograph (canvas ${W}x${H}) with ULTRA-DIFFUSED, INVISIBLE-EDGE GRADATION:
 
 PRIMARY OBJECTIVE:
-Create a completely natural, ultra-wide, imperceptible-edge atmospheric shadow gradation (like a soft optical graduated neutral-density filter in camera, 35% to 45% subtle tonal depth at the core with a massive 500px+ Gaussian feather transition) behind the top logo area and behind the left-center headline area (focus: ${area}), while keeping the rest of the photograph (75%+ of the frame) at its exact original brightness, color, and architectural clarity.
+Create a completely natural, ultra-wide, imperceptible-edge atmospheric shadow gradation (like a soft optical graduated neutral-density filter in camera, ${minDepth}% to ${maxDepth}% subtle and luminous tonal depth at the core with a massive 600px+ Gaussian feather transition) behind the top logo area and behind the left-center headline area (focus: ${area}), while keeping the rest of the photograph (80%+ of the frame) at its exact original brightness, color, and architectural clarity.
 
 CRITICAL RULES — DO NOT VIOLATE:
-1. NEVER draw visible dark ovals, circles, pills, boxes, or localized dark spots/stains! Any darkening must have an ultra-wide, 500px+ Gaussian falloff so the human eye can NEVER detect where the shadow starts or ends.
-2. NEVER darken the entire photograph globally or turn a bright interior/daytime scene dark.
-3. For the top logo zone, any darkening must feather smoothly from the very top edge (y=0) downward and outward with zero visible oval border on ceilings or skies.
-4. NEVER draw, render, or add any text, letters, words, numbers, logos, or buttons in the image. Output ONLY the clean background photograph.
-5. Preserve 100% of the real building architecture, geometry, materials, and perspective.
+1. The gradation MUST be extremely subtle, delicate, airy, and transparent — NEVER dark, muddy, heavy, or opaque. The titles must be effortlessly legible against a softly shaded, elegant and luminous background.
+2. NEVER draw visible dark ovals, circles, pills, boxes, or localized dark spots/stains! Any darkening must have an ultra-wide, 600px+ Gaussian falloff so the human eye can NEVER detect where the shadow starts or ends.
+3. NEVER darken the entire photograph globally or turn a bright interior/daytime scene dark.
+4. For the top logo zone, any darkening must feather smoothly from the very top edge (y=0) downward and outward with zero visible oval border on ceilings or skies.
+5. NEVER draw, render, or add any text, letters, words, numbers, logos, or buttons in the image. Output ONLY the clean background photograph.
+6. Preserve 100% of the real building architecture, geometry, materials, and perspective.
 - User guidance: ${userInstruction}`;
 }
 
