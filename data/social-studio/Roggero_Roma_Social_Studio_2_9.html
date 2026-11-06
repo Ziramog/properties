@@ -820,8 +820,8 @@ function aiAct(action){if(action==='generate'){aiGenerate();return;}if(action===
 // ----- FIN RETOQUE IA -----
 
 function slider(name,key,value,min,max,step,fmt){let shown=fmt==='%'?Math.round(value*100)+'%':fmt==='×'?Number(value).toFixed(2)+'×':Math.round(value)+'%';return `<div class="field"><label>${name}<b data-read="${key}">${shown}</b></label><input data-piecefield="${key}" type="range" min="${min}" max="${max}" step="${step}" value="${value}"></div>`;}
-const layerName=l=>{const id=typeof l==='object'?l.id:l;const ctaMode=typeof l==='object'?l.ctaMode:(p()?.layers?.find(x=>x.id==='cta')?.ctaMode);if(id==='cta')return ctaMode==='line'?'Línea naranja':'Botón CTA';return({logo:'Logo',category:'Etiqueta / categoría',title:'Título principal',accent:'Título naranja',support:'Subtítulo / apoyo',cta:'Botón CTA',location:'Ubicación con líneas'})[id]||id;};
-function drawLayers(){const el=$('#layerList');if(!el)return;el.innerHTML=[...p().layers].reverse().map(l=>`<div class="layer-row ${picked.includes(l.id)?'selected':''} ${l.visible?'':'faded'}" data-layer="${l.id}"><button class="vis" data-visibility="${l.id}" title="${l.visible?'Ocultar':'Mostrar'}">${l.visible?'◉':'⊘'}</button><input class="sel" type="checkbox" data-multisel="${l.id}" ${picked.includes(l.id)?'checked':''}><span class="layer-mini">${esc(l.id==='logo'?'LOGO':l.id==='cta'?(l.ctaMode==='line'?'LÍNEA':'CTA'):l.id==='location'?'— UBICACIÓN —':(l.text||'').slice(0,17))}</span><span class="layer-name">${layerName(l)}</span><span class="updown" title="Seleccionar">⋮⋮</span></div>`).join('');const count=$('#selCount');if(count)count.textContent=picked.length+' seleccionada(s)';}
+const layerName=l=>{const id=typeof l==='object'?l.id:l;if(id==='cta'){const st=typeof l==='object'?(l.ctaStyle||(Number(l.height||70)<=6?'line':'solid')):'solid';return st==='line'?'Línea divisoria':st==='outline'?'Recuadro CTA (sin fill)':'Botón CTA';}return({logo:'Logo',category:'Etiqueta / categoría',title:'Título principal',accent:'Título naranja',support:'Subtítulo / apoyo',location:'Ubicación con líneas'})[id]||id;};
+function drawLayers(){const el=$('#layerList');if(!el)return;el.innerHTML=[...p().layers].reverse().map(l=>{const st=l.id==='cta'?(l.ctaStyle||(Number(l.height||70)<=6?'line':'solid')):'';const mini=l.id==='logo'?'LOGO':l.id==='cta'?(st==='line'?'LÍNEA':st==='outline'?'MARCO':'CTA'):l.id==='location'?'— UBICACIÓN —':(l.text||'').slice(0,17);return`<div class="layer-row ${picked.includes(l.id)?'selected':''} ${l.visible?'':'faded'}" data-layer="${l.id}"><button class="vis" data-visibility="${l.id}" title="${l.visible?'Ocultar':'Mostrar'}">${l.visible?'◉':'⊘'}</button><input class="sel" type="checkbox" data-multisel="${l.id}" ${picked.includes(l.id)?'checked':''}><span class="layer-mini">${esc(mini)}</span><span class="layer-name">${layerName(l)}</span><span class="updown" title="Seleccionar">⋮⋮</span></div>`;}).join('');const count=$('#selCount');if(count)count.textContent=picked.length+' seleccionada(s)';}
 function drawLayerFields(){const el=$('#layerFields');if(!el)return;if(picked.length!==1){el.innerHTML='<div class="surface-help">Elegí una sola capa para editar su texto, tamaño y posición. La alineación grupal funciona con varias capas seleccionadas.</div>';return;}const l=sel();if(!l){el.innerHTML='';return;}let html=`<label class="switch-row"><input type="checkbox" data-lcheck="visible" ${l.visible?'checked':''}> Capa visible</label>`;
 if(['text','location'].includes(l.type))html+=`<div class="field"><label>Texto</label><textarea data-lfield="text" rows="${l.id==='support'||l.id==='accent'?3:2}">${esc(l.text)}</textarea></div>`;
 if(l.type!=='cta')html+=`<div class="field-row">${lfnum('Posición X','x',l.x)}${lfnum('Posición Y','y',l.y)}${lfnum('Ancho','width',l.width)}${l.type==='logo'?lfnum('Alto','height',l.height):''}</div>`;
@@ -830,31 +830,73 @@ if(['text','location'].includes(l.type))html+=`<div class="field"><label>Interli
 if(['text','location'].includes(l.type))html+=`<div class="field"><label>Alineación</label><div class="alignment-four" style="margin-top:4px"><button data-aligntext="left" class="${l.align==='left'?'active-btn':''}" type="button"><span>≡</span>Izq</button><button data-aligntext="center" class="${l.align==='center'?'active-btn':''}" type="button"><span>☰</span>Cen</button><button data-aligntext="right" class="${l.align==='right'?'active-btn':''}" type="button"><span>≡</span>Der</button><button data-aligntext="justify" class="${l.align==='justify'?'active-btn':''}" type="button"><span>≣</span>Just</button></div></div>`;
 if(['text','location'].includes(l.type))html+=`<div class="field-row"><div class="field"><label>Tipografía</label><select data-lfield="family"><option value="serif" ${l.family==='serif'?'selected':''}>PT Serif</option><option value="sans" ${l.family==='sans'?'selected':''}>Sans</option></select></div><div class="field"><label>Peso</label><select data-lfield="weight"><option value="regular" ${l.weight==='regular'?'selected':''}>Regular</option><option value="bold" ${l.weight==='bold'?'selected':''}>Bold</option></select></div></div><div class="field"><label>Color del texto</label><input data-lfield="color" type="color" value="${l.color}"><div class="color-tools-row"><span class="color-hex-badge">${(l.color||'#FFFFFF').toUpperCase()}</span><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.color}">📋 Copiar</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="color">📌 Pegar</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="${l.id}" data-color-field="color" data-color-val="${l.color}">⚡ Aplicar a todos (${layerName(l.id)})</button></div></div><div class="field"><label>Espesor refuerzo</label><input data-lfield="stroke" type="number" min="0" max="3" step="0.1" value="${l.stroke}"></div><div class="cloud-control-card"><div class="cloud-card-head"><span class="cloud-card-title">☁ Nube de contraste</span><span class="cloud-badge"><b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></span></div><div class="field" style="margin-bottom:8px"><label>Intensidad / Opacidad <b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></label><input data-lfield="cloud" type="range" min="0" max="1" step="0.01" value="${l.cloud||0}"></div><div class="field" style="margin-bottom:8px"><label>Dispersión <span style="font-size:10.5px;font-weight:400;color:var(--text-muted);">(Concentrada ↔ Difusa)</span> <b data-cloud-s-read>${Math.round((l.cloudSpread!=null?l.cloudSpread:0.5)*100)}%</b></label><input data-lfield="cloudSpread" type="range" min="0" max="1" step="0.01" value="${l.cloudSpread!=null?l.cloudSpread:0.5}"></div><div class="field-row" style="margin-bottom:8px"><div class="field"><label>Ancho (alcance X) <b data-cloud-w-read>${Number(l.cloudWidth>0?l.cloudWidth:1).toFixed(2)}×</b></label><input data-lfield="cloudWidth" type="range" min="0.2" max="3" step="0.05" value="${l.cloudWidth>0?l.cloudWidth:1}"></div><div class="field"><label>Alto (alcance Y) <b data-cloud-h-read>${Number(l.cloudHeight>0?l.cloudHeight:1).toFixed(2)}×</b></label><input data-lfield="cloudHeight" type="range" min="0.2" max="3" step="0.05" value="${l.cloudHeight>0?l.cloudHeight:1}"></div></div><div class="field-row" style="margin-bottom:8px"><div class="field"><label>Mover en ancho (X) <b data-cloud-x-read>${(l.cloudX||0)>0?'+':''}${Math.round(l.cloudX||0)} px</b></label><input data-lfield="cloudX" type="range" min="-600" max="600" step="2" value="${Math.round(l.cloudX||0)}"></div><div class="field"><label>Mover en altura (Y) <b data-cloud-y-read>${(l.cloudY||0)>0?'+':''}${Math.round(l.cloudY||0)} px</b></label><input data-lfield="cloudY" type="range" min="-400" max="400" step="2" value="${Math.round(l.cloudY||0)}"></div></div><div class="color-tools-row" style="margin-top:6px"><button type="button" class="btn-tiny-action" data-cloud-action="fit-text" title="Ajusta automáticamente centro y tamaño a la superficie de las palabras">🎯 Ajustar al texto</button><button type="button" class="btn-tiny-action" data-cloud-action="reset" title="Restablecer posición y tamaño a valores estándar">↺ Restablecer</button><button type="button" class="btn-tiny-action highlight" data-cloud-action="apply-class" title="Aplicar esta misma nube a esta capa en todas las piezas">⚡ A todos (${layerName(l.id)})</button></div></div>`;
 if(l.type==='cta'){
-  const hVal=Math.round(l.height!=null&&l.height!==''?Number(l.height):70);
+  const st=l.ctaStyle||((Number(l.height||70)<=6)?'line':'solid');
+  const hVal=Math.round(l.height!=null&&l.height!==''?Number(l.height):(st==='line'?3:70));
   const wVal=Math.round(l.width!=null&&l.width!==''?Number(l.width):758);
-  const isLine=hVal<=6;
+  const bwVal=Math.max(1,Math.min(15,Math.round(l.borderWidth||2)));
+  const radVal=l.borderRadius!=null?Math.round(l.borderRadius):(st==='line'?0:8);
   const rawText=String(l.text??'').trim();
-  const hasText=(l.showText!==false)&&rawText.length>0;
-  html+=`<div class="field" style="margin-top:10px"><label>Formato rápido del CTA</label><div class="two-buttons"><button type="button" class="${!isLine?'active-btn':''}" data-cta-quick="button">🔘 Botón CTA (${hVal>6?hVal:70}px)</button><button type="button" class="${isLine?'active-btn':''}" data-cta-quick="line">━ Línea fina (${isLine?hVal:3}px)</button></div></div>
-<div class="field"><label>Color del fondo / línea</label><input data-lfield="bgColor" type="color" value="${l.bgColor||brandOrange}"><div class="color-tools-row"><span class="color-hex-badge">${(l.bgColor||brandOrange).toUpperCase()}</span><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.bgColor||brandOrange}">📋 Copiar</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="bgColor">📌 Pegar</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="cta" data-color-field="bgColor" data-color-val="${l.bgColor||brandOrange}">⚡ A todos los CTA</button></div></div>
-<div class="field"><label>Alto / Grosor <span style="font-size:10px;color:var(--text-muted);font-weight:400">(1-4 px: línea fina · 50-80 px: botón)</span> <b data-cta-h-read>${hVal} px</b></label><input data-lfield="height" type="range" min="1" max="180" step="1" value="${hVal}"></div>
-<div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Grosor rápido:</span><button type="button" class="btn-tiny-action" data-cta-h-preset="2">Fina (2px)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="4">Media (4px)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="10">Barra (10px)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="55">Botón (55px)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="75">Botón (75px)</button></div>
-<div class="field"><label>Ancho <b data-cta-w-read>${wVal} px</b></label><input data-lfield="width" type="range" min="10" max="${Math.max(1080,W)}" step="2" value="${wVal}"></div>
-<div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Ancho rápido:</span><button type="button" class="btn-tiny-action" data-cta-w-preset="120">120 px</button><button type="button" class="btn-tiny-action" data-cta-w-preset="350">350 px</button><button type="button" class="btn-tiny-action" data-cta-w-preset="700">700 px</button><button type="button" class="btn-tiny-action highlight" data-cta-w-preset="full">Ancho total</button></div>
-<div class="field" style="margin-top:12px"><label style="display:flex;justify-content:space-between;align-items:center;"><span>Texto del CTA</span><button type="button" class="btn-tiny-action" data-cta-text-clear style="font-size:10px;padding:1px 6px;">✕ Eliminar texto y flecha</button></label><textarea data-lfield="text" rows="2" placeholder="Dejá vacío este campo para mostrar solo el botón o la línea sin texto ni flecha...">${esc(l.text)}</textarea></div>
-<div style="display:flex;flex-direction:column;gap:6px;margin:8px 0;"><label class="switch-row"><input type="checkbox" data-lcheck="showText" ${l.showText!==false?'checked':''}> <span>Mostrar texto en el botón</span></label><label class="switch-row"><input type="checkbox" data-lcheck="showArrow" ${l.showArrow!==false?'checked':''}> <span>Incluir flecha (→) al final del texto</span></label></div>`;
-  if(hasText&&hVal>=16){
-    html+=`<div class="field"><label>Color del texto</label><input data-lfield="color" type="color" value="${l.color||'#FFFFFF'}"><div class="color-tools-row"><span class="color-hex-badge">${(l.color||'#FFFFFF').toUpperCase()}</span><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.color||'#FFFFFF'}">📋 Copiar</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="color">📌 Pegar</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="cta" data-color-field="color" data-color-val="${l.color||'#FFFFFF'}">⚡ A todos los CTA</button></div></div>
-<div class="field"><label>Tamaño del texto <b data-size-read>${Math.round(l.size||24)} px</b></label><input data-lfield="size" type="range" min="12" max="90" step="1" value="${Math.round(l.size||24)}"></div>`;
+  const hasText=(st!=='line')&&(l.showText!==false)&&rawText.length>0&&hVal>=16;
+
+  html+=`<div class="field" style="margin-top:10px">
+    <label>Estilo / Formato visual</label>
+    <div class="alignment-three" style="grid-template-columns:repeat(3,1fr);gap:4px">
+      <button type="button" class="${st==='solid'?'active-btn':''}" data-cta-style="solid"><span>🔘</span>Sólido</button>
+      <button type="button" class="${st==='outline'?'active-btn':''}" data-cta-style="outline"><span>🔲</span>Recuadro</button>
+      <button type="button" class="${st==='line'?'active-btn':''}" data-cta-style="line"><span>━</span>Línea recta</button>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;margin:8px 0;">
+    <button type="button" class="btn-tiny-action" data-cta-vis-toggle style="flex:1;justify-content:center;padding:5px 8px;font-size:11px">${l.visible?'👁 Ocultar elemento en esta pieza':'◉ Mostrar elemento en esta pieza'}</button>
+  </div>
+  <div class="field">
+    <label>${st==='line'?'Color de la línea':st==='outline'?'Color del recuadro / borde':'Fondo del botón'}</label>
+    <input data-lfield="bgColor" type="color" value="${l.bgColor||brandOrange}">
+    <div class="color-tools-row">
+      <span class="color-hex-badge">${(l.bgColor||brandOrange).toUpperCase()}</span>
+      <button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.bgColor||brandOrange}">📋 Copiar</button>
+      <button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="bgColor">📌 Pegar</button>
+      <button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="cta" data-color-field="bgColor" data-color-val="${l.bgColor||brandOrange}">⚡ A todos los CTA</button>
+    </div>
+  </div>`;
+
+  if(st==='outline'){
+    html+=`<div class="control-preview" style="margin:8px 0;background:#fff8ee;border-color:#f6d3a8;color:#9b4e0d;">🔲 <b>Modo Recuadro (sin fill):</b> fondo 100% transparente con solo el marco naranja.</div>
+    <div class="field"><label>Grosor del recuadro / borde <b data-cta-bw-read>${bwVal} px</b></label><input data-lfield="borderWidth" type="range" min="1" max="10" step="1" value="${bwVal}"></div>
+    <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Borde rápido:</span><button type="button" class="btn-tiny-action" data-cta-bw-preset="1">1 px (fino)</button><button type="button" class="btn-tiny-action" data-cta-bw-preset="2">2 px (estándar)</button><button type="button" class="btn-tiny-action" data-cta-bw-preset="3">3 px (medio)</button><button type="button" class="btn-tiny-action" data-cta-bw-preset="5">5 px (grueso)</button></div>
+    <div class="field"><label>Curvatura de esquinas <b data-cta-rad-read>${radVal} px</b></label><input data-lfield="borderRadius" type="range" min="0" max="30" step="1" value="${radVal}"></div>
+    <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Esquinas:</span><button type="button" class="btn-tiny-action" data-cta-rad-preset="0">Rectas (0px)</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="4">Sutil (4px)</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="8">Redondeadas (8px)</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="25">Píldora</button></div>
+    <div class="field-row"><div class="field"><label>Ancho <b data-cta-w-read>${wVal} px</b></label><input data-lfield="width" type="range" min="10" max="${Math.max(1080,W)}" step="2" value="${wVal}"></div><div class="field"><label>Alto <b data-cta-h-read>${hVal} px</b></label><input data-lfield="height" type="range" min="20" max="180" step="1" value="${hVal}"></div></div>`;
+  }else if(st==='line'){
+    html+=`<div class="control-preview" style="margin:8px 0;background:#fff8ee;border-color:#f6d3a8;color:#9b4e0d;">━ <b>Modo Línea divisoria recta:</b> barra horizontal recta sin curvatura de cápsula.</div>
+    <div class="field"><label>Grosor de la línea <b data-cta-h-read>${hVal} px</b></label><input data-lfield="height" type="range" min="1" max="30" step="1" value="${hVal}"></div>
+    <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Grosor rápido:</span><button type="button" class="btn-tiny-action" data-cta-h-preset="1">1 px (ultrafina)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="2">2 px (fina)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="3">3 px (estándar)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="5">5 px (media)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="10">10 px (barra)</button></div>
+    <div class="field"><label>Ancho de la línea <b data-cta-w-read>${wVal} px</b></label><input data-lfield="width" type="range" min="10" max="${Math.max(1080,W)}" step="2" value="${wVal}"></div>
+    <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Ancho rápido:</span><button type="button" class="btn-tiny-action" data-cta-w-preset="80">80 px</button><button type="button" class="btn-tiny-action" data-cta-w-preset="150">150 px</button><button type="button" class="btn-tiny-action" data-cta-w-preset="300">300 px</button><button type="button" class="btn-tiny-action" data-cta-w-preset="500">500 px</button><button type="button" class="btn-tiny-action highlight" data-cta-w-preset="full">Ancho total</button></div>`;
   }else{
-    html+=`<div class="control-preview" style="margin:6px 0 10px;background:#fff8ee;border-color:#f6d3a8;color:#9b4e0d;">🔘 <b>Sin texto:</b> se renderiza solo la forma naranja (${isLine?'línea fina':'botón liso'}) sin texto ni flecha.</div>`;
+    html+=`<div class="field-row"><div class="field"><label>Ancho botón <b data-cta-w-read>${wVal} px</b></label><input data-lfield="width" type="range" min="10" max="${Math.max(1080,W)}" step="2" value="${wVal}"></div><div class="field"><label>Alto botón <b data-cta-h-read>${hVal} px</b></label><input data-lfield="height" type="range" min="10" max="180" step="1" value="${hVal}"></div></div>
+    <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Alto rápido:</span><button type="button" class="btn-tiny-action" data-cta-h-preset="45">45 px</button><button type="button" class="btn-tiny-action" data-cta-h-preset="55">55 px</button><button type="button" class="btn-tiny-action" data-cta-h-preset="70">70 px</button><button type="button" class="btn-tiny-action" data-cta-h-preset="85">85 px</button></div>
+    <div class="field"><label>Curvatura de esquinas <b data-cta-rad-read>${radVal} px</b></label><input data-lfield="borderRadius" type="range" min="0" max="30" step="1" value="${radVal}"></div>
+    <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Esquinas:</span><button type="button" class="btn-tiny-action" data-cta-rad-preset="0">Rectas (0px)</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="4">Sutil (4px)</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="9">Estándar (9px)</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="30">Píldora</button></div>`;
   }
+
+  if(st!=='line'){
+    html+=`<div class="field" style="margin-top:12px"><label style="display:flex;justify-content:space-between;align-items:center;"><span>Texto del CTA</span><button type="button" class="btn-tiny-action" data-cta-text-clear style="font-size:10px;padding:1px 6px;">✕ Eliminar texto y flecha</button></label><textarea data-lfield="text" rows="2" placeholder="Dejá vacío este campo para mostrar solo la forma sin texto ni flecha...">${esc(l.text)}</textarea></div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0;"><label class="switch-row"><input type="checkbox" data-lcheck="showText" ${l.showText!==false?'checked':''}> <span>Mostrar texto en el botón</span></label><label class="switch-row"><input type="checkbox" data-lcheck="showArrow" ${l.showArrow!==false?'checked':''}> <span>Incluir flecha (→) al final del texto</span></label></div>`;
+    if(hasText){
+      html+=`<div class="field"><label>Color del texto</label><input data-lfield="color" type="color" value="${l.color||(st==='outline'?(l.bgColor||brandOrange):'#FFFFFF')}"><div class="color-tools-row"><span class="color-hex-badge">${(l.color||(st==='outline'?(l.bgColor||brandOrange):'#FFFFFF')).toUpperCase()}</span><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.color||(st==='outline'?(l.bgColor||brandOrange):'#FFFFFF')}">📋 Copiar</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="color">📌 Pegar</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="cta" data-color-field="color" data-color-val="${l.color||(st==='outline'?(l.bgColor||brandOrange):'#FFFFFF')}">⚡ A todos los CTA</button></div></div>
+      <div class="field"><label>Tamaño del texto <b data-size-read>${Math.round(l.size||24)} px</b></label><input data-lfield="size" type="range" min="12" max="90" step="1" value="${Math.round(l.size||24)}"></div>`;
+    }else{
+      html+=`<div class="control-preview" style="margin:6px 0 10px;background:#fff8ee;border-color:#f6d3a8;color:#9b4e0d;">🔘 <b>Sin texto:</b> se renderiza solo ${st==='outline'?'el recuadro sin relleno':'el botón sólido'} sin texto ni flecha.</div>`;
+    }
+  }
+
   html+=`<div class="field" style="margin-top:10px"><label>Posición horizontal (X) <b data-cta-x-read>${Math.round(l.x)} px</b></label><input data-lfield="x" type="range" min="0" max="${Math.max(1080,W)}" step="2" value="${Math.round(l.x)}"></div>
-<div class="field"><label>Posición vertical (Y) <b data-cta-y-read>${Math.round(l.y)} px</b></label><input data-lfield="y" type="range" min="0" max="${H}" step="2" value="${Math.round(l.y)}"></div>
-<div class="field-row">${lfnum('Posición X','x',l.x)}${lfnum('Posición Y','y',l.y)}${lfnum('Ancho (px)','width',wVal)}${lfnum('Alto / Grosor (px)','height',hVal)}</div>
-<div class="alignment-three" style="margin:10px 0 6px"><button type="button" data-cta-align="left"><span>⇥</span>Izquierda</button><button type="button" data-cta-align="center"><span>⇋</span>Centrar X</button><button type="button" data-cta-align="right"><span>⇤</span>Derecha</button></div>
-<div style="margin-top:10px"><button type="button" class="btn-tiny-action highlight full" data-cta-action="apply-all" style="justify-content:center;padding:7px 10px;font-size:11px">⚡ Replicar formato a todas las piezas</button></div>
-<p class="mini-info" style="margin-top:7px">💡 También podés arrastrar la línea o botón directamente con el cursor en el lienzo.</p>`;
+  <div class="field"><label>Posición vertical (Y) <b data-cta-y-read>${Math.round(l.y)} px</b></label><input data-lfield="y" type="range" min="0" max="${H}" step="2" value="${Math.round(l.y)}"></div>
+  <div class="field-row">${lfnum('Posición X','x',l.x)}${lfnum('Posición Y','y',l.y)}${lfnum('Ancho (px)','width',wVal)}${lfnum(st==='line'?'Grosor (px)':'Alto (px)','height',hVal)}</div>
+  <div class="alignment-three" style="margin:10px 0 6px"><button type="button" data-cta-align="left"><span>⇥</span>Izquierda</button><button type="button" data-cta-align="center"><span>⇋</span>Centrar X</button><button type="button" data-cta-align="right"><span>⇤</span>Derecha</button></div>
+  <div style="margin-top:10px"><button type="button" class="btn-tiny-action highlight full" data-cta-action="apply-all" style="justify-content:center;padding:7px 10px;font-size:11px">⚡ Replicar ${st==='line'?'línea':st==='outline'?'recuadro':'botón'} a todas las piezas</button></div>
+  <p class="mini-info" style="margin-top:7px">💡 También podés arrastrar el elemento directamente con el cursor en el lienzo.</p>`;
 }
 if(l.type==='logo')html+='<p class="mini-info">El logo conserva sus proporciones dentro de la caja. Convertirlo a blanco no modifica el archivo original.</p>';
 html+=`<div class="two-buttons" style="margin-top:8px"><button data-do="centerLayerX">Centrar X</button><button data-do="centerLayerY">Centrar Y</button></div>`;el.innerHTML=html;}
@@ -875,24 +917,40 @@ function rrect(ctx,x,y,w,h,r){r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x
 function drawLayerCloud(ctx,l){if(!l.visible||!l.cloud)return;if(l.type!=='text'&&l.type!=='location')return;const metaArr=linesWithMeta(ctx,l),arr=metaArr.map(m=>m.text),lh=getLineHeight(l),hh=Math.max(l.size*1.22,arr.length*lh);cloud(ctx,l.x,l.y,l.width,hh,l.cloud,l);}
 function drawLayerContent(ctx,l,exporting){if(!l.visible)return;if(l.type==='logo'){rects.push({id:l.id,x:l.x,y:l.y,w:l.width,h:l.height});if(logoImage?.naturalWidth){const src=whiteLogo?getWhiteLogo():logoImage;const ratio=Math.min(l.width/src.width,l.height/src.height);const w=src.width*ratio,h=src.height*ratio;ctx.drawImage(src,l.x+(l.width-w)/2,l.y+(l.height-h)/2,w,h);}else if(!exporting){ctx.save();ctx.strokeStyle='#ffcb9c';ctx.lineWidth=2;ctx.setLineDash([10,8]);ctx.strokeRect(l.x,l.y,l.width,l.height);ctx.font='600 22px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('CARGAR LOGO OFICIAL',l.x+l.width/2,l.y+l.height/2);ctx.restore();}return;}
 if(l.type==='cta'){
-  const h=Math.max(1,Math.round(l.height!=null&&l.height!==''?Number(l.height):70));
+  const st=l.ctaStyle||((Number(l.height||70)<=6)?'line':'solid');
+  const h=Math.max(1,Math.round(l.height!=null&&l.height!==''?Number(l.height):(st==='line'?3:70)));
   const w=Math.max(1,Math.round(l.width!=null&&l.width!==''?Number(l.width):758));
   rects.push({id:l.id,x:l.x,y:l.y,w:w,h:h});
   ctx.save();
-  ctx.fillStyle=l.bgColor||brandOrange;
-  if(h<=3){
-    ctx.fillRect(l.x,l.y,w,h);
-  }else{
-    const rad=Math.min(9,Math.floor(h/2));
+  const brandCol=l.bgColor||brandOrange;
+  if(st==='line'){
+    ctx.fillStyle=brandCol;
+    const rad=(l.borderRadius&&h>=4)?Math.min(l.borderRadius,Math.floor(h/2)):0;
     if(rad>=1){rrect(ctx,l.x,l.y,w,h,rad);ctx.fill();}
+    else{ctx.fillRect(l.x,l.y,w,h);}
+  }else if(st==='outline'){
+    const bw=Math.max(1,Math.min(20,Math.round(l.borderWidth||2)));
+    const rad=l.borderRadius!=null?Math.min(l.borderRadius,Math.floor(h/2),Math.floor(w/2)):Math.min(8,Math.floor(h/2));
+    ctx.strokeStyle=brandCol;
+    ctx.lineWidth=bw;
+    if(rad>=1){
+      rrect(ctx,l.x+bw/2,l.y+bw/2,Math.max(1,w-bw),Math.max(1,h-bw),Math.max(0,rad-bw/2));
+      ctx.stroke();
+    }else{
+      ctx.strokeRect(l.x+bw/2,l.y+bw/2,Math.max(1,w-bw),Math.max(1,h-bw));
+    }
+  }else{
+    ctx.fillStyle=brandCol;
+    const rad=l.borderRadius!=null?Math.min(l.borderRadius,Math.floor(h/2),Math.floor(w/2)):Math.min(9,Math.floor(h/2));
+    if(rad>=1&&h>3){rrect(ctx,l.x,l.y,w,h,rad);ctx.fill();}
     else{ctx.fillRect(l.x,l.y,w,h);}
   }
   const rawText=String(l.text??'').trim();
-  const hasText=(l.showText!==false)&&rawText.length>0&&h>=16;
+  const hasText=(st!=='line')&&(l.showText!==false)&&rawText.length>0&&h>=16;
   if(hasText){
     const showArrow=l.showArrow!==false;
     const displayText=showArrow?(rawText+'   →'):rawText;
-    ctx.fillStyle=l.color||'#FFFFFF';
+    ctx.fillStyle=l.color||(st==='outline'?brandCol:'#FFFFFF');
     ctx.textAlign='center';
     ctx.textBaseline='middle';
     ctx.font=`700 ${l.size||24}px 'DM Sans',Arial,sans-serif`;
@@ -1114,20 +1172,42 @@ function activatePiece(i){if(!Number.isInteger(i)||i<0||i>=pieces.length)return;
 $('#pieces').addEventListener('click',e=>{const b=e.target.closest('[data-piece]');if(!b)return;activatePiece(Number(b.dataset.piece));});
 $$('[data-panel]').forEach(b=>b.onclick=()=>inspectTab(b.dataset.panel));
 $('#inspectBody').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-if(b.dataset.ctaQuick&&picked.length===1&&sel()?.id==='cta'){
-  const q=b.dataset.ctaQuick,l=sel();
+if(b.dataset.ctaStyle&&picked.length===1&&sel()?.id==='cta'){
+  const st=b.dataset.ctaStyle,l=sel();
   mutate(()=>{
-    if(q==='line'){
+    l.ctaStyle=st;
+    if(st==='line'){
       l.height=3;
+      l.borderRadius=0;
       l.text='';
       if(!l.width||l.width>700)l.width=450;
+    }else if(st==='outline'){
+      if(!l.height||l.height<30)l.height=65;
+      if(!l.width||l.width<120)l.width=Math.min(550,W-SAFE*2);
+      if(!l.borderWidth)l.borderWidth=2;
+      if(l.borderRadius==null)l.borderRadius=8;
     }else{
-      l.height=70;
-      if(!l.text)l.text='CONOCÉ NUESTROS SERVICIOS';
-      if(!l.width||l.width<150)l.width=Math.min(758,W-SAFE*2);
+      if(!l.height||l.height<30)l.height=70;
+      if(!l.width||l.width<120)l.width=Math.min(758,W-SAFE*2);
+      if(l.borderRadius==null)l.borderRadius=9;
     }
   });
-  drawLayers();drawLayerFields();status(q==='line'?'CTA convertido en línea fina (3 px).':'CTA convertido en botón (70 px).');return;
+  drawLayers();drawLayerFields();status(`CTA configurado como ${st==='line'?'Línea divisoria':st==='outline'?'Recuadro sin fill':'Botón sólido'}.`);return;
+}
+if(b.hasAttribute('data-cta-vis-toggle')&&picked.length===1&&sel()?.id==='cta'){
+  const l=sel();
+  mutate(()=>{l.visible=!l.visible;});
+  drawLayers();drawLayerFields();status(l.visible?'Elemento visible en esta pieza.':'Elemento oculto en esta pieza.');return;
+}
+if(b.dataset.ctaBwPreset&&picked.length===1&&sel()?.id==='cta'){
+  const val=Number(b.dataset.ctaBwPreset),l=sel();
+  mutate(()=>{l.borderWidth=val;});
+  drawLayerFields();status(`Grosor de recuadro fijado en ${val} px.`);return;
+}
+if(b.dataset.ctaRadPreset&&picked.length===1&&sel()?.id==='cta'){
+  const val=Number(b.dataset.ctaRadPreset),l=sel();
+  mutate(()=>{l.borderRadius=val;});
+  drawLayerFields();status(`Curvatura fijada en ${val} px.`);return;
 }
 if(b.hasAttribute('data-cta-text-clear')&&picked.length===1&&sel()?.id==='cta'){
   const l=sel();
@@ -1146,8 +1226,8 @@ if(b.dataset.ctaAlign&&picked.length===1&&sel()?.id==='cta'){
 }
 if(b.dataset.ctaAction==='apply-all'&&picked.length===1&&sel()?.id==='cta'){
   const src=sel();
-  mutate(()=>{for(const pz of pieces){const t=pz.layers.find(lx=>lx.id==='cta');if(t){t.height=src.height;t.width=src.width;t.bgColor=src.bgColor;t.showText=src.showText;t.showArrow=src.showArrow;t.text=src.text;if(src.color)t.color=src.color;if(src.size)t.size=src.size;}}});
-  drawInspector();status('Formato de CTA replicado a todas las piezas.');return;
+  mutate(()=>{for(const pz of pieces){const t=pz.layers.find(lx=>lx.id==='cta');if(t){t.ctaStyle=src.ctaStyle;t.height=src.height;t.width=src.width;t.borderWidth=src.borderWidth;t.borderRadius=src.borderRadius;t.bgColor=src.bgColor;t.showText=src.showText;t.showArrow=src.showArrow;t.text=src.text;if(src.color)t.color=src.color;if(src.size)t.size=src.size;}}});
+  drawInspector();status(`Estilo de CTA (${src.ctaStyle==='line'?'Línea':src.ctaStyle==='outline'?'Recuadro sin fill':'Botón sólido'}) replicado a todas las piezas.`);return;
 }
 if(b.dataset.ai){aiAct(b.dataset.ai);return;}if(b.dataset.do){doAction(b.dataset.do);return;}if(b.dataset.alignlayers){alignObjects(b.dataset.alignlayers);drawLayerFields();return;}if(b.dataset.aligntext){const target=b.dataset.aligntext;mutate(()=>picked.forEach(id=>{let l=getLayer(id);if(l?.type==='text'||l?.type==='location')l.align=target;}));drawInspector();return;}if(b.dataset.visibility){const id=b.dataset.visibility;mutate(()=>getLayer(id).visible=!getLayer(id).visible);drawLayers();return;}
 const cb=e.target.closest('[data-color-action]');
@@ -1220,6 +1300,8 @@ $('#inspectBody').addEventListener('input',e=>{const el=e.target;if(el.id==='aiP
 if(key==='lineHeight'){const read=$('[data-lh-read]');if(read)read.textContent=Number(val).toFixed(2)+'×';}
 if(key==='width'&&sel().id==='cta'){const read=$('[data-cta-w-read]');if(read)read.textContent=Math.round(val)+' px';$$('[data-lfield="width"]').forEach(inp=>{if(inp!==el)inp.value=val;});}
 if(key==='height'&&sel().id==='cta'){const read=$('[data-cta-h-read]');if(read)read.textContent=Math.round(val)+' px';$$('[data-lfield="height"]').forEach(inp=>{if(inp!==el)inp.value=val;});}
+if(key==='borderWidth'&&sel().id==='cta'){const read=$('[data-cta-bw-read]');if(read)read.textContent=Math.round(val)+' px';$$('[data-lfield="borderWidth"]').forEach(inp=>{if(inp!==el)inp.value=val;});}
+if(key==='borderRadius'&&sel().id==='cta'){const read=$('[data-cta-rad-read]');if(read)read.textContent=Math.round(val)+' px';$$('[data-lfield="borderRadius"]').forEach(inp=>{if(inp!==el)inp.value=val;});}
 if(key==='x'&&sel().id==='cta'){const read=$('[data-cta-x-read]');if(read)read.textContent=Math.round(val)+' px';$$('[data-lfield="x"]').forEach(inp=>{if(inp!==el)inp.value=val;});}
 if(key==='y'&&sel().id==='cta'){const read=$('[data-cta-y-read]');if(read)read.textContent=Math.round(val)+' px';$$('[data-lfield="y"]').forEach(inp=>{if(inp!==el)inp.value=val;});}
 if(key==='cloud'){$$('[data-cloud-read]').forEach(r=>r.textContent=Math.round(val*100)+'%');}
