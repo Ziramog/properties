@@ -830,38 +830,31 @@ if(['text','location'].includes(l.type))html+=`<div class="field"><label>Interli
 if(['text','location'].includes(l.type))html+=`<div class="field"><label>Alineación</label><div class="alignment-four" style="margin-top:4px"><button data-aligntext="left" class="${l.align==='left'?'active-btn':''}" type="button"><span>≡</span>Izq</button><button data-aligntext="center" class="${l.align==='center'?'active-btn':''}" type="button"><span>☰</span>Cen</button><button data-aligntext="right" class="${l.align==='right'?'active-btn':''}" type="button"><span>≡</span>Der</button><button data-aligntext="justify" class="${l.align==='justify'?'active-btn':''}" type="button"><span>≣</span>Just</button></div></div>`;
 if(['text','location'].includes(l.type))html+=`<div class="field-row"><div class="field"><label>Tipografía</label><select data-lfield="family"><option value="serif" ${l.family==='serif'?'selected':''}>PT Serif</option><option value="sans" ${l.family==='sans'?'selected':''}>Sans</option></select></div><div class="field"><label>Peso</label><select data-lfield="weight"><option value="regular" ${l.weight==='regular'?'selected':''}>Regular</option><option value="bold" ${l.weight==='bold'?'selected':''}>Bold</option></select></div></div><div class="field"><label>Color del texto</label><input data-lfield="color" type="color" value="${l.color}"><div class="color-tools-row"><span class="color-hex-badge">${(l.color||'#FFFFFF').toUpperCase()}</span><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.color}">📋 Copiar</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="color">📌 Pegar</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="${l.id}" data-color-field="color" data-color-val="${l.color}">⚡ Aplicar a todos (${layerName(l.id)})</button></div></div><div class="field"><label>Espesor refuerzo</label><input data-lfield="stroke" type="number" min="0" max="3" step="0.1" value="${l.stroke}"></div><div class="cloud-control-card"><div class="cloud-card-head"><span class="cloud-card-title">☁ Nube de contraste</span><span class="cloud-badge"><b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></span></div><div class="field" style="margin-bottom:8px"><label>Intensidad / Opacidad <b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></label><input data-lfield="cloud" type="range" min="0" max="1" step="0.01" value="${l.cloud||0}"></div><div class="field" style="margin-bottom:8px"><label>Dispersión <span style="font-size:10.5px;font-weight:400;color:var(--text-muted);">(Concentrada ↔ Difusa)</span> <b data-cloud-s-read>${Math.round((l.cloudSpread!=null?l.cloudSpread:0.5)*100)}%</b></label><input data-lfield="cloudSpread" type="range" min="0" max="1" step="0.01" value="${l.cloudSpread!=null?l.cloudSpread:0.5}"></div><div class="field-row" style="margin-bottom:8px"><div class="field"><label>Ancho (alcance X) <b data-cloud-w-read>${Number(l.cloudWidth>0?l.cloudWidth:1).toFixed(2)}×</b></label><input data-lfield="cloudWidth" type="range" min="0.2" max="3" step="0.05" value="${l.cloudWidth>0?l.cloudWidth:1}"></div><div class="field"><label>Alto (alcance Y) <b data-cloud-h-read>${Number(l.cloudHeight>0?l.cloudHeight:1).toFixed(2)}×</b></label><input data-lfield="cloudHeight" type="range" min="0.2" max="3" step="0.05" value="${l.cloudHeight>0?l.cloudHeight:1}"></div></div><div class="field-row" style="margin-bottom:8px"><div class="field"><label>Mover en ancho (X) <b data-cloud-x-read>${(l.cloudX||0)>0?'+':''}${Math.round(l.cloudX||0)} px</b></label><input data-lfield="cloudX" type="range" min="-600" max="600" step="2" value="${Math.round(l.cloudX||0)}"></div><div class="field"><label>Mover en altura (Y) <b data-cloud-y-read>${(l.cloudY||0)>0?'+':''}${Math.round(l.cloudY||0)} px</b></label><input data-lfield="cloudY" type="range" min="-400" max="400" step="2" value="${Math.round(l.cloudY||0)}"></div></div><div class="color-tools-row" style="margin-top:6px"><button type="button" class="btn-tiny-action" data-cloud-action="fit-text" title="Ajusta automáticamente centro y tamaño a la superficie de las palabras">🎯 Ajustar al texto</button><button type="button" class="btn-tiny-action" data-cloud-action="reset" title="Restablecer posición y tamaño a valores estándar">↺ Restablecer</button><button type="button" class="btn-tiny-action highlight" data-cloud-action="apply-class" title="Aplicar esta misma nube a esta capa en todas las piezas">⚡ A todos (${layerName(l.id)})</button></div></div>`;
 if(l.type==='cta'){
-  const isLine = l.ctaMode === 'line';
-  html += `<div class="field" style="margin-top:10px"><label>Formato / Elemento CTA</label><div class="two-buttons"><button type="button" class="${!isLine?'active-btn':''}" data-ctamode="button">🔘 Botón CTA</button><button type="button" class="${isLine?'active-btn':''}" data-ctamode="line">━ Línea naranja</button></div></div>`;
-  if(isLine){
-    html += `<div class="control-preview" style="margin:8px 0;background:#fff8ee;border-color:#f6d3a8;color:#9b4e0d;">━ <b>Línea divisoria:</b> barra decorativa con control total de ancho, grosor y ubicación espacial.</div>
-<div class="field"><label>Color de la línea</label><input data-lfield="bgColor" type="color" value="${l.bgColor||brandOrange}"><div class="color-tools-row"><span class="color-hex-badge">${(l.bgColor||brandOrange).toUpperCase()}</span><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.bgColor||brandOrange}">📋 Copiar</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="bgColor">📌 Pegar</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="cta" data-color-field="bgColor" data-color-val="${l.bgColor||brandOrange}">⚡ A todos</button></div></div>
-<div class="field"><label>Ancho de la línea <b data-cta-w-read>${Math.round(l.width)} px</b></label><input data-lfield="width" type="range" min="10" max="${Math.max(1080,W)}" step="2" value="${Math.round(l.width)}"></div>
+  const hVal=Math.round(l.height!=null&&l.height!==''?Number(l.height):70);
+  const wVal=Math.round(l.width!=null&&l.width!==''?Number(l.width):758);
+  const isLine=hVal<=6;
+  const rawText=String(l.text??'').trim();
+  const hasText=(l.showText!==false)&&rawText.length>0;
+  html+=`<div class="field" style="margin-top:10px"><label>Formato rápido del CTA</label><div class="two-buttons"><button type="button" class="${!isLine?'active-btn':''}" data-cta-quick="button">🔘 Botón CTA (${hVal>6?hVal:70}px)</button><button type="button" class="${isLine?'active-btn':''}" data-cta-quick="line">━ Línea fina (${isLine?hVal:3}px)</button></div></div>
+<div class="field"><label>Color del fondo / línea</label><input data-lfield="bgColor" type="color" value="${l.bgColor||brandOrange}"><div class="color-tools-row"><span class="color-hex-badge">${(l.bgColor||brandOrange).toUpperCase()}</span><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.bgColor||brandOrange}">📋 Copiar</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="bgColor">📌 Pegar</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="cta" data-color-field="bgColor" data-color-val="${l.bgColor||brandOrange}">⚡ A todos los CTA</button></div></div>
+<div class="field"><label>Alto / Grosor <span style="font-size:10px;color:var(--text-muted);font-weight:400">(1-4 px: línea fina · 50-80 px: botón)</span> <b data-cta-h-read>${hVal} px</b></label><input data-lfield="height" type="range" min="1" max="180" step="1" value="${hVal}"></div>
+<div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Grosor rápido:</span><button type="button" class="btn-tiny-action" data-cta-h-preset="2">Fina (2px)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="4">Media (4px)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="10">Barra (10px)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="55">Botón (55px)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="75">Botón (75px)</button></div>
+<div class="field"><label>Ancho <b data-cta-w-read>${wVal} px</b></label><input data-lfield="width" type="range" min="10" max="${Math.max(1080,W)}" step="2" value="${wVal}"></div>
 <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Ancho rápido:</span><button type="button" class="btn-tiny-action" data-cta-w-preset="120">120 px</button><button type="button" class="btn-tiny-action" data-cta-w-preset="350">350 px</button><button type="button" class="btn-tiny-action" data-cta-w-preset="700">700 px</button><button type="button" class="btn-tiny-action highlight" data-cta-w-preset="full">Ancho total</button></div>
-<div class="field"><label>Grosor de la línea <b data-cta-h-read>${Math.round(l.height||4)} px</b></label><input data-lfield="height" type="range" min="1" max="60" step="1" value="${Math.round(l.height||4)}"></div>
-<div class="field"><label>Posición horizontal (X) <b data-cta-x-read>${Math.round(l.x)} px</b></label><input data-lfield="x" type="range" min="0" max="${Math.max(1080,W)}" step="2" value="${Math.round(l.x)}"></div>
-<div class="field"><label>Posición vertical (Y) <b data-cta-y-read>${Math.round(l.y)} px</b></label><input data-lfield="y" type="range" min="0" max="${H}" step="2" value="${Math.round(l.y)}"></div>
-<div class="field-row">${lfnum('Posición X','x',l.x)}${lfnum('Posición Y','y',l.y)}${lfnum('Ancho (px)','width',l.width)}${lfnum('Grosor (px)','height',l.height||4)}</div>
-<div class="alignment-three" style="margin:10px 0 6px"><button type="button" data-cta-align="left"><span>⇥</span>Izquierda</button><button type="button" data-cta-align="center"><span>⇋</span>Centrar X</button><button type="button" data-cta-align="right"><span>⇤</span>Derecha</button></div>
-<div style="margin-top:10px"><button type="button" class="btn-tiny-action highlight full" data-cta-action="apply-all" style="justify-content:center;padding:7px 10px;font-size:11px">⚡ Replicar línea a todas las piezas</button></div>
-<p class="mini-info" style="margin-top:7px">💡 También podés arrastrar la línea directamente con el cursor en el lienzo.</p>`;
-  } else {
-    const showText = l.showText !== false;
-    html += `<label class="switch-row" style="margin:10px 0 6px"><input type="checkbox" data-lcheck="showText" ${showText?'checked':''}> <strong>Mostrar texto en el botón</strong></label>`;
-    if(showText){
-      html += `<div class="field"><label>Texto del botón</label><textarea data-lfield="text" rows="2" placeholder="Escribí el texto del botón...">${esc(l.text)}</textarea></div>
-<div class="field" style="margin-top:8px"><label>Color del texto CTA</label><input data-lfield="color" type="color" value="${l.color||'#FFFFFF'}"><div class="color-tools-row"><span class="color-hex-badge">${(l.color||'#FFFFFF').toUpperCase()}</span><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.color||'#FFFFFF'}">📋 Copiar</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="color">📌 Pegar</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="cta" data-color-field="color" data-color-val="${l.color||'#FFFFFF'}">⚡ A todos los CTA</button></div></div>
-<div class="field" style="margin-top:8px"><label>Tamaño texto CTA <b data-size-read>${Math.round(l.size)} px</b></label><input data-lfield="size" type="range" min="12" max="90" step="1" value="${Math.round(l.size)}"></div>`;
-    } else {
-      html += `<div class="control-preview" style="margin:8px 0 10px;background:#fef7ee;border-color:#fbd38d;color:#c05621;">🔘 <b>Solo botón:</b> se dibuja el botón naranja liso sin texto blanco ni flecha.</div>`;
-    }
-    html += `<div class="field"><label>Fondo del botón CTA</label><input data-lfield="bgColor" type="color" value="${l.bgColor||brandOrange}"><div class="color-tools-row"><span class="color-hex-badge">${(l.bgColor||brandOrange).toUpperCase()}</span><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.bgColor||brandOrange}">📋 Copiar</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="bgColor">📌 Pegar</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="cta" data-color-field="bgColor" data-color-val="${l.bgColor||brandOrange}">⚡ A todos los CTA</button></div></div>
-<div class="field-row" style="margin-top:8px"><div class="field"><label>Ancho botón CTA <b data-cta-w-read>${Math.round(l.width)} px</b></label><input data-lfield="width" type="range" min="120" max="${Math.max(1050,W)}" step="2" value="${Math.round(l.width)}"></div><div class="field"><label>Alto botón CTA <b data-cta-h-read>${Math.round(l.height||70)} px</b></label><input data-lfield="height" type="range" min="30" max="180" step="2" value="${Math.round(l.height||70)}"></div></div>
-<div class="field"><label>Posición horizontal (X) <b data-cta-x-read>${Math.round(l.x)} px</b></label><input data-lfield="x" type="range" min="0" max="${Math.max(1080,W)}" step="2" value="${Math.round(l.x)}"></div>
-<div class="field"><label>Posición vertical (Y) <b data-cta-y-read>${Math.round(l.y)} px</b></label><input data-lfield="y" type="range" min="0" max="${H}" step="2" value="${Math.round(l.y)}"></div>
-<div class="field-row">${lfnum('Posición X','x',l.x)}${lfnum('Posición Y','y',l.y)}${lfnum('Ancho','width',l.width)}${lfnum('Alto','height',l.height||70)}</div>
-<div class="alignment-three" style="margin:10px 0 6px"><button type="button" data-cta-align="left"><span>⇥</span>Izquierda</button><button type="button" data-cta-align="center"><span>⇋</span>Centrar X</button><button type="button" data-cta-align="right"><span>⇤</span>Derecha</button></div>
-<div style="margin-top:10px"><button type="button" class="btn-tiny-action highlight full" data-cta-action="apply-all" style="justify-content:center;padding:7px 10px;font-size:11px">⚡ Replicar formato de botón a todas las piezas</button></div>`;
+<div class="field" style="margin-top:12px"><label style="display:flex;justify-content:space-between;align-items:center;"><span>Texto del CTA</span><button type="button" class="btn-tiny-action" data-cta-text-clear style="font-size:10px;padding:1px 6px;">✕ Eliminar texto y flecha</button></label><textarea data-lfield="text" rows="2" placeholder="Dejá vacío este campo para mostrar solo el botón o la línea sin texto ni flecha...">${esc(l.text)}</textarea></div>
+<div style="display:flex;flex-direction:column;gap:6px;margin:8px 0;"><label class="switch-row"><input type="checkbox" data-lcheck="showText" ${l.showText!==false?'checked':''}> <span>Mostrar texto en el botón</span></label><label class="switch-row"><input type="checkbox" data-lcheck="showArrow" ${l.showArrow!==false?'checked':''}> <span>Incluir flecha (→) al final del texto</span></label></div>`;
+  if(hasText&&hVal>=16){
+    html+=`<div class="field"><label>Color del texto</label><input data-lfield="color" type="color" value="${l.color||'#FFFFFF'}"><div class="color-tools-row"><span class="color-hex-badge">${(l.color||'#FFFFFF').toUpperCase()}</span><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.color||'#FFFFFF'}">📋 Copiar</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="color">📌 Pegar</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="cta" data-color-field="color" data-color-val="${l.color||'#FFFFFF'}">⚡ A todos los CTA</button></div></div>
+<div class="field"><label>Tamaño del texto <b data-size-read>${Math.round(l.size||24)} px</b></label><input data-lfield="size" type="range" min="12" max="90" step="1" value="${Math.round(l.size||24)}"></div>`;
+  }else{
+    html+=`<div class="control-preview" style="margin:6px 0 10px;background:#fff8ee;border-color:#f6d3a8;color:#9b4e0d;">🔘 <b>Sin texto:</b> se renderiza solo la forma naranja (${isLine?'línea fina':'botón liso'}) sin texto ni flecha.</div>`;
   }
+  html+=`<div class="field" style="margin-top:10px"><label>Posición horizontal (X) <b data-cta-x-read>${Math.round(l.x)} px</b></label><input data-lfield="x" type="range" min="0" max="${Math.max(1080,W)}" step="2" value="${Math.round(l.x)}"></div>
+<div class="field"><label>Posición vertical (Y) <b data-cta-y-read>${Math.round(l.y)} px</b></label><input data-lfield="y" type="range" min="0" max="${H}" step="2" value="${Math.round(l.y)}"></div>
+<div class="field-row">${lfnum('Posición X','x',l.x)}${lfnum('Posición Y','y',l.y)}${lfnum('Ancho (px)','width',wVal)}${lfnum('Alto / Grosor (px)','height',hVal)}</div>
+<div class="alignment-three" style="margin:10px 0 6px"><button type="button" data-cta-align="left"><span>⇥</span>Izquierda</button><button type="button" data-cta-align="center"><span>⇋</span>Centrar X</button><button type="button" data-cta-align="right"><span>⇤</span>Derecha</button></div>
+<div style="margin-top:10px"><button type="button" class="btn-tiny-action highlight full" data-cta-action="apply-all" style="justify-content:center;padding:7px 10px;font-size:11px">⚡ Replicar formato a todas las piezas</button></div>
+<p class="mini-info" style="margin-top:7px">💡 También podés arrastrar la línea o botón directamente con el cursor en el lienzo.</p>`;
 }
 if(l.type==='logo')html+='<p class="mini-info">El logo conserva sus proporciones dentro de la caja. Convertirlo a blanco no modifica el archivo original.</p>';
 html+=`<div class="two-buttons" style="margin-top:8px"><button data-do="centerLayerX">Centrar X</button><button data-do="centerLayerY">Centrar Y</button></div>`;el.innerHTML=html;}
@@ -882,29 +875,28 @@ function rrect(ctx,x,y,w,h,r){r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x
 function drawLayerCloud(ctx,l){if(!l.visible||!l.cloud)return;if(l.type!=='text'&&l.type!=='location')return;const metaArr=linesWithMeta(ctx,l),arr=metaArr.map(m=>m.text),lh=getLineHeight(l),hh=Math.max(l.size*1.22,arr.length*lh);cloud(ctx,l.x,l.y,l.width,hh,l.cloud,l);}
 function drawLayerContent(ctx,l,exporting){if(!l.visible)return;if(l.type==='logo'){rects.push({id:l.id,x:l.x,y:l.y,w:l.width,h:l.height});if(logoImage?.naturalWidth){const src=whiteLogo?getWhiteLogo():logoImage;const ratio=Math.min(l.width/src.width,l.height/src.height);const w=src.width*ratio,h=src.height*ratio;ctx.drawImage(src,l.x+(l.width-w)/2,l.y+(l.height-h)/2,w,h);}else if(!exporting){ctx.save();ctx.strokeStyle='#ffcb9c';ctx.lineWidth=2;ctx.setLineDash([10,8]);ctx.strokeRect(l.x,l.y,l.width,l.height);ctx.font='600 22px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('CARGAR LOGO OFICIAL',l.x+l.width/2,l.y+l.height/2);ctx.restore();}return;}
 if(l.type==='cta'){
-  if(l.ctaMode==='line'){
-    const thickness=Math.max(1,Math.round(l.height||4)),w=Math.max(1,Math.round(l.width||100));
-    rects.push({id:l.id,x:l.x,y:l.y,w:w,h:thickness});
-    ctx.save();
-    ctx.fillStyle=l.bgColor||brandOrange;
-    const rad=Math.min(thickness/2,4);
-    if(rad>=1&&thickness>=3){rrect(ctx,l.x,l.y,w,thickness,rad);ctx.fill();}
-    else{ctx.fillRect(l.x,l.y,w,thickness);}
-    ctx.restore();
-    return;
-  }
-  rects.push({id:l.id,x:l.x,y:l.y,w:l.width,h:l.height||70});
+  const h=Math.max(1,Math.round(l.height!=null&&l.height!==''?Number(l.height):70));
+  const w=Math.max(1,Math.round(l.width!=null&&l.width!==''?Number(l.width):758));
+  rects.push({id:l.id,x:l.x,y:l.y,w:w,h:h});
   ctx.save();
   ctx.fillStyle=l.bgColor||brandOrange;
-  rrect(ctx,l.x,l.y,l.width,l.height||70,9);
-  ctx.fill();
-  const hasText=(l.showText!==false)&&!!String(l.text||'').trim();
+  if(h<=3){
+    ctx.fillRect(l.x,l.y,w,h);
+  }else{
+    const rad=Math.min(9,Math.floor(h/2));
+    if(rad>=1){rrect(ctx,l.x,l.y,w,h,rad);ctx.fill();}
+    else{ctx.fillRect(l.x,l.y,w,h);}
+  }
+  const rawText=String(l.text??'').trim();
+  const hasText=(l.showText!==false)&&rawText.length>0&&h>=16;
   if(hasText){
+    const showArrow=l.showArrow!==false;
+    const displayText=showArrow?(rawText+'   →'):rawText;
     ctx.fillStyle=l.color||'#FFFFFF';
     ctx.textAlign='center';
     ctx.textBaseline='middle';
     ctx.font=`700 ${l.size||24}px 'DM Sans',Arial,sans-serif`;
-    ctx.fillText(l.text+'   →',l.x+l.width/2,l.y+(l.height||70)/2,l.width-40);
+    ctx.fillText(displayText,l.x+w/2,l.y+h/2,Math.max(20,w-30));
   }
   ctx.restore();
   return;
@@ -988,7 +980,7 @@ function render(){
 function point(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};}
 function pickedAt(x,y){for(let i=rects.length-1;i>=0;i--){const r=rects[i];const tolX=(r.w<24)?12:5,tolY=(r.h<24)?14:5;if(x>=r.x-tolX&&x<=r.x+r.w+tolX&&y>=r.y-tolY&&y<=r.y+r.h+tolY)return r.id;}return null;}
 function snapDelta(dx,dy,baseIds,origins){if(!showGuides)return{dx,dy};const moving=origins.map(o=>({...getLayer(o.id),x:o.x,y:o.y}));const xs=moving.map(l=>l.x),rs=moving.map(l=>l.x+l.width),ys=moving.map(l=>l.y),hs=moving.map(l=>l.y+heightFor(l));const minX=Math.min(...xs),maxX=Math.max(...rs),minY=Math.min(...ys),maxY=Math.max(...hs);const other=rects.filter(r=>!baseIds.includes(r.id));const refXs=[SAFE,W/2,W-SAFE,...other.flatMap(r=>[r.x,r.x+r.w/2,r.x+r.w])];const refYs=[SAFE,H/2,H-SAFE,...other.flatMap(r=>[r.y,r.y+r.h/2,r.y+r.h])];const near=(probes,targets,delta)=>{let best=null;for(const a of probes)for(const b of targets){let diff=b-(a+delta);if(Math.abs(diff)<10&&(!best||Math.abs(diff)<Math.abs(best.diff)))best={diff,value:b};}return best;};const ax=near([minX,(minX+maxX)/2,maxX],refXs,dx),ay=near([minY,(minY+maxY)/2,maxY],refYs,dy);snapGuide=[];if(ax){dx+=ax.diff;snapGuide.push({axis:'x',value:ax.value});}if(ay){dy+=ay.diff;snapGuide.push({axis:'y',value:ay.value});}return{dx,dy};}
-function heightFor(l){if(l.type==='logo')return l.height||176;if(l.type==='cta')return l.height||(l.ctaMode==='line'?4:70);return Math.max(l.size*1.2,(String(l.text).split('\n').length)*getLineHeight(l));}
+function heightFor(l){if(l.type==='logo')return l.height||176;if(l.type==='cta')return Math.max(1,l.height!=null&&l.height!==''?Number(l.height):70);return Math.max(l.size*1.2,(String(l.text).split('\n').length)*getLineHeight(l));}
 function alignObjects(side){if(!picked.length)return;mutate(()=>{for(const id of picked){const l=getLayer(id);if(!l)continue;switch(side){case'left':l.x=SAFE;break;case'center':l.x=(W-l.width)/2;break;case'right':l.x=W-SAFE-l.width;break;case'top':l.y=SAFE;break;case'bottom':l.y=H-SAFE-heightFor(l);break;}}});drawLayerFields();status('Alineación de '+picked.length+' capa(s): '+side+'.');}
 function selectList(id,multiple){if(multiple){picked=picked.includes(id)?picked.filter(x=>x!==id):[...picked,id];if(!picked.length)picked=[id];}else picked=[id];mode='layer';updateToolBtns();drawLayers();drawLayerFields();render();}
 function updateToolBtns(){setCanvasFormat();$('#chooseLayer').classList.toggle('active-btn',mode==='layer');$('#movePhoto').classList.toggle('active-btn',mode==='photo');$('#toggleSquare').classList.toggle('active-btn',squareView);$('#toggleSquare').textContent=squareView?'Volver 4:5':'1:1';$('#toggleSafe').classList.toggle('active-btn',showGuides);$('#toggleGrid')?.classList.toggle('active-btn',showGrid);const tz=$('#toolbarZoom');if(tz)tz.value=p().zoom;const zo=$('#zoomOut');if(zo)zo.textContent=p().zoom.toFixed(2)+'×';}
@@ -1122,19 +1114,25 @@ function activatePiece(i){if(!Number.isInteger(i)||i<0||i>=pieces.length)return;
 $('#pieces').addEventListener('click',e=>{const b=e.target.closest('[data-piece]');if(!b)return;activatePiece(Number(b.dataset.piece));});
 $$('[data-panel]').forEach(b=>b.onclick=()=>inspectTab(b.dataset.panel));
 $('#inspectBody').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-if(b.dataset.ctamode&&picked.length===1&&sel()?.id==='cta'){
-  const targetMode=b.dataset.ctamode,l=sel();
+if(b.dataset.ctaQuick&&picked.length===1&&sel()?.id==='cta'){
+  const q=b.dataset.ctaQuick,l=sel();
   mutate(()=>{
-    l.ctaMode=targetMode;
-    if(targetMode==='line'){
-      if(!l.height||l.height>30)l.height=4;
-      if(!l.width||l.width<50)l.width=Math.min(450,W-SAFE*2);
+    if(q==='line'){
+      l.height=3;
+      l.text='';
+      if(!l.width||l.width>700)l.width=450;
     }else{
-      if(!l.height||l.height<30)l.height=70;
-      if(!l.width||l.width<120)l.width=Math.min(758,W-SAFE*2);
+      l.height=70;
+      if(!l.text)l.text='CONOCÉ NUESTROS SERVICIOS';
+      if(!l.width||l.width<150)l.width=Math.min(758,W-SAFE*2);
     }
   });
-  drawLayers();drawLayerFields();status(`CTA configurado como ${targetMode==='line'?'Línea naranja':'Botón CTA'}.`);return;
+  drawLayers();drawLayerFields();status(q==='line'?'CTA convertido en línea fina (3 px).':'CTA convertido en botón (70 px).');return;
+}
+if(b.hasAttribute('data-cta-text-clear')&&picked.length===1&&sel()?.id==='cta'){
+  const l=sel();
+  mutate(()=>{l.text='';});
+  drawLayerFields();status('Texto y flecha eliminados. Solo queda el botón/línea.');return;
 }
 if(b.dataset.ctaWPreset&&picked.length===1&&sel()?.id==='cta'){
   const val=b.dataset.ctaWPreset,l=sel();
@@ -1148,8 +1146,8 @@ if(b.dataset.ctaAlign&&picked.length===1&&sel()?.id==='cta'){
 }
 if(b.dataset.ctaAction==='apply-all'&&picked.length===1&&sel()?.id==='cta'){
   const src=sel();
-  mutate(()=>{for(const pz of pieces){const t=pz.layers.find(lx=>lx.id==='cta');if(t){t.ctaMode=src.ctaMode;t.height=src.height;t.width=src.width;t.bgColor=src.bgColor;t.showText=src.showText;if(src.color)t.color=src.color;if(src.size)t.size=src.size;}}});
-  drawInspector();status(`Estilo de ${src.ctaMode==='line'?'Línea':'Botón CTA'} replicado a todas las piezas.`);return;
+  mutate(()=>{for(const pz of pieces){const t=pz.layers.find(lx=>lx.id==='cta');if(t){t.height=src.height;t.width=src.width;t.bgColor=src.bgColor;t.showText=src.showText;t.showArrow=src.showArrow;t.text=src.text;if(src.color)t.color=src.color;if(src.size)t.size=src.size;}}});
+  drawInspector();status('Formato de CTA replicado a todas las piezas.');return;
 }
 if(b.dataset.ai){aiAct(b.dataset.ai);return;}if(b.dataset.do){doAction(b.dataset.do);return;}if(b.dataset.alignlayers){alignObjects(b.dataset.alignlayers);drawLayerFields();return;}if(b.dataset.aligntext){const target=b.dataset.aligntext;mutate(()=>picked.forEach(id=>{let l=getLayer(id);if(l?.type==='text'||l?.type==='location')l.align=target;}));drawInspector();return;}if(b.dataset.visibility){const id=b.dataset.visibility;mutate(()=>getLayer(id).visible=!getLayer(id).visible);drawLayers();return;}
 const cb=e.target.closest('[data-color-action]');
@@ -1216,7 +1214,7 @@ if(cloudBtn&&picked.length===1){
     }
   }
 }});
-$('#inspectBody').addEventListener('change',e=>{const el=e.target;if(el.id==='aiFocus'){aiFocuses[active]=el.value;if(aiCandidates[active]?.rawAiImage)aiUpdateCandidateIntensity(active,aiIntensities[active]??0.35);return;}if(el.id==='brandColor'){changeBrandColor(el.value);return;}if(el.id==='whiteLogo'){markHistory();whiteLogo=el.checked;logoWhiteCache=null;render();drawInspector();}else if(el.id==='removeLight'){markHistory();removeLight=el.checked;logoWhiteCache=null;render();}else if(el.dataset.lcheck){mutate(()=>sel()[el.dataset.lcheck]=el.checked);drawLayers();if(el.dataset.lcheck==='showText')drawLayerFields();}else if(el.dataset.multisel){selectList(el.dataset.multisel,true);} });
+$('#inspectBody').addEventListener('change',e=>{const el=e.target;if(el.id==='aiFocus'){aiFocuses[active]=el.value;if(aiCandidates[active]?.rawAiImage)aiUpdateCandidateIntensity(active,aiIntensities[active]??0.35);return;}if(el.id==='brandColor'){changeBrandColor(el.value);return;}if(el.id==='whiteLogo'){markHistory();whiteLogo=el.checked;logoWhiteCache=null;render();drawInspector();}else if(el.id==='removeLight'){markHistory();removeLight=el.checked;logoWhiteCache=null;render();}else if(el.dataset.lcheck){mutate(()=>sel()[el.dataset.lcheck]=el.checked);drawLayers();if(['showText','showArrow'].includes(el.dataset.lcheck))drawLayerFields();}else if(el.dataset.multisel){selectList(el.dataset.multisel,true);} });
 $('#inspectBody').addEventListener('click',e=>{const row=e.target.closest('[data-layer]');if(row&&!e.target.closest('[data-visibility]')&&!e.target.matches('[data-multisel]')){selectList(row.dataset.layer,e.ctrlKey||e.metaKey||e.shiftKey);}});
 $('#inspectBody').addEventListener('input',e=>{const el=e.target;if(el.id==='aiPrompt'){aiPrompts[active]=el.value;return;}if(el.id==='aiIntensity'){const val=+el.value;aiIntensities[active]=val;const read=$('#aiIntensityRead');if(read)read.textContent=Math.round(val*100)+'%';aiUpdateCandidateIntensity(active,val);return;}if(el.id==='brandColor'){changeBrandColor(el.value);return;}if(el.dataset.piecefield){let key=el.dataset.piecefield,val=+el.value;markHistory();p()[key]=val;const label=$(`[data-read="${key}"]`);if(label)label.textContent=key==='zoom'||key==='middleWidth'?val.toFixed(2)+'×':(['brightness','contrast','saturation'].includes(key)?val:Math.round(val*100))+'%';if(key==='zoom'){let z=$('#zoomOut');if(z)z.textContent=val.toFixed(2)+'×';}render();}else if(el.dataset.lfield&&picked.length===1){const key=el.dataset.lfield,val=el.type==='number'||el.type==='range'?+el.value:el.value;markHistory();sel()[key]=val;if(key==='size'){const read=$('[data-size-read]');if(read)read.textContent=Math.round(val)+' px';}
 if(key==='lineHeight'){const read=$('[data-lh-read]');if(read)read.textContent=Number(val).toFixed(2)+'×';}
