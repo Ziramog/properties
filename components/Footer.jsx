@@ -109,6 +109,7 @@ const Footer = ({
                       {[
                         { href: '/properties?type=Casa', label: 'Casas' },
                         { href: '/properties?type=Departamento', label: 'Departamentos' },
+                        { href: '/properties?type=D%C3%BAplex', label: 'Dúplex' },
                         { href: '/properties?type=Campo', label: 'Campos' },
                         { href: '/properties?type=Terreno', label: 'Terrenos' },
                       ].map(l => (
@@ -298,6 +299,7 @@ const Footer = ({
                 {[
                   { href: '/properties?type=Casa', label: 'Casas' },
                   { href: '/properties?type=Departamento', label: 'Departamentos' },
+                  { href: '/properties?type=D%C3%BAplex', label: 'Dúplex' },
                   { href: '/properties?type=Campo', label: 'Campos' },
                   { href: '/properties?type=Terreno', label: 'Terrenos' },
                 ].map(l => (

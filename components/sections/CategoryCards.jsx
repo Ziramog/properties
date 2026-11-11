@@ -1,13 +1,14 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Home, Building2, Mountain, Sprout, Store, TrendingUp } from 'lucide-react';
+import { Home, Building2, Building, Mountain, Sprout, Store, TrendingUp } from 'lucide-react';
 import SectionBox from '@/components/sections/SectionBox';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 
 const CATEGORIES = [
   { type: 'Casa', icon: Home, label: 'Casas' },
   { type: 'Departamento', icon: Building2, label: 'Departamentos' },
+  { type: 'Dúplex', icon: Building, label: 'Dúplex' },
   { type: 'Terreno', icon: Mountain, label: 'Terrenos' },
   { type: 'Campo', icon: Sprout, label: 'Campos' },
   { type: 'Inmueble Comercial', icon: Store, label: 'Locales' },
@@ -46,7 +47,7 @@ const CategoryCards = () => {
         </div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-5">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 md:gap-5">
           {CATEGORIES.map(({ type, label, icon: Icon }) => {
             const isActive = active === type;
             return (

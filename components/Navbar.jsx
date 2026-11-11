@@ -123,6 +123,7 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
                     {[
                       { label: 'Casas', query: 'type=Casa' },
                       { label: 'Deptos', query: 'type=Departamento' },
+                      { label: 'Dúplex', query: 'type=D%C3%BAplex' },
                       { label: 'Terrenos', query: 'type=Terreno' },
                       { label: 'Comerciales', query: 'type=Inmueble+Comercial' },
                       { label: 'Campos', query: 'type=Campo' },
@@ -267,10 +268,11 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
                   <path d="M9 18l6-6-6-6"/>
                 </svg>
               </button>
-              <div className={`overflow-hidden transition-all duration-300 ${mobileSubOpen ? 'max-h-[300px] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
+              <div className={`overflow-hidden transition-all duration-300 ${mobileSubOpen ? 'max-h-[360px] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
                 {[
                   { href: '/properties?type=Casa', label: 'Casas' },
                   { href: '/properties?type=Departamento', label: 'Deptos' },
+                  { href: '/properties?type=D%C3%BAplex', label: 'Dúplex' },
                   { href: '/properties?type=Terreno', label: 'Terrenos' },
                   { href: '/properties?type=Inmueble+Comercial', label: 'Comerciales' },
                   { href: '/properties?type=Campo', label: 'Campos' },

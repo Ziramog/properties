@@ -7,7 +7,11 @@ export function filterProperties(properties, filters) {
     .filter((p) => {
       // Type filter
       if (filters.type && filters.type !== 'Todos') {
-        if (p.type !== filters.type) return false;
+        if (/^d[uú]plex$/i.test(filters.type)) {
+          if (!/^d[uú]plex$/i.test(p.type || '')) return false;
+        } else if (p.type !== filters.type) {
+          return false;
+        }
       }
 
       // City filter

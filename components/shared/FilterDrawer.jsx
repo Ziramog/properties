@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaSearch, FaSlidersH, FaTimes } from 'react-icons/fa';
 
-const PROPERTY_TYPES = ['Todos', 'Casa', 'Departamento', 'Terreno', 'Campo', 'Inmueble Comercial', 'Gran Inversión'];
+const PROPERTY_TYPES = ['Todos', 'Casa', 'Departamento', 'Dúplex', 'Terreno', 'Campo', 'Inmueble Comercial', 'Gran Inversión'];
 const CITIES = ['Ciudad', 'Alta Gracia', 'Anisacate', 'Despeñaderos', 'Falda del Carmen', 'Huerta Grande'];
 const BEDROOM_OPTS = ['', '1', '2', '3', '4', '5'];
 

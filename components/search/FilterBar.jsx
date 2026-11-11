@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { getUniqueCities } from '@/utils/filterProperties';
 
 const PROPERTY_TYPES = [
-  'Todos', 'Casa', 'Departamento', 'Terreno', 'Campo', 'Inmueble Comercial', 'Gran Inversión',
+  'Todos', 'Casa', 'Departamento', 'Dúplex', 'Terreno', 'Campo', 'Inmueble Comercial', 'Gran Inversión',
 ];
 
 const BEDROOM_OPTIONS = [

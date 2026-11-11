@@ -11,7 +11,7 @@ const MapAllProperties = dynamic(() => import('@/components/MapAllProperties'), 
 
 export const metadata = {
   title: 'Mapa de Propiedades',
-  description: 'Explorá todas las propiedades de Roggero & Roma Inmobiliaria en el mapa interactivo. Casas, departamentos, campos y terrenos en Alta Gracia y toda Córdoba.',
+  description: 'Explorá todas las propiedades de Roggero & Roma Inmobiliaria en el mapa interactivo. Casas, departamentos, dúplex, campos y terrenos en Alta Gracia y toda Córdoba.',
 };
 
 export const revalidate = 600;

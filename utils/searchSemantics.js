@@ -5,8 +5,9 @@
 
 const typeSynonyms = {
   'Terreno': ['lote', 'lotes', 'terreno', 'terrenos', 'parcela', 'parcelas', 'loteo', 'loteos'],
-  'Casa': ['casa', 'casas', 'chalet', 'duplex', 'triplex', 'vivienda'],
+  'Casa': ['casa', 'casas', 'chalet', 'triplex', 'vivienda'],
   'Departamento': ['departamento', 'departamentos', 'depto', 'deptos', 'dpto', 'piso', 'semipiso'],
+  'Dúplex': ['duplex', 'dúplex'],
   'Inmueble Comercial': ['local', 'locales', 'oficina', 'oficinas', 'galpon', 'galpones', 'deposito', 'comercial', 'comercio', 'fondo de comercio'],
   'Campo': ['campo', 'campos', 'chacra', 'chacras', 'finca', 'estancia'],
   'Gran Inversión': ['inversion', 'inversiones', 'desarrollo', 'edificio', 'hotel', 'complejo']

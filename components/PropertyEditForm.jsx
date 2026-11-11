@@ -202,7 +202,7 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
   };
 
   const [operation, setOperation] = useState(property.operation || 'venta');
-  const [type, setType] = useState(property.type || '');
+  const [type, setType] = useState(property.type === 'Duplex' ? 'Dúplex' : (property.type || ''));
   const isLandOrCommercial = ['Terreno', 'Campo', 'Gran Inversión'].includes(type);
   const [isGenerating, setIsGenerating] = useState(false);
   const formRef = useRef(null);
@@ -279,6 +279,7 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
           <option value=''>Sin tipo específico</option>
           <option value='Casa'>Casa</option>
           <option value='Departamento'>Departamento</option>
+          <option value='Dúplex'>Dúplex</option>
           <option value='Campo'>Campo</option>
           <option value='Terreno'>Terreno</option>
           <option value='Inmueble Comercial'>Inmueble Comercial</option>

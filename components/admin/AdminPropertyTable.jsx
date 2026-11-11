@@ -32,7 +32,7 @@ const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = 
         p.location?.city?.toLowerCase().includes(q)
       );
     }
-    if (filterType) result = result.filter(p => p.type === filterType);
+    if (filterType) result = result.filter(p => /^d[uú]plex$/i.test(filterType) ? /^d[uú]plex$/i.test(p.type || '') : p.type === filterType);
     if (filterOp) result = result.filter(p => p.operation === filterOp);
     if (filterFeatured === 'yes') result = result.filter(p => p.is_featured);
     if (filterFeatured === 'no') result = result.filter(p => !p.is_featured);
@@ -82,7 +82,7 @@ const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = 
   };
 
   const typeLabels = {
-    Casa: 'Casa', Departamento: 'Depto', Terreno: 'Terreno',
+    Casa: 'Casa', Departamento: 'Depto', Dúplex: 'Dúplex', Duplex: 'Dúplex', Terreno: 'Terreno',
     Campo: 'Campo', 'Inmueble Comercial': 'Comercial', 'Gran Inversión': 'Inversión',
   };
 
@@ -142,6 +142,7 @@ const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = 
               <option value="">Tipo: Todos</option>
               <option value="Casa">Casa</option>
               <option value="Departamento">Departamento</option>
+              <option value="Dúplex">Dúplex</option>
               <option value="Campo">Campo</option>
               <option value="Terreno">Terreno</option>
               <option value="Inmueble Comercial">Comercial</option>

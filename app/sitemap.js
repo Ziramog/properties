@@ -16,6 +16,7 @@ export default async function sitemap() {
   const categoryUrls = [
     { url: 'https://properties-srs5.vercel.app/properties?type=Casa', priority: 0.7 },
     { url: 'https://properties-srs5.vercel.app/properties?type=Departamento', priority: 0.7 },
+    { url: 'https://properties-srs5.vercel.app/properties?type=D%C3%BAplex', priority: 0.7 },
     { url: 'https://properties-srs5.vercel.app/properties?type=Campo', priority: 0.7 },
     { url: 'https://properties-srs5.vercel.app/properties?type=Terreno', priority: 0.7 },
     { url: 'https://properties-srs5.vercel.app/properties?type=Inmueble+Comercial', priority: 0.7 },

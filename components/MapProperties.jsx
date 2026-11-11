@@ -26,7 +26,7 @@ const MapView = dynamic(() => import('./MapView'), {
   ),
 });
 
-const PROPERTY_TYPES = ['Casa', 'Departamento', 'Terreno', 'Campo', 'Inmueble Comercial'];
+const PROPERTY_TYPES = ['Casa', 'Departamento', 'Dúplex', 'Terreno', 'Campo', 'Inmueble Comercial'];
 
 const EmptyState = () => (
   <div className="flex flex-col items-center justify-center h-full text-center px-8">

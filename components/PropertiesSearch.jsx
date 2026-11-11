@@ -7,6 +7,7 @@ const TIPO_OPTIONS = [
   { value: '', label: '' },
   { value: 'Casa', label: 'Casa' },
   { value: 'Departamento', label: 'Departamento' },
+  { value: 'Dúplex', label: 'Dúplex' },
   { value: 'Terreno', label: 'Terreno' },
   { value: 'Campo', label: 'Campo' },
   { value: 'Inmueble Comercial', label: 'Inmueble Comercial' },

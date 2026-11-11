@@ -51,6 +51,7 @@ const PropertySearchForm = () => {
           <option value='All'>Todos los tipos</option>
           <option value='Casa'>Casa</option>
           <option value='Departamento'>Departamento</option>
+          <option value='Dúplex'>Dúplex</option>
           <option value='Campo'>Campo</option>
           <option value='Terreno'>Terreno</option>
           <option value='Inmueble Comercial'>Inmueble Comercial</option>

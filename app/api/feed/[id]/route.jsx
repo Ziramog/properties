@@ -80,7 +80,7 @@ function parseFeedTitleAndCondition(property) {
     });
 
     const typePartIndex = filteredParts.findIndex((p) =>
-      /casa|dpto|depto|departamento|lote|terreno|campo|chacra|galp[oó]n|oficina|local/i.test(p)
+      /casa|dpto|depto|departamento|d[uú]plex|lote|terreno|campo|chacra|galp[oó]n|oficina|local/i.test(p)
     );
 
     if (typePartIndex !== -1) {

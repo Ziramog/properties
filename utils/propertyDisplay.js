@@ -8,7 +8,7 @@
  * Houses/apartments → covered area.  Land/campo → total area (with hectare conversion).
  */
 export function getAreaDisplay(property) {
-  const isBuilding = ['Casa', 'Departamento', 'Inmueble Comercial'].includes(property.type);
+  const isBuilding = ['Casa', 'Departamento', 'Dúplex', 'Duplex', 'Inmueble Comercial'].includes(property.type);
 
   // Prefer covered_area for buildings
   if (isBuilding && property.covered_area) {

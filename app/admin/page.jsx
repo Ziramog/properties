@@ -15,6 +15,7 @@ import { isGranInversion } from '@/utils/filterProperties';
 import {
   Home,
   Building2,
+  Building,
   Sprout,
   Map,
   Store,
@@ -41,11 +42,11 @@ const AdminPage = async () => {
   const featured = await Property.countDocuments({ is_featured: true });
   const quotations = await Quotation.countDocuments({});
 
-  const types = ['Casa', 'Departamento', 'Campo', 'Terreno', 'Inmueble Comercial'];
+  const types = ['Casa', 'Departamento', 'Dúplex', 'Campo', 'Terreno', 'Inmueble Comercial'];
   const categoryCounts = await Promise.all(
     types.map(async (t) => ({
       type: t,
-      count: await Property.countDocuments({ type: t }),
+      count: await Property.countDocuments({ type: t === 'Dúplex' ? /^d[uú]plex$/i : t }),
     }))
   );
 
@@ -56,6 +57,7 @@ const AdminPage = async () => {
   const CATEGORIES = [
     { type: 'Casa', Icon: Home, color: '#F26B2E' },
     { type: 'Departamento', Icon: Building2, color: '#652660' },
+    { type: 'Dúplex', Icon: Building, color: '#A855F7' },
     { type: 'Campo', Icon: Sprout, color: '#25D366' },
     { type: 'Terreno', Icon: Map, color: '#60A5FA' },
     { type: 'Inmueble Comercial', Icon: Store, color: '#E94560' },
@@ -103,13 +105,13 @@ const AdminPage = async () => {
 
       {/* Category cards: 6 cards */}
       <div className="mb-6">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-4">
           {CATEGORIES.map((cat, index) => {
             const count = cat.count !== undefined ? cat.count : categoryCounts.find((c) => c.type === cat.type)?.count || 0;
             return (
               <MotionCard key={cat.type} delay={0.2 + index * 0.1} color={cat.color}>
                 <Link
-                  href={cat.href || `/admin/properties?type=${cat.type}`}
+                  href={cat.href || `/admin/properties?type=${encodeURIComponent(cat.type)}`}
                   className="block h-full bg-[#161616] border border-[#222] rounded-sm p-5 hover:border-[#333] transition-colors text-center group"
                 >
                   <cat.Icon className="w-7 h-7 mx-auto mb-3 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all" style={{ color: cat.color }} strokeWidth={1.5} />

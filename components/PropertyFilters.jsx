@@ -14,7 +14,7 @@ const PropertyFilters = ({ variant = 'hero' }) => {
     bedrooms: '',
   });
 
-  const propertyTypes = ['Todos', 'Casa', 'Departamento', 'Terreno', 'Campo', 'Inmueble Comercial', 'Gran Inversión'];
+  const propertyTypes = ['Todos', 'Casa', 'Departamento', 'Dúplex', 'Terreno', 'Campo', 'Inmueble Comercial', 'Gran Inversión'];
   const cities = ['Ciudad', 'Alta Gracia', 'Anisacate', 'Despeñaderos', 'Falda del Carmen', 'Huerta Grande'];
   const bedroomOptions = ['', '1', '2', '3', '4', '5'];
 

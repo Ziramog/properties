@@ -109,7 +109,7 @@ export default function MapAllProperties({ initialProperties = [] }) {
     }
 
     if (activeFilters.tipo) {
-      result = result.filter(p => p.type === activeFilters.tipo);
+      result = result.filter(p => /^d[uú]plex$/i.test(activeFilters.tipo) ? /^d[uú]plex$/i.test(p.type || '') : p.type === activeFilters.tipo);
     }
 
     if (activeFilters.price) {
@@ -163,8 +163,8 @@ export default function MapAllProperties({ initialProperties = [] }) {
 
     if (activeFilters['property-type']?.length) {
       const typeMap = {
-        residential: ['Casa', 'Departamento'],
-        multi_family: ['Departamento'],
+        residential: ['Casa', 'Departamento', 'Dúplex'],
+        multi_family: ['Departamento', 'Dúplex'],
         land: ['Terreno', 'Campo'],
         commercial: ['Inmueble Comercial'],
         industrial: ['Inmueble Comercial'],

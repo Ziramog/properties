@@ -210,6 +210,7 @@ const PropertyAddForm = ({ customLabels = [] }) => {
           <option value=''>Seleccione un tipo</option>
           <option value='Casa'>Casa</option>
           <option value='Departamento'>Departamento</option>
+          <option value='Dúplex'>Dúplex</option>
           <option value='Campo'>Campo</option>
           <option value='Terreno'>Terreno</option>
           <option value='Inmueble Comercial'>Inmueble Comercial</option>

@@ -159,7 +159,7 @@ const Hero = ({ title = 'Vendemos Inmuebles, Construimos Confianza', subtitle = 
     }
 
     if (finalType) {
-      const typeMap = { 'Casas': 'Casa', 'Departamentos': 'Departamento', 'Terrenos': 'Terreno', 'Campos': 'Campo', 'Inmuebles Comerciales': 'Inmueble Comercial', 'Grandes Inversiones': 'Gran Inversión' };
+      const typeMap = { 'Casas': 'Casa', 'Departamentos': 'Departamento', 'Dúplex': 'Dúplex', 'Terrenos': 'Terreno', 'Campos': 'Campo', 'Inmuebles Comerciales': 'Inmueble Comercial', 'Grandes Inversiones': 'Gran Inversión' };
       params.set('type', typeMap[finalType] || finalType);
     }
     if (filters.bedrooms) params.set('bedrooms', filters.bedrooms);
@@ -267,7 +267,7 @@ const Hero = ({ title = 'Vendemos Inmuebles, Construimos Confianza', subtitle = 
                 <div className={`transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${desktopFilterOpen ? 'overflow-visible' : 'overflow-hidden'}`} style={{ maxHeight: showMore ? '200px' : '0', opacity: showMore ? 1 : 0, marginTop: showMore ? '16px' : '0' }}>
                   <div className='flex items-end gap-4 bg-black rounded-xl p-6'>
                     {[
-                      {label:'Tipo', name:'type', opts:[{v:'Todos',l:'Todos'},{v:'Casa',l:'Casas'},{v:'Departamento',l:'Departamentos'},{v:'Terreno',l:'Terrenos'},{v:'Campo',l:'Campos'},{v:'Inmueble Comercial',l:'Inmuebles Comerciales'},{v:'Gran Inversión',l:'Grandes Inversiones'}]},
+                      {label:'Tipo', name:'type', opts:[{v:'Todos',l:'Todos'},{v:'Casa',l:'Casas'},{v:'Departamento',l:'Departamentos'},{v:'Dúplex',l:'Dúplex'},{v:'Terreno',l:'Terrenos'},{v:'Campo',l:'Campos'},{v:'Inmueble Comercial',l:'Inmuebles Comerciales'},{v:'Gran Inversión',l:'Grandes Inversiones'}]},
                       {label:'Operación', name:'operation', opts:[{v:'Todos',l:'Todos'},{v:'Venta',l:'Venta'},{v:'Alquiler',l:'Alquiler'}]},
                       {label:'Dormitorios', name:'bedrooms', opts:[{v:'',l:'Cualquiera'},{v:'1',l:'1'},{v:'2',l:'2'},{v:'3',l:'3'},{v:'4',l:'4'},{v:'5+',l:'5+'}]},
                       {label:'Baños', name:'baths', opts:[{v:'',l:'Cualquiera'},{v:'1',l:'1'},{v:'2',l:'2'},{v:'3',l:'3'},{v:'4',l:'4'},{v:'5+',l:'5+'}]},
@@ -358,7 +358,7 @@ const Hero = ({ title = 'Vendemos Inmuebles, Construimos Confianza', subtitle = 
                     }
 
                     if (finalType) {
-                      const typeMap = { 'Casas': 'Casa', 'Departamentos': 'Departamento', 'Terrenos': 'Terreno', 'Campos': 'Campo', 'Inmuebles Comerciales': 'Inmueble Comercial', 'Grandes Inversiones': 'Gran Inversión' };
+                      const typeMap = { 'Casas': 'Casa', 'Departamentos': 'Departamento', 'Dúplex': 'Dúplex', 'Terrenos': 'Terreno', 'Campos': 'Campo', 'Inmuebles Comerciales': 'Inmueble Comercial', 'Grandes Inversiones': 'Gran Inversión' };
                       params.set('type', typeMap[finalType] || finalType);
                     }
                     if (filters.price && filters.price !== 'Cualquiera') {
@@ -421,8 +421,8 @@ const Hero = ({ title = 'Vendemos Inmuebles, Construimos Confianza', subtitle = 
                           <svg className={`w-4 h-4 text-white/50 transition-transform ${openDropdown === 'type' ? 'rotate-180' : ''}`} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><path d='M6 9l6 6 6-6' /></svg>
                         </span>
                         {openDropdown === 'type' && (
-                          <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-50' style={{ borderRadius: '0 0 12px 12px', overflow: 'visible' }}>
-                            {['Todos', 'Casas', 'Departamentos', 'Terrenos', 'Campos', 'Inmuebles Comerciales', 'Grandes Inversiones'].map(v => (
+                          <div className='absolute top-full left-0 right-0 bg-black border border-white/10 z-50 max-h-[240px] overflow-y-auto' style={{ borderRadius: '0 0 12px 12px' }}>
+                            {['Todos', 'Casas', 'Departamentos', 'Dúplex', 'Terrenos', 'Campos', 'Inmuebles Comerciales', 'Grandes Inversiones'].map(v => (
                               <div key={v} onClick={(e) => { e.stopPropagation(); setFilters(prev => ({ ...prev, type: v })); setOpenDropdown(null); }} className={`h-12 px-4 flex items-center border-b border-white/10 hover:bg-white/5 cursor-pointer`}>
                                 <span className={`text-sm px-3 py-1.5 rounded-lg ${filters.type === v ? 'bg-[var(--color-brand)] text-white font-semibold' : 'text-white/70'}`}>{v}</span>
                               </div>

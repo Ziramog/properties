@@ -28,7 +28,13 @@ export default async function PropertiesContent({ searchParams, subtitle }) {
   const filter = { is_published: { $ne: false } };
 
   if (granInversion !== 'true') {
-    if (type && type !== 'Todos') filter.type = type;
+    if (type && type !== 'Todos') {
+      if (/^d[uú]plex$/i.test(type.trim())) {
+        filter.type = /^d[uú]plex$/i;
+      } else {
+        filter.type = type;
+      }
+    }
   }
   
   if (operation && operation !== 'Todos') {

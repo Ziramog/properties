@@ -47,9 +47,9 @@ export const metadata = {
     default: 'Roggero & Roma | Negocios Inmobiliarios en Alta Gracia, Córdoba',
   },
   description:
-    'Agencia inmobiliaria en Alta Gracia, Córdoba. Más de 10 años de experiencia en compra, venta y alquiler de casas, departamentos, campos y locales comerciales.',
+    'Agencia inmobiliaria en Alta Gracia, Córdoba. Más de 10 años de experiencia en compra, venta y alquiler de casas, departamentos, dúplex, campos y locales comerciales.',
   keywords:
-    'inmobiliaria, propiedades, casas, departamentos, campos, Alta Gracia, Córdoba, Argentina, venta, alquiler',
+    'inmobiliaria, propiedades, casas, departamentos, dúplex, campos, Alta Gracia, Córdoba, Argentina, venta, alquiler',
   authors: [{ name: 'Roggero & Roma' }],
   openGraph: {
     type: 'website',

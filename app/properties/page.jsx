@@ -1,7 +1,7 @@
 
 export const metadata = {
   title: 'Propiedades',
-  description: 'Explorá todas las propiedades en venta y alquiler de Roggero & Roma Inmobiliaria en Alta Gracia, Córdoba. Casas, departamentos, campos y más.',
+  description: 'Explorá todas las propiedades en venta y alquiler de Roggero & Roma Inmobiliaria en Alta Gracia, Córdoba. Casas, departamentos, dúplex, campos y más.',
 };
 
 import { Suspense } from 'react';
@@ -17,13 +17,13 @@ const PropertiesPage = async ({ searchParams }) => {
     : granInversion === 'true'
     ? 'Grandes Inversiones'
     : type && type !== 'Todos'
-    ? type === 'Inmueble Comercial' ? 'Inmuebles Comerciales' : `${type}s`
+    ? type === 'Inmueble Comercial' ? 'Inmuebles Comerciales' : /^d[uú]plex$/i.test(type) ? 'Dúplex' : `${type}s`
     : term && term !== 'Ciudad'
     ? `Propiedades en ${term}`
     : 'Nuestras Propiedades';
 
   const subtitle = type && type !== 'Todos'
-    ? `Búsqueda en ${type === 'Inmueble Comercial' ? 'INMUEBLES COMERCIALES' : type.toUpperCase() + 'S'}`
+    ? `Búsqueda en ${type === 'Inmueble Comercial' ? 'INMUEBLES COMERCIALES' : /^d[uú]plex$/i.test(type) ? 'DÚPLEX' : type.toUpperCase() + 'S'}`
     : term && term !== 'Ciudad'
     ? `Búsqueda en ${term.toUpperCase()}`
     : 'Búsqueda de Propiedades';
@@ -33,7 +33,7 @@ const PropertiesPage = async ({ searchParams }) => {
   const currentFilters = {
     term: searchParams.term || '',
     address: searchParams.address || '',
-    tipo: type || '',
+    tipo: type && /^d[uú]plex$/i.test(type) ? 'Dúplex' : (type || ''),
     operation: operation || 'venta',
     area: area || '',
     price: searchParams.price || '',

@@ -11,6 +11,7 @@ const PropertySchema = new Schema(
       type: String,
       required: true,
     },
+    // Valores canónicos: 'Casa', 'Departamento', 'Dúplex', 'Campo', 'Terreno', 'Inmueble Comercial', 'Gran Inversión'
     type: {
       type: String,
     },
