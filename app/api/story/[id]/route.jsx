@@ -431,7 +431,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
       }
 
       // Title adaptive sizing
-      const titleFontSize = data.title.length > 50 ? 46 : (data.title.length > 32 ? 56 : 66);
+      const titleFontSize = data.title.length > 52 ? 54 : (data.title.length > 32 ? 64 : 76);
 
       return await renderImage(
         (
@@ -588,7 +588,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                padding: '0 65px 155px 65px',
+                padding: '0 65px 110px 65px',
                 zIndex: 20,
               }}
             >
@@ -599,17 +599,17 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                   fontSize: titleFontSize,
                   fontFamily: '"PT Serif", serif',
                   fontWeight: 700,
-                  lineHeight: 1.15,
-                  margin: '0 0 16px 0',
+                  lineHeight: 1.14,
+                  margin: '0 0 18px 0',
                   textShadow: '0 3px 14px rgba(0,0,0,0.9)',
                 }}
               >
                 {data.title}
               </h1>
 
-              {/* Ubicación con Pin Naranja Sólido */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              {/* Ubicación con Pin Naranja Sólido al ras izquierdo */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '20px' }}>
+                <svg width="32" height="36" viewBox="4.5 1.5 15 21" fill="none" style={{ flexShrink: 0 }}>
                   <path
                     fillRule="evenodd"
                     clipRule="evenodd"
@@ -617,7 +617,16 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                     fill={corporateOrange}
                   />
                 </svg>
-                <span style={{ color: '#F1F5F9', fontSize: 26, fontWeight: 500, fontFamily: '"Montserrat", sans-serif' }}>
+                <span
+                  style={{
+                    color: '#F1F5F9',
+                    fontSize: 34,
+                    fontWeight: 500,
+                    lineHeight: 1.25,
+                    fontFamily: '"Montserrat", sans-serif',
+                    textShadow: '0 2px 8px rgba(0,0,0,0.85)',
+                  }}
+                >
                   {data.locationFull}
                 </span>
               </div>
@@ -627,8 +636,8 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                 style={{
                   width: '100%',
                   height: '1px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  marginBottom: '22px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.22)',
+                  marginBottom: '24px',
                 }}
               />
 
@@ -726,7 +735,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               </div>
 
               {/* Fila del Precio Prominente + Zona libre inferior para Sticker Enlace */}
-              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '115px' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '150px' }}>
                 <span
                   style={{
                     color: corporateOrange,
@@ -741,15 +750,23 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                 </span>
               </div>
 
-              {/* Línea naranja de soporte debajo del espacio reservado para el sticker Enlace de Instagram */}
+              {/* Línea naranja centrada en X con ancho equivalente al sticker Enlace nativo de IG (sin escalar) */}
               <div
                 style={{
                   width: '100%',
-                  height: '4px',
-                  backgroundColor: corporateOrange,
-                  borderRadius: '2px',
+                  display: 'flex',
+                  justifyContent: 'center',
                 }}
-              />
+              >
+                <div
+                  style={{
+                    width: '440px',
+                    height: '4px',
+                    backgroundColor: corporateOrange,
+                    borderRadius: '2px',
+                  }}
+                />
+              </div>
             </div>
           </div>
         ),

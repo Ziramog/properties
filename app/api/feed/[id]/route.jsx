@@ -329,7 +329,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
     // CASO 1: IMAGEN INICIAL (index === 0) — Portada Editorial Feed
     // ========================================================
     if (index === 0) {
-      const titleFontSize = data.title.length > 45 ? 38 : data.title.length > 28 ? 44 : 50;
+      const titleFontSize = data.title.length > 48 ? 44 : data.title.length > 28 ? 52 : 60;
 
       return await renderImage(
         (
@@ -502,17 +502,17 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                   fontSize: titleFontSize,
                   fontFamily: '"PT Serif", serif',
                   fontWeight: 700,
-                  lineHeight: 1.15,
-                  margin: '0 0 10px 0',
+                  lineHeight: 1.14,
+                  margin: '0 0 12px 0',
                   textShadow: '0 3px 14px rgba(0,0,0,0.9)',
                 }}
               >
                 {data.title}
               </h1>
 
-              {/* Ubicación con Pin Naranja Sólido */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              {/* Ubicación con Pin Naranja Sólido al ras izquierdo */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <svg width="28" height="32" viewBox="4.5 1.5 15 21" fill="none" style={{ flexShrink: 0 }}>
                   <path
                     fillRule="evenodd"
                     clipRule="evenodd"
@@ -520,7 +520,16 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                     fill={corporateOrange}
                   />
                 </svg>
-                <span style={{ color: '#F1F5F9', fontSize: 22, fontWeight: 500, fontFamily: '"Montserrat", sans-serif' }}>
+                <span
+                  style={{
+                    color: '#F1F5F9',
+                    fontSize: 30,
+                    fontWeight: 500,
+                    lineHeight: 1.25,
+                    fontFamily: '"Montserrat", sans-serif',
+                    textShadow: '0 2px 8px rgba(0,0,0,0.85)',
+                  }}
+                >
                   {data.locationFull}
                 </span>
               </div>
@@ -530,8 +539,8 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 style={{
                   width: '100%',
                   height: '1px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  marginBottom: '14px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.22)',
+                  marginBottom: '18px',
                 }}
               />
 
@@ -642,15 +651,23 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 </span>
               </div>
 
-              {/* Línea editorial naranja inferior (en consonancia con Social Studio e Historias) */}
+              {/* Línea editorial naranja centrada en X (en consonancia con Social Studio e Historias) */}
               <div
                 style={{
                   width: '100%',
-                  height: '4px',
-                  backgroundColor: corporateOrange,
-                  borderRadius: '2px',
+                  display: 'flex',
+                  justifyContent: 'center',
                 }}
-              />
+              >
+                <div
+                  style={{
+                    width: '440px',
+                    height: '4px',
+                    backgroundColor: corporateOrange,
+                    borderRadius: '2px',
+                  }}
+                />
+              </div>
             </div>
           </div>
         ),
