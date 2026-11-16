@@ -69,14 +69,12 @@
   - **Header Institucional:** Isotipo blanco oficial en alta definición con sombra, «SILVIA ROGGERO & ROMA» (PT Serif Bold, 38 px), descriptor «NEGOCIOS INMOBILIARIOS» (sans-serif bold, 24 px) y filete naranja con «ALTA GRACIA, CÓRDOBA · ARGENTINA».
   - **Etiquetas Dinámicas de Publicación:** Ubicadas en la zona superior izquierda (`top: 310px, left: 65px`), con formato rectangular (`borderRadius: 8px`), sombra y texto de alto contraste (26 px bold). Reflejan fielmente los datos reales del inmueble (`DESTACADA`, `APTO CRÉDITO`, `PRECIO MEJORADO`, `ACEPTA PERMUTA`, etc.).
   - **Iconos Oficiales del Sitio (Mosaic Dark):**
-    - Reutilización de los SVGs originales (`ico_bed.svg`, `ico_bath.svg`, `ico_sqfoot.svg` y `LandPlot` de `lucide-react`) con grosor de trazo calibrado (`stroke-width: 1.8`) para renderizado nítido en alta resolución.
-    - Separación explícita homogénea (`marginRight: 40px`).
+    - Reutilización de los SVGs originales (`ico_bed.svg`, `ico_bath.svg`, `ico_sqfoot.svg` y `LandPlot` de `lucide-react`) ampliados `~2.5×` (`85×66` dormitorios, `80×64` baños, `70×70` superficie en Story; `70×54`, `65×52`, `56×56` en Feed) con cifras grandes (`44–46 px` en Story / `38–40 px` en Feed) y **sin palabras redundantes** (`"Dorms"`, `"Baños"`, `"cub"`, `"tot"` eliminados, mostrando solo números y `m²` tal como en [`PropertyGallery.jsx`](file:///c:/Projects/property-pulse-nextjs/components/PropertyGallery.jsx#L166-L191)).
     - Eliminación completa de ceros sueltos (`0`): validación estricta numérica y guardas booleanas que garantizan que inmuebles sin dormitorios/baños o con valor 0 solo muestren superficie de terreno sin campos fantasma.
-  - **Precio:** Prominente y en renglón exclusivo en PT Serif Bold (`fontSize: 72px`), coloreado en naranja corporativo `#F26B2E`. Compatible con USD (`USD / U$D`), ARS (`$`) y propiedades sin precio informado (`Consultar`).
-  - **Rediseño del CTA («CONSULTÁ POR WHATSAPP»):**
-    - Se eliminó el gran botón gráfico falso «Ver más →» que prometía una interacción web inexistente en el PNG.
-    - Se incorporó una barra orientativa elegante (`rgba(11, 13, 16, 0.65)` con borde `1.5px solid rgba(242, 107, 46, 0.75)` y `borderRadius: 16px`) con isotipo oficial de WhatsApp (`#25D366`), el texto `CONSULTÁ POR WHATSAPP` y la micro-guía `Tocá el sticker enlace o escribinos`, acompañada de un indicador sutil de flecha.
-    - Si el operador agrega el sticker nativo, este se fusiona naturalmente con esta zona. Si no lo agrega, la pieza conserva un balance editorial completo y profesional.
+  - **Precio:** Prominente y en renglón exclusivo en PT Serif Bold (`fontSize: 74px`), coloreado en naranja corporativo `#F26B2E`. Compatible con USD (`USD / U$D`), ARS (`$`) y propiedades sin precio informado (`Consultar`).
+  - **Línea Naranja de Soporte para Sticker Enlace (Alineación con Social Studio — 2026-11-16):**
+    - Se eliminó la caja/botón «CONSULTÁ POR WHATSAPP / Tocá el sticker enlace o escribinos» tanto en Story (`rr-story-v2.2`) como en Portada de Feed (`index = 0`), manteniendo intacto el copiado automático del enlace contextualizado de WhatsApp en [`StoryShareButton.jsx`](file:///c:/Projects/property-pulse-nextjs/components/StoryShareButton.jsx).
+    - En **Story (`rr-story-v2.2`)**, debajo del precio se reserva una zona limpia (`115 px` de aire libre) sobre una línea horizontal naranja (`#F26B2E`, `4 px`, `paddingBottom: 155px`) que actúa como soporte visual directo del sticker «Enlace» nativo de Instagram, replicando el criterio editorial del Social Studio. En **Feed (`index = 0`)**, la línea naranja cierra el bloque editorial inferior.
 - **Contacto por WhatsApp Contextualizado (`utils/whatsapp.js`):**
   - Número canónico internacional: `5493547563911` (`wa.me/5493547563911`).
   - Mensaje contextualizado con título, localidad y enlace canónico de la ficha pública:

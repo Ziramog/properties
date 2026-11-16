@@ -280,12 +280,12 @@ function extractStoryDataV2_3(property) {
 
   let coveredAreaDisplay = null;
   if (!isLand && property.covered_area != null && property.covered_area > 0) {
-    coveredAreaDisplay = `${property.covered_area.toLocaleString('es-AR')} m² cub`;
+    coveredAreaDisplay = `${property.covered_area.toLocaleString('es-AR')} m²`;
   }
 
   let totalAreaDisplay = null;
   if (!isLand && property.square_feet != null && property.square_feet > 0) {
-    totalAreaDisplay = `${property.square_feet.toLocaleString('es-AR')} m² tot`;
+    totalAreaDisplay = `${property.square_feet.toLocaleString('es-AR')} m²`;
   }
 
   const beds = !isLand && property.beds != null && Number(property.beds) > 0 ? Number(property.beds) : null;
@@ -588,7 +588,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                padding: '0 65px 125px 65px',
+                padding: '0 65px 155px 65px',
                 zIndex: 20,
               }}
             >
@@ -628,22 +628,22 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                   width: '100%',
                   height: '1px',
                   backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  marginBottom: '20px',
+                  marginBottom: '22px',
                 }}
               />
 
-              {/* Características — Estilo Mosaic con divisores verticales */}
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '22px' }}>
+              {/* Características — Íconos grandes estilo ficha web + solo números (sin "Dorms"/"Baños"/"cub") */}
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '26px' }}>
                 {/* Terreno / Campo: Icono LandPlot de Lucide */}
                 {Boolean(data.isLand && data.areaDisplay) ? (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <svg
-                      width="32"
-                      height="32"
+                      width="72"
+                      height="72"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke={corporateOrange}
-                      strokeWidth="1.8"
+                      strokeWidth="1.6"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     >
@@ -652,62 +652,62 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                       <path d="m6.49 12.85 11.02 6.3" />
                       <path d="M17.51 12.85 6.49 19.15" />
                     </svg>
-                    <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600, fontFamily: '"Montserrat", sans-serif' }}>
+                    <span style={{ color: '#FFFFFF', fontSize: 44, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
                       {data.areaDisplay}
                     </span>
                   </div>
                 ) : null}
 
-                {/* Vivienda: Dormitorios, Baños, Superficies con divisores verticales */}
+                {/* Vivienda: Dormitorios, Baños, Superficie con íconos ampliados y solo cifras */}
                 {!data.isLand ? (
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     {Boolean(data.beds && data.beds > 0) ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <img src={assets.bedIconUrl} width={34} height={27} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600, fontFamily: '"Montserrat", sans-serif' }}>
-                          {data.beds} Dorms
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        <img src={assets.bedIconUrl} width={85} height={66} style={{ objectFit: 'contain' }} />
+                        <span style={{ color: '#FFFFFF', fontSize: 46, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
+                          {data.beds}
                         </span>
                       </div>
                     ) : null}
 
                     {Boolean(data.beds && data.beds > 0 && data.baths && data.baths > 0) ? (
-                      <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 24px' }} />
+                      <div style={{ width: '1.5px', height: '44px', backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 30px' }} />
                     ) : null}
 
                     {Boolean(data.baths && data.baths > 0) ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <img src={assets.bathIconUrl} width={32} height={25} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600, fontFamily: '"Montserrat", sans-serif' }}>
-                          {data.baths} Baños
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        <img src={assets.bathIconUrl} width={80} height={64} style={{ objectFit: 'contain' }} />
+                        <span style={{ color: '#FFFFFF', fontSize: 46, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
+                          {data.baths}
                         </span>
                       </div>
                     ) : null}
 
                     {Boolean((data.beds > 0 || data.baths > 0) && data.coveredAreaDisplay) ? (
-                      <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 24px' }} />
+                      <div style={{ width: '1.5px', height: '44px', backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 30px' }} />
                     ) : null}
 
                     {Boolean(data.coveredAreaDisplay) ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <img src={assets.sqftIconUrl} width={28} height={28} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600, fontFamily: '"Montserrat", sans-serif' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        <img src={assets.sqftIconUrl} width={70} height={70} style={{ objectFit: 'contain' }} />
+                        <span style={{ color: '#FFFFFF', fontSize: 44, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
                           {data.coveredAreaDisplay}
                         </span>
                       </div>
                     ) : null}
 
                     {Boolean(!data.coveredAreaDisplay && data.totalAreaDisplay) ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                         {(data.beds > 0 || data.baths > 0) ? (
-                          <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 24px' }} />
+                          <div style={{ width: '1.5px', height: '44px', backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 30px' }} />
                         ) : null}
                         <svg
-                          width="32"
-                          height="32"
+                          width="72"
+                          height="72"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke={corporateOrange}
-                          strokeWidth="1.8"
+                          strokeWidth="1.6"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         >
@@ -716,7 +716,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                           <path d="m6.49 12.85 11.02 6.3" />
                           <path d="M17.51 12.85 6.49 19.15" />
                         </svg>
-                        <span style={{ color: '#FFFFFF', fontSize: 30, fontWeight: 600, fontFamily: '"Montserrat", sans-serif' }}>
+                        <span style={{ color: '#FFFFFF', fontSize: 44, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
                           {data.totalAreaDisplay}
                         </span>
                       </div>
@@ -725,8 +725,8 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                 ) : null}
               </div>
 
-              {/* Fila del Precio Prominente */}
-              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '20px' }}>
+              {/* Fila del Precio Prominente + Zona libre inferior para Sticker Enlace */}
+              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '115px' }}>
                 <span
                   style={{
                     color: corporateOrange,
@@ -741,81 +741,15 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                 </span>
               </div>
 
-              {/* Zona CTA Orientativa */}
+              {/* Línea naranja de soporte debajo del espacio reservado para el sticker Enlace de Instagram */}
               <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
                   width: '100%',
-                  backgroundColor: 'rgba(11, 13, 16, 0.8)',
-                  border: '1.5px solid #F26B2E',
-                  borderRadius: '16px',
-                  padding: '18px 24px',
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.55)',
+                  height: '4px',
+                  backgroundColor: corporateOrange,
+                  borderRadius: '2px',
                 }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <svg width="38" height="38" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.884 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.456 5.711 1.457h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 00-3.48-8.413z"
-                      fill="#25D366"
-                    />
-                  </svg>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span
-                      style={{
-                        color: '#FFFFFF',
-                        fontSize: 24,
-                        fontWeight: 700,
-                        letterSpacing: '1.5px',
-                        textTransform: 'uppercase',
-                        fontFamily: '"Montserrat", sans-serif',
-                      }}
-                    >
-                      CONSULTÁ POR WHATSAPP
-                    </span>
-                    <span
-                      style={{
-                        color: '#CBD5E1',
-                        fontSize: 18,
-                        fontWeight: 400,
-                        letterSpacing: '0.5px',
-                        fontFamily: '"Montserrat", sans-serif',
-                        marginTop: '2px',
-                      }}
-                    >
-                      Tocá el sticker enlace o escribinos
-                    </span>
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '46px',
-                    height: '46px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(242, 107, 46, 0.25)',
-                  }}
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke={corporateOrange}
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
-                </div>
-              </div>
+              />
             </div>
           </div>
         ),
