@@ -6,7 +6,37 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
 import { isSocialStudioAuthorized } from '@/utils/socialStudioAuth';
 import connectDB from '@/config/database';
+import SocialStudioUsage from '@/models/SocialStudioUsage';
 import OpenAI from 'openai';
+
+const MONTHLY_CREDIT_LIMIT = 50;
+
+function getCurrentMonthKey() {
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/Argentina/Buenos_Aires',
+      year: 'numeric',
+      month: '2-digit',
+    }).formatToParts(new Date());
+    const year = parts.find((p) => p.type === 'year')?.value;
+    const month = parts.find((p) => p.type === 'month')?.value;
+    if (year && month) return `${year}-${month}`;
+  } catch {}
+  return new Date().toISOString().slice(0, 7);
+}
+
+function formatCredits(doc, monthKey) {
+  const limit = Number(doc?.limit) > 0 ? Number(doc.limit) : MONTHLY_CREDIT_LIMIT;
+  const used = Math.max(0, Number(doc?.used) || 0);
+  const remaining = Math.max(0, limit - used);
+  return {
+    month: doc?.month || monthKey,
+    limit,
+    used,
+    remaining,
+    exceeded: used >= limit,
+  };
+}
 
 function buildRetouchPrompt(meta) {
   const W = Number(meta.width) || 1080;
@@ -85,6 +115,32 @@ function calculateConsumption(aiResponse, promptText, startTime) {
     costUSD: totalCostUSD,
     costFormatted,
   };
+}
+
+export async function GET() {
+  try {
+    await connectDB();
+    const session = await getServerSession(authOptions);
+    if (!isSocialStudioAuthorized(session)) {
+      return NextResponse.json(
+        { error: 'Acceso no autorizado: requiere rol superadmin o administrador autorizado' },
+        { status: 401 }
+      );
+    }
+
+    const monthKey = getCurrentMonthKey();
+    const doc = await SocialStudioUsage.findOne({ month: monthKey }).lean();
+    return NextResponse.json(
+      { credits: formatCredits(doc, monthKey) },
+      { headers: { 'Cache-Control': 'no-store' } }
+    );
+  } catch (error) {
+    console.error('[SocialStudio-Retouch] Error consultando créditos:', error);
+    return NextResponse.json(
+      { error: 'Error al consultar créditos mensuales' },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request) {
@@ -187,14 +243,30 @@ export async function POST(request) {
 
     const metrics = calculateConsumption(aiResponse, combinedPrompt, startTime);
 
+    const monthKey = getCurrentMonthKey();
+    const usageDoc = await SocialStudioUsage.findOneAndUpdate(
+      { month: monthKey },
+      {
+        $inc: { used: 1 },
+        $set: {
+          lastUsedAt: new Date(),
+          lastUserEmail: session?.user?.email || null,
+        },
+        $setOnInsert: { limit: MONTHLY_CREDIT_LIMIT },
+      },
+      { new: true, upsert: true }
+    ).lean();
+
+    const credits = formatCredits(usageDoc, monthKey);
+
     console.log(
-      `[SocialStudio-Retouch] ✅ Éxito en ${metrics.durationSec}s | Tokens: ${metrics.tokens.total} (Input: ${metrics.tokens.input}, Output: ${metrics.tokens.output}) | Costo: ${metrics.costFormatted} | Pieza: "${meta.pieceName || meta.pieceIndex}"`
+      `[SocialStudio-Retouch] ✅ Éxito en ${metrics.durationSec}s | Tokens: ${metrics.tokens.total} (Input: ${metrics.tokens.input}, Output: ${metrics.tokens.output}) | Costo: ${metrics.costFormatted} | Créditos: ${credits.used}/${credits.limit} (${credits.month}) | Pieza: "${meta.pieceName || meta.pieceIndex}"`
     );
 
     return NextResponse.json({
       imageDataUrl: dataUrl,
       image_base64: base64Data,
-      metrics,
+      credits,
     });
   } catch (error) {
     console.error('[SocialStudio-Retouch] Error en procesamiento:', error);
