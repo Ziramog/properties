@@ -324,13 +324,12 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
     }
 
     const data = extractFeedData(property);
+    const titleFontSize = data.title.length > 48 ? 44 : data.title.length > 28 ? 52 : 60;
 
     // ========================================================
     // CASO 1: IMAGEN INICIAL (index === 0) — Portada Editorial Feed
     // ========================================================
     if (index === 0) {
-      const titleFontSize = data.title.length > 48 ? 44 : data.title.length > 28 ? 52 : 60;
-
       return await renderImage(
         (
           <div
@@ -705,39 +704,39 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             />
           </div>
 
-          {/* Degradado superior progresivo (34% = 459px, 0% -> 100% del contenedor; cubre el isologo ubicado en la zona segura central y sobrevive a un recorte 1:1) */}
+          {/* Degradado superior progresivo (28% = 378px, unificado con portada para proteger el isologo en top 64px) */}
           <div
             style={{
               position: 'absolute',
               top: 0,
               left: 0,
               width: '100%',
-              height: '34%',
+              height: '28%',
               backgroundImage:
-                'linear-gradient(to bottom, rgba(11, 13, 16, 0.70) 0%, rgba(11, 13, 16, 0.62) 30%, rgba(11, 13, 16, 0.38) 55%, rgba(11, 13, 16, 0.12) 80%, rgba(11, 13, 16, 0) 100%)',
+                'linear-gradient(to bottom, rgba(11, 13, 16, 0.78) 0%, rgba(11, 13, 16, 0.45) 45%, rgba(11, 13, 16, 0.12) 78%, rgba(11, 13, 16, 0) 100%)',
               display: 'flex',
             }}
           />
 
-          {/* Degradado inferior progresivo (34% = 459px, 0% -> 100% del contenedor; cubre título y ubicación ubicados en la zona segura central) */}
+          {/* Degradado inferior progresivo (38% = 513px, 0% -> 100% del contenedor; protege título y subtítulo en escala portada) */}
           <div
             style={{
               position: 'absolute',
               bottom: 0,
               left: 0,
               width: '100%',
-              height: '34%',
+              height: '38%',
               backgroundImage:
-                'linear-gradient(to top, rgba(11, 13, 16, 0.78) 0%, rgba(11, 13, 16, 0.68) 30%, rgba(11, 13, 16, 0.40) 55%, rgba(11, 13, 16, 0.12) 80%, rgba(11, 13, 16, 0) 100%)',
+                'linear-gradient(to top, rgba(11, 13, 16, 0.82) 0%, rgba(11, 13, 16, 0.72) 32%, rgba(11, 13, 16, 0.48) 58%, rgba(11, 13, 16, 0.16) 82%, rgba(11, 13, 16, 0) 100%)',
               display: 'flex',
             }}
           />
 
-          {/* Top Center: SOLO Isologo Blanco (Safe Zone central: top 145px; se mantiene visible aunque Instagram recorte la lámina a 1:1, que quita 135px por lado) */}
+          {/* Top Center: SOLO Isologo Blanco (top 64px unificado en altura y centrado con la primera imagen) */}
           <div
             style={{
               position: 'absolute',
-              top: 145,
+              top: 64,
               left: 0,
               width: '100%',
               display: 'flex',
@@ -756,7 +755,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             />
           </div>
 
-          {/* Bottom Center: SOLO Título y Ubicación de la Propiedad (Safe Zone central: padding-bottom 145px; visible aunque Instagram recorte a 1:1) */}
+          {/* Bottom Center: SOLO Título y Ubicación de la Propiedad (misma escala tipográfica que portada; padding-bottom 145px) */}
           <div
             style={{
               position: 'absolute',
@@ -773,12 +772,12 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             <span
               style={{
                 color: '#FFFFFF',
-                fontSize: 34,
+                fontSize: titleFontSize,
                 fontFamily: '"PT Serif", serif',
                 fontWeight: 700,
                 textAlign: 'center',
-                textShadow: '0 2px 14px rgba(0,0,0,0.95)',
-                lineHeight: 1.2,
+                textShadow: '0 3px 14px rgba(0,0,0,0.9)',
+                lineHeight: 1.14,
               }}
             >
               {data.title}
@@ -786,12 +785,13 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             {data.locationFull && (
               <span
                 style={{
-                  color: '#CBD5E1',
-                  fontSize: 20,
+                  color: '#F1F5F9',
+                  fontSize: 30,
                   fontFamily: '"Montserrat", sans-serif',
                   fontWeight: 500,
-                  marginTop: '8px',
-                  textShadow: '0 2px 10px rgba(0,0,0,0.9)',
+                  lineHeight: 1.25,
+                  marginTop: '12px',
+                  textShadow: '0 2px 8px rgba(0,0,0,0.85)',
                   textAlign: 'center',
                 }}
               >
