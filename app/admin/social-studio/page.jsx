@@ -25,8 +25,8 @@ export default async function SocialStudioPage() {
   return (
     <div className="fixed inset-0 z-[120] flex flex-col h-screen w-screen bg-[#090b10] overflow-hidden select-none">
       {/* Top helper header */}
-      <header className="h-[36px] bg-[#0b0e14] border-b border-[#232836] px-3 flex items-center justify-between z-30 shrink-0">
-        <div className="flex items-center gap-2.5">
+      <header className="h-[38px] bg-[#0b0e14] border-b border-[#232836] px-3 grid grid-cols-[1fr_auto_1fr] items-center z-30 shrink-0">
+        <div className="justify-self-start flex items-center gap-2.5">
           <Link
             href="/admin"
             className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-[#161b26] hover:bg-[#1f2636] border border-[#2a3142] text-[#cbd5e1] hover:text-white text-xs font-medium transition-colors"
@@ -42,7 +42,15 @@ export default async function SocialStudioPage() {
           </span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="justify-self-center flex items-center">
+          <img
+            src="/images/ISOTIPO%20R&R-White.png"
+            alt="Roggero & Roma"
+            className="h-[22px] w-auto object-contain opacity-95"
+          />
+        </div>
+
+        <div className="justify-self-end flex items-center gap-3">
           <a
             href="/admin/social-studio/embed"
             target="_blank"
@@ -61,7 +69,7 @@ export default async function SocialStudioPage() {
       </header>
 
       {/* Editor iframe */}
-      <div className="flex-1 w-full h-[calc(100vh-36px)] relative bg-[#090b10]">
+      <div className="flex-1 w-full h-[calc(100vh-38px)] relative bg-[#090b10]">
         <iframe
           src="/admin/social-studio/embed"
           title="Roggero & Roma Social Studio 2.9"
