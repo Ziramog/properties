@@ -38,7 +38,7 @@ async function renderImage(jsx, options) {
   const imgResponse = new ImageResponse(jsx, options);
   const buffer = await imgResponse.arrayBuffer();
   return new Response(buffer, {
-    headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=3600' },
+    headers: { 'Content-Type': 'image/png', 'Cache-Control': 'no-store' },
   });
 }
 
@@ -718,14 +718,14 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             }}
           />
 
-          {/* Degradado inferior progresivo (38% = 513px, 0% -> 100% del contenedor; protege título y subtítulo en escala portada) */}
+          {/* Degradado inferior progresivo (42% = 567px, 0% -> 100% del contenedor; protege título y subtítulo anclados a la altura de la portada) */}
           <div
             style={{
               position: 'absolute',
               bottom: 0,
               left: 0,
               width: '100%',
-              height: '38%',
+              height: '42%',
               backgroundImage:
                 'linear-gradient(to top, rgba(11, 13, 16, 0.82) 0%, rgba(11, 13, 16, 0.72) 32%, rgba(11, 13, 16, 0.48) 58%, rgba(11, 13, 16, 0.16) 82%, rgba(11, 13, 16, 0) 100%)',
               display: 'flex',
@@ -755,7 +755,8 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             />
           </div>
 
-          {/* Bottom Center: SOLO Título y Ubicación de la Propiedad (misma escala tipográfica que portada; padding-bottom 145px) */}
+          {/* Bottom Center: SOLO Título y Ubicación de la Propiedad. Misma escala tipográfica que la portada y anclado a la MISMA altura:
+              la portada deja bajo la ubicación ~249px (separador 1+16+18, íconos ~54+18, precio ~80+28, línea 4, margen 30), por eso padding-bottom 250px. */}
           <div
             style={{
               position: 'absolute',
@@ -765,7 +766,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              padding: '0 55px 145px 55px',
+              padding: '0 55px 250px 55px',
               zIndex: 20,
             }}
           >

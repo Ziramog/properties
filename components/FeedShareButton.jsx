@@ -44,8 +44,13 @@ export default function FeedShareButton({ property }) {
         
         const blob = await response.blob();
 
-        // Entregar JPEG sRGB 1080x1350 (liviano y estándar para Instagram); si falla, se usa el PNG original
-        const jpegBlob = await convertBlobToJpeg(blob, 1080, 1350, 0.92);
+        // Entregar JPEG sRGB 1080x1350 (liviano y estándar para Instagram). Reintento único ante fallos de memoria
+        // en móviles para no mezclar .jpg y .png dentro del mismo lote; si vuelve a fallar, se usa el PNG original.
+        let jpegBlob = await convertBlobToJpeg(blob, 1080, 1350, 0.92);
+        if (!jpegBlob) {
+          await new Promise((r) => setTimeout(r, 150));
+          jpegBlob = await convertBlobToJpeg(blob, 1080, 1350, 0.92);
+        }
         const file = jpegBlob
           ? new File([jpegBlob], `carrusel-${i+1}.jpg`, { type: 'image/jpeg' })
           : new File([blob], `carrusel-${i+1}.png`, { type: 'image/png' });
@@ -60,7 +65,7 @@ export default function FeedShareButton({ property }) {
       
       setFilesToShare(generatedFiles);
       setStatus('ready');
-      toast.success('¡Carrusel 4:5 listo! En Instagram usá el modo Vertical (< >) en la 1ª foto.');
+      toast.success('¡Carrusel 4:5 listo! En Instagram tocá Vertical (< >) en CADA lámina: las 2–7 pueden abrir en cuadrado.', { autoClose: 8000 });
     } catch (error) {
       console.error(error);
       toast.error('Hubo un error al preparar el carrusel.');
