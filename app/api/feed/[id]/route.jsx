@@ -441,11 +441,11 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               </div>
             </div>
 
-            {/* Etiquetas (Badges) — Ajustadas al margen superior 4:5 */}
+            {/* Etiquetas (Badges) — top 282px: ~60px de aire respecto del bloque del logotipo (que termina cerca de y=222) */}
             <div
               style={{
                 position: 'absolute',
-                top: 232,
+                top: 282,
                 left: 55,
                 display: 'flex',
                 gap: '10px',
@@ -718,14 +718,14 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             }}
           />
 
-          {/* Degradado inferior progresivo (42% = 567px, 0% -> 100% del contenedor; protege título y subtítulo anclados a la altura de la portada) */}
+          {/* Degradado inferior progresivo (36% = 486px, 0% -> 100% del contenedor; protege título y dirección pegados al borde inferior) */}
           <div
             style={{
               position: 'absolute',
               bottom: 0,
               left: 0,
               width: '100%',
-              height: '42%',
+              height: '36%',
               backgroundImage:
                 'linear-gradient(to top, rgba(11, 13, 16, 0.82) 0%, rgba(11, 13, 16, 0.72) 32%, rgba(11, 13, 16, 0.48) 58%, rgba(11, 13, 16, 0.16) 82%, rgba(11, 13, 16, 0) 100%)',
               display: 'flex',
@@ -755,8 +755,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             />
           </div>
 
-          {/* Bottom Center: SOLO Título y Ubicación de la Propiedad. Misma escala tipográfica que la portada y anclado a la MISMA altura:
-              la portada deja bajo la ubicación ~249px (separador 1+16+18, íconos ~54+18, precio ~80+28, línea 4, margen 30), por eso padding-bottom 250px. */}
+          {/* Bottom Left: SOLO Título y Dirección de la Propiedad, alineados a la izquierda (mismo margen de 55px y pin que la portada) y pegados al borde inferior */}
           <div
             style={{
               position: 'absolute',
@@ -765,8 +764,8 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               width: '100%',
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',
-              padding: '0 55px 250px 55px',
+              alignItems: 'flex-start',
+              padding: '0 55px 60px 55px',
               zIndex: 20,
             }}
           >
@@ -776,7 +775,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 fontSize: titleFontSize,
                 fontFamily: '"PT Serif", serif',
                 fontWeight: 700,
-                textAlign: 'center',
+                textAlign: 'left',
                 textShadow: '0 3px 14px rgba(0,0,0,0.9)',
                 lineHeight: 1.14,
               }}
@@ -784,20 +783,29 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               {data.title}
             </span>
             {data.locationFull && (
-              <span
-                style={{
-                  color: '#F1F5F9',
-                  fontSize: 30,
-                  fontFamily: '"Montserrat", sans-serif',
-                  fontWeight: 500,
-                  lineHeight: 1.25,
-                  marginTop: '12px',
-                  textShadow: '0 2px 8px rgba(0,0,0,0.85)',
-                  textAlign: 'center',
-                }}
-              >
-                {data.locationFull}
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
+                <svg width="28" height="32" viewBox="4.5 1.5 15 21" fill="none" style={{ flexShrink: 0 }}>
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C10.6193 11.5 9.5 10.3807 9.5 9C9.5 7.61929 10.6193 6.5 12 6.5C13.3807 6.5 14.5 7.61929 14.5 9C14.5 10.3807 13.3807 11.5 12 11.5Z"
+                    fill={corporateOrange}
+                  />
+                </svg>
+                <span
+                  style={{
+                    color: '#F1F5F9',
+                    fontSize: 30,
+                    fontFamily: '"Montserrat", sans-serif',
+                    fontWeight: 500,
+                    lineHeight: 1.25,
+                    textShadow: '0 2px 8px rgba(0,0,0,0.85)',
+                    textAlign: 'left',
+                  }}
+                >
+                  {data.locationFull}
+                </span>
+              </div>
             )}
           </div>
         </div>
