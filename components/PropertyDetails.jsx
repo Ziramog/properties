@@ -10,6 +10,7 @@ import ScrollReveal from '@/components/shared/ScrollReveal';
 import SectionTitle from '@/components/shared/SectionTitle';
 import { getAreaDisplay } from '@/utils/propertyDisplay';
 import { formatPriceDisplay } from '@/utils/priceUtils';
+import { isSocialStudioAuthorized } from '@/utils/socialStudioAuth';
 
 const ReadMoreText = ({ text, maxChars = 400 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -47,6 +48,20 @@ const PropertyDetails = ({ property }) => {
 
   const rawPrice = property.price;
   const displayPrice = formatPriceDisplay(rawPrice);
+  const canShareInstagram = isSocialStudioAuthorized(session);
+
+  const shareSection = (
+    <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6 mt-auto">
+      <span className="text-[16px] uppercase text-[#999] block text-center mb-4">Compartir</span>
+      <ShareButtons property={property} />
+      {canShareInstagram && (
+        <div className="mt-6">
+          <StoryShareButton property={property} />
+          <FeedShareButton property={property} />
+        </div>
+      )}
+    </div>
+  );
 
   const featureItems = [
     { label: 'Precio', value: displayPrice },
@@ -110,16 +125,7 @@ const PropertyDetails = ({ property }) => {
                   </p>
                 )}
                 {/* Share */}
-                <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6 mt-auto">
-                  <span className="text-[16px] uppercase text-[#999] block text-center mb-4">Compartir</span>
-                  <ShareButtons property={property} />
-                  {session?.user?.role === 'superadmin' && (
-                    <div className="mt-6">
-                      <StoryShareButton property={property} />
-                      <FeedShareButton property={property} />
-                    </div>
-                  )}
-                </div>
+                {shareSection}
               </div>
             </div>
           ) : (
@@ -132,16 +138,7 @@ const PropertyDetails = ({ property }) => {
                   No hay descripción detallada disponible para esta propiedad en este momento.
                 </div>
                 {/* Share */}
-                <div className="share-wrapper border-t border-[#e9e9e9] pt-8 pb-6 mt-auto">
-                  <span className="text-[16px] uppercase text-[#999] block text-center mb-4">Compartir</span>
-                  <ShareButtons property={property} />
-                  {session?.user?.role === 'superadmin' && (
-                    <div className="mt-6">
-                      <StoryShareButton property={property} />
-                      <FeedShareButton property={property} />
-                    </div>
-                  )}
-                </div>
+                {shareSection}
               </div>
             </div>
           )}
