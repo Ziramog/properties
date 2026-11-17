@@ -482,7 +482,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               ))}
             </div>
 
-            {/* Bloque Editorial Inferior (Safe Zone Feed 4:5: padding-bottom 58px sin banda muerta) */}
+            {/* Bloque Editorial Inferior (línea naranja anclada baja a 30px del borde inferior) */}
             <div
               style={{
                 position: 'absolute',
@@ -491,7 +491,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                padding: '0 55px 58px 55px',
+                padding: '0 55px 30px 55px',
                 zIndex: 20,
               }}
             >
@@ -636,7 +636,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               </div>
 
               {/* Fila del Precio Prominente */}
-              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '22px' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '28px' }}>
                 <span
                   style={{
                     color: corporateOrange,

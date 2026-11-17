@@ -588,7 +588,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                padding: '0 65px 110px 65px',
+                padding: '0 65px 60px 65px',
                 zIndex: 20,
               }}
             >
@@ -735,7 +735,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               </div>
 
               {/* Fila del Precio Prominente + Zona libre inferior para Sticker Enlace */}
-              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '150px' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '190px' }}>
                 <span
                   style={{
                     color: corporateOrange,
