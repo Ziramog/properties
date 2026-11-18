@@ -15,7 +15,7 @@ const PropertyGallery = ({ images = [], property }) => {
   const isLand = ['Terreno', 'Campo', 'Gran Inversión'].includes(property?.type);
   const rawPrice = property?.price;
   const { currency: priceCurrency, numericPrice } = parsePrice(rawPrice);
-  const displayPrice = formatPriceDisplay(rawPrice);
+  const displayPrice = formatPriceDisplay(rawPrice, property?.operation);
 
   const operationLabel =
     property?.operation === 'venta' ? 'Venta' :

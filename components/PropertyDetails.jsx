@@ -47,7 +47,7 @@ const PropertyDetails = ({ property }) => {
     property.operation === 'compra' ? 'Compra' : '';
 
   const rawPrice = property.price;
-  const displayPrice = formatPriceDisplay(rawPrice);
+  const displayPrice = formatPriceDisplay(rawPrice, property.operation);
   const canShareInstagram = isSocialStudioAuthorized(session);
 
   const shareSection = (

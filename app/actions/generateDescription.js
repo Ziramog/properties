@@ -14,6 +14,7 @@ export async function generateDescription(formData) {
     }
 
     const type = formData.get('type') || 'Propiedad';
+    const operation = formData.get('operation') || 'venta';
     const beds = formData.get('beds');
     const baths = formData.get('baths');
     const city = formData.get('location.city');
@@ -24,7 +25,7 @@ export async function generateDescription(formData) {
     const lat = formData.get('coordinates.lat');
     const lng = formData.get('coordinates.lng');
     
-    let propertyInfo = `Tipo: ${type}`;
+    let propertyInfo = `Tipo: ${type}\nOperación: ${operation === 'alquiler' ? 'Alquiler' : 'Venta'}`;
     if (street) propertyInfo += `\nCalle: ${street}`;
     if (city) propertyInfo += `\nCiudad: ${city}`;
     if (state) propertyInfo += `\nProvincia: ${state}`;

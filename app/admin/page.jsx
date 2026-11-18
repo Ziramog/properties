@@ -26,7 +26,8 @@ import {
   CheckCircle,
   FileText,
   MessageCircle,
-  Palette
+  Palette,
+  KeyRound
 } from 'lucide-react';
 import MotionCard from '@/components/admin/MotionCard';
 import { isSocialStudioAuthorized } from '@/utils/socialStudioAuth';
@@ -40,6 +41,7 @@ const AdminPage = async () => {
   const total = await Property.countDocuments({});
   const activas = await Property.countDocuments({ is_published: { $ne: false } });
   const featured = await Property.countDocuments({ is_featured: true });
+  const alquileres = await Property.countDocuments({ operation: 'alquiler' });
   const quotations = await Quotation.countDocuments({});
 
   const types = ['Casa', 'Departamento', 'Dúplex', 'Campo', 'Terreno', 'Inmueble Comercial'];
@@ -78,13 +80,14 @@ const AdminPage = async () => {
         Panel de Control
       </h1>
 
-      {/* Global Stats: 3 cards */}
+      {/* Global Stats: 4 cards */}
       <div className="mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { value: total, label: 'Total Propiedades', color: '#F26B2E', href: '/admin/properties', Icon: Layers },
             { value: activas, label: 'Activas', color: '#25D366', href: '/admin/properties?status=active', Icon: CheckCircle },
             { value: featured, label: 'Destacadas', color: '#652660', href: '/admin/properties?is_featured=true', Icon: Star },
+            { value: alquileres, label: 'Alquileres', color: '#3B82F6', href: '/admin/properties?operation=alquiler', Icon: KeyRound },
           ].map((stat, index) => (
             <MotionCard key={stat.label} delay={0.1 + index * 0.1} color={stat.color}>
               <Link href={stat.href} className="block h-full bg-[#161616] border border-[#222] rounded-sm p-5 md:p-6 hover:border-[#333] transition-colors relative group overflow-hidden flex flex-col justify-between">

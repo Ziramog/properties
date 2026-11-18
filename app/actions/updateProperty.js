@@ -12,6 +12,15 @@ const cleanNumber = (val) => {
   return isNaN(num) ? undefined : num;
 };
 
+function normalizePriceValue(rawPrice, currency) {
+  const trimmed = String(rawPrice || '').trim();
+  if (!trimmed || /^consultar$/i.test(trimmed)) return 'Consultar';
+  const cleanedDigits = trimmed.replace(/[.,]00$/, '').replace(/[^0-9]/g, '');
+  if (!cleanedDigits) return 'Consultar';
+  const safeCurrency = currency === 'ARS' ? 'ARS' : 'USD';
+  return `${safeCurrency} ${cleanedDigits}`;
+}
+
 async function updateProperty(prevState, formData) {
   const propertyId = formData.get('propertyId');
 
@@ -108,7 +117,7 @@ async function updateProperty(prevState, formData) {
       type: formData.get('type'),
       name: formData.get('name'),
       description: formData.get('description'),
-      price: rawPrice === 'Consultar' || !rawPrice ? 'Consultar' : `${formData.get('price_currency') || 'USD'} ${rawPrice}`,
+      price: normalizePriceValue(rawPrice, formData.get('price_currency')),
       location: {
         street: formData.get('location.street'),
         city: formData.get('location.city'),

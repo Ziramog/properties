@@ -209,7 +209,7 @@ function extractFeedData(property) {
     badges.push({ text: condition.toUpperCase(), isPrimary: false });
   }
 
-  const priceDisplay = formatPriceDisplay(property.price);
+  const priceDisplay = formatPriceDisplay(property.price, property.operation);
 
   const locParts = [
     property.location?.street,

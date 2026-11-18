@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation';
 import deleteProperty from '@/app/actions/deleteProperty';
 import { toast } from 'react-toastify';
 import { isGranInversion } from '@/utils/filterProperties';
+import { formatPriceDisplay } from '@/utils/priceUtils';
 
-const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = '', defaultGranInversion = false, defaultFeatured = '', defaultPublished = '' }) => {
+const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = '', defaultOperation = '', defaultGranInversion = false, defaultFeatured = '', defaultPublished = '' }) => {
   const router = useRouter();
   const [items, setItems] = useState(properties);
   const [search, setSearch] = useState('');
   const [filterType, setFilterType] = useState(defaultType);
-  const [filterOp, setFilterOp] = useState('');
+  const [filterOp, setFilterOp] = useState(defaultOperation);
   const [filterFeatured, setFilterFeatured] = useState(defaultFeatured);
   const [filterStatus, setFilterStatus] = useState('');
   const [filterGranInversion, setFilterGranInversion] = useState(defaultGranInversion ? 'yes' : '');
@@ -233,7 +234,7 @@ const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = 
                   </span>
                 </td>
                 <td className="px-2 md:px-4 py-3">
-                  <span className="text-[13px] font-semibold text-white">{prop.price || 'Consultar'}</span>
+                  <span className="text-[13px] font-semibold text-white whitespace-nowrap">{formatPriceDisplay(prop.price, prop.operation)}</span>
                 </td>
                 <td className="px-2 md:px-4 py-3">
                   <span className="text-[13px] text-[#bbb]">{(prop.images || []).length}</span>
@@ -328,7 +329,7 @@ const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = 
             
             {/* Price */}
             <div className="text-[14px] font-semibold text-white">
-              {prop.price || 'Consultar'}
+              {formatPriceDisplay(prop.price, prop.operation)}
             </div>
 
             {/* Footer: Actions */}

@@ -66,10 +66,19 @@ const FeaturedPropertyCard = ({ property }) => {
           <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(180deg, transparent 80%, var(--color-brand))' }} />
 
           {/* Status badge — top left */}
-          {badge && (
-            <span className="absolute top-3 left-3 z-10 bg-[var(--color-brand)] text-white text-[11px] font-bold px-2.5 py-1 rounded uppercase tracking-wider shadow-md">
-              {badge.label}
-            </span>
+          {(badge || property.operation === 'alquiler') && (
+            <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5">
+              {badge && (
+                <span className="bg-[var(--color-brand)] text-white text-[11px] font-bold px-2.5 py-1 rounded uppercase tracking-wider shadow-md">
+                  {badge.label}
+                </span>
+              )}
+              {property.operation === 'alquiler' && (
+                <span className="bg-[#0F172A]/85 backdrop-blur-sm text-white text-[11px] font-bold px-2.5 py-1 rounded uppercase tracking-wider shadow-md">
+                  Alquiler
+                </span>
+              )}
+            </div>
           )}
 
           {/* Features overlay — bottom */}
@@ -101,7 +110,7 @@ const FeaturedPropertyCard = ({ property }) => {
 
             {price && (
               <span
-                className="ml-auto self-end text-white text-[32px] font-bold leading-none group-hover:scale-[1.1] transition-transform duration-300"
+                className="ml-auto self-end text-white text-[22px] sm:text-[26px] lg:text-[30px] font-bold leading-none whitespace-nowrap group-hover:scale-[1.05] transition-transform duration-300"
                 style={{ fontFamily: 'var(--font-heading)', transformOrigin: 'right bottom' }}
               >
                 {price}

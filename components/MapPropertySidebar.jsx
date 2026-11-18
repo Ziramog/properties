@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
 import { getPropertyImage, getAreaDisplay, getStatusBadge } from '@/utils/propertyDisplay';
+import { formatPriceDisplay } from '@/utils/priceUtils';
 
 export default function MapPropertySidebar({ property, onClose }) {
   const router = useRouter();
@@ -68,7 +69,7 @@ export default function MapPropertySidebar({ property, onClose }) {
 
   // Feature grid data
   const features = [
-    { value: property.price || 'Consultar', label: 'Precio' },
+    { value: formatPriceDisplay(property.price, property.operation), label: 'Precio' },
     { value: area || '-', label: 'Superficie' },
     { value: property.type ? property.type.charAt(0).toUpperCase() + property.type.slice(1) : '-', label: 'Tipo' },
     { value: property.beds != null ? property.beds : '-', label: 'Dormitorios' },

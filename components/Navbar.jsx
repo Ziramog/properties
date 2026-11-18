@@ -127,6 +127,7 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
                       { label: 'Terrenos', query: 'type=Terreno' },
                       { label: 'Comerciales', query: 'type=Inmueble+Comercial' },
                       { label: 'Campos', query: 'type=Campo' },
+                      { label: 'Alquileres', query: 'operation=alquiler' },
                       { label: 'Todas las propiedades', query: '' },
                     ].map(item => (
                       <li key={item.label} className="border-b border-[#252525] last:border-b-0">
@@ -268,7 +269,7 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
                   <path d="M9 18l6-6-6-6"/>
                 </svg>
               </button>
-              <div className={`overflow-hidden transition-all duration-300 ${mobileSubOpen ? 'max-h-[360px] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
+              <div className={`overflow-hidden transition-all duration-300 ${mobileSubOpen ? 'max-h-[420px] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
                 {[
                   { href: '/properties?type=Casa', label: 'Casas' },
                   { href: '/properties?type=Departamento', label: 'Deptos' },
@@ -276,6 +277,7 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
                   { href: '/properties?type=Terreno', label: 'Terrenos' },
                   { href: '/properties?type=Inmueble+Comercial', label: 'Comerciales' },
                   { href: '/properties?type=Campo', label: 'Campos' },
+                  { href: '/properties?operation=alquiler', label: 'Alquileres' },
                   { href: '/properties', label: 'Todas las propiedades' },
                 ].map(l => (
                     <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] py-2 pl-4 hover:text-white transition-colors" style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400 }} onClick={() => setIsMobileMenuOpen(false)}>

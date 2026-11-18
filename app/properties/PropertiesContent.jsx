@@ -104,8 +104,8 @@ export default async function PropertiesContent({ searchParams, subtitle }) {
   const properties = await Property.find(filter).sort(sortObj);
 
   const parsePrice = (priceStr) => {
-    if (!priceStr) return null;
-    const cleaned = priceStr.replace(/[^0-9]/g, '');
+    if (!priceStr || /consultar/i.test(priceStr)) return null;
+    const cleaned = String(priceStr).replace(/[.,]00$/, '').replace(/[^0-9]/g, '');
     if (!cleaned) return null;
     return parseInt(cleaned, 10);
   };
@@ -140,7 +140,7 @@ export default async function PropertiesContent({ searchParams, subtitle }) {
     filteredProperties.sort((a, b) => (parsePrice(b.price) || 0) - (parsePrice(a.price) || 0));
   }
 
-  const isFiltered = !!(type && type !== 'Todos') || !!(term && term !== 'Ciudad');
+  const isFiltered = !!(type && type !== 'Todos') || !!(term && term !== 'Ciudad') || !!(operation && operation !== 'Todos');
 
   const parsedPage = parseInt(page, 10) || 1;
   const parsedPageSize = parseInt(pageSize, 10) || 9;

@@ -33,6 +33,7 @@ const AdminPropertiesPage = async ({ searchParams }) => {
         properties={serialized} 
         customLabels={customLabels}
         defaultType={searchParams?.type || ''} 
+        defaultOperation={searchParams?.operation || ''}
         defaultGranInversion={searchParams?.granInversion === 'true'} 
         defaultFeatured={searchParams?.is_featured === 'true' ? 'yes' : ''}
         defaultPublished={searchParams?.status === 'active' ? 'yes' : ''}

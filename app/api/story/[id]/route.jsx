@@ -56,7 +56,7 @@ function extractStoryData(property) {
     ? (property.operation === 'venta' ? 'VENTA' : property.operation.toUpperCase())
     : 'DISPONIBLE';
 
-  const priceDisplay = formatPriceDisplay(property.price);
+  const priceDisplay = formatPriceDisplay(property.price, property.operation);
 
   const isBuiltType =
     ['Casa', 'Departamento', 'Dpto', 'Duplex', 'Dúplex', 'Chalet', 'Villa', 'Local', 'Oficina', 'Galpón', 'Galpon', 'Cochera', 'Edificio', 'Hotel'].includes(property.type) ||
@@ -292,7 +292,7 @@ function extractStoryDataV2_3(property) {
   const baths = !isLand && property.baths != null && Number(property.baths) > 0 ? Number(property.baths) : null;
 
   const badges = extractPublicationBadges(property);
-  const priceDisplay = formatPriceDisplay(property.price);
+  const priceDisplay = formatPriceDisplay(property.price, property.operation);
   const { title } = parseStoryTitleAndCondition(property);
 
   const street = property.location?.street?.trim();

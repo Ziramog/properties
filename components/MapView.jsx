@@ -4,7 +4,7 @@ import Map, { Marker, Popup, useMap } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { getPropertyImage } from '@/utils/propertyDisplay';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
-import { parsePrice } from '@/utils/priceUtils';
+import { parsePrice, formatPriceDisplay } from '@/utils/priceUtils';
 
 // ── Known city coordinates (geocoding fallback) ──
 const knownCities = {
@@ -84,10 +84,13 @@ function formatPrice(property) {
   if (!priceStr) return '?';
   const { currency, numericPrice } = parsePrice(priceStr);
   if (!numericPrice) return '?';
-  const prefix = currency === 'USD' ? 'USD $' : 'ARS $';
+  const prefix = currency === 'USD' ? 'USD $' : '$';
   
   if (numericPrice >= 1000000) return `${prefix}${(numericPrice / 1000000).toFixed(1)}M`;
-  if (numericPrice >= 1000) return `${prefix}${Math.round(numericPrice / 1000)}k`;
+  if (numericPrice >= 1000) {
+    const k = numericPrice / 1000;
+    return `${prefix}${k < 10 && k % 1 !== 0 ? k.toFixed(1) : Math.round(k)}k`;
+  }
   return `${prefix}${numericPrice}`;
 }
 
@@ -168,7 +171,7 @@ const MapView = forwardRef(({ properties = [], onMarkerClick, selectedId }, ref)
       <p className="text-xs text-gray-500 mt-0.5">
         {prop.location?.city}, {prop.location?.state}
       </p>
-      <p className="font-bold mt-1 text-base" style={{ color: '#C93E15' }}>{prop.price || 'Consultar'}</p>
+      <p className="font-bold mt-1 text-base" style={{ color: '#C93E15' }}>{formatPriceDisplay(prop.price, prop.operation)}</p>
       <a
         href={generateWhatsAppLink({ property: prop })}
         target="_blank"

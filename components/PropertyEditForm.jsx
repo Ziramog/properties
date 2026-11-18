@@ -202,6 +202,11 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
   };
 
   const [operation, setOperation] = useState(property.operation || 'venta');
+  const [currency, setCurrency] = useState(() => {
+    const p = String(property.price || '').trim().toUpperCase();
+    if (p.startsWith('ARS') || p.startsWith('$')) return 'ARS';
+    return 'USD';
+  });
   const [type, setType] = useState(property.type === 'Duplex' ? 'Dúplex' : (property.type || ''));
   const isLandOrCommercial = ['Terreno', 'Campo', 'Gran Inversión'].includes(type);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -290,7 +295,20 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
       {/* Operacion */}
       <div className='mb-4'>
         <label htmlFor='operation' className={labelClass}>Operación</label>
-        <select id='operation' name='operation' className={inputClass} value={operation} onChange={(e) => setOperation(e.target.value)}>
+        <select
+          id='operation'
+          name='operation'
+          className={inputClass}
+          value={operation}
+          onChange={(e) => {
+            const nextOp = e.target.value;
+            setOperation(nextOp);
+            const currentVal = formRef.current?.elements?.price?.value?.trim() || '';
+            if (!currentVal || /^consultar$/i.test(currentVal)) {
+              setCurrency(nextOp === 'alquiler' ? 'ARS' : 'USD');
+            }
+          }}
+        >
           <option value='venta'>Venta</option>
           <option value='alquiler'>Alquiler</option>
         </select>
@@ -401,16 +419,31 @@ const PropertyEditForm = ({ property, customLabels = [] }) => {
 
       {/* Precio */}
       <div className='mb-6'>
-        <label className={labelClass}>Precio</label>
+        <label className={labelClass}>
+          {operation === 'alquiler' ? 'Precio de Alquiler Mensual' : 'Precio de Venta'}
+        </label>
         <div className='flex gap-2 items-start'>
-          <select name='price_currency' className={`${inputClass} !w-[110px] flex-shrink-0`} defaultValue={(() => { const p = property.price || ''; if (p.startsWith('ARS') || p.startsWith('$ ')) return 'ARS'; return 'USD'; })()}>
+          <select name='price_currency' value={currency} onChange={(e) => setCurrency(e.target.value)} className={`${inputClass} !w-[110px] flex-shrink-0`}>
             <option value='USD'>U$D</option>
-            <option value='ARS'>ARS</option>
+            <option value='ARS'>ARS ($)</option>
           </select>
           <div className='flex-1'>
-            <input type='text' name='price' className={inputClass} placeholder='Ej: 502,000' defaultValue={String(property.price || '').replace(/^[A-Z$]+\s*/i, '')} />
+            <input
+              type='text'
+              name='price'
+              className={inputClass}
+              placeholder={operation === 'alquiler' ? 'Ej: 450000' : 'Ej: 150000'}
+              defaultValue={(() => {
+                const raw = String(property.price || '').trim();
+                if (!raw) return '';
+                if (/^consultar$/i.test(raw)) return 'Consultar';
+                return raw.replace(/^(USD|U\$D|ARS|\$)\s*/i, '').trim();
+              })()}
+            />
             <p className={helperClass}>
-              Ej: 502000 — Escribí solo números. Usá coma para miles. Escribí "Consultar" si no querés publicar el precio.
+              {operation === 'alquiler'
+                ? 'Ej: 450000 — Escribí el valor mensual (con o sin puntos de miles). Escribí "Consultar" si no querés publicar el precio.'
+                : 'Ej: 150000 — Escribí el valor (con o sin puntos de miles). Escribí "Consultar" si no querés publicar el precio.'}
             </p>
           </div>
         </div>

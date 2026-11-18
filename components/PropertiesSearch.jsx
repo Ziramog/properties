@@ -12,6 +12,11 @@ const TIPO_OPTIONS = [
   { value: 'Campo', label: 'Campo' },
   { value: 'Inmueble Comercial', label: 'Inmueble Comercial' },
 ];
+const OPERATION_OPTIONS = [
+  { value: '', label: 'Todas' },
+  { value: 'venta', label: 'Venta' },
+  { value: 'alquiler', label: 'Alquiler' },
+];
 const PRECIO_RANGES = [
   { value: '', label: '' },
   { value: '0-100000', label: 'Hasta U$S 100,000' },
@@ -20,6 +25,13 @@ const PRECIO_RANGES = [
   { value: '500000-1000000', label: 'U$S 500,000-1,000,000' },
   { value: '1000000-2000000', label: 'U$S 1,000,000-2,000,000' },
   { value: '2000000-0', label: '>U$S 2,000,000' },
+];
+const PRECIO_RANGES_ALQUILER = [
+  { value: '', label: '' },
+  { value: '0-350000', label: 'Hasta $ 350.000' },
+  { value: '350000-600000', label: '$ 350.000 - $ 600.000' },
+  { value: '600000-1000000', label: '$ 600.000 - $ 1.000.000' },
+  { value: '1000000-0', label: '> $ 1.000.000' },
 ];
 const AREA_RANGES = [
   { value: '', label: '' },
@@ -57,7 +69,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     term: currentFilters.term || '',
     address: currentFilters.address || '',
     tipo: currentFilters.tipo || '',
-    operation: currentFilters.operation || 'venta',
+    operation: currentFilters.operation || '',
     area: currentFilters.area || '',
     price: currentFilters.price || '',
     minPrice: currentFilters.minPrice || '',
@@ -70,13 +82,14 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
   });
 
   const [focused, setFocused] = useState({
-    term: false, address: false, tipo: false, area: false, price: false, bedrooms: false, baths: false,
+    term: false, address: false, tipo: false, operation: false, area: false, price: false, bedrooms: false, baths: false,
   });
 
   const labelActive = (field) => {
     if (field === 'term') return focused.term || filters.term !== '';
     if (field === 'address') return focused.address || filters.address !== '';
     if (field === 'tipo') return focused.tipo || filters.tipo !== '';
+    if (field === 'operation') return focused.operation || filters.operation !== '';
     if (field === 'area') return focused.area || filters.area !== '';
     if (field === 'price') return focused.price || filters.price !== '';
     if (field === 'bedrooms') return focused.bedrooms || filters.bedrooms !== '';
@@ -84,24 +97,27 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     return false;
   };
 
-  const precioRanges = PRECIO_RANGES;
+  const precioRanges = filters.operation === 'alquiler' ? PRECIO_RANGES_ALQUILER : PRECIO_RANGES;
 
   const FILTER_CONFIG = [
+    { name: 'operation', label: 'Operación',
+      options: OPERATION_OPTIONS,
+      className: 'flex-1 min-[992px]:w-1/6 xl:w-[11%]' },
     { name: 'tipo', label: 'Tipo',
       options: TIPO_OPTIONS.filter((t) => t.value).map((t) => ({ value: t.value, label: t.label })),
-      className: 'flex-1 min-[992px]:w-1/6 xl:w-[12%]' },
+      className: 'flex-1 min-[992px]:w-1/6 xl:w-[11%]' },
     { name: 'area', label: 'Superficie',
       options: AREA_RANGES.filter((r) => r.value).map((r) => ({ value: r.value, label: r.label })),
-      className: 'flex-1 min-[992px]:w-1/3 xl:w-[11%]' },
+      className: 'flex-1 min-[992px]:w-1/3 xl:w-[10%]' },
     { name: 'price', label: 'Precio',
-      options: PRECIO_RANGES.filter((r) => r.value).map((r) => ({ value: r.value, label: r.label })),
-      className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[14%]' },
+      options: precioRanges.filter((r) => r.value).map((r) => ({ value: r.value, label: r.label })),
+      className: 'w-full min-[651px]:w-1/2 min-[992px]:w-1/3 xl:w-[13%]' },
     { name: 'bedrooms', label: 'Dormitorios',
       options: BEDROOM_OPTS.filter((o) => o).map((o) => ({ value: o, label: o + '+' })),
-      className: 'flex-1 min-[992px]:w-1/3 xl:w-[10%]' },
+      className: 'flex-1 min-[992px]:w-1/3 xl:w-[9%]' },
     { name: 'baths', label: 'Baños',
       options: BATH_OPTS.filter((o) => o).map((o) => ({ value: o, label: o + '+' })),
-      className: 'flex-1 min-[992px]:w-1/3 xl:w-[10%]' },
+      className: 'flex-1 min-[992px]:w-1/3 xl:w-[9%]' },
   ];
 
   // Click outside to close custom dropdowns
@@ -157,7 +173,11 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
   };
 
   const handleSelect = (name, value) => {
-    setFilters((prev) => ({ ...prev, [name]: value }));
+    setFilters((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === 'operation' && prev.operation !== value ? { price: '', minPrice: '', maxPrice: '' } : {}),
+    }));
     setOpenDropdown(null);
     setFocused((p) => ({ ...p, [name]: false }));
   };
@@ -171,7 +191,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!filters.term && !filters.address && !filters.tipo && !filters.price && !filters.area && !filters.bedrooms && !filters.baths && !filters.status) {
+    if (!filters.term && !filters.address && !filters.tipo && !filters.operation && !filters.price && !filters.area && !filters.bedrooms && !filters.baths && (!filters.status || filters.status.length === 0)) {
       alert('Por favor, selecioná al menos un filtro para buscar.');
       return;
     }
@@ -180,7 +200,8 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     const interpreted = interpretSearchTerm(filters.term || '');
     const finalTerm = interpreted.term;
     const finalType = interpreted.type || (filters.tipo && filters.tipo !== 'Todos' ? filters.tipo : null);
-    const finalOp = interpreted.operation || (filters.operation && filters.operation !== 'Todos' ? filters.operation : null);
+    const rawOp = interpreted.operation || (filters.operation && filters.operation !== 'Todos' ? filters.operation : null);
+    const finalOp = rawOp ? rawOp.toLowerCase() : null;
     
     const params = new URLSearchParams();
     if (finalTerm) params.set('term', finalTerm);
@@ -214,8 +235,8 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
 
   const handleReset = () => {
     setFilters({
-      term: '', address: '', tipo: '', operation: 'venta', area: '',
-      price: '', bedrooms: '', baths: '', 'property-type': [], status: [], sort: 'price-desc',
+      term: '', address: '', tipo: '', operation: '', area: '',
+      price: '', minPrice: '', maxPrice: '', bedrooms: '', baths: '', 'property-type': [], status: [], sort: 'price-desc',
     });
     setCitySearch('');
     if (onFilter) {
@@ -276,7 +297,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
           display: 'flex', flexWrap: 'wrap', marginTop: '0', alignItems: 'center',
         }}>
           {/* City / term */}
-          <div className="form-group elatus-autocomplete w-full min-[992px]:w-1/2 xl:w-[20%] border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626] hover:bg-[#0d0d0d] transition-colors duration-200"
+          <div className="form-group elatus-autocomplete w-full min-[992px]:w-1/2 xl:w-[18%] border-r border-[#2a2626] max-[650px]:border-r-0 max-[650px]:border-b max-[650px]:border-[#2a2626] hover:bg-[#0d0d0d] transition-colors duration-200"
             style={getWrapperStyle()}
             onFocus={() => setFocused((p) => ({ ...p, term: true }))}
             onBlur={() => setFocused((p) => ({ ...p, term: false }))}>
@@ -318,7 +339,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
           {FILTER_CONFIG.map((f) => {
             const isActive = labelActive(f.name);
             const isOpen = openDropdown === f.name;
-            const selectedLabel = f.options.find((o) => o.value === filters[f.name])?.label || '';
+            const selectedLabel = filters[f.name] ? (f.options.find((o) => o.value === filters[f.name])?.label || '') : '';
             return (
               <div key={f.name}
                 ref={(el) => { dropdownRefs.current[f.name] = el; }}
@@ -373,10 +394,10 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
                           color: '#fff',
                           borderRadius: '5px',
                           cursor: 'pointer',
-                          background: filters[f.name] === o.value ? 'var(--color-brand)' : 'transparent',
+                          background: filters[f.name] === o.value && filters[f.name] !== '' ? 'var(--color-brand)' : 'transparent',
                         }}
-                        onMouseEnter={(e) => { if (filters[f.name] !== o.value) e.target.style.background = 'var(--color-brand)'; }}
-                        onMouseLeave={(e) => { if (filters[f.name] !== o.value) e.target.style.background = 'transparent'; }}
+                        onMouseEnter={(e) => { if (!(filters[f.name] === o.value && filters[f.name] !== '')) e.target.style.background = 'var(--color-brand)'; }}
+                        onMouseLeave={(e) => { if (!(filters[f.name] === o.value && filters[f.name] !== '')) e.target.style.background = 'transparent'; }}
                       >
                         {o.label}
                       </div>
