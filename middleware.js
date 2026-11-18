@@ -27,7 +27,7 @@ export default withAuth(
       }
     }
 
-    // Social Studio: Superadmin and authorized admin (Franco Roma)
+    // Social Studio: Superadmin and Admin users
     if (path.startsWith('/admin/social-studio')) {
       if (!isSocialStudioAuthorized(token)) {
         console.log('[auth:middleware] Social Studio blocked for unauthorized user:', path, 'role:', token?.role, 'email:', token?.email);
