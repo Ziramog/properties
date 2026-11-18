@@ -423,11 +423,11 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               }}
             />
 
-            {/* ZONA 1: Header Institucional (Top Center con logo maestro completo) */}
+            {/* ZONA 1: Header Institucional (Top Center con separación simétrica de 13 px) */}
             <div
               style={{
                 position: 'absolute',
-                top: 60,
+                top: 58,
                 left: 0,
                 width: '100%',
                 display: 'flex',
@@ -439,21 +439,21 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               {/* Logo maestro blanco oficial (R&R + SILVIA ROGGERO de ROMA) */}
               <img
                 src={assets.brandFullWhiteLogoUrl}
-                width={440}
-                height={163}
+                width={470}
+                height={154}
                 style={{
                   objectFit: 'contain',
                   filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
-                  marginBottom: '10px',
                 }}
               />
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '7px' }}>
                 <div style={{ width: '40px', height: '2px', backgroundColor: corporateOrange }} />
                 <span
                   style={{
                     color: '#FFFFFF',
-                    fontSize: 17,
+                    fontSize: 22,
+                    lineHeight: 1,
                     fontWeight: 700,
                     letterSpacing: '4.5px',
                     fontFamily: '"Lato", sans-serif',
@@ -793,7 +793,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               <img
                 src={assets.brandFullWhiteLogoUrl}
                 width={420}
-                height={155}
+                height={137}
                 style={{
                   objectFit: 'contain',
                   filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
@@ -802,11 +802,12 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               <span
                 style={{
                   color: corporateOrange,
-                  fontSize: 16,
+                  fontSize: 18,
+                  lineHeight: 1,
                   fontWeight: 700,
-                  letterSpacing: '7px',
+                  letterSpacing: '6px',
                   textTransform: 'uppercase',
-                  marginTop: 10,
+                  marginTop: 7,
                   textShadow: '0 2px 8px rgba(0,0,0,0.85)',
                 }}
               >
@@ -1068,7 +1069,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               <img
                 src={assets.brandFullWhiteLogoUrl}
                 width={380}
-                height={141}
+                height={124}
                 style={{
                   objectFit: 'contain',
                   filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
@@ -1077,11 +1078,12 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               <span
                 style={{
                   color: corporateOrange,
-                  fontSize: 13,
+                  fontSize: 16,
+                  lineHeight: 1,
                   fontWeight: 700,
                   letterSpacing: '5px',
                   textTransform: 'uppercase',
-                  marginTop: 8,
+                  marginTop: 6,
                 }}
               >
                 NEGOCIOS INMOBILIARIOS
@@ -1306,7 +1308,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
 
           {/* Top Isotipo Center */}
           <div style={{ position: 'absolute', top: 80, left: 0, width: '100%', display: 'flex', justifyContent: 'center', zIndex: 20 }}>
-            <img src={assets.brandFullWhiteLogoUrl} width={440} height={163} style={{ objectFit: 'contain', filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))' }} />
+            <img src={assets.brandFullWhiteLogoUrl} width={470} height={154} style={{ objectFit: 'contain', filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))' }} />
           </div>
 
           {/* Content - Bottom Aligned */}

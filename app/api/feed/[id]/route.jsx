@@ -273,6 +273,52 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
     const data = extractFeedData(property);
     const titleFontSize = data.title.length > 48 ? 44 : data.title.length > 28 ? 52 : 60;
 
+    // Header institucional unificado en las 7 láminas (separación simétrica de 12 px entre monograma, nombre y bajada)
+    const brandHeader = (
+      <div
+        style={{
+          position: 'absolute',
+          top: 56,
+          left: 0,
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          zIndex: 20,
+        }}
+      >
+        <img
+          src={assets.brandFullWhiteLogoUrl}
+          width={430}
+          height={141}
+          style={{
+            objectFit: 'contain',
+            filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
+          }}
+        />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '7px' }}>
+          <div style={{ width: '36px', height: '2px', backgroundColor: corporateOrange }} />
+          <span
+            style={{
+              color: '#FFFFFF',
+              fontSize: 20,
+              lineHeight: 1,
+              fontWeight: 700,
+              letterSpacing: '4.5px',
+              fontFamily: '"Lato", sans-serif',
+              textTransform: 'uppercase',
+              textAlign: 'center',
+              textShadow: '0 2px 8px rgba(0,0,0,0.9)',
+            }}
+          >
+            NEGOCIOS INMOBILIARIOS
+          </span>
+          <div style={{ width: '36px', height: '2px', backgroundColor: corporateOrange }} />
+        </div>
+      </div>
+    );
+
     // ========================================================
     // CASO 1: IMAGEN INICIAL (index === 0) — Portada Editorial Feed
     // ========================================================
@@ -328,49 +374,8 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               }}
             />
 
-            {/* Header Institucional (Safe Zone Feed 4:5: top 56px, unificado en las 7 láminas con logo maestro completo) */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 56,
-                left: 0,
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                zIndex: 20,
-              }}
-            >
-              <img
-                src={assets.brandFullWhiteLogoUrl}
-                width={400}
-                height={148}
-                style={{
-                  objectFit: 'contain',
-                  filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
-                  marginBottom: '8px',
-                }}
-              />
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <div style={{ width: '38px', height: '2px', backgroundColor: corporateOrange }} />
-                <span
-                  style={{
-                    color: '#FFFFFF',
-                    fontSize: 15,
-                    fontWeight: 700,
-                    letterSpacing: '4.5px',
-                    fontFamily: '"Lato", sans-serif',
-                    textTransform: 'uppercase',
-                    textAlign: 'center',
-                    textShadow: '0 2px 8px rgba(0,0,0,0.9)',
-                  }}
-                >
-                  NEGOCIOS INMOBILIARIOS
-                </span>
-                <div style={{ width: '38px', height: '2px', backgroundColor: corporateOrange }} />
-              </div>
-            </div>
+            {/* Header Institucional (Safe Zone Feed 4:5: top 56px, unificado en las 7 láminas) */}
+            {brandHeader}
 
             {/* Etiquetas (Badges) — top 282px: ~60px de aire respecto del bloque del logotipo (que termina cerca de y=222) */}
             <div
@@ -663,28 +668,8 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             }}
           />
 
-          {/* Top Center: Logo maestro completo unificado en altura y escala con la primera imagen */}
-          <div
-            style={{
-              position: 'absolute',
-              top: 56,
-              left: 0,
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              zIndex: 20,
-            }}
-          >
-            <img
-              src={assets.brandFullWhiteLogoUrl}
-              width={400}
-              height={148}
-              style={{
-                objectFit: 'contain',
-                filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
-              }}
-            />
-          </div>
+          {/* Top Center: Header institucional idéntico a la portada en las 7 láminas */}
+          {brandHeader}
 
           {/* Bottom Left: SOLO Título y Dirección de la Propiedad, alineados a la izquierda (mismo margen de 55px y pin que la portada) y pegados al borde inferior */}
           <div
