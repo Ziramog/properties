@@ -2,9 +2,8 @@ import { ImageResponse } from 'next/og';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import mongoose from 'mongoose';
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
 import { formatPriceDisplay } from '@/utils/priceUtils';
+import { loadSocialBrandAssets, loadSocialExportFonts } from '@/utils/socialExportAssets';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -254,15 +253,6 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
 
     const corporateOrange = '#F26B2E';
 
-    // Carga de logotipo oficial blanco (idéntico a historias con fallback)
-    const logoBuffer = readFileSync(join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-Photoroom.png'));
-    const isoLogoUrl = `data:image/png;base64,${logoBuffer.toString('base64')}`;
-
-    const whiteLogoPath = join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-White.png');
-    const isoWhiteLogoUrl = existsSync(whiteLogoPath)
-      ? `data:image/png;base64,${readFileSync(whiteLogoPath).toString('base64')}`
-      : isoLogoUrl;
-
     // Si el navegador ya recortó y mejoró la imagen en <canvas>, se usa directamente sin hacer fetch
     const rawImgUrl = typeof imageToUse === 'string' ? imageToUse : imageToUse?.url;
     const imageUrl =
@@ -272,56 +262,13 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
           ? await toDataUrl(rawImgUrl)
           : null;
 
-    // Íconos SVG oficiales con trazo calibrado
-    const rawBedSvg = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_bed.svg'), 'utf8');
-    const bedIconUrl = `data:image/svg+xml;base64,${Buffer.from(rawBedSvg.replace(/stroke-width="[^"]*"/g, 'stroke-width="1.8"')).toString('base64')}`;
-
-    const rawBathSvg = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_bath.svg'), 'utf8');
-    const bathIconUrl = `data:image/svg+xml;base64,${Buffer.from(rawBathSvg).toString('base64')}`;
-
-    const rawSqftSvg = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_sqfoot.svg'), 'utf8');
-    const sqftIconUrl = `data:image/svg+xml;base64,${Buffer.from(rawSqftSvg.replace(/stroke-width="[^"]*"/g, 'stroke-width="1.8"')).toString('base64')}`;
-
     const assets = {
-      isoLogoUrl,
-      isoWhiteLogoUrl,
+      ...loadSocialBrandAssets(),
       imageUrl,
-      bedIconUrl,
-      bathIconUrl,
-      sqftIconUrl,
     };
 
-    // Fuentes oficiales
-    const fontOptions = [];
-    const ptSerifPath = join(process.cwd(), 'assets', 'fonts', 'pt-serif', 'PTSerif-Bold.ttf');
-    if (existsSync(ptSerifPath)) {
-      fontOptions.push({
-        name: 'PT Serif',
-        data: readFileSync(ptSerifPath),
-        style: 'normal',
-        weight: 700,
-      });
-    }
-
-    const montserratBoldPath = join(process.cwd(), 'assets', 'fonts', 'montserrat', 'Montserrat-Bold.woff');
-    if (existsSync(montserratBoldPath)) {
-      fontOptions.push({
-        name: 'Montserrat',
-        data: readFileSync(montserratBoldPath),
-        style: 'normal',
-        weight: 700,
-      });
-    }
-
-    const montserratRegularPath = join(process.cwd(), 'assets', 'fonts', 'montserrat', 'Montserrat-Regular.woff');
-    if (existsSync(montserratRegularPath)) {
-      fontOptions.push({
-        name: 'Montserrat',
-        data: readFileSync(montserratRegularPath),
-        style: 'normal',
-        weight: 400,
-      });
-    }
+    // Fuentes oficiales del sitio (PT Serif + Lato .ttf compatibles con Satori)
+    const fontOptions = loadSocialExportFonts();
 
     const data = extractFeedData(property);
     const titleFontSize = data.title.length > 48 ? 44 : data.title.length > 28 ? 52 : 60;
@@ -339,7 +286,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               display: 'flex',
               flexDirection: 'column',
               backgroundColor: '#0B0D10',
-              fontFamily: '"Montserrat", sans-serif',
+              fontFamily: '"Lato", sans-serif',
               position: 'relative',
             }}
           >
@@ -381,11 +328,11 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               }}
             />
 
-            {/* Header Institucional (Safe Zone Feed 4:5: top 64px, unificado en las 7 láminas) */}
+            {/* Header Institucional (Safe Zone Feed 4:5: top 56px, unificado en las 7 láminas con logo maestro completo) */}
             <div
               style={{
                 position: 'absolute',
-                top: 64,
+                top: 56,
                 left: 0,
                 width: '100%',
                 display: 'flex',
@@ -395,9 +342,9 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               }}
             >
               <img
-                src={assets.isoWhiteLogoUrl}
-                width={200}
-                height={88}
+                src={assets.brandFullWhiteLogoUrl}
+                width={400}
+                height={148}
                 style={{
                   objectFit: 'contain',
                   filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
@@ -405,31 +352,15 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 }}
               />
 
-              <span
-                style={{
-                  color: '#FFFFFF',
-                  fontSize: 30,
-                  fontFamily: '"Montserrat", sans-serif',
-                  fontWeight: 700,
-                  letterSpacing: '3.5px',
-                  textTransform: 'uppercase',
-                  textAlign: 'center',
-                  textShadow: '0 2px 10px rgba(0,0,0,0.9)',
-                  marginBottom: '5px',
-                }}
-              >
-                SILVIA ROGGERO & ROMA
-              </span>
-
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                 <div style={{ width: '38px', height: '2px', backgroundColor: corporateOrange }} />
                 <span
                   style={{
                     color: '#FFFFFF',
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: 700,
                     letterSpacing: '4.5px',
-                    fontFamily: '"Montserrat", sans-serif',
+                    fontFamily: '"Lato", sans-serif',
                     textTransform: 'uppercase',
                     textAlign: 'center',
                     textShadow: '0 2px 8px rgba(0,0,0,0.9)',
@@ -472,7 +403,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                       fontWeight: 700,
                       letterSpacing: '1.5px',
                       textTransform: 'uppercase',
-                      fontFamily: '"Montserrat", sans-serif',
+                      fontFamily: '"Lato", sans-serif',
                     }}
                   >
                     {b.text}
@@ -523,9 +454,9 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                   style={{
                     color: '#F1F5F9',
                     fontSize: 30,
-                    fontWeight: 500,
+                    fontWeight: 400,
                     lineHeight: 1.25,
-                    fontFamily: '"Montserrat", sans-serif',
+                    fontFamily: '"Lato", sans-serif',
                     textShadow: '0 2px 8px rgba(0,0,0,0.85)',
                   }}
                 >
@@ -562,7 +493,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                       <path d="m6.49 12.85 11.02 6.3" />
                       <path d="M17.51 12.85 6.49 19.15" />
                     </svg>
-                    <span style={{ color: '#FFFFFF', fontSize: 38, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
+                    <span style={{ color: '#FFFFFF', fontSize: 38, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
                       {data.areaDisplay}
                     </span>
                   </div>
@@ -573,7 +504,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                     {Boolean(data.beds && data.beds > 0) ? (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                         <img src={assets.bedIconUrl} width={70} height={54} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 40, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
+                        <span style={{ color: '#FFFFFF', fontSize: 40, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
                           {data.beds}
                         </span>
                       </div>
@@ -586,7 +517,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                     {Boolean(data.baths && data.baths > 0) ? (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                         <img src={assets.bathIconUrl} width={65} height={52} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 40, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
+                        <span style={{ color: '#FFFFFF', fontSize: 40, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
                           {data.baths}
                         </span>
                       </div>
@@ -599,7 +530,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                     {Boolean(data.coveredAreaDisplay) ? (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                         <img src={assets.sqftIconUrl} width={56} height={56} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 38, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
+                        <span style={{ color: '#FFFFFF', fontSize: 38, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
                           {data.coveredAreaDisplay}
                         </span>
                       </div>
@@ -625,7 +556,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                           <path d="m6.49 12.85 11.02 6.3" />
                           <path d="M17.51 12.85 6.49 19.15" />
                         </svg>
-                        <span style={{ color: '#FFFFFF', fontSize: 38, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
+                        <span style={{ color: '#FFFFFF', fontSize: 38, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
                           {data.totalAreaDisplay}
                         </span>
                       </div>
@@ -690,7 +621,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             display: 'flex',
             flexDirection: 'column',
             backgroundColor: '#0B0D10',
-            fontFamily: '"Montserrat", sans-serif',
+            fontFamily: '"Lato", sans-serif',
             position: 'relative',
           }}
         >
@@ -732,11 +663,11 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             }}
           />
 
-          {/* Top Center: SOLO Isologo Blanco (top 64px unificado en altura y centrado con la primera imagen) */}
+          {/* Top Center: Logo maestro completo unificado en altura y escala con la primera imagen */}
           <div
             style={{
               position: 'absolute',
-              top: 64,
+              top: 56,
               left: 0,
               width: '100%',
               display: 'flex',
@@ -745,9 +676,9 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             }}
           >
             <img
-              src={assets.isoWhiteLogoUrl}
-              width={200}
-              height={88}
+              src={assets.brandFullWhiteLogoUrl}
+              width={400}
+              height={148}
               style={{
                 objectFit: 'contain',
                 filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
@@ -796,8 +727,8 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                   style={{
                     color: '#F1F5F9',
                     fontSize: 30,
-                    fontFamily: '"Montserrat", sans-serif',
-                    fontWeight: 500,
+                    fontFamily: '"Lato", sans-serif',
+                    fontWeight: 400,
                     lineHeight: 1.25,
                     textShadow: '0 2px 8px rgba(0,0,0,0.85)',
                     textAlign: 'left',

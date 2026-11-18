@@ -2,11 +2,10 @@ import { ImageResponse } from 'next/og';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import mongoose from 'mongoose';
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
 import { getSessionUser } from '@/utils/getSessionUser';
 import { isAdmin } from '@/utils/isAdmin';
 import { formatPriceDisplay } from '@/utils/priceUtils';
+import { loadSocialBrandAssets, loadSocialExportFonts } from '@/utils/socialExportAssets';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -351,15 +350,6 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
       height: 1920,
     };
 
-    // Load static assets
-    const logoBuffer = readFileSync(join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-Photoroom.png'));
-    const isoLogoUrl = `data:image/png;base64,${logoBuffer.toString('base64')}`;
-
-    const whiteLogoPath = join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-White.png');
-    const isoWhiteLogoUrl = existsSync(whiteLogoPath)
-      ? `data:image/png;base64,${readFileSync(whiteLogoPath).toString('base64')}`
-      : isoLogoUrl;
-
     // Si el navegador ya recortó y mejoró la imagen en <canvas>, se usa directamente sin hacer fetch
     const firstImg = property.images?.[0];
     const rawImgUrl = typeof firstImg === 'string' ? firstImg : firstImg?.url;
@@ -370,26 +360,13 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
           ? await toDataUrl(rawImgUrl)
           : null;
 
-    // Load icons with calibrated stroke for high-res 1080x1920
-    const rawBedSvg = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_bed.svg'), 'utf8');
-    const enhancedBedSvg = rawBedSvg.replace(/stroke-width="[^"]*"/g, 'stroke-width="1.8"');
-    const bedIconUrl = `data:image/svg+xml;base64,${Buffer.from(enhancedBedSvg).toString('base64')}`;
-
-    const bathIconBuffer = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_bath.svg'));
-    const bathIconUrl = `data:image/svg+xml;base64,${bathIconBuffer.toString('base64')}`;
-
-    const rawSqftSvg = readFileSync(join(process.cwd(), 'public', 'senada', 'images', 'icons', 'ico_sqfoot.svg'), 'utf8');
-    const enhancedSqftSvg = rawSqftSvg.replace(/stroke-width="[^"]*"/g, 'stroke-width="1.8"');
-    const sqftIconUrl = `data:image/svg+xml;base64,${Buffer.from(enhancedSqftSvg).toString('base64')}`;
-
     const assets = {
-      isoLogoUrl,
-      isoWhiteLogoUrl,
+      ...loadSocialBrandAssets(),
       imageUrl,
-      bedIconUrl,
-      bathIconUrl,
-      sqftIconUrl,
     };
+
+    // Fuentes oficiales del sitio (PT Serif + Lato .ttf compatibles con Satori)
+    const fontOptions = loadSocialExportFonts();
 
     // ==========================================
     // PLANTILLA V2.2: rr-story-v2.2 (REFINAMIENTO DEFINITIVO SEGÚN REFERENCIA)
@@ -397,38 +374,6 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
     if (isV2_2) {
       const data = extractStoryDataV2_3(property);
       const corporateOrange = '#F26B2E';
-
-      // Load PT Serif Bold and Montserrat fonts for exact editorial typography match
-      const fontOptions = [];
-      const ptSerifPath = join(process.cwd(), 'assets', 'fonts', 'pt-serif', 'PTSerif-Bold.ttf');
-      if (existsSync(ptSerifPath)) {
-        fontOptions.push({
-          name: 'PT Serif',
-          data: readFileSync(ptSerifPath),
-          style: 'normal',
-          weight: 700,
-        });
-      }
-
-      const montserratBoldPath = join(process.cwd(), 'assets', 'fonts', 'montserrat', 'Montserrat-Bold.woff');
-      if (existsSync(montserratBoldPath)) {
-        fontOptions.push({
-          name: 'Montserrat',
-          data: readFileSync(montserratBoldPath),
-          style: 'normal',
-          weight: 700,
-        });
-      }
-
-      const montserratRegularPath = join(process.cwd(), 'assets', 'fonts', 'montserrat', 'Montserrat-Regular.woff');
-      if (existsSync(montserratRegularPath)) {
-        fontOptions.push({
-          name: 'Montserrat',
-          data: readFileSync(montserratRegularPath),
-          style: 'normal',
-          weight: 400,
-        });
-      }
 
       // Title adaptive sizing
       const titleFontSize = data.title.length > 52 ? 54 : (data.title.length > 32 ? 64 : 76);
@@ -442,7 +387,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               display: 'flex',
               flexDirection: 'column',
               backgroundColor: '#0B0D10',
-              fontFamily: '"Montserrat", sans-serif',
+              fontFamily: '"Lato", sans-serif',
               position: 'relative',
             }}
           >
@@ -478,11 +423,11 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               }}
             />
 
-            {/* ZONA 1: Header Institucional (Top Center) */}
+            {/* ZONA 1: Header Institucional (Top Center con logo maestro completo) */}
             <div
               style={{
                 position: 'absolute',
-                top: 65,
+                top: 60,
                 left: 0,
                 width: '100%',
                 display: 'flex',
@@ -491,11 +436,11 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                 zIndex: 20,
               }}
             >
-              {/* Isotipo: blanco oficial en alta definición con sombra */}
+              {/* Logo maestro blanco oficial (R&R + SILVIA ROGGERO de ROMA) */}
               <img
-                src={assets.isoWhiteLogoUrl}
-                width={220}
-                height={98}
+                src={assets.brandFullWhiteLogoUrl}
+                width={440}
+                height={163}
                 style={{
                   objectFit: 'contain',
                   filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
@@ -503,31 +448,15 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                 }}
               />
 
-              <span
-                style={{
-                  color: '#FFFFFF',
-                  fontSize: 34,
-                  fontFamily: '"Montserrat", sans-serif',
-                  fontWeight: 700,
-                  letterSpacing: '3.5px',
-                  textTransform: 'uppercase',
-                  textAlign: 'center',
-                  textShadow: '0 2px 10px rgba(0,0,0,0.9)',
-                  marginBottom: '6px',
-                }}
-              >
-                SILVIA ROGGERO & ROMA
-              </span>
-
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                 <div style={{ width: '40px', height: '2px', backgroundColor: corporateOrange }} />
                 <span
                   style={{
                     color: '#FFFFFF',
-                    fontSize: 18,
+                    fontSize: 17,
                     fontWeight: 700,
                     letterSpacing: '4.5px',
-                    fontFamily: '"Montserrat", sans-serif',
+                    fontFamily: '"Lato", sans-serif',
                     textTransform: 'uppercase',
                     textAlign: 'center',
                     textShadow: '0 2px 8px rgba(0,0,0,0.9)',
@@ -570,7 +499,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                       fontWeight: 700,
                       letterSpacing: '2px',
                       textTransform: 'uppercase',
-                      fontFamily: '"Montserrat", sans-serif',
+                      fontFamily: '"Lato", sans-serif',
                     }}
                   >
                     {b.text}
@@ -621,9 +550,9 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                   style={{
                     color: '#F1F5F9',
                     fontSize: 34,
-                    fontWeight: 500,
+                    fontWeight: 400,
                     lineHeight: 1.25,
-                    fontFamily: '"Montserrat", sans-serif',
+                    fontFamily: '"Lato", sans-serif',
                     textShadow: '0 2px 8px rgba(0,0,0,0.85)',
                   }}
                 >
@@ -661,7 +590,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                       <path d="m6.49 12.85 11.02 6.3" />
                       <path d="M17.51 12.85 6.49 19.15" />
                     </svg>
-                    <span style={{ color: '#FFFFFF', fontSize: 44, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
+                    <span style={{ color: '#FFFFFF', fontSize: 44, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
                       {data.areaDisplay}
                     </span>
                   </div>
@@ -673,7 +602,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                     {Boolean(data.beds && data.beds > 0) ? (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                         <img src={assets.bedIconUrl} width={85} height={66} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 46, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
+                        <span style={{ color: '#FFFFFF', fontSize: 46, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
                           {data.beds}
                         </span>
                       </div>
@@ -686,7 +615,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                     {Boolean(data.baths && data.baths > 0) ? (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                         <img src={assets.bathIconUrl} width={80} height={64} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 46, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
+                        <span style={{ color: '#FFFFFF', fontSize: 46, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
                           {data.baths}
                         </span>
                       </div>
@@ -699,7 +628,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                     {Boolean(data.coveredAreaDisplay) ? (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                         <img src={assets.sqftIconUrl} width={70} height={70} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 44, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
+                        <span style={{ color: '#FFFFFF', fontSize: 44, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
                           {data.coveredAreaDisplay}
                         </span>
                       </div>
@@ -725,7 +654,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                           <path d="m6.49 12.85 11.02 6.3" />
                           <path d="M17.51 12.85 6.49 19.15" />
                         </svg>
-                        <span style={{ color: '#FFFFFF', fontSize: 44, fontWeight: 700, fontFamily: '"Montserrat", sans-serif' }}>
+                        <span style={{ color: '#FFFFFF', fontSize: 44, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
                           {data.totalAreaDisplay}
                         </span>
                       </div>
@@ -784,19 +713,6 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
       const data = extractStoryDataV2_1(property);
       const corporateOrange = '#F26B2E';
 
-      // Load PT Serif Bold font for editorial headings
-      const fontPath = join(process.cwd(), 'assets', 'fonts', 'pt-serif', 'PTSerif-Bold.ttf');
-      let fontOptions = [];
-      if (existsSync(fontPath)) {
-        const ptSerifBuffer = readFileSync(fontPath);
-        fontOptions.push({
-          name: 'PT Serif',
-          data: ptSerifBuffer,
-          style: 'normal',
-          weight: 700,
-        });
-      }
-
       // Title adaptive sizing (+20-25% from V2)
       const titleFontSize = data.title.length > 48 ? 44 : (data.title.length > 32 ? 54 : 66);
 
@@ -825,7 +741,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               display: 'flex',
               flexDirection: 'column',
               backgroundColor: '#0B0D10',
-              fontFamily: 'sans-serif',
+              fontFamily: '"Lato", sans-serif',
               position: 'relative',
             }}
           >
@@ -861,11 +777,11 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               }}
             />
 
-            {/* ZONA 1: Header / Marca Integrado (+45% tamaño de isotipo, mayor legibilidad) */}
+            {/* ZONA 1: Header / Marca Integrado con logo maestro completo */}
             <div
               style={{
                 position: 'absolute',
-                top: 120,
+                top: 90,
                 left: 0,
                 width: '100%',
                 display: 'flex',
@@ -875,40 +791,27 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               }}
             >
               <img
-                src={assets.isoLogoUrl}
-                width={160}
-                height={160}
+                src={assets.brandFullWhiteLogoUrl}
+                width={420}
+                height={155}
                 style={{
                   objectFit: 'contain',
+                  filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
                 }}
               />
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 12 }}>
-                <span
-                  style={{
-                    color: '#FFFFFF',
-                    fontSize: 25,
-                    fontWeight: 800,
-                    letterSpacing: '5px',
-                    textTransform: 'uppercase',
-                    textShadow: '0 2px 10px rgba(0,0,0,0.85)',
-                  }}
-                >
-                  SILVIA ROGGERO & ROMA
-                </span>
-                <span
-                  style={{
-                    color: corporateOrange,
-                    fontSize: 16,
-                    fontWeight: 700,
-                    letterSpacing: '7px',
-                    textTransform: 'uppercase',
-                    marginTop: 4,
-                    textShadow: '0 2px 8px rgba(0,0,0,0.85)',
-                  }}
-                >
-                  NEGOCIOS INMOBILIARIOS
-                </span>
-              </div>
+              <span
+                style={{
+                  color: corporateOrange,
+                  fontSize: 16,
+                  fontWeight: 700,
+                  letterSpacing: '7px',
+                  textTransform: 'uppercase',
+                  marginTop: 10,
+                  textShadow: '0 2px 8px rgba(0,0,0,0.85)',
+                }}
+              >
+                NEGOCIOS INMOBILIARIOS
+              </span>
             </div>
 
             {/* CONTENIDO PRINCIPAL INFERIOR (Zonas 4 a 9) */}
@@ -931,7 +834,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                     backgroundColor: corporateOrange,
                     color: '#FFFFFF',
                     fontSize: 17,
-                    fontWeight: 800,
+                    fontWeight: 700,
                     padding: '8px 22px',
                     borderRadius: '24px',
                     textTransform: 'uppercase',
@@ -1062,7 +965,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                     fontSize: 24,
                     letterSpacing: '5px',
                     textTransform: 'uppercase',
-                    fontWeight: 800,
+                    fontWeight: 700,
                   }}
                 >
                   ROGGEROYROMA.COM.AR
@@ -1085,19 +988,6 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
       const data = extractStoryData(property);
       const corporateOrange = '#F26B2E';
 
-      // Load PT Serif Bold font for editorial headings
-      const fontPath = join(process.cwd(), 'assets', 'fonts', 'pt-serif', 'PTSerif-Bold.ttf');
-      let fontOptions = [];
-      if (existsSync(fontPath)) {
-        const ptSerifBuffer = readFileSync(fontPath);
-        fontOptions.push({
-          name: 'PT Serif',
-          data: ptSerifBuffer,
-          style: 'normal',
-          weight: 700,
-        });
-      }
-
       // Title adaptive sizing
       const titleFontSize = data.title.length > 50 ? 38 : (data.title.length > 28 ? 46 : 54);
 
@@ -1114,7 +1004,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
       const pillTextStyle = {
         color: '#FFFFFF',
         fontSize: 22,
-        fontWeight: 600,
+        fontWeight: 700,
       };
 
       return await renderImage(
@@ -1126,7 +1016,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               display: 'flex',
               flexDirection: 'column',
               backgroundColor: '#0B0D10',
-              fontFamily: 'sans-serif',
+              fontFamily: '"Lato", sans-serif',
               position: 'relative',
             }}
           >
@@ -1162,11 +1052,11 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               }}
             />
 
-            {/* ZONA 1: Header / Marca Integrado (Sin barras pesadas, respetando zona segura) */}
+            {/* ZONA 1: Header / Marca Integrado con logo maestro completo */}
             <div
               style={{
                 position: 'absolute',
-                top: 130,
+                top: 100,
                 left: 0,
                 width: '100%',
                 display: 'flex',
@@ -1176,38 +1066,26 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               }}
             >
               <img
-                src={assets.isoLogoUrl}
-                width={110}
-                height={110}
+                src={assets.brandFullWhiteLogoUrl}
+                width={380}
+                height={141}
                 style={{
                   objectFit: 'contain',
+                  filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
                 }}
               />
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
-                <span
-                  style={{
-                    color: '#FFFFFF',
-                    fontSize: 18,
-                    fontWeight: 700,
-                    letterSpacing: '4px',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  SILVIA ROGGERO & ROMA
-                </span>
-                <span
-                  style={{
-                    color: corporateOrange,
-                    fontSize: 12,
-                    fontWeight: 700,
-                    letterSpacing: '5px',
-                    textTransform: 'uppercase',
-                    marginTop: 3,
-                  }}
-                >
-                  NEGOCIOS INMOBILIARIOS
-                </span>
-              </div>
+              <span
+                style={{
+                  color: corporateOrange,
+                  fontSize: 13,
+                  fontWeight: 700,
+                  letterSpacing: '5px',
+                  textTransform: 'uppercase',
+                  marginTop: 8,
+                }}
+              >
+                NEGOCIOS INMOBILIARIOS
+              </span>
             </div>
 
             {/* CONTENIDO PRINCIPAL INFERIOR (Zonas 4 a 9) */}
@@ -1230,7 +1108,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                     backgroundColor: corporateOrange,
                     color: '#FFFFFF',
                     fontSize: 15,
-                    fontWeight: 800,
+                    fontWeight: 700,
                     padding: '7px 20px',
                     borderRadius: '20px',
                     textTransform: 'uppercase',
@@ -1276,7 +1154,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                   fontSize: 22,
                   letterSpacing: '3px',
                   textTransform: 'uppercase',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   marginBottom: '26px',
                 }}
               >
@@ -1344,7 +1222,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                     fontSize: 15,
                     letterSpacing: '2px',
                     textTransform: 'uppercase',
-                    fontWeight: 500,
+                    fontWeight: 400,
                   }}
                 >
                   PROPIEDADES EXCLUSIVAS
@@ -1355,7 +1233,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                     fontSize: 17,
                     letterSpacing: '3px',
                     textTransform: 'uppercase',
-                    fontWeight: 800,
+                    fontWeight: 700,
                   }}
                 >
                   ROGGEROYROMA.COM.AR
@@ -1391,7 +1269,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
             display: 'flex',
             flexDirection: 'column',
             backgroundColor: '#0B0D10',
-            fontFamily: 'sans-serif',
+            fontFamily: '"Lato", sans-serif',
             position: 'relative',
           }}
         >
@@ -1428,7 +1306,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
 
           {/* Top Isotipo Center */}
           <div style={{ position: 'absolute', top: 80, left: 0, width: '100%', display: 'flex', justifyContent: 'center', zIndex: 20 }}>
-            <img src={assets.isoLogoUrl} width={320} height={320} style={{ objectFit: 'contain' }} />
+            <img src={assets.brandFullWhiteLogoUrl} width={440} height={163} style={{ objectFit: 'contain', filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))' }} />
           </div>
 
           {/* Content - Bottom Aligned */}
@@ -1465,7 +1343,8 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               style={{
                 color: '#FFFFFF',
                 fontSize: 130,
-                fontWeight: '900',
+                fontFamily: '"PT Serif", serif',
+                fontWeight: 700,
                 margin: '0 0 15px 0',
                 textAlign: 'center',
               }}
@@ -1477,7 +1356,8 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               style={{
                 color: '#E2E8F0',
                 fontSize: 65,
-                fontWeight: 'bold',
+                fontFamily: '"PT Serif", serif',
+                fontWeight: 700,
                 margin: '0 0 25px 0',
                 lineHeight: 1.2,
                 textAlign: 'center',
@@ -1510,7 +1390,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                     border: '1px solid rgba(255,255,255,0.3)',
                   }}
                 >
-                  <span style={{ color: '#FFFFFF', fontSize: 32, fontWeight: '500' }}>{areaLabelV1}</span>
+                  <span style={{ color: '#FFFFFF', fontSize: 32, fontWeight: 400 }}>{areaLabelV1}</span>
                 </div>
               )}
               {property.beds > 0 && (
@@ -1524,7 +1404,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                     border: '1px solid rgba(255,255,255,0.3)',
                   }}
                 >
-                  <span style={{ color: '#FFFFFF', fontSize: 32, fontWeight: '500' }}>{property.beds} Dorms</span>
+                  <span style={{ color: '#FFFFFF', fontSize: 32, fontWeight: 400 }}>{property.beds} Dorms</span>
                 </div>
               )}
               {property.baths > 0 && (
@@ -1538,7 +1418,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
                     border: '1px solid rgba(255,255,255,0.3)',
                   }}
                 >
-                  <span style={{ color: '#FFFFFF', fontSize: 32, fontWeight: '500' }}>{property.baths} Baños</span>
+                  <span style={{ color: '#FFFFFF', fontSize: 32, fontWeight: 400 }}>{property.baths} Baños</span>
                 </div>
               )}
             </div>
@@ -1563,6 +1443,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
       ),
       {
         ...size,
+        fonts: fontOptions,
       }
     );
   } catch (error) {
