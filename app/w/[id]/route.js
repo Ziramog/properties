@@ -22,7 +22,7 @@ export async function GET(request, { params }) {
   try {
     if (id && mongoose.Types.ObjectId.isValid(id)) {
       await connectDB();
-      const property = await Property.findById(id).select('_id name location.city location.state').lean();
+      const property = await Property.findById(id).select('_id name operation location.city location.state').lean();
       if (property) {
         const targetUrl = generateWhatsAppLink({ property, context: 'story', origin });
         return NextResponse.redirect(targetUrl, {

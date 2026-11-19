@@ -1,4 +1,16 @@
 const WA_NUMBER = '5493547563911';
+const WA_RENTAL_NUMBER = '5493547596631';
+
+/**
+ * Devuelve el número de WhatsApp correspondiente para exportaciones a Instagram/Facebook:
+ * alquileres usa la línea dedicada (5493547596631) y el resto conserva la principal (5493547563911).
+ */
+export function getSocialWhatsAppTarget(property) {
+  const isRental = String(property?.operation || '').toLowerCase() === 'alquiler';
+  return isRental
+    ? { number: WA_RENTAL_NUMBER, display: '+54 9 3547 596631' }
+    : { number: WA_NUMBER, display: '+54 9 3547 563911' };
+}
 
 const MESSAGES = {
 
@@ -49,7 +61,12 @@ export function generateWhatsAppLink({ property, context = 'general', customMess
     message = MESSAGES[context] || MESSAGES.general;
   }
 
-  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
+  const targetNumber =
+    context === 'story' || context === 'feed'
+      ? getSocialWhatsAppTarget(property).number
+      : WA_NUMBER;
+
+  return `https://wa.me/${targetNumber}?text=${encodeURIComponent(message)}`;
 }
 
 /**
@@ -69,5 +86,6 @@ export function generateStoryShortWhatsAppLink({ propertyId, origin } = {}) {
 
 /** Expose the canonical number for tel: links */
 export const WHATSAPP_NUMBER = WA_NUMBER;
+export const WHATSAPP_RENTAL_NUMBER = WA_RENTAL_NUMBER;
 export const PHONE_NUMBER = '+543547425454';
 export const PHONE_DISPLAY = '(03547) 425454';

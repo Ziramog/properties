@@ -4,6 +4,7 @@ import { Layers, Share } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { processImageInBrowser } from '@/utils/processImageInBrowser';
 import { convertBlobToJpeg } from '@/utils/convertBlobToJpeg';
+import { generateStoryShortWhatsAppLink, getSocialWhatsAppTarget } from '@/utils/whatsapp';
 
 export default function FeedShareButton({ property }) {
   const [status, setStatus] = useState('idle'); // 'idle', 'preparing', 'ready'
@@ -96,7 +97,9 @@ export default function FeedShareButton({ property }) {
       let description = property.description || '';
       if (description.length > 400) description = description.slice(0, 400) + '...';
 
-      const caption = `🏠 ${title} en ${operation}\n📍 ${location}\n💰 ${price}\n\n✨ Características:\n${features.join(' | ')}\n\n📝 ${description}\n\n🔗 Más info en roggeroyroma.com.ar\n#BienesRaices #Inmobiliaria #RoggeroYRoma #${property.location?.city?.replace(/\s+/g, '') || 'Propiedades'}`;
+      const waLink = generateStoryShortWhatsAppLink({ propertyId: property._id || property.id });
+      const { display: waDisplay } = getSocialWhatsAppTarget(property);
+      const caption = `🏠 ${title} en ${operation}\n📍 ${location}\n💰 ${price}\n\n✨ Características:\n${features.join(' | ')}\n\n📝 ${description}\n\n📲 Consultas por WhatsApp (${waDisplay}): ${waLink}\n🔗 Más info en roggeroyroma.com.ar\n#BienesRaices #Inmobiliaria #RoggeroYRoma #${property.location?.city?.replace(/\s+/g, '') || 'Propiedades'}`;
 
       // 2. Copiar al portapapeles (workaround porque Instagram iOS suele ignorar el text del share)
       try {
