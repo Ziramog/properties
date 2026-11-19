@@ -4,7 +4,7 @@ import { Layers, Share } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { processImageInBrowser } from '@/utils/processImageInBrowser';
 import { convertBlobToJpeg } from '@/utils/convertBlobToJpeg';
-import { generateStoryShortWhatsAppLink, getSocialWhatsAppTarget } from '@/utils/whatsapp';
+import { buildFeedCaption } from '@/utils/feedCaption';
 
 export default function FeedShareButton({ property }) {
   const [status, setStatus] = useState('idle'); // 'idle', 'preparing', 'ready'
@@ -76,30 +76,8 @@ export default function FeedShareButton({ property }) {
 
   const handleShare = async () => {
     try {
-      // 1. Generar el texto para el feed
-      const formatPrice = (price) => {
-        if (!price) return 'Consultar';
-        const rawPrice = String(price).replace(/[^0-9]/g, '');
-        if (!rawPrice) return 'Consultar';
-        return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(rawPrice);
-      };
-
-      const title = property.name || property.type || 'Propiedad';
-      const operation = property.operation ? property.operation.toUpperCase() : 'DISPONIBLE';
-      const price = formatPrice(property.price);
-      const location = [property.location?.city, property.location?.state].filter(Boolean).join(', ');
-      
-      const features = [];
-      if (property.covered_area) features.push(`📐 ${property.covered_area} m² cub`);
-      if (property.beds) features.push(`🛏️ ${property.beds} Dormitorios`);
-      if (property.baths) features.push(`🛁 ${property.baths} Baños`);
-
-      let description = property.description || '';
-      if (description.length > 400) description = description.slice(0, 400) + '...';
-
-      const waLink = generateStoryShortWhatsAppLink({ propertyId: property._id || property.id });
-      const { display: waDisplay } = getSocialWhatsAppTarget(property);
-      const caption = `🏠 ${title} en ${operation}\n📍 ${location}\n💰 ${price}\n\n✨ Características:\n${features.join(' | ')}\n\n📝 ${description}\n\n📲 Consultas por WhatsApp (${waDisplay}): ${waLink}\n🔗 Más info en roggeroyroma.com.ar\n#BienesRaices #Inmobiliaria #RoggeroYRoma #${property.location?.city?.replace(/\s+/g, '') || 'Propiedades'}`;
+      // 1. Generar el texto limpio para el feed
+      const caption = buildFeedCaption(property);
 
       // 2. Copiar al portapapeles (workaround porque Instagram iOS suele ignorar el text del share)
       try {
