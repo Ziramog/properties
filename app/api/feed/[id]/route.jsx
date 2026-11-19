@@ -243,6 +243,8 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
 
     const { searchParams } = new URL(request.url);
     const index = parseInt(searchParams.get('index') || '0', 10);
+    const showLogo = searchParams.get('logo') !== '0';
+    const showDetails = searchParams.get('details') !== '0';
     const imageToUse = property.images?.[index] || property.images?.[0];
 
     // Formato Feed 4:5 oficial de Instagram (1080 x 1350)
@@ -273,8 +275,24 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
     const data = extractFeedData(property);
     const titleFontSize = data.title.length > 48 ? 44 : data.title.length > 28 ? 52 : 60;
 
+    // Overlay Superior compartido (solo cuando se muestra el logo para no oscurecer cielos innecesariamente)
+    const topOverlay = showLogo ? (
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '28%',
+          backgroundImage:
+            'linear-gradient(to bottom, rgba(11, 13, 16, 0.78) 0%, rgba(11, 13, 16, 0.45) 45%, rgba(11, 13, 16, 0.12) 78%, rgba(11, 13, 16, 0) 100%)',
+          display: 'flex',
+        }}
+      />
+    ) : null;
+
     // Header institucional completo unificado en las 7 láminas (logo maestro con bajada integrada)
-    const brandHeader = (
+    const brandHeader = showLogo ? (
       <div
         style={{
           position: 'absolute',
@@ -296,7 +314,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
           }}
         />
       </div>
-    );
+    ) : null;
 
     // ========================================================
     // CASO 1: IMAGEN INICIAL (index === 0) — Portada Editorial Feed
@@ -325,90 +343,81 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               />
             </div>
 
-            {/* Overlay Superior (28% = 378px, difusión progresiva 0% -> 100% del bloque) */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '28%',
-                backgroundImage:
-                  'linear-gradient(to bottom, rgba(11, 13, 16, 0.78) 0%, rgba(11, 13, 16, 0.45) 45%, rgba(11, 13, 16, 0.12) 78%, rgba(11, 13, 16, 0) 100%)',
-                display: 'flex',
-              }}
-            />
+            {topOverlay}
 
-            {/* Overlay Inferior (46% = 621px, difusión progresiva sin franja negra dura) */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                width: '100%',
-                height: '46%',
-                backgroundImage:
-                  'linear-gradient(to top, rgba(11, 13, 16, 0.88) 0%, rgba(11, 13, 16, 0.68) 42%, rgba(11, 13, 16, 0.28) 74%, rgba(11, 13, 16, 0) 100%)',
-                display: 'flex',
-              }}
-            />
+            {/* Overlay Inferior (46% = 621px, solo visible si se muestran textos/detalles) */}
+            {showDetails ? (
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '46%',
+                  backgroundImage:
+                    'linear-gradient(to top, rgba(11, 13, 16, 0.88) 0%, rgba(11, 13, 16, 0.68) 42%, rgba(11, 13, 16, 0.28) 74%, rgba(11, 13, 16, 0) 100%)',
+                  display: 'flex',
+                }}
+              />
+            ) : null}
 
-            {/* Header Institucional (Safe Zone Feed 4:5: top 56px, unificado en las 7 láminas) */}
             {brandHeader}
 
-            {/* Etiquetas (Badges) — top 282px: ~60px de aire respecto del bloque del logotipo (que termina cerca de y=222) */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 282,
-                left: 55,
-                display: 'flex',
-                gap: '10px',
-                zIndex: 20,
-              }}
-            >
-              {data.badges.map((b, idx) => (
+            {/* Etiquetas y Bloque Editorial Inferior (controlados juntos por el switch de descripciones/textos) */}
+            {showDetails ? (
+              <>
                 <div
-                  key={idx}
                   style={{
-                    backgroundColor: b.isPrimary ? corporateOrange : 'rgba(20, 26, 38, 0.85)',
-                    border: b.isPrimary ? 'none' : '1px solid rgba(255, 255, 255, 0.35)',
-                    padding: '10px 20px',
-                    borderRadius: '6px',
-                    boxShadow: '0 6px 20px rgba(0, 0, 0, 0.55)',
+                    position: 'absolute',
+                    top: 282,
+                    left: 55,
                     display: 'flex',
-                    alignItems: 'center',
+                    gap: '10px',
+                    zIndex: 20,
                   }}
                 >
-                  <span
-                    style={{
-                      color: '#FFFFFF',
-                      fontSize: 20,
-                      fontWeight: 700,
-                      letterSpacing: '1.5px',
-                      textTransform: 'uppercase',
-                      fontFamily: '"Lato", sans-serif',
-                    }}
-                  >
-                    {b.text}
-                  </span>
+                  {data.badges.map((b, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        backgroundColor: b.isPrimary ? corporateOrange : 'rgba(20, 26, 38, 0.85)',
+                        border: b.isPrimary ? 'none' : '1px solid rgba(255, 255, 255, 0.35)',
+                        padding: '10px 20px',
+                        borderRadius: '6px',
+                        boxShadow: '0 6px 20px rgba(0, 0, 0, 0.55)',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: '#FFFFFF',
+                          fontSize: 20,
+                          fontWeight: 700,
+                          letterSpacing: '1.5px',
+                          textTransform: 'uppercase',
+                          fontFamily: '"Lato", sans-serif',
+                        }}
+                      >
+                        {b.text}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            {/* Bloque Editorial Inferior (línea naranja anclada baja a 30px del borde inferior) */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                padding: '0 55px 30px 55px',
-                zIndex: 20,
-              }}
-            >
+                {/* Bloque Editorial Inferior (línea naranja anclada baja a 30px del borde inferior) */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '0 55px 30px 55px',
+                    zIndex: 20,
+                  }}
+                >
               {/* Título */}
               <h1
                 style={{
@@ -583,6 +592,8 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 />
               </div>
             </div>
+              </>
+            ) : null}
           </div>
         ),
         {
@@ -619,90 +630,81 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             />
           </div>
 
-          {/* Degradado superior progresivo (28% = 378px, unificado con portada para proteger el isologo en top 64px) */}
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '28%',
-              backgroundImage:
-                'linear-gradient(to bottom, rgba(11, 13, 16, 0.78) 0%, rgba(11, 13, 16, 0.45) 45%, rgba(11, 13, 16, 0.12) 78%, rgba(11, 13, 16, 0) 100%)',
-              display: 'flex',
-            }}
-          />
+          {topOverlay}
 
-          {/* Degradado inferior progresivo (36% = 486px, 0% -> 100% del contenedor; protege título y dirección pegados al borde inferior) */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              width: '100%',
-              height: '36%',
-              backgroundImage:
-                'linear-gradient(to top, rgba(11, 13, 16, 0.82) 0%, rgba(11, 13, 16, 0.72) 32%, rgba(11, 13, 16, 0.48) 58%, rgba(11, 13, 16, 0.16) 82%, rgba(11, 13, 16, 0) 100%)',
-              display: 'flex',
-            }}
-          />
+          {/* Degradado inferior progresivo (36% = 486px, solo visible si se muestran textos/detalles) */}
+          {showDetails ? (
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '36%',
+                backgroundImage:
+                  'linear-gradient(to top, rgba(11, 13, 16, 0.82) 0%, rgba(11, 13, 16, 0.72) 32%, rgba(11, 13, 16, 0.48) 58%, rgba(11, 13, 16, 0.16) 82%, rgba(11, 13, 16, 0) 100%)',
+                display: 'flex',
+              }}
+            />
+          ) : null}
 
-          {/* Top Center: Header institucional idéntico a la portada en las 7 láminas */}
           {brandHeader}
 
-          {/* Bottom Left: SOLO Título y Dirección de la Propiedad, alineados a la izquierda (mismo margen de 55px y pin que la portada) y pegados al borde inferior */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              padding: '0 55px 60px 55px',
-              zIndex: 20,
-            }}
-          >
-            <span
+          {/* Bottom Left: Título y Dirección de la Propiedad */}
+          {showDetails ? (
+            <div
               style={{
-                color: '#FFFFFF',
-                fontSize: titleFontSize,
-                fontFamily: '"PT Serif", serif',
-                fontWeight: 700,
-                textAlign: 'left',
-                textShadow: '0 3px 14px rgba(0,0,0,0.9)',
-                lineHeight: 1.14,
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                padding: '0 55px 60px 55px',
+                zIndex: 20,
               }}
             >
-              {data.title}
-            </span>
-            {data.locationFull && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
-                <svg width="28" height="32" viewBox="4.5 1.5 15 21" fill="none" style={{ flexShrink: 0 }}>
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C10.6193 11.5 9.5 10.3807 9.5 9C9.5 7.61929 10.6193 6.5 12 6.5C13.3807 6.5 14.5 7.61929 14.5 9C14.5 10.3807 13.3807 11.5 12 11.5Z"
-                    fill={corporateOrange}
-                  />
-                </svg>
-                <span
-                  style={{
-                    color: '#F1F5F9',
-                    fontSize: 30,
-                    fontFamily: '"Lato", sans-serif',
-                    fontWeight: 400,
-                    lineHeight: 1.25,
-                    textShadow: '0 2px 8px rgba(0,0,0,0.85)',
-                    textAlign: 'left',
-                  }}
-                >
-                  {data.locationFull}
-                </span>
-              </div>
-            )}
-          </div>
+              <span
+                style={{
+                  color: '#FFFFFF',
+                  fontSize: titleFontSize,
+                  fontFamily: '"PT Serif", serif',
+                  fontWeight: 700,
+                  textAlign: 'left',
+                  textShadow: '0 3px 14px rgba(0,0,0,0.9)',
+                  lineHeight: 1.14,
+                }}
+              >
+                {data.title}
+              </span>
+              {data.locationFull && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
+                  <svg width="28" height="32" viewBox="4.5 1.5 15 21" fill="none" style={{ flexShrink: 0 }}>
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C10.6193 11.5 9.5 10.3807 9.5 9C9.5 7.61929 10.6193 6.5 12 6.5C13.3807 6.5 14.5 7.61929 14.5 9C14.5 10.3807 13.3807 11.5 12 11.5Z"
+                      fill={corporateOrange}
+                    />
+                  </svg>
+                  <span
+                    style={{
+                      color: '#F1F5F9',
+                      fontSize: 30,
+                      fontFamily: '"Lato", sans-serif',
+                      fontWeight: 400,
+                      lineHeight: 1.25,
+                      textShadow: '0 2px 8px rgba(0,0,0,0.85)',
+                      textAlign: 'left',
+                    }}
+                  >
+                    {data.locationFull}
+                  </span>
+                </div>
+              )}
+            </div>
+          ) : null}
         </div>
       ),
       {

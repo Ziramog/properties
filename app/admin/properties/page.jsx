@@ -6,6 +6,9 @@ export const metadata = {
 };
 
 import Link from 'next/link';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/utils/authOptions';
+import { isSocialStudioAuthorized } from '@/utils/socialStudioAuth';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
@@ -15,10 +18,12 @@ import SiteConfig from '@/models/SiteConfig';
 const AdminPropertiesPage = async ({ searchParams }) => {
   await connectDB();
 
-  const [properties, config] = await Promise.all([
+  const [session, properties, config] = await Promise.all([
+    getServerSession(authOptions),
     Property.find({}).sort({ createdAt: -1 }).lean(),
-    SiteConfig.findOne({}).lean()
+    SiteConfig.findOne({}).lean(),
   ]);
+  const canShareSocial = isSocialStudioAuthorized(session);
   const serialized = properties.map(p => convertToSerializeableObject(p));
   const customLabels = config?.customPropertyLabels || ['PRECIO MEJORADO', 'ULTIMA UNIDAD', 'UNICO EN SU TIPO', 'MEJOR PRECIO', 'EXCELENTE PRECIO', 'AMOBLADA'];
 
@@ -32,6 +37,7 @@ const AdminPropertiesPage = async ({ searchParams }) => {
       <AdminPropertyTable 
         properties={serialized} 
         customLabels={customLabels}
+        canShareSocial={canShareSocial}
         defaultType={searchParams?.type || ''} 
         defaultOperation={searchParams?.operation || ''}
         defaultGranInversion={searchParams?.granInversion === 'true'} 

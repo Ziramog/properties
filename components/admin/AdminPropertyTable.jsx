@@ -6,8 +6,10 @@ import deleteProperty from '@/app/actions/deleteProperty';
 import { toast } from 'react-toastify';
 import { isGranInversion } from '@/utils/filterProperties';
 import { formatPriceDisplay } from '@/utils/priceUtils';
+import { Share2, X } from 'lucide-react';
+import SocialSharePanel from '@/components/SocialSharePanel';
 
-const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = '', defaultOperation = '', defaultGranInversion = false, defaultFeatured = '', defaultPublished = '' }) => {
+const AdminPropertyTable = ({ properties = [], customLabels = [], canShareSocial = false, defaultType = '', defaultOperation = '', defaultGranInversion = false, defaultFeatured = '', defaultPublished = '' }) => {
   const router = useRouter();
   const [items, setItems] = useState(properties);
   const [search, setSearch] = useState('');
@@ -18,11 +20,21 @@ const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = 
   const [filterGranInversion, setFilterGranInversion] = useState(defaultGranInversion ? 'yes' : '');
   const [filterPublished, setFilterPublished] = useState(defaultPublished);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [shareProp, setShareProp] = useState(null);
 
   // Sync state with props when data is refreshed from server
   useEffect(() => {
     setItems(properties);
   }, [properties]);
+
+  useEffect(() => {
+    if (!shareProp) return;
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setShareProp(null);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [shareProp]);
 
   const filtered = useMemo(() => {
     let result = items;
@@ -259,6 +271,17 @@ const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = 
                 </td>
                 <td className="px-3 md:px-6 py-3 text-right">
                   <div className="flex items-center justify-end gap-1 md:gap-2">
+                    {canShareSocial && (
+                      <button
+                        type="button"
+                        onClick={() => setShareProp(prop)}
+                        className="inline-flex items-center justify-center md:gap-1.5 text-[12px] font-medium text-orange-300 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 w-8 h-8 md:w-auto md:px-3 md:py-1.5 rounded-sm transition-colors"
+                        title="Exportar Historia / Feed IG & FB"
+                      >
+                        <Share2 className="w-3.5 h-3.5" />
+                        <span className="hidden md:inline">Redes</span>
+                      </button>
+                    )}
                     <Link href={`/admin/properties/${prop._id}/edit`}
                       className="inline-flex items-center justify-center md:gap-1.5 bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white text-[13px] font-semibold w-8 h-8 md:w-auto md:px-4 md:py-2 rounded-sm transition-colors"
                       title="Editar">
@@ -351,6 +374,16 @@ const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = 
                 </button>
               </div>
               <div className="flex items-center gap-2">
+                {canShareSocial && (
+                  <button
+                    type="button"
+                    onClick={() => setShareProp(prop)}
+                    className="inline-flex items-center justify-center w-8 h-8 text-orange-300 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 rounded-sm transition-colors"
+                    title="Exportar Historia / Feed IG & FB"
+                  >
+                    <Share2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
                 <Link href={`/admin/properties/${prop._id}/edit`}
                   className="inline-flex items-center justify-center w-8 h-8 bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white rounded-sm transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5m-1.414-9.414a2 2 0 1 1 2.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -369,6 +402,54 @@ const AdminPropertyTable = ({ properties = [], customLabels = [], defaultType = 
           </div>
         )}
       </div>
+
+      {/* Modal de exportación a Instagram / Facebook */}
+      {shareProp && (
+        <div
+          className="fixed inset-0 z-[150] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          onClick={() => setShareProp(null)}
+        >
+          <div
+            className="w-full max-w-md bg-[#161616] border border-[#2a2a2a] rounded-sm shadow-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-4 py-3 border-b border-[#252525] bg-[#121212]">
+              <div className="flex items-center gap-3 min-w-0">
+                {shareProp.images?.[0]?.url && (
+                  <img
+                    src={shareProp.images[0].url}
+                    alt=""
+                    className="w-11 h-11 rounded-sm object-cover shrink-0 bg-[#222]"
+                  />
+                )}
+                <div className="min-w-0">
+                  <p className="text-[11px] uppercase tracking-wider text-orange-400 font-semibold">
+                    Publicar en IG / FB
+                  </p>
+                  <h3 className="text-[14px] font-semibold text-white truncate">
+                    {shareProp.name}
+                  </h3>
+                  <p className="text-[12px] text-[#999] truncate">
+                    {[shareProp.location?.city, formatPriceDisplay(shareProp.price, shareProp.operation)].filter(Boolean).join(' · ')}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShareProp(null)}
+                className="p-1.5 text-[#888] hover:text-white transition-colors shrink-0"
+                aria-label="Cerrar modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-4 pt-1">
+              <SocialSharePanel property={shareProp} variant="dark" />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -5,7 +5,8 @@ import { toast } from 'react-toastify';
 import { generateStoryShortWhatsAppLink } from '@/utils/whatsapp';
 import { processImageInBrowser } from '@/utils/processImageInBrowser';
 
-export default function StoryShareButton({ property }) {
+export default function StoryShareButton({ property, variant = 'light' }) {
+  const isDark = variant === 'dark';
   const [status, setStatus] = useState('idle'); // 'idle', 'preparing', 'ready'
   const [fileToShare, setFileToShare] = useState(null);
   const [linkCopied, setLinkCopied] = useState(false);
@@ -139,23 +140,27 @@ export default function StoryShareButton({ property }) {
         <button
           onClick={handleCopyLink}
           type="button"
-          className="w-full flex items-center justify-center gap-2 text-[12px] font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 transition-colors py-2.5 px-4"
+          className={`w-full flex items-center justify-center gap-2 text-[12px] font-semibold border transition-colors py-2.5 px-4 ${
+            isDark
+              ? 'text-zinc-200 bg-[#222] hover:bg-[#2c2c2c] border-[#3a3a3a]'
+              : 'text-gray-700 bg-gray-100 hover:bg-gray-200 border-gray-300'
+          }`}
         >
           {linkCopied ? (
             <>
-              <Check className="w-4 h-4 text-green-600" />
-              <span className="text-green-700 font-bold">¡Enlace de WhatsApp Copiado!</span>
+              <Check className={`w-4 h-4 ${isDark ? 'text-green-400' : 'text-green-600'}`} />
+              <span className={`${isDark ? 'text-green-400' : 'text-green-700'} font-bold`}>¡Enlace de WhatsApp Copiado!</span>
             </>
           ) : (
             <>
-              <Copy className="w-4 h-4 text-gray-600" />
+              <Copy className={`w-4 h-4 ${isDark ? 'text-zinc-400' : 'text-gray-600'}`} />
               <span>Copiar enlace de WhatsApp</span>
             </>
           )}
         </button>
 
         {/* Micro-instrucción para el operador */}
-        <p className="text-[11px] text-gray-500 text-center leading-tight">
+        <p className={`text-[11px] text-center leading-tight ${isDark ? 'text-zinc-400' : 'text-gray-500'}`}>
           Pegá este enlace en el sticker <strong>Enlace</strong> de tu historia
         </p>
 
@@ -166,7 +171,7 @@ export default function StoryShareButton({ property }) {
               setStatus('idle');
               setFileToShare(null);
             }}
-            className="text-[11px] text-gray-400 hover:text-gray-600 underline"
+            className={`text-[11px] underline ${isDark ? 'text-zinc-400 hover:text-zinc-200' : 'text-gray-400 hover:text-gray-600'}`}
           >
             Preparar otra versión
           </button>
