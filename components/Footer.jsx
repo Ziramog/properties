@@ -107,12 +107,12 @@ const Footer = ({
                     </span>
                     <ul>
                       {[
+                        { href: '/properties?operation=alquiler', label: 'Alquileres' },
                         { href: '/properties?type=Casa', label: 'Casas' },
                         { href: '/properties?type=Departamento', label: 'Departamentos' },
                         { href: '/properties?type=D%C3%BAplex', label: 'Dúplex' },
                         { href: '/properties?type=Campo', label: 'Campos' },
                         { href: '/properties?type=Terreno', label: 'Terrenos' },
-                        { href: '/properties?operation=alquiler', label: 'Alquileres' },
                       ].map(l => (
                         <li key={l.href}>
                           <Link href={l.href} className="block text-[13px] text-white/70 font-light py-[5px] pr-[10px] hover:text-white transition-colors">
@@ -298,12 +298,12 @@ const Footer = ({
               <span className="block text-[15px] text-white uppercase font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>Propiedades</span>
               <div className="grid grid-cols-2 gap-y-1">
                 {[
+                  { href: '/properties?operation=alquiler', label: 'Alquileres' },
                   { href: '/properties?type=Casa', label: 'Casas' },
                   { href: '/properties?type=Departamento', label: 'Departamentos' },
                   { href: '/properties?type=D%C3%BAplex', label: 'Dúplex' },
                   { href: '/properties?type=Campo', label: 'Campos' },
                   { href: '/properties?type=Terreno', label: 'Terrenos' },
-                  { href: '/properties?operation=alquiler', label: 'Alquileres' },
                 ].map(l => (
                   <Link key={l.href} href={l.href} className="text-[13px] text-white/60 font-light py-[3px] hover:text-white transition-colors">
                     {l.label}

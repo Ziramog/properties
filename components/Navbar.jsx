@@ -121,13 +121,13 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
                 }}>
                   <ul className="bg-black rounded-[6px] min-w-[200px] text-center shadow-[0_8px_14px_-3px_rgba(255,255,255,0.1)] mt-2">
                     {[
+                      { label: 'Alquileres', query: 'operation=alquiler' },
                       { label: 'Casas', query: 'type=Casa' },
                       { label: 'Deptos', query: 'type=Departamento' },
                       { label: 'Dúplex', query: 'type=D%C3%BAplex' },
                       { label: 'Terrenos', query: 'type=Terreno' },
                       { label: 'Comerciales', query: 'type=Inmueble+Comercial' },
                       { label: 'Campos', query: 'type=Campo' },
-                      { label: 'Alquileres', query: 'operation=alquiler' },
                       { label: 'Todas las propiedades', query: '' },
                     ].map(item => (
                       <li key={item.label} className="border-b border-[#252525] last:border-b-0">
@@ -271,13 +271,13 @@ const Navbar = ({ contactEmail = 'roggeroroma@hotmail.com', contactPhone = '+54 
               </button>
               <div className={`overflow-hidden transition-all duration-300 ${mobileSubOpen ? 'max-h-[420px] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
                 {[
+                  { href: '/properties?operation=alquiler', label: 'Alquileres' },
                   { href: '/properties?type=Casa', label: 'Casas' },
                   { href: '/properties?type=Departamento', label: 'Deptos' },
                   { href: '/properties?type=D%C3%BAplex', label: 'Dúplex' },
                   { href: '/properties?type=Terreno', label: 'Terrenos' },
                   { href: '/properties?type=Inmueble+Comercial', label: 'Comerciales' },
                   { href: '/properties?type=Campo', label: 'Campos' },
-                  { href: '/properties?operation=alquiler', label: 'Alquileres' },
                   { href: '/properties', label: 'Todas las propiedades' },
                 ].map(l => (
                     <Link key={l.href} href={l.href} className="block text-white/70 text-[16px] py-2 pl-4 hover:text-white transition-colors" style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400 }} onClick={() => setIsMobileMenuOpen(false)}>
