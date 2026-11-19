@@ -29,11 +29,11 @@ export function loadSocialExportFonts() {
 }
 
 /**
- * Carga el logotipo blanco oficial completo (R&R + SILVIA ROGGERO de ROMA)
- * junto con los íconos SVG utilizados en las exportaciones a Instagram.
+ * Carga el logotipo blanco completo oficial (R&R + SILVIA ROGGERO de ROMA + NEGOCIOS INMOBILIARIOS)
+ * junto con los íconos SVG utilizados en las exportaciones a Instagram/Facebook.
  */
 export function loadSocialBrandAssets() {
-  const fullWhiteLogoPath = join(process.cwd(), 'public', 'images', 'roggero-roma-isotipo-nombre-blanco.png');
+  const fullWhiteLogoPath = join(process.cwd(), 'public', 'images', 'roggero-roma-logo-completo-blanco.png');
   const whiteIsoPath = join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-White.png');
   const fallbackIsoPath = join(process.cwd(), 'public', 'images', 'ISOTIPO R&R-Photoroom.png');
 

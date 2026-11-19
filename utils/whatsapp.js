@@ -21,20 +21,23 @@ const MESSAGES = {
  *
  * @param {object}  [options]
  * @param {object}  [options.property]      – Property object (card / detail)
- * @param {string}  [options.context]       – 'hero' | 'seller' | 'float' | 'general'
+ * @param {string}  [options.context]       – 'hero' | 'seller' | 'float' | 'general' | 'story'
  * @param {string}  [options.customMessage] – Override auto-generated message
+ * @param {string}  [options.origin]        – Canonical origin for server-side URLs
  * @returns {string} Full WhatsApp URL
  */
-export function generateWhatsAppLink({ property, context = 'general', customMessage } = {}) {
+export function generateWhatsAppLink({ property, context = 'general', customMessage, origin } = {}) {
   let message;
 
   if (customMessage) {
     message = customMessage;
   } else if (property) {
-    const url =
-      typeof window !== 'undefined'
-        ? `${window.location.origin}/properties/${property._id}`
-        : `https://roggeroyroma.com.ar/properties/${property._id}`;
+    const baseOrigin =
+      origin ||
+      (typeof window !== 'undefined'
+        ? window.location.origin
+        : process.env.NEXT_PUBLIC_DOMAIN || 'https://roggeroyroma.com');
+    const url = `${baseOrigin.replace(/\/$/, '')}/properties/${property._id}`;
     if (context === 'story') {
       const loc = [property.location?.city, property.location?.state].filter(Boolean).join(', ');
       const locStr = loc ? `, ${loc}` : '';
@@ -47,6 +50,21 @@ export function generateWhatsAppLink({ property, context = 'general', customMess
   }
 
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * URL corta compatible con el Sticker «Enlace» de Instagram Stories (~50-65 chars).
+ * Redirige vía /w/[id] al deep-link completo de WhatsApp con todos los datos de la propiedad.
+ */
+export function generateStoryShortWhatsAppLink({ propertyId, origin } = {}) {
+  if (!propertyId) return `https://wa.me/${WA_NUMBER}`;
+  const isBrowserProd = typeof window !== 'undefined' && !window.location.hostname.includes('localhost');
+  const baseOrigin =
+    origin ||
+    (isBrowserProd
+      ? window.location.origin
+      : process.env.NEXT_PUBLIC_DOMAIN || 'https://roggeroyroma.com');
+  return `${baseOrigin.replace(/\/$/, '')}/w/${propertyId}`;
 }
 
 /** Expose the canonical number for tel: links */

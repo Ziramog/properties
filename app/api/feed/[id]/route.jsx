@@ -273,7 +273,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
     const data = extractFeedData(property);
     const titleFontSize = data.title.length > 48 ? 44 : data.title.length > 28 ? 52 : 60;
 
-    // Header institucional unificado en las 7 láminas (separación simétrica de 12 px entre monograma, nombre y bajada)
+    // Header institucional completo unificado en las 7 láminas (logo maestro con bajada integrada)
     const brandHeader = (
       <div
         style={{
@@ -282,40 +282,19 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
           left: 0,
           width: '100%',
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          justifyContent: 'center',
           zIndex: 20,
         }}
       >
         <img
           src={assets.brandFullWhiteLogoUrl}
           width={430}
-          height={141}
+          height={174}
           style={{
             objectFit: 'contain',
             filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
           }}
         />
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '7px' }}>
-          <div style={{ width: '36px', height: '2px', backgroundColor: corporateOrange }} />
-          <span
-            style={{
-              color: '#FFFFFF',
-              fontSize: 20,
-              lineHeight: 1,
-              fontWeight: 700,
-              letterSpacing: '4.5px',
-              fontFamily: '"Lato", sans-serif',
-              textTransform: 'uppercase',
-              textAlign: 'center',
-              textShadow: '0 2px 8px rgba(0,0,0,0.9)',
-            }}
-          >
-            NEGOCIOS INMOBILIARIOS
-          </span>
-          <div style={{ width: '36px', height: '2px', backgroundColor: corporateOrange }} />
-        </div>
       </div>
     );
 

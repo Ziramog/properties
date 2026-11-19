@@ -423,49 +423,27 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               }}
             />
 
-            {/* ZONA 1: Header Institucional (Top Center con separación simétrica de 13 px) */}
+            {/* ZONA 1: Header Institucional (Logo maestro completo con R&R + SILVIA ROGGERO de ROMA + NEGOCIOS INMOBILIARIOS) */}
             <div
               style={{
                 position: 'absolute',
-                top: 58,
+                top: 56,
                 left: 0,
                 width: '100%',
                 display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
+                justifyContent: 'center',
                 zIndex: 20,
               }}
             >
-              {/* Logo maestro blanco oficial (R&R + SILVIA ROGGERO de ROMA) */}
               <img
                 src={assets.brandFullWhiteLogoUrl}
                 width={470}
-                height={154}
+                height={190}
                 style={{
                   objectFit: 'contain',
                   filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
                 }}
               />
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '7px' }}>
-                <div style={{ width: '40px', height: '2px', backgroundColor: corporateOrange }} />
-                <span
-                  style={{
-                    color: '#FFFFFF',
-                    fontSize: 22,
-                    lineHeight: 1,
-                    fontWeight: 700,
-                    letterSpacing: '4.5px',
-                    fontFamily: '"Lato", sans-serif',
-                    textTransform: 'uppercase',
-                    textAlign: 'center',
-                    textShadow: '0 2px 8px rgba(0,0,0,0.9)',
-                  }}
-                >
-                  NEGOCIOS INMOBILIARIOS
-                </span>
-                <div style={{ width: '40px', height: '2px', backgroundColor: corporateOrange }} />
-              </div>
             </div>
 
             {/* ZONA 2: Etiquetas de la Publicación (Top-Left) */}
@@ -793,26 +771,12 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               <img
                 src={assets.brandFullWhiteLogoUrl}
                 width={420}
-                height={137}
+                height={170}
                 style={{
                   objectFit: 'contain',
                   filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
                 }}
               />
-              <span
-                style={{
-                  color: corporateOrange,
-                  fontSize: 18,
-                  lineHeight: 1,
-                  fontWeight: 700,
-                  letterSpacing: '6px',
-                  textTransform: 'uppercase',
-                  marginTop: 7,
-                  textShadow: '0 2px 8px rgba(0,0,0,0.85)',
-                }}
-              >
-                NEGOCIOS INMOBILIARIOS
-              </span>
             </div>
 
             {/* CONTENIDO PRINCIPAL INFERIOR (Zonas 4 a 9) */}
@@ -1069,25 +1033,12 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
               <img
                 src={assets.brandFullWhiteLogoUrl}
                 width={380}
-                height={124}
+                height={154}
                 style={{
                   objectFit: 'contain',
                   filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
                 }}
               />
-              <span
-                style={{
-                  color: corporateOrange,
-                  fontSize: 16,
-                  lineHeight: 1,
-                  fontWeight: 700,
-                  letterSpacing: '5px',
-                  textTransform: 'uppercase',
-                  marginTop: 6,
-                }}
-              >
-                NEGOCIOS INMOBILIARIOS
-              </span>
             </div>
 
             {/* CONTENIDO PRINCIPAL INFERIOR (Zonas 4 a 9) */}
@@ -1308,7 +1259,7 @@ async function handleStoryRequest(request, { params }, clientImageBase64 = null)
 
           {/* Top Isotipo Center */}
           <div style={{ position: 'absolute', top: 80, left: 0, width: '100%', display: 'flex', justifyContent: 'center', zIndex: 20 }}>
-            <img src={assets.brandFullWhiteLogoUrl} width={470} height={154} style={{ objectFit: 'contain', filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))' }} />
+            <img src={assets.brandFullWhiteLogoUrl} width={470} height={190} style={{ objectFit: 'contain', filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))' }} />
           </div>
 
           {/* Content - Bottom Aligned */}

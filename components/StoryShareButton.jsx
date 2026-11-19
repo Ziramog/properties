@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Share2, Share, Copy, Check } from 'lucide-react';
 import { toast } from 'react-toastify';
-import { generateWhatsAppLink } from '@/utils/whatsapp';
+import { generateStoryShortWhatsAppLink } from '@/utils/whatsapp';
 import { processImageInBrowser } from '@/utils/processImageInBrowser';
 
 export default function StoryShareButton({ property }) {
@@ -10,8 +10,9 @@ export default function StoryShareButton({ property }) {
   const [fileToShare, setFileToShare] = useState(null);
   const [linkCopied, setLinkCopied] = useState(false);
 
-  // Generate contextualized WhatsApp link for Instagram's Link Sticker
-  const waLink = property ? generateWhatsAppLink({ property, context: 'story' }) : '';
+  // Enlace corto (/w/[id]) para cumplir el límite de largo del Sticker Enlace en Instagram
+  const propertyId = property?._id || property?.id;
+  const waLink = propertyId ? generateStoryShortWhatsAppLink({ propertyId }) : '';
 
   const handlePrepare = async () => {
     setStatus('preparing');
