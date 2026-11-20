@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { Layers, Share } from 'lucide-react';
+import { Layers, Share, Copy, Check } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { processImageInBrowser } from '@/utils/processImageInBrowser';
 import { convertBlobToJpeg } from '@/utils/convertBlobToJpeg';
@@ -42,6 +42,7 @@ export default function FeedShareButton({ property, variant = 'light' }) {
   const [filesToShare, setFilesToShare] = useState([]);
   const [showLogo, setShowLogo] = useState(true);
   const [showDetails, setShowDetails] = useState(true);
+  const [captionCopied, setCaptionCopied] = useState(false);
 
   const isDark = variant === 'dark';
 
@@ -55,12 +56,14 @@ export default function FeedShareButton({ property, variant = 'light' }) {
       setStatus('idle');
       setFilesToShare([]);
       setProgress(0);
+      setCaptionCopied(false);
     }
   };
 
   const handlePrepare = async () => {
     setStatus('preparing');
     setProgress(0);
+    setCaptionCopied(false);
     const generatedFiles = [];
     const propertyId = property._id || property.id;
 
@@ -125,7 +128,26 @@ export default function FeedShareButton({ property, variant = 'light' }) {
 
       setFilesToShare(generatedFiles);
       setStatus('ready');
-      toast.success('¡Carrusel 4:5 listo! En Instagram tocá Vertical (< >) en CADA lámina: las 2–7 pueden abrir en cuadrado.', { autoClose: 8000 });
+
+      // Copiar el texto automáticamente durante la preparación para no interferir con el gesto de navigator.share en iOS
+      const caption = buildFeedCaption(property);
+      let copiedAuto = false;
+      if (typeof navigator !== 'undefined' && navigator.clipboard && caption) {
+        try {
+          await navigator.clipboard.writeText(caption);
+          copiedAuto = true;
+          setCaptionCopied(true);
+        } catch {
+          copiedAuto = false;
+        }
+      }
+
+      toast.success(
+        copiedAuto
+          ? '¡Carrusel 4:5 listo y texto copiado! En Instagram tocá Vertical (< >) en CADA lámina.'
+          : '¡Carrusel 4:5 listo! Podés copiar el texto abajo antes de publicar.',
+        { autoClose: 8000 }
+      );
     } catch (error) {
       console.error(error);
       toast.error('Hubo un error al preparar el carrusel.');
@@ -133,18 +155,24 @@ export default function FeedShareButton({ property, variant = 'light' }) {
     }
   };
 
+  const handleCopyCaption = async () => {
+    const caption = buildFeedCaption(property);
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        await navigator.clipboard.writeText(caption);
+        setCaptionCopied(true);
+        toast.success('Texto del post copiado al portapapeles');
+      } else {
+        throw new Error('Portapapeles no soportado');
+      }
+    } catch {
+      toast.error('No se pudo copiar automáticamente. Tocá para reintentar.');
+    }
+  };
+
   const handleShare = async () => {
     try {
-      // 1. Generar el texto limpio para el feed
       const caption = buildFeedCaption(property);
-
-      // 2. Copiar al portapapeles (workaround porque Instagram iOS suele ignorar el text del share)
-      try {
-        await navigator.clipboard.writeText(caption);
-        toast.info('Texto copiado al portapapeles. ¡Pégalo en Instagram!');
-      } catch (err) {
-        console.log('Clipboard fallback:', err);
-      }
 
       if (navigator.canShare && navigator.canShare({ files: filesToShare })) {
         await navigator.share({
@@ -155,8 +183,15 @@ export default function FeedShareButton({ property, variant = 'light' }) {
         // Volver al estado inicial luego de compartir por si quiere hacerlo de nuevo
         setStatus('idle');
         setFilesToShare([]);
+        setCaptionCopied(false);
       } else {
-        // Fallback si no soporta compartir nativo o el navegador de escritorio
+        // En escritorio, copiar al portapapeles si no estaba copiado y avisar
+        if (!captionCopied && typeof navigator !== 'undefined' && navigator.clipboard) {
+          try {
+            await navigator.clipboard.writeText(caption);
+            setCaptionCopied(true);
+          } catch {}
+        }
         toast.warning('Tu navegador no soporta compartir directamente. Usa un celular.');
         setStatus('idle');
       }
@@ -189,13 +224,37 @@ export default function FeedShareButton({ property, variant = 'light' }) {
       </div>
 
       {status === 'ready' ? (
-        <button
-          onClick={handleShare}
-          className="w-full flex items-center justify-center gap-2 text-[13px] font-bold uppercase tracking-wider text-white bg-green-600 border-2 border-green-600 hover:bg-green-700 transition-colors py-3 px-6"
-        >
-          <Share className="w-5 h-5" />
-          Compartir a Instagram
-        </button>
+        <div className="space-y-2">
+          <button
+            onClick={handleShare}
+            className="w-full flex items-center justify-center gap-2 text-[13px] font-bold uppercase tracking-wider text-white bg-green-600 border-2 border-green-600 hover:bg-green-700 transition-colors py-3 px-6"
+          >
+            <Share className="w-5 h-5" />
+            Compartir a Instagram
+          </button>
+
+          <button
+            type="button"
+            onClick={handleCopyCaption}
+            className={`w-full flex items-center justify-center gap-2 text-[12px] font-semibold border transition-colors py-2.5 px-4 ${
+              isDark
+                ? 'text-zinc-200 bg-[#222] hover:bg-[#2c2c2c] border-[#3a3a3a]'
+                : 'text-gray-700 bg-gray-100 hover:bg-gray-200 border-gray-300'
+            }`}
+          >
+            {captionCopied ? (
+              <>
+                <Check className={`w-4 h-4 ${isDark ? 'text-green-400' : 'text-green-600'}`} />
+                <span className={`${isDark ? 'text-green-400' : 'text-green-700'} font-bold`}>¡Texto del post Copiado!</span>
+              </>
+            ) : (
+              <>
+                <Copy className={`w-4 h-4 ${isDark ? 'text-zinc-400' : 'text-gray-600'}`} />
+                <span>Copiar texto del post</span>
+              </>
+            )}
+          </button>
+        </div>
       ) : (
         <button
           onClick={handlePrepare}

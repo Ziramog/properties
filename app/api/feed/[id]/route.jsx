@@ -363,10 +363,9 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
 
             {brandHeader}
 
-            {/* Etiquetas y Bloque Editorial Inferior (controlados juntos por el switch de descripciones/textos) */}
+            {/* Etiquetas (controladas por el switch de textos/detalles) */}
             {showDetails ? (
-              <>
-                <div
+              <div
                   style={{
                     position: 'absolute',
                     top: 282,
@@ -403,10 +402,12 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                       </span>
                     </div>
                   ))}
-                </div>
+              </div>
+            ) : null}
 
-                {/* Bloque Editorial Inferior (línea naranja anclada baja a 30px del borde inferior) */}
-                <div
+            {/* Bloque Editorial Inferior (directo sobre el contenedor raíz: evita Fragment en Satori) */}
+            {showDetails ? (
+              <div
                   style={{
                     position: 'absolute',
                     bottom: 0,
@@ -592,7 +593,6 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 />
               </div>
             </div>
-              </>
             ) : null}
           </div>
         ),
