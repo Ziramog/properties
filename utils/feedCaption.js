@@ -1,23 +1,23 @@
 import { parsePrice } from './priceUtils.js';
-import { generateStoryShortWhatsAppLink, getSocialWhatsAppTarget } from './whatsapp.js';
 
 const ABBREV_REGEX = /\b(Av|Bv|Pje|Gral|Ing|Arq|Dr|Dra|Sr|Sra|Nro|aprox|ej|hs|tel|urb)\.\s+/gi;
 
 /**
  * Formatea el precio del caption para Feed según la operación:
- * - Alquiler: siempre en pesos con emoji 💲 (ej. `💲 2.500.000`).
- * - Venta u otras operaciones: en dólares con emoji 💵 (ej. `💵 U$D 150.000`).
+ * - Alquiler: en pesos con emoji 💲 (ej. `💲 2.500.000`).
+ * - Venta u otras operaciones: en dólares con emoji 💲 y aclaración USD (ej. `💲 USD 150.000`).
+ * - Sin monto informado: `💲 Consultar`.
  */
 export function formatFeedCaptionPrice(property) {
   const isRental = String(property?.operation || '').toLowerCase() === 'alquiler';
   const { numericPrice } = parsePrice(property?.price);
 
   if (!numericPrice) {
-    return isRental ? '💲 Consultar' : '💵 Consultar';
+    return '💲 Consultar';
   }
 
   const formatted = numericPrice.toLocaleString('es-AR');
-  return isRental ? `💲 ${formatted}` : `💵 U$D ${formatted}`;
+  return isRental ? `💲 ${formatted}` : `💲 USD ${formatted}`;
 }
 
 /**
@@ -111,9 +111,10 @@ export function extractDescriptionBullets(property, maxBullets = 4, maxChars = 4
 
 /**
  * Genera el caption limpio para Feed de Instagram / Facebook con pocos emojis,
- * moneda diferenciada por operación, características con `✔️` y enlace WhatsApp enrutado.
+ * moneda diferenciada por operación (`💲` en pesos, `💲 USD` en dólares),
+ * características con `✔️` y enlace al sitio web oficial.
  */
-export function buildFeedCaption(property, { origin } = {}) {
+export function buildFeedCaption(property) {
   const title = (property?.name || property?.type || 'Propiedad').trim();
   const operation = property?.operation ? property.operation.toUpperCase() : 'DISPONIBLE';
   const endsWithOperation = new RegExp(`\\ben\\s+${operation}$`, 'i').test(title);
@@ -130,9 +131,6 @@ export function buildFeedCaption(property, { origin } = {}) {
     characteristicLines.push(`✔️ ${bullet}`);
   }
 
-  const propertyId = property?._id || property?.id;
-  const waLink = generateStoryShortWhatsAppLink({ propertyId, origin });
-  const { display: waDisplay } = getSocialWhatsAppTarget(property);
   const cityTag = property?.location?.city?.replace(/\s+/g, '') || 'Propiedades';
 
   const sections = [headline];
@@ -144,7 +142,7 @@ export function buildFeedCaption(property, { origin } = {}) {
   }
 
   sections.push(
-    `📲 Consultas por WhatsApp (${waDisplay}): ${waLink}\n🔗 Más info en roggeroyroma.com.ar\n#BienesRaices #Inmobiliaria #RoggeroYRoma #${cityTag}`
+    `🔗 Más info en www.roggeroyroma.com\n#BienesRaices #Inmobiliaria #RoggeroYRoma #${cityTag}`
   );
 
   return sections.join('\n\n');
