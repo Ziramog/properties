@@ -1028,7 +1028,7 @@ details.cloud-control-card[open] > summary {
   margin-bottom: 7px;
 }
 
-/* Right Studio Dock Cards (IA + Copywriting + Quick Export) */
+/* Right Studio Dock Cards (Contrast: Retoque IA / Nube + Quick Export) */
 .dock-card {
   background: #141924;
   border: 1px solid #232b3d;
@@ -1063,15 +1063,72 @@ details.cloud-control-card[open] > summary {
   padding: 2px 8px;
   white-space: nowrap;
 }
+.dock-mode-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 3px;
+  background: #0b0e14;
+  border: 1px solid #252e40;
+  border-radius: 8px;
+}
+.dock-mode-tabs button {
+  border: 0 !important;
+  border-radius: 6px !important;
+  padding: 7px 6px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #94a3b8 !important;
+  background: transparent !important;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.dock-mode-tabs button:hover:not(.active) {
+  color: #f1f5f9 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+.dock-mode-tabs button.active {
+  background: #f26b2e !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(242, 107, 46, 0.28);
+}
+.dock-explain-box {
+  background: rgba(242, 107, 46, 0.07);
+  border: 1px solid rgba(242, 107, 46, 0.24);
+  border-left: 3px solid #f26b2e;
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+.dock-explain-box strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fdba74;
+  margin-bottom: 3px;
+}
+.dock-explain-box p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.42;
+  color: #cbd5e1;
+}
+.dock-explain-box p b {
+  color: #f8fafc;
+}
 .dock-btn-ai {
   width: 100%;
-  padding: 8px 10px !important;
+  padding: 9px 10px !important;
   border-radius: 7px !important;
   font-size: 11.5px !important;
   font-weight: 700 !important;
-  background: rgba(242, 107, 46, 0.16) !important;
-  border: 1px solid rgba(242, 107, 46, 0.55) !important;
-  color: #fdba74 !important;
+  background: #f26b2e !important;
+  border: 1px solid #f26b2e !important;
+  color: #ffffff !important;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -1079,42 +1136,79 @@ details.cloud-control-card[open] > summary {
   gap: 5px;
 }
 .dock-btn-ai:hover:not(:disabled) {
-  background: #f26b2e !important;
+  background: #d95d24 !important;
+  border-color: #d95d24 !important;
+}
+.dock-btn-ai:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.dock-cloud-layers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+.dock-cloud-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 6px 8px !important;
+  background: #0d1119 !important;
+  border: 1px solid #262f42 !important;
+  border-radius: 6px !important;
+  color: #cbd5e1 !important;
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  text-align: left;
+}
+.dock-cloud-chip:hover {
+  border-color: #475569 !important;
+  color: #f8fafc !important;
+}
+.dock-cloud-chip.active {
+  background: rgba(242, 107, 46, 0.14) !important;
   border-color: #f26b2e !important;
   color: #ffffff !important;
 }
-.dock-copy-textarea {
+.dock-cloud-chip .chip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dock-cloud-chip .chip-pct {
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748b;
+  flex-shrink: 0;
+}
+.dock-cloud-chip .chip-pct.on {
+  color: #fb923c;
+}
+.cloud-jump-btn {
   width: 100%;
-  box-sizing: border-box;
-  background: #0b0e14;
-  border: 1px solid #262f42;
-  border-radius: 7px;
-  color: #e2e8f0;
-  padding: 8px 9px;
-  font-size: 11.5px;
-  line-height: 1.42;
-  resize: vertical;
-  min-height: 92px;
-  max-height: 200px;
-  font-family: inherit;
-  outline: none;
+  margin-top: 8px;
+  padding: 7px 10px !important;
+  background: rgba(242, 107, 46, 0.09) !important;
+  border: 1px solid rgba(242, 107, 46, 0.35) !important;
+  border-radius: 7px !important;
+  color: #e2e8f0 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  cursor: pointer;
 }
-.dock-copy-textarea:focus {
-  border-color: #f26b2e;
+.cloud-jump-btn:hover {
+  background: rgba(242, 107, 46, 0.18) !important;
+  border-color: #f26b2e !important;
 }
-.dock-copy-input {
-  width: 100%;
-  box-sizing: border-box;
-  background: #0b0e14;
-  border: 1px solid #262f42;
-  border-radius: 6px;
-  color: #e2e8f0;
-  padding: 6px 8px;
-  font-size: 11px;
-  outline: none;
-}
-.dock-copy-input:focus {
-  border-color: #f26b2e;
+.cloud-jump-btn b {
+  color: #fb923c;
 }
 .dock-export-grid {
   display: grid;
@@ -1148,6 +1242,21 @@ details.cloud-control-card[open] > summary {
   stroke-width: 1.8;
   fill: none;
 }
+.dock-sub-export {
+  width: 100%;
+  padding: 6px 8px !important;
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+  background: #0d1119 !important;
+  border: 1px solid #242d3f !important;
+  border-radius: 6px !important;
+  color: #cbd5e1 !important;
+  cursor: pointer;
+}
+.dock-sub-export:hover {
+  border-color: #f26b2e !important;
+  color: #fb923c !important;
+}
 </style>
 </head>
 <body>
@@ -1174,26 +1283,19 @@ details.cloud-control-card[open] > summary {
 <input id="fileFontReg" type="file" accept=".ttf,.otf,.woff,.woff2,font/*" hidden>
 <input id="fileFontBold" type="file" accept=".ttf,.otf,.woff,.woff2,font/*" hidden>
 <div id="rrCopyModal" style="display:none;position:fixed;inset:0;background:rgba(5,8,14,.82);z-index:99990;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);">
-  <div style="background:#12161f;border-radius:12px;width:100%;max-width:600px;box-shadow:0 24px 64px rgba(0,0,0,.75);overflow:hidden;border:1px solid #2a3142;display:flex;flex-direction:column;color:#f1f5f9;">
+  <div style="background:#12161f;border-radius:12px;width:100%;max-width:580px;box-shadow:0 24px 64px rgba(0,0,0,.75);overflow:hidden;border:1px solid #2a3142;display:flex;flex-direction:column;color:#f1f5f9;">
     <div style="padding:14px 18px;background:#0d1017;border-bottom:1px solid #232836;color:#fff;display:flex;align-items:center;justify-content:space-between;">
       <div style="font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;">
-        <span style="color:#F26B2E;">📝</span> Copy Editorial de Publicación · OpenAI
+        <span style="color:#F26B2E;">📝</span> Texto / Notas de la Publicación
       </div>
       <button id="closeCopyModal" style="background:transparent;border:0;color:#94a3b8;font-size:22px;cursor:pointer;line-height:1;padding:0 6px;">&times;</button>
     </div>
     <div style="padding:18px;display:flex;flex-direction:column;gap:12px;">
-      <div style="background:#161b26;border:1px solid #262d3d;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;">
-        <label style="font-size:11px;font-weight:700;color:#fb923c;text-transform:uppercase;letter-spacing:.4px;">Asistente IA (OpenAI GPT-4o mini)</label>
-        <div style="display:flex;gap:8px;">
-          <input id="copyContextInput" type="text" placeholder="Opcional: detalles extra (ej. 3 dormitorios, barrio Pellegrini, apto crédito...)" style="flex:1;background:#090b10;border:1px solid #2a3142;border-radius:6px;padding:8px 10px;font-size:12px;color:#f1f5f9;outline:none;">
-          <button id="btnAiGenerateCopy" style="padding:8px 14px;background:#f26b2e;border:0;color:#fff;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;">✨ Redactar con IA</button>
-        </div>
-      </div>
       <div style="display:flex;align-items:center;justify-content:space-between;">
-        <label style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;">Texto para Feed / Historias</label>
+        <label style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;">Pie de publicación (guardado en esta pieza)</label>
         <span id="copyStats" style="font-size:11px;color:#94a3b8;font-family:monospace;">0 caracteres · 0 palabras</span>
       </div>
-      <textarea id="copyTextarea" rows="10" placeholder="Escribí aquí el texto o hacé clic en «✨ Redactar con IA» para generarlo a partir de los titulares de la pieza activa..." style="width:100%;background:#090b10;border:1px solid #2a3142;border-radius:8px;padding:12px;font-family:inherit;font-size:13px;line-height:1.5;resize:vertical;outline:none;box-sizing:border-box;color:#f1f5f9;"></textarea>
+      <textarea id="copyTextarea" rows="9" placeholder="Escribí o pegá aquí el texto para acompañar esta pieza en Instagram o Facebook..." style="width:100%;background:#090b10;border:1px solid #2a3142;border-radius:8px;padding:12px;font-family:inherit;font-size:13px;line-height:1.5;resize:vertical;outline:none;box-sizing:border-box;color:#f1f5f9;"></textarea>
       <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid #232836;">
         <span id="copySuccessMsg" style="font-size:12px;color:#4ade80;font-weight:700;display:none;">✓ ¡Texto copiado al portapapeles!</span>
         <div style="margin-left:auto;display:flex;gap:8px;">
@@ -1460,55 +1562,142 @@ function drawPieces(){const box=$('#pieces'),title=$('#piecesHeading'),info=$('#
 
 
 function photoDataFor(i){return assets[pieces[i].photoKey]?.data||'';}
-let dockCopyGenerating=false,dockCopyContextVal='';
-function dockCreditsMini(){
-  if(!aiConnected())return '<span style="font-size:10px;color:#64748b;">Offline</span>';
-  if(!aiCredits)return '<span class="dock-ai-pill">✨ IA</span>';
-  const limit=Number(aiCredits.limit)||50,used=Math.max(0,Number(aiCredits.used)||0),rem=Math.max(0,limit-used);
-  return `<span class="dock-ai-pill" title="${used} usados de ${limit} créditos mensuales">✨ IA · ${rem}/${limit}</span>`;
+let dockTab='ai',dockCloudLayerId='title';
+const CLOUD_SHORT_LABELS={logo:'Logo',category:'Etiqueta',title:'Título principal',accent:'Título naranja',support:'Subtítulo',location:'Ubicación'};
+function getCloudCapableLayers(){
+  const order=['logo','category','title','accent','support','location'];
+  const layers=(p()?.layers||[]).filter(l=>l&&['logo','text','location'].includes(l.type));
+  return layers.sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id));
 }
-function drawDock(force=false){
+function getDockCloudLayer(){
+  if(picked.length===1){
+    const s=sel();
+    if(s&&['logo','text','location'].includes(s.type)){
+      dockCloudLayerId=s.id;
+      return s;
+    }
+  }
+  const list=getCloudCapableLayers();
+  return list.find(l=>l.id===dockCloudLayerId)||list.find(l=>l.id==='title')||list[0]||null;
+}
+function drawDock(){
   const dock=$('#studioDock');if(!dock)return;
   syncShellFold();
   if(!isDockActive()){dock.innerHTML='';return;}
-  const activeEl=document.activeElement;
-  if(!force&&activeEl&&(activeEl.id==='dockCopyTextarea'||activeEl.id==='dockCopyContext'))return;
   const c=aiCandidates[active],z=p(),online=aiConnected(),focus=aiFocuses[active]||'titles_logo';
   if(online&&!aiCredits&&!aiCreditsLoading)aiFetchCredits();
-  const capVal=(z&&z.caption)||'';
-  const words=capVal.trim()?capVal.trim().split(/\s+/).length:0;
   const isFb=facebook(),isSt=story();
   const zipCount=(isSt?[6,7,8,9,10]:[0,1,2,3,4]).filter(i=>pieces[i]?.included!==false).length;
+  const cloudLayers=getCloudCapableLayers();
+  const activeCloudsCount=cloudLayers.filter(l=>l.visible&&(l.cloud||0)>0).length;
+  const statusPill=z.aiRetouch
+    ?'<span class="dock-ai-pill" style="color:#4ade80;border-color:rgba(74,222,128,.4);background:rgba(74,222,128,.1);">✓ IA aplicada</span>'
+    :(activeCloudsCount?`<span class="dock-ai-pill">${activeCloudsCount} ${activeCloudsCount===1?'nube':'nubes'}</span>`:'<span style="font-size:10px;color:#94a3b8;">Sin sombras</span>');
+
+  let mainBody='';
+  if(dockTab==='ai'){
+    mainBody=`
+    <div class="dock-explain-box">
+      <strong>¿Para qué es el Retoque con IA?</strong>
+      <p>Retoca los <b>overlays de contraste detrás de los títulos, subtítulos y logo</b> para que los textos se vean mejor y se lean con nitidez sobre fondos claros, <b>sin oscurecer ni alterar</b> el resto de la fotografía.</p>
+    </div>
+    ${aiCreditsMarkup()}
+    <div class="field" style="margin:2px 0 !important;">
+      <label for="aiFocus">Área de títulos / logo a reforzar</label>
+      <select id="aiFocus">
+        <option value="titles_logo" ${focus==='titles_logo'?'selected':''}>Títulos, subtítulos y logo (recomendado)</option>
+        <option value="titles" ${focus==='titles'?'selected':''}>Solo títulos y subtítulos</option>
+        <option value="logo" ${focus==='logo'?'selected':''}>Solo zona del logo</option>
+        <option value="upper" ${focus==='upper'?'selected':''}>Tercio superior</option>
+        <option value="lower" ${focus==='lower'?'selected':''}>Tercio inferior</option>
+        <option value="general" ${focus==='general'?'selected':''}>Tratamiento general localizado</option>
+      </select>
+    </div>
+    <div class="field" style="margin:2px 0 !important;">
+      <label for="aiIntensity">Sutileza / Intensidad del overlay <b id="aiIntensityRead">${Math.round((aiIntensities[active]??0.35)*100)}%</b></label>
+      <input id="aiIntensity" type="range" min="0.10" max="0.75" step="0.05" value="${aiIntensities[active]??0.35}">
+      <div style="display:flex;justify-content:space-between;font-size:9.5px;color:#94a3b8;margin-top:2px;"><span>10% Muy sutil</span><span style="color:#fb923c;font-weight:700;">35% Equilibrado</span><span>75% Marcado</span></div>
+    </div>
+    ${c?`
+      <div class="ai-image-comparison" style="margin:4px 0;"><div class="ai-preview-label" style="padding:5px 8px;font-size:10.5px;">${aiPreviewMode==='before'?'ANTES · Composición actual':'DESPUÉS · Overlays retocados detrás de textos'}</div><img id="aiCompareImage" alt="Comparación del retoque" src="${aiPreviewMode==='before'?c.beforePreview:c.afterPreview}" style="max-height:175px;"></div>
+      <div class="ai-button-row" style="margin:2px 0;"><button type="button" data-ai="before" class="${aiPreviewMode==='before'?'selected':''}" style="min-height:30px;padding:4px;font-size:11px;">Antes</button><button type="button" data-ai="after" class="${aiPreviewMode==='after'?'selected':''}" style="min-height:30px;padding:4px;font-size:11px;">Después</button></div>
+      <div class="two-buttons" style="margin-top:2px;"><button type="button" class="ai-action-primary" data-ai="approve" style="padding:9px;font-size:11.5px;">✓ Aprobar retoque</button><button type="button" class="ai-secondary" data-ai="discard" style="padding:9px;font-size:11.5px;">Descartar</button></div>
+    `:(online?`<button type="button" class="dock-btn-ai" data-ai="generate" style="margin-top:2px;" ${aiGenerating?'disabled':''}>${aiGenerating?'⏳ Generando retoque de overlays…':'✨ Generar retoque con IA'}</button>`:'')}
+    ${z.aiRetouch&&!c?`<div style="background:rgba(74,222,128,.09);border:1px solid rgba(74,222,128,.32);border-radius:6px;padding:7px 9px;font-size:11px;color:#86efac;">✅ <b>Retoque IA activo en esta pieza.</b> Los títulos y el logo siguen siendo 100% editables.</div>`:''}
+    ${z.aiOriginal?`<button type="button" class="ai-secondary" data-ai="revert" style="padding:7px 9px;font-size:11px;">↺ Restaurar foto y overlays originales</button>`:''}
+    <p class="mini-info" style="margin:2px 0 0;font-size:10px;line-height:1.38;">Al aprobar, las nubes manuales de esta pieza se apagan para evitar doble sombra. Siempre es reversible.</p>`;
+  }else{
+    const cl=getDockCloudLayer();
+    const cPct=cl?Math.round((cl.cloud||0)*100):0;
+    const cSpread=cl?Math.round((cl.cloudSpread!=null?cl.cloudSpread:0.5)*100):50;
+    const cW=cl?Number(cl.cloudWidth>0?cl.cloudWidth:1):1;
+    const cH=cl?Number(cl.cloudHeight>0?cl.cloudHeight:1):1;
+    const cX=cl?Math.round(cl.cloudX||0):0;
+    const cY=cl?Math.round(cl.cloudY||0):0;
+    mainBody=`
+    <div class="dock-explain-box">
+      <strong>¿Para qué es la Nube de contraste?</strong>
+      <p>Crea al instante un <b>halo oscuro difuso manual detrás de cada texto o logo</b> para despegar las letras de la foto sin usar créditos de IA.</p>
+    </div>
+    ${z.aiRetouch?`<div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.35);border-radius:6px;padding:6px 8px;font-size:10.5px;color:#fcd34d;line-height:1.35;">⚠️ Esta pieza ya tiene <b>Retoque IA</b> activo. Sumar nubes agregará sombra extra sobre el fondo retocado.</div>`:''}
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;font-size:10.5px;color:#94a3b8;margin-bottom:4px;"><span>Elegí la capa a sombrear</span><button type="button" class="textlink" data-dock-cloud-act="clear-piece" style="font-size:10px;color:#f87171;" ${activeCloudsCount?'':'disabled'}>🧹 Quitar todas</button></div>
+      <div class="dock-cloud-layers">
+        ${cloudLayers.map(lx=>{
+          const pVal=Math.round((lx.cloud||0)*100);
+          return `<button type="button" class="dock-cloud-chip ${cl&&cl.id===lx.id?'active':''}" data-dock-cloud-layer="${lx.id}" style="${lx.visible?'':'opacity:.48;'}" title="${lx.visible?'Seleccionar '+layerName(lx):layerName(lx)+' (capa oculta)'}"><span class="chip-name">${esc(CLOUD_SHORT_LABELS[lx.id]||layerName(lx))}</span><span class="chip-pct ${pVal>0?'on':''}" data-dock-chip-pct="${lx.id}">${lx.visible?pVal+'%':'Oculta'}</span></button>`;
+        }).join('')}
+      </div>
+    </div>
+    ${cl?`
+      <div style="border-top:1px solid #222a3a;padding-top:7px;display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
+          <span style="font-size:11px;font-weight:700;color:#f8fafc;">☁ ${esc(CLOUD_SHORT_LABELS[cl.id]||layerName(cl))}</span>
+          <div style="display:inline-flex;gap:3px;">
+            <button type="button" class="btn-tiny-action" data-dock-cloud-preset="0">0%</button>
+            <button type="button" class="btn-tiny-action" data-dock-cloud-preset="0.25">25%</button>
+            <button type="button" class="btn-tiny-action" data-dock-cloud-preset="0.45">45%</button>
+            <button type="button" class="btn-tiny-action" data-dock-cloud-preset="0.70">70%</button>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field" style="margin:0 !important;"><label>Intensidad <b data-dock-cloud-read>${cPct}%</b></label><input data-dock-cfield="cloud" type="range" min="0" max="1" step="0.01" value="${cl.cloud||0}"></div>
+          <div class="field" style="margin:0 !important;"><label>Dispersión <b data-dock-cs-read>${cSpread}%</b></label><input data-dock-cfield="cloudSpread" type="range" min="0" max="1" step="0.01" value="${cl.cloudSpread!=null?cl.cloudSpread:0.5}"></div>
+        </div>
+        <div class="field-row">
+          <div class="field" style="margin:0 !important;"><label>Ancho X <b data-dock-cw-read>${cW.toFixed(2)}×</b></label><input data-dock-cfield="cloudWidth" type="range" min="0.2" max="3" step="0.05" value="${cW}"></div>
+          <div class="field" style="margin:0 !important;"><label>Alto Y <b data-dock-ch-read>${cH.toFixed(2)}×</b></label><input data-dock-cfield="cloudHeight" type="range" min="0.2" max="3" step="0.05" value="${cH}"></div>
+        </div>
+        ${cl.type!=='logo'?`<div class="field-row">
+          <div class="field" style="margin:0 !important;"><label>Mover X <b data-dock-cx-read>${cX>0?'+':''}${cX} px</b></label><input data-dock-cfield="cloudX" type="range" min="-600" max="600" step="2" value="${cX}"></div>
+          <div class="field" style="margin:0 !important;"><label>Mover Y <b data-dock-cy-read>${cY>0?'+':''}${cY} px</b></label><input data-dock-cfield="cloudY" type="range" min="-400" max="400" step="2" value="${cY}"></div>
+        </div>`:''}
+        <div class="color-tools-row" style="margin-top:2px;">
+          ${cl.type!=='logo'?`<button type="button" class="btn-tiny-action" data-dock-cloud-act="fit-text" title="Centra y ajusta el tamaño de la nube a la superficie real de las palabras">🎯 Ajustar al texto</button>`:''}
+          <button type="button" class="btn-tiny-action" data-dock-cloud-act="reset" title="Restablecer forma y posición">↺ Reset</button>
+          <button type="button" class="btn-tiny-action highlight" data-dock-cloud-act="apply-class" style="margin-left:auto;" title="Aplicar esta nube a todas las piezas">⚡ A las 11 piezas</button>
+        </div>
+      </div>
+    `:''}`;
+  }
+
   dock.innerHTML=`
   <div class="dock-card">
-    <div class="dock-card-head"><h4>Retoque IA de la foto</h4>${dockCreditsMini()}</div>
-    ${c?`<div class="ai-image-comparison" style="margin:2px 0;"><div class="ai-preview-label" style="padding:4px 8px;font-size:10px;">${aiPreviewMode==='before'?'ANTES':'DESPUÉS · Retoque propuesto'}</div><img id="aiCompareImage" alt="Comparación" src="${aiPreviewMode==='before'?c.beforePreview:c.afterPreview}" style="max-height:155px;"></div>
-    <div class="ai-button-row" style="margin:2px 0;"><button type="button" data-ai="before" class="${aiPreviewMode==='before'?'selected':''}" style="min-height:28px;padding:4px;font-size:11px;">Antes</button><button type="button" data-ai="after" class="${aiPreviewMode==='after'?'selected':''}" style="min-height:28px;padding:4px;font-size:11px;">Después</button></div>`:''}
-    <div class="field-row" style="margin:0;">
-      <div class="field" style="margin:0 !important;"><label for="aiFocus">Zona</label><select id="aiFocus" style="padding:5px 6px !important;font-size:11px !important;"><option value="titles_logo" ${focus==='titles_logo'?'selected':''}>Títulos + logo</option><option value="titles" ${focus==='titles'?'selected':''}>Solo títulos</option><option value="logo" ${focus==='logo'?'selected':''}>Solo logo</option><option value="upper" ${focus==='upper'?'selected':''}>Tercio sup.</option><option value="lower" ${focus==='lower'?'selected':''}>Tercio inf.</option><option value="general" ${focus==='general'?'selected':''}>General</option></select></div>
-      <div class="field" style="margin:0 !important;"><label for="aiIntensity">Intensidad <b id="aiIntensityRead">${Math.round((aiIntensities[active]??0.35)*100)}%</b></label><input id="aiIntensity" type="range" min="0.10" max="0.75" step="0.05" value="${aiIntensities[active]??0.35}" style="margin-top:6px;"></div>
+    <div class="dock-card-head"><h4>Legibilidad de títulos</h4>${statusPill}</div>
+    <div class="dock-mode-tabs" role="tablist" aria-label="Modo de contraste para títulos y logo">
+      <button type="button" data-dock-tab="ai" class="${dockTab==='ai'?'active':''}">✨ Retoque con IA</button>
+      <button type="button" data-dock-tab="cloud" class="${dockTab==='cloud'?'active':''}">☁ Nube de contraste</button>
     </div>
-    ${c?`<div class="two-buttons"><button type="button" class="ai-action-primary" data-ai="approve" style="padding:8px;font-size:11.5px;">✓ Aprobar</button><button type="button" class="ai-secondary" data-ai="discard" style="padding:8px;font-size:11.5px;">Descartar</button></div>`:(online?`<button type="button" class="dock-btn-ai" data-ai="generate" ${aiGenerating?'disabled':''}>${aiGenerating?'⏳ Generando retoque…':'✨ Aplicar retoque IA'}</button>`:'')}
-    ${z.aiOriginal?`<button type="button" class="ai-secondary" data-ai="revert" style="padding:6px 8px;font-size:11px;">↺ Restaurar original</button>`:''}
-    ${z.aiRetouch&&!c?`<div style="font-size:10.5px;color:#4ade80;font-weight:600;">✓ Retoque IA activo en esta pieza</div>`:''}
-  </div>
-  <div class="dock-card" style="flex:1;min-height:0;">
-    <div class="dock-card-head"><h4>Copywriting con IA</h4><span class="dock-ai-pill">✨ IA</span></div>
-    <input id="dockCopyContext" class="dock-copy-input" type="text" placeholder="Contexto opcional (ej: 3 dorms, apto crédito…)" value="${esc(dockCopyContextVal)}">
-    <textarea id="dockCopyTextarea" class="dock-copy-textarea" rows="5" style="flex:1;" placeholder="Escribí el pie de publicación o generá el copy con IA a partir de los textos de esta pieza…">${esc(capVal)}</textarea>
-    <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#94a3b8;"><span id="dockCopyStats">${capVal.length} caract. · ${words} pal.</span><span id="dockCopyCopied" style="color:#4ade80;font-weight:700;display:none;">✓ ¡Copiado!</span></div>
-    <div style="display:flex;gap:6px;">
-      <button type="button" id="dockAiCopyBtn" class="dock-btn-ai" style="flex:1;" ${dockCopyGenerating?'disabled':''}>${dockCopyGenerating?'⏳ Redactando…':'✨ Generar texto con IA'}</button>
-      <button type="button" id="dockCopyClipBtn" title="Copiar texto al portapapeles" style="padding:7px 11px !important;border-radius:7px !important;font-weight:700;font-size:12px;">📋</button>
-    </div>
+    ${mainBody}
   </div>
   <div class="dock-card" style="margin-top:auto;">
-    <div class="dock-card-head"><h4>Exportar</h4><span style="font-size:10px;color:#94a3b8;">${W} × ${H}</span></div>
+    <div class="dock-card-head"><h4>Exportar</h4><span style="font-size:10px;color:#94a3b8;">${isFb?'Portada FB':isSt?'Historia 9:16':'Feed 4:5'} · ${W} × ${H}</span></div>
     <div class="dock-export-grid">
-      <button type="button" class="dock-export-tile" data-dock-export="png" title="Descargar pieza activa en PNG"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>PNG</button>
-      <button type="button" class="dock-export-tile" data-dock-export="jpg" title="Descargar pieza activa en JPG"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>JPG</button>
-      <button type="button" class="dock-export-tile" data-dock-export="zip" title="${isFb?'Exportar PNG 851 × 315 (Meta)':`Exportar ZIP (${zipCount} piezas)`}"><svg viewBox="0 0 24 24"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>${isFb?'Meta':'ZIP ('+zipCount+')'}</button>
+      <button type="button" class="dock-export-tile" data-dock-export="png" title="Descargar pieza activa en PNG (${W} × ${H})"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>PNG</button>
+      <button type="button" class="dock-export-tile" data-dock-export="jpg" title="Descargar pieza activa en JPG (${W} × ${H})"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>JPG</button>
+      <button type="button" class="dock-export-tile" data-dock-export="zip" title="${isFb?'Exportar PNG 851 × 315 (Meta)':`Exportar lote ZIP (${zipCount} piezas)`}"><svg viewBox="0 0 24 24"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>${isFb?'Meta':'ZIP ('+zipCount+')'}</button>
     </div>
+    ${!isFb&&!isSt?`<button type="button" class="dock-sub-export" data-dock-export="square" title="Exportar versión cuadrada 1080 × 1080 sin recortar textos ni logo">◻ Exportar PNG cuadrado adaptado · 1080 × 1080</button>`:''}
   </div>`;
 }
 function inspectTab(which){if(['style','brand'].includes(which))which='brand';else if(['overlays','filters','background'].includes(which))which='background';else if(which==='ai'&&!isDockActive())which='ai';else which='edit';panel=which;$$('[data-panel]').forEach(b=>b.classList.toggle('active',b.dataset.panel===which));drawInspector();}
@@ -1604,7 +1793,7 @@ function aiCreditsMarkup(){
   ${exhausted?`<div style="margin-top:8px;padding:7px 9px;border-radius:6px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);color:#fbbf24;font-size:11.5px;line-height:1.4;">⚠️ Consumiste los ${limit} créditos mensuales incluidos. Por ahora podés seguir generando retoques.</div>`:''}
  </div>`;
 }
-function aiPanelMarkup(){const c=aiCandidates[active],z=p(),online=aiConnected();const focus=aiFocuses[active]||'titles_logo';if(online&&!aiCredits&&!aiCreditsLoading)aiFetchCredits();return `<section class="section"><h3>Retoque IA · bajo demanda</h3><div class="ai-panel-note"><b>Overlay difuso localizado (solo detrás de textos y logo).</b> Mantiene intacta la luminosidad general de la foto y aplica un sombreado suave únicamente detrás de los títulos, subtítulos y logo.</div>
+function aiPanelMarkup(){const c=aiCandidates[active],z=p(),online=aiConnected();const focus=aiFocuses[active]||'titles_logo';if(online&&!aiCredits&&!aiCreditsLoading)aiFetchCredits();return `<section class="section"><h3>Retoque con IA · Overlays de títulos</h3><div class="dock-explain-box" style="margin-bottom:10px;"><strong>¿Para qué es el Retoque con IA?</strong><p>Retoca los <b>overlays de contraste detrás de los títulos, subtítulos y logo</b> para que los textos se vean mejor y se lean con claridad, <b>sin oscurecer ni alterar</b> el resto de la fotografía.</p></div>
 ${aiCreditsMarkup()}
 <div class="field ai-field"><label for="aiFocus">Área que necesita retoque</label><select id="aiFocus"><option value="titles_logo" ${focus==='titles_logo'?'selected':''}>Títulos, subtítulos y logo (recomendado)</option><option value="titles" ${focus==='titles'?'selected':''}>Solo títulos y subtítulos</option><option value="logo" ${focus==='logo'?'selected':''}>Solo zona del logo</option><option value="upper" ${focus==='upper'?'selected':''}>Tercio superior</option><option value="lower" ${focus==='lower'?'selected':''}>Tercio inferior</option><option value="general" ${focus==='general'?'selected':''}>Tratamiento general localizado</option></select></div>
 <div class="field ai-field"><label for="aiIntensity">Sutileza / Intensidad del retoque <b id="aiIntensityRead">${Math.round((aiIntensities[active]??0.35)*100)}%</b></label><input id="aiIntensity" type="range" min="0.10" max="0.75" step="0.05" value="${aiIntensities[active]??0.35}"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:2px;"><span>10% Muy sutil</span><span style="color:var(--orange);font-weight:600;">35% Equilibrado (legible)</span><span>75% Marcado</span></div></div>
@@ -1771,7 +1960,7 @@ function aiUpdateCandidateIntensity(idx,intensity){
 const chosenIntensity=aiIntensities[idx]??0.35;
 const t=aiCompositeLocalized(img,p(),aiFocuses[idx]||'titles_logo',chosenIntensity);const normalized=t.toDataURL('image/png');const normalizedImage=await aiLoadedImage(normalized);
 const before=aiThumb(aiMakeCanvas('reference'));
-const after=aiThumb(aiMakeCanvas('proposal',normalizedImage));aiCandidates[idx]={rawAiImage:img,imageData:normalized,img:normalizedImage,beforePreview:before,afterPreview:after,width:W,height:H,sourceSignature:signature||aiSnapshot(p()),metrics};aiPreviewMode='after';if(isDockActive())drawDock(true);else inspectTab('ai');status('Retoque recibido. Compará antes/después y aprobalo únicamente si la propiedad sigue siendo fiel.');}
+const after=aiThumb(aiMakeCanvas('proposal',normalizedImage));aiCandidates[idx]={rawAiImage:img,imageData:normalized,img:normalizedImage,beforePreview:before,afterPreview:after,width:W,height:H,sourceSignature:signature||aiSnapshot(p()),metrics};aiPreviewMode='after';if(isDockActive()){dockTab='ai';drawDock();}else inspectTab('ai');status('Retoque recibido. Compará antes/después y aprobalo únicamente si la propiedad sigue siendo fiel.');}
 async function aiImport(file){if(!file)return;if(!/^image\/(png|jpeg|webp)$/i.test(file.type)&&!/\.(png|jpe?g|webp)$/i.test(file.name||'')){status('Usá una imagen PNG, JPG o WebP para el retoque.');return;}try{await aiAcceptCandidateData(await fileData(file));}catch(err){status(err.message);alert('No se pudo incorporar el retoque: '+err.message);}}
 async function aiGenerate(){if(aiGenerating||!aiConnected())return;const i=active;aiPrompts[i]=$('#aiPrompt')?.value||aiPrompts[i]||AI_DEFAULT_PROMPT;aiFocuses[i]=$('#aiFocus')?.value||'titles_logo';const currentSignature=aiSnapshot(p());aiGenerating=true;if(isDockActive())drawDock(true);else drawInspector();status('Solicitando retoque fotográfico al servidor…');try{const {meta,images}=await aiPreparedAssets(i,true);const form=new FormData();form.append('metadata',JSON.stringify(meta));for(const f of images)form.append(f.name,f.blob,f.name);const endpoint=AI_CONFIG().endpoint||'/api/social-studio/retouch';if(!endpoint.startsWith('/')||endpoint.startsWith('//'))throw Error('El endpoint debe ser una ruta interna del mismo sitio.');const resp=await fetch(endpoint,{method:'POST',body:form,credentials:'same-origin'});if(!resp.ok){const errObj=await resp.json().catch(()=>({}));throw Error(errObj.error||('El servicio devolvió '+resp.status));}const result=await resp.json();if(result.credits){aiCredits=result.credits;if(result.credits.exceeded&&result.credits.used===result.credits.limit){alert(`¡Aviso! Ya consumiste los ${result.credits.limit} créditos mensuales incluidos. Por ahora podés seguir usando el retoque.`);}}const data=result.imageDataUrl||(result.image_base64?`data:image/png;base64,${result.image_base64}`:null);if(!data||!/^data:image\/(png|jpeg|webp);base64,/i.test(data))throw Error('El servidor no devolvió una imagen en el contrato esperado.');if(active!==i||aiSnapshot(p())!==currentSignature)throw Error('La pieza cambió durante la generación: resultado no aplicado. Volvé a generar para evitar desajustes.');await aiAcceptCandidateData(data,i,currentSignature,null);}catch(e){status('Retoque IA no disponible: '+e.message);alert('No se completó el retoque: '+e.message);}finally{aiGenerating=false;if(panel==='ai')drawInspector();else if(isDockActive())drawDock(true);}}
 function aiApprove(){const c=aiCandidates[active];if(!c)return;if(aiSnapshot(p())!==c.sourceSignature){alert('La pieza fue modificada después de generar la propuesta. Volvé a importar o generar el retoque para no perder esos ajustes.');return;}if(!confirm('¿Aplicar esta fotografía retocada a la pieza actual? Los textos y el logo seguirán editables; los overlays de fondo se desactivarán para evitar doble tratamiento. Podrás restaurar el fondo previo.'))return;const idx=active,key=`ai_retouch_${Date.now()}_${idx}`;assets[key]={data:c.imageData,name:`Retoque aprobado ${NAMES[idx]}`,origin:'ai-retouch'};photoImages[key]=c.img;mutate(()=>{const z=p();if(!z.aiOriginal){z.aiOriginal={photoKey:z.photoKey,zoom:z.zoom,panX:z.panX,panY:z.panY,global:z.global,top:z.top,topHeight:z.topHeight,middle:z.middle,middleY:z.middleY,middleX:z.middleX,middleHeight:z.middleHeight,middleWidth:z.middleWidth,bottom:z.bottom,bottomHeight:z.bottomHeight,brightness:z.brightness,contrast:z.contrast,saturation:z.saturation,clouds:Object.fromEntries((z.layers||[]).map(l=>[l.id,l.cloud||0]))};}z.aiRetouch={date:new Date().toISOString(),focus:aiFocuses[idx]||'titles_logo',instruction:aiPrompts[idx]||AI_DEFAULT_PROMPT,metrics:c?.metrics};z.photoKey=key;z.zoom=1;z.panX=0;z.panY=0;z.global=0;z.top=0;z.middle=0;z.bottom=0;z.brightness=100;z.contrast=100;z.saturation=100;for(const l of (z.layers||[]))l.cloud=0;});delete aiCandidates[idx];if(isDockActive()){drawInspector();drawDock(true);}else inspectTab('ai');status('Retoque aprobado en esta pieza, con original reversible. Textos y logo siguen editables.');}
@@ -1800,7 +1989,7 @@ if(['text','location'].includes(l.type)){
   <div class="field"><label>Color del texto</label><div class="inline-color-bar"><input data-lfield="color" type="color" value="${l.color}"><span class="color-hex-badge" data-color-hex>${(l.color||'#FFFFFF').toUpperCase()}</span><span class="color-actions-push"><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.color}" title="Copiar color">📋</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="color" title="Pegar color">📌</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="${l.id}" data-color-field="color" data-color-val="${l.color}" title="Aplicar a todas las piezas">⚡ A todos</button></span></div></div>`;
 }
 if(l.type==='location')html+=`<div class="field"><label>Líneas laterales · Grosor <b data-loc-lw-read>${Number(l.lineWidth||2.4).toFixed(1)} px</b></label><input data-lfield="lineWidth" type="range" min="1" max="8" step="0.2" value="${l.lineWidth||2.4}"><div class="inline-color-bar" style="margin-top:4px;"><input data-lfield="lineColor" type="color" value="${l.lineColor||'#FFFFFF'}"><span class="color-hex-badge" data-color-hex>${(l.lineColor||'#FFFFFF').toUpperCase()}</span><span class="color-actions-push"><button type="button" class="btn-tiny-action" data-loc-line-color="white">#FFF</button><button type="button" class="btn-tiny-action highlight" data-loc-line-color="orange">Marca</button><button type="button" class="btn-tiny-action" data-loc-line-color="match">=Texto</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="location" data-color-field="lineColor" data-color-val="${l.lineColor||'#FFFFFF'}" title="Aplicar a todas las ubicaciones">⚡</button></span></div></div>`;
-if(['text','location'].includes(l.type))html+=`<details class="cloud-control-card" ${(l.cloud||0)>0?'open':''}><summary><span class="cloud-card-title">☁ Nube de contraste</span><span class="cloud-badge"><b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b> ▾</span></summary><div class="field-row"><div class="field"><label>Intensidad <b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></label><input data-lfield="cloud" type="range" min="0" max="1" step="0.01" value="${l.cloud||0}"></div><div class="field"><label>Dispersión <b data-cloud-s-read>${Math.round((l.cloudSpread!=null?l.cloudSpread:0.5)*100)}%</b></label><input data-lfield="cloudSpread" type="range" min="0" max="1" step="0.01" value="${l.cloudSpread!=null?l.cloudSpread:0.5}"></div></div><div class="field-row"><div class="field"><label>Ancho X <b data-cloud-w-read>${Number(l.cloudWidth>0?l.cloudWidth:1).toFixed(2)}×</b></label><input data-lfield="cloudWidth" type="range" min="0.2" max="3" step="0.05" value="${l.cloudWidth>0?l.cloudWidth:1}"></div><div class="field"><label>Alto Y <b data-cloud-h-read>${Number(l.cloudHeight>0?l.cloudHeight:1).toFixed(2)}×</b></label><input data-lfield="cloudHeight" type="range" min="0.2" max="3" step="0.05" value="${l.cloudHeight>0?l.cloudHeight:1}"></div></div><div class="field-row"><div class="field"><label>Mover X <b data-cloud-x-read>${(l.cloudX||0)>0?'+':''}${Math.round(l.cloudX||0)} px</b></label><input data-lfield="cloudX" type="range" min="-600" max="600" step="2" value="${Math.round(l.cloudX||0)}"></div><div class="field"><label>Mover Y <b data-cloud-y-read>${(l.cloudY||0)>0?'+':''}${Math.round(l.cloudY||0)} px</b></label><input data-lfield="cloudY" type="range" min="-400" max="400" step="2" value="${Math.round(l.cloudY||0)}"></div></div><div class="color-tools-row" style="margin-top:4px"><button type="button" class="btn-tiny-action" data-cloud-action="fit-text" title="Ajusta centro y tamaño a las palabras">🎯 Ajustar</button><button type="button" class="btn-tiny-action" data-cloud-action="reset">↺ Reset</button><button type="button" class="btn-tiny-action highlight" data-cloud-action="apply-class">⚡ A todos</button></div></details>`;
+if(['text','location'].includes(l.type))html+=isDockActive()?`<button type="button" class="cloud-jump-btn" data-open-dock-cloud="${l.id}"><span>☁ Nube de contraste: <b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></span><span style="color:#fb923c;">Ajustar →</span></button>`:`<details class="cloud-control-card" ${(l.cloud||0)>0?'open':''}><summary><span class="cloud-card-title">☁ Nube de contraste</span><span class="cloud-badge"><b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b> ▾</span></summary><div class="field-row"><div class="field"><label>Intensidad <b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></label><input data-lfield="cloud" type="range" min="0" max="1" step="0.01" value="${l.cloud||0}"></div><div class="field"><label>Dispersión <b data-cloud-s-read>${Math.round((l.cloudSpread!=null?l.cloudSpread:0.5)*100)}%</b></label><input data-lfield="cloudSpread" type="range" min="0" max="1" step="0.01" value="${l.cloudSpread!=null?l.cloudSpread:0.5}"></div></div><div class="field-row"><div class="field"><label>Ancho X <b data-cloud-w-read>${Number(l.cloudWidth>0?l.cloudWidth:1).toFixed(2)}×</b></label><input data-lfield="cloudWidth" type="range" min="0.2" max="3" step="0.05" value="${l.cloudWidth>0?l.cloudWidth:1}"></div><div class="field"><label>Alto Y <b data-cloud-h-read>${Number(l.cloudHeight>0?l.cloudHeight:1).toFixed(2)}×</b></label><input data-lfield="cloudHeight" type="range" min="0.2" max="3" step="0.05" value="${l.cloudHeight>0?l.cloudHeight:1}"></div></div><div class="field-row"><div class="field"><label>Mover X <b data-cloud-x-read>${(l.cloudX||0)>0?'+':''}${Math.round(l.cloudX||0)} px</b></label><input data-lfield="cloudX" type="range" min="-600" max="600" step="2" value="${Math.round(l.cloudX||0)}"></div><div class="field"><label>Mover Y <b data-cloud-y-read>${(l.cloudY||0)>0?'+':''}${Math.round(l.cloudY||0)} px</b></label><input data-lfield="cloudY" type="range" min="-400" max="400" step="2" value="${Math.round(l.cloudY||0)}"></div></div><div class="color-tools-row" style="margin-top:4px"><button type="button" class="btn-tiny-action" data-cloud-action="fit-text" title="Ajusta centro y tamaño a las palabras">🎯 Ajustar</button><button type="button" class="btn-tiny-action" data-cloud-action="reset">↺ Reset</button><button type="button" class="btn-tiny-action highlight" data-cloud-action="apply-class">⚡ A todos</button></div></details>`;
 if(l.type==='cta'){
   const st=l.ctaStyle||((Number(l.height||70)<=6)?'line':'solid');
   const hVal=Math.round(l.height!=null&&l.height!==''?Number(l.height):(st==='line'?3:70));
@@ -1853,12 +2042,12 @@ if(l.type==='logo'){
     <button type="button" class="${logoMode==='orange-white'?'active-btn':''}" data-logomode="orange-white">ISO naranja</button>
     <button type="button" class="${logoMode==='original'?'active-btn':''}" data-logomode="original">Original</button>
   </div></div>
-  <details class="cloud-control-card" ${(l.cloud||0)>0?'open':''}><summary><span class="cloud-card-title">☁ Sombra detrás del logo</span><span class="cloud-badge"><b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b> ▾</span></summary>
+  ${isDockActive()?`<button type="button" class="cloud-jump-btn" data-open-dock-cloud="logo"><span>☁ Sombra detrás del logo: <b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></span><span style="color:#fb923c;">Ajustar →</span></button>`:`<details class="cloud-control-card" ${(l.cloud||0)>0?'open':''}><summary><span class="cloud-card-title">☁ Sombra detrás del logo</span><span class="cloud-badge"><b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b> ▾</span></summary>
     <div class="color-tools-row" style="margin-bottom:6px"><button type="button" class="btn-tiny-action" data-logo-cloud-preset="0">0%</button><button type="button" class="btn-tiny-action" data-logo-cloud-preset="0.30">30%</button><button type="button" class="btn-tiny-action" data-logo-cloud-preset="0.50">50%</button><button type="button" class="btn-tiny-action" data-logo-cloud-preset="0.75">75%</button></div>
     <div class="field-row"><div class="field"><label>Intensidad <b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></label><input data-lfield="cloud" type="range" min="0" max="1" step="0.01" value="${l.cloud||0}"></div><div class="field"><label>Dispersión <b data-cloud-s-read>${Math.round((l.cloudSpread!=null?l.cloudSpread:0.5)*100)}%</b></label><input data-lfield="cloudSpread" type="range" min="0" max="1" step="0.01" value="${l.cloudSpread!=null?l.cloudSpread:0.5}"></div></div>
     <div class="field-row"><div class="field"><label>Ancho X <b data-cloud-w-read>${Number(l.cloudWidth>0?l.cloudWidth:1).toFixed(2)}×</b></label><input data-lfield="cloudWidth" type="range" min="0.2" max="3" step="0.05" value="${l.cloudWidth>0?l.cloudWidth:1}"></div><div class="field"><label>Alto Y <b data-cloud-h-read>${Number(l.cloudHeight>0?l.cloudHeight:1).toFixed(2)}×</b></label><input data-lfield="cloudHeight" type="range" min="0.2" max="3" step="0.05" value="${l.cloudHeight>0?l.cloudHeight:1}"></div></div>
     <div class="color-tools-row" style="margin-top:4px"><button type="button" class="btn-tiny-action" data-cloud-action="reset">↺ Reset</button><button type="button" class="btn-tiny-action highlight" data-cloud-action="apply-class">⚡ Aplicar a todos los logos</button></div>
-  </details>`;
+  </details>`}`;
 }
 el.innerHTML=html;}
 function lfnum(name,key,value){return `<div class="field"><label>${name}</label><input data-lfield="${key}" type="number" step="1" value="${Math.round(value??0)}"></div>`;}
@@ -2040,7 +2229,7 @@ function pickedAt(x,y){for(let i=rects.length-1;i>=0;i--){const r=rects[i];const
 function snapDelta(dx,dy,baseIds,origins){if(!showGuides)return{dx,dy};const moving=origins.map(o=>({...getLayer(o.id),x:o.x,y:o.y}));const xs=moving.map(l=>l.x),rs=moving.map(l=>l.x+l.width),ys=moving.map(l=>l.y),hs=moving.map(l=>l.y+heightFor(l));const minX=Math.min(...xs),maxX=Math.max(...rs),minY=Math.min(...ys),maxY=Math.max(...hs);const other=rects.filter(r=>!baseIds.includes(r.id));const refXs=[SAFE,W/2,W-SAFE,...other.flatMap(r=>[r.x,r.x+r.w/2,r.x+r.w])];const refYs=[SAFE,H/2,H-SAFE,...other.flatMap(r=>[r.y,r.y+r.h/2,r.y+r.h])];const near=(probes,targets,delta)=>{let best=null;for(const a of probes)for(const b of targets){let diff=b-(a+delta);if(Math.abs(diff)<10&&(!best||Math.abs(diff)<Math.abs(best.diff)))best={diff,value:b};}return best;};const ax=near([minX,(minX+maxX)/2,maxX],refXs,dx),ay=near([minY,(minY+maxY)/2,maxY],refYs,dy);snapGuide=[];if(ax){dx+=ax.diff;snapGuide.push({axis:'x',value:ax.value});}if(ay){dy+=ay.diff;snapGuide.push({axis:'y',value:ay.value});}return{dx,dy};}
 function heightFor(l){if(l.type==='logo')return l.height||176;if(l.type==='cta')return Math.max(1,l.height!=null&&l.height!==''?Number(l.height):70);return Math.max(l.size*1.2,(String(l.text).split('\n').length)*getLineHeight(l));}
 function alignObjects(side){if(!picked.length)return;mutate(()=>{for(const id of picked){const l=getLayer(id);if(!l)continue;switch(side){case'left':l.x=SAFE;break;case'center':l.x=(W-l.width)/2;break;case'right':l.x=W-SAFE-l.width;break;case'top':l.y=SAFE;break;case'bottom':l.y=H-SAFE-heightFor(l);break;}}});drawLayerFields();status('Alineación de '+picked.length+' capa(s): '+side+'.');}
-function selectList(id,multiple){if(multiple){picked=picked.includes(id)?picked.filter(x=>x!==id):[...picked,id];if(!picked.length)picked=[id];}else picked=[id];mode='layer';updateToolBtns();drawLayers();drawLayerFields();render();}
+function selectList(id,multiple){if(multiple){picked=picked.includes(id)?picked.filter(x=>x!==id):[...picked,id];if(!picked.length)picked=[id];}else picked=[id];if(picked.length===1){const sl=getLayer(picked[0]);if(sl&&['logo','text','location'].includes(sl.type))dockCloudLayerId=sl.id;}mode='layer';updateToolBtns();drawLayers();drawLayerFields();if(isDockActive()&&dockTab==='cloud')drawDock();render();}
 function updateToolBtns(){setCanvasFormat();$('#chooseLayer').classList.toggle('active-btn',mode==='layer');$('#movePhoto').classList.toggle('active-btn',mode==='photo');$('#toggleSquare').classList.toggle('active-btn',squareView);$('#toggleSquare').textContent=squareView?'Volver 4:5':'1:1';$('#toggleSafe').classList.toggle('active-btn',showGuides);$('#toggleGrid')?.classList.toggle('active-btn',showGrid);const tz=$('#toolbarZoom');if(tz)tz.value=p().zoom;const zo=$('#zoomOut');if(zo)zo.textContent=p().zoom.toFixed(2)+'×';}
 function syncAll(){setCanvasFormat();drawPieces();drawInspector(true);updateToolBtns();syncHistory();render();}
 function loadImg(data,cb){const img=new Image();img.onload=()=>{cb(img);render();};img.onerror=()=>status('No se pudo abrir la imagen.');img.decoding='async';img.src=data;}
@@ -2283,7 +2472,8 @@ if(b.dataset.locLineColor&&picked.length===1&&sel()?.id==='location'){
   status('Color de líneas laterales actualizado.');
   return;
 }
-if(b.dataset.ai){aiAct(b.dataset.ai);return;}if(b.dataset.do){doAction(b.dataset.do);return;}if(b.dataset.alignlayers){alignObjects(b.dataset.alignlayers);drawLayerFields();return;}if(b.dataset.aligntext){const target=b.dataset.aligntext;mutate(()=>picked.forEach(id=>{let l=getLayer(id);if(l?.type==='text'||l?.type==='location')l.align=target;}));drawInspector();return;}if(b.dataset.visibility){const id=b.dataset.visibility;mutate(()=>getLayer(id).visible=!getLayer(id).visible);drawLayers();return;}
+if(b.dataset.openDockCloud){dockCloudLayerId=b.dataset.openDockCloud;dockTab='cloud';drawDock();status('Panel derecho abierto en Nube de contraste.');return;}
+if(b.dataset.ai){aiAct(b.dataset.ai);return;}if(b.dataset.do){doAction(b.dataset.do);return;}if(b.dataset.alignlayers){alignObjects(b.dataset.alignlayers);drawLayerFields();return;}if(b.dataset.aligntext){const target=b.dataset.aligntext;mutate(()=>picked.forEach(id=>{let l=getLayer(id);if(l?.type==='text'||l?.type==='location')l.align=target;}));drawInspector();return;}if(b.dataset.visibility){const id=b.dataset.visibility;mutate(()=>getLayer(id).visible=!getLayer(id).visible);drawLayers();if(isDockActive())drawDock();return;}
 const cb=e.target.closest('[data-color-action]');
 if(cb){
   const act=cb.dataset.colorAction;
@@ -2348,7 +2538,7 @@ if(cloudBtn&&picked.length===1){
     }
   }
 }});
-$('#inspectBody').addEventListener('change',e=>{const el=e.target;if(el.id==='aiFocus'){aiFocuses[active]=el.value;if(aiCandidates[active]?.rawAiImage)aiUpdateCandidateIntensity(active,aiIntensities[active]??0.35);return;}if(el.id==='brandColor'){changeBrandColor(el.value);return;}if(el.id==='whiteLogo'){markHistory();whiteLogo=el.checked;logoWhiteCache=null;render();drawInspector();}else if(el.id==='removeLight'){markHistory();removeLight=el.checked;logoWhiteCache=null;render();}else if(el.dataset.lcheck){mutate(()=>sel()[el.dataset.lcheck]=el.checked);drawLayers();if(['showText','showArrow'].includes(el.dataset.lcheck))drawLayerFields();}else if(el.dataset.multisel){selectList(el.dataset.multisel,true);} });
+$('#inspectBody').addEventListener('change',e=>{const el=e.target;if(el.id==='aiFocus'){aiFocuses[active]=el.value;if(aiCandidates[active]?.rawAiImage)aiUpdateCandidateIntensity(active,aiIntensities[active]??0.35);return;}if(el.id==='brandColor'){changeBrandColor(el.value);return;}if(el.id==='whiteLogo'){markHistory();whiteLogo=el.checked;logoWhiteCache=null;render();drawInspector();}else if(el.id==='removeLight'){markHistory();removeLight=el.checked;logoWhiteCache=null;render();}else if(el.dataset.lcheck){mutate(()=>sel()[el.dataset.lcheck]=el.checked);drawLayers();if(['showText','showArrow'].includes(el.dataset.lcheck))drawLayerFields();if(isDockActive())drawDock();}else if(el.dataset.multisel){selectList(el.dataset.multisel,true);} });
 $('#inspectBody').addEventListener('click',e=>{const row=e.target.closest('[data-layer]');if(row&&!e.target.closest('[data-visibility]')&&!e.target.matches('[data-multisel]')){selectList(row.dataset.layer,e.ctrlKey||e.metaKey||e.shiftKey);}});
 $('#inspectBody').addEventListener('input',e=>{const el=e.target;if(el.id==='aiPrompt'){aiPrompts[active]=el.value;return;}if(el.id==='aiIntensity'){const val=+el.value;aiIntensities[active]=val;const read=$('#aiIntensityRead');if(read)read.textContent=Math.round(val*100)+'%';aiUpdateCandidateIntensity(active,val);return;}if(el.id==='brandColor'){changeBrandColor(el.value);return;}if(el.dataset.piecefield){let key=el.dataset.piecefield,val=+el.value;markHistory();p()[key]=val;const label=$(`[data-read="${key}"]`);if(label)label.textContent=key==='zoom'||key==='middleWidth'?val.toFixed(2)+'×':(['brightness','contrast','saturation'].includes(key)?val:Math.round(val*100))+'%';if(key==='zoom'){let z=$('#zoomOut');if(z)z.textContent=val.toFixed(2)+'×';}render();}else if(el.dataset.lfield&&picked.length===1){const key=el.dataset.lfield,val=el.type==='number'||el.type==='range'?+el.value:el.value;markHistory();sel()[key]=val;if(key==='size'){const read=$('[data-size-read]');if(read)read.textContent=Math.round(val)+' px';}
 if(key==='lineHeight'){const read=$('[data-lh-read]');if(read)read.textContent=Number(val).toFixed(2)+'×';}
@@ -2439,69 +2629,82 @@ $('#pieces').addEventListener('click',e=>{
 $('#pieces').addEventListener('input',e=>{if(e.target.id!=='libSearchInput')return;webPropQuery=e.target.value;const res=$('#libPropResults'),cnt=$('#libPropCount');if(res)res.innerHTML=renderWebPropListHtml();if(cnt){const n=filteredWebProperties().length;cnt.textContent=`${n} ${n===1?'propiedad':'propiedades'}`;}});
 $('#pieces').addEventListener('change',e=>{const chk=e.target.closest('[data-piece-export]');if(!chk)return;const idx=Number(chk.dataset.pieceExport);if(!pieces[idx])return;pieces[idx].included=chk.checked;drawPieces();setCanvasFormat();drawDock();scheduleAutoSave();status(`${NAMES[idx]} ${chk.checked?'incluida en':'excluida de'} la exportación ZIP.`);});
 
-async function generateDockCopy(){
-  if(dockCopyGenerating)return;
-  const currentPiece=p();if(!currentPiece)return;
-  const getLayerText=(id)=>{const l=(currentPiece.layers||[]).find(x=>x.id===id);return l&&l.visible!==false?(l.text||''):'';};
-  dockCopyGenerating=true;drawDock(true);
-  status('Redactando copy editorial con IA…');
-  try{
-    const endpoint=AI_CONFIG().copyEndpoint||'/api/social-studio/generate-copy';
-    const resp=await fetch(endpoint,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      credentials:'same-origin',
-      body:JSON.stringify({
-        pieceName:currentPiece.name||NAMES[active]||'',
-        studioType:studio(),
-        category:getLayerText('category'),
-        title:getLayerText('title'),
-        accent:getLayerText('accent'),
-        support:getLayerText('support'),
-        cta:getLayerText('cta'),
-        location:getLayerText('location'),
-        customContext:(dockCopyContextVal||'').trim()
-      })
-    });
-    const data=await resp.json().catch(()=>({}));
-    if(!resp.ok)throw new Error(data.error||('Error '+resp.status));
-    if(data.copy){
-      currentPiece.caption=data.copy;
-      const ct=$('#copyTextarea');if(ct)ct.value=data.copy;
-      scheduleAutoSave();
-      status('Copy editorial generado con OpenAI.');
-    }
-  }catch(err){
-    status('Copy IA no disponible: '+err.message);
-    alert('No se pudo generar el copy con IA: '+err.message);
-  }finally{
-    dockCopyGenerating=false;
-    drawDock(true);
-  }
-}
-
 const studioDockEl=$('#studioDock');
 if(studioDockEl){
   studioDockEl.addEventListener('click',e=>{
+    const tabBtn=e.target.closest('[data-dock-tab]');
+    if(tabBtn){dockTab=tabBtn.dataset.dockTab;drawDock();return;}
     const aiBtn=e.target.closest('[data-ai]');
     if(aiBtn){aiAct(aiBtn.dataset.ai);return;}
+    const layerBtn=e.target.closest('[data-dock-cloud-layer]');
+    if(layerBtn){
+      const id=layerBtn.dataset.dockCloudLayer;
+      dockCloudLayerId=id;
+      selectList(id,false);
+      return;
+    }
+    const presetBtn=e.target.closest('[data-dock-cloud-preset]');
+    if(presetBtn){
+      const cl=getDockCloudLayer();if(!cl)return;
+      const val=Number(presetBtn.dataset.dockCloudPreset);
+      mutate(()=>{cl.cloud=val;if(val>0&&cl.cloudSpread==null)cl.cloudSpread=0.5;});
+      drawInspector();
+      status(`Nube de contraste (${layerName(cl)}): ${Math.round(val*100)}%.`);
+      return;
+    }
+    const cloudAct=e.target.closest('[data-dock-cloud-act]');
+    if(cloudAct){
+      const act=cloudAct.dataset.dockCloudAct;
+      if(act==='clear-piece'){
+        mutate(()=>{for(const lx of (p().layers||[]))lx.cloud=0;});
+        drawInspector();
+        status('Se quitaron todas las nubes de contraste de '+NAMES[active]+'.');
+        return;
+      }
+      const cl=getDockCloudLayer();if(!cl)return;
+      if(act==='reset'){
+        mutate(()=>{cl.cloudWidth=1;cl.cloudHeight=1;cl.cloudX=0;cl.cloudY=0;cl.cloudSpread=0.5;});
+        drawInspector();
+        status('Posición y tamaño de la nube restablecidos.');
+        return;
+      }
+      if(act==='fit-text'&&cl.type!=='logo'){
+        mutate(()=>{
+          const meta=linesWithMeta(cx,cl),lines=meta.map(m=>m.text).filter(t=>t.trim());
+          if(!lines.length)return;
+          cx.font=font(cl);
+          let maxW=0;
+          lines.forEach(line=>{const w=cx.measureText(line).width;if(w>maxW)maxW=w;});
+          maxW=Math.max(50,maxW);
+          const lh=getLineHeight(cl),totalH=Math.max(cl.size*1.2,lines.length*lh);
+          let targetCenterX=cl.x+cl.width/2;
+          if(cl.align==='left')targetCenterX=cl.x+maxW/2;
+          else if(cl.align==='right')targetCenterX=(cl.x+cl.width)-maxW/2;
+          cl.cloudX=Math.round(targetCenterX-(cl.x+cl.width/2));
+          cl.cloudY=0;
+          const baseRx=Math.max(30,cl.width*0.70),desiredRx=Math.max(40,(maxW/2)*1.35);
+          cl.cloudWidth=+(desiredRx/baseRx).toFixed(2);
+          const baseRy=Math.max(45,totalH*0.85),desiredRy=Math.max(30,(totalH/2)*1.45);
+          cl.cloudHeight=+(desiredRy/baseRy).toFixed(2);
+          if(!cl.cloud||cl.cloud<=0)cl.cloud=0.35;
+        });
+        drawInspector();
+        status('Nube ajustada automáticamente a la superficie del texto.');
+        return;
+      }
+      if(act==='apply-class'){
+        const lid=cl.id,cVal=cl.cloud,cw=cl.cloudWidth,ch=cl.cloudHeight,cxVal=cl.cloudX,cyVal=cl.cloudY,csVal=cl.cloudSpread!=null?cl.cloudSpread:0.5;
+        mutate(()=>{for(const pz of pieces){const t=pz.layers.find(lx=>lx.id===lid);if(t){t.cloud=cVal;t.cloudWidth=cw;t.cloudHeight=ch;t.cloudX=cxVal;t.cloudY=cyVal;t.cloudSpread=csVal;}}});
+        syncAll();
+        status('Nube de contraste replicada en "'+layerName(lid)+'" a las '+pieces.length+' piezas.');
+        return;
+      }
+    }
     const expBtn=e.target.closest('[data-dock-export]');
     if(expBtn){
       const m=expBtn.dataset.dockExport;
       if(m==='zip'){if(facebook())exportOne('fbmeta');else exportAll(story()?'stories':'feed');}
       else exportOne(m);
-      return;
-    }
-    if(e.target.closest('#dockAiCopyBtn')){generateDockCopy();return;}
-    if(e.target.closest('#dockCopyClipBtn')){
-      const txt=(p()&&p().caption)||'';
-      if(navigator.clipboard){
-        navigator.clipboard.writeText(txt).then(()=>{
-          const ok=$('#dockCopyCopied');
-          if(ok){ok.style.display='inline';setTimeout(()=>{if(ok)ok.style.display='none';},2200);}
-          status('Texto de publicación copiado al portapapeles.');
-        }).catch(()=>{});
-      }
       return;
     }
   });
@@ -2520,19 +2723,27 @@ if(studioDockEl){
       aiUpdateCandidateIntensity(active,val);
       return;
     }
-    if(el.id==='dockCopyContext'){
-      dockCopyContextVal=el.value;
-      const ci=$('#copyContextInput');if(ci)ci.value=el.value;
-      return;
-    }
-    if(el.id==='dockCopyTextarea'){
-      const val=el.value||'';
-      if(p())p().caption=val;
-      const words=val.trim()?val.trim().split(/\s+/).length:0;
-      const st=$('#dockCopyStats');if(st)st.textContent=`${val.length} caract. · ${words} pal.`;
-      const ct=$('#copyTextarea');if(ct)ct.value=val;
-      scheduleAutoSave();
-      return;
+    const cKey=el.dataset.dockCfield;
+    if(cKey){
+      const cl=getDockCloudLayer();if(!cl)return;
+      const val=+el.value;
+      markHistory();
+      cl[cKey]=val;
+      if(cKey==='cloud'){
+        const pct=Math.round(val*100)+'%';
+        $$('[data-dock-cloud-read]').forEach(r=>r.textContent=pct);
+        $$('[data-cloud-read]').forEach(r=>r.textContent=pct);
+        const chipPct=studioDockEl.querySelector(`[data-dock-chip-pct="${cl.id}"]`);
+        if(chipPct){chipPct.textContent=cl.visible?pct:'Oculta';chipPct.classList.toggle('on',val>0);}
+        const clearBtn=studioDockEl.querySelector('[data-dock-cloud-act="clear-piece"]');
+        if(clearBtn)clearBtn.disabled=!getCloudCapableLayers().some(x=>x.visible&&(x.cloud||0)>0);
+      }
+      if(cKey==='cloudSpread'){const r=$('[data-dock-cs-read]');if(r)r.textContent=Math.round(val*100)+'%';}
+      if(cKey==='cloudWidth'){const r=$('[data-dock-cw-read]');if(r)r.textContent=Number(val).toFixed(2)+'×';}
+      if(cKey==='cloudHeight'){const r=$('[data-dock-ch-read]');if(r)r.textContent=Number(val).toFixed(2)+'×';}
+      if(cKey==='cloudX'){const r=$('[data-dock-cx-read]');if(r)r.textContent=(val>0?'+':'')+Math.round(val)+' px';}
+      if(cKey==='cloudY'){const r=$('[data-dock-cy-read]');if(r)r.textContent=(val>0?'+':'')+Math.round(val)+' px';}
+      render();
     }
   });
 }
@@ -2571,8 +2782,6 @@ if(document.fonts){Promise.all([document.fonts.load("400 24px 'RR_Regular'"),doc
 try {
   const copyModal = document.getElementById('rrCopyModal');
   const copyTextarea = document.getElementById('copyTextarea');
-  const copyContextInput = document.getElementById('copyContextInput');
-  const btnAiGenerateCopy = document.getElementById('btnAiGenerateCopy');
   const copyStats = document.getElementById('copyStats');
   const copySuccessMsg = document.getElementById('copySuccessMsg');
   const openCopyBtn = document.getElementById('openCopyBtn');
@@ -2592,7 +2801,6 @@ try {
     if (!copyModal || !copyTextarea) return;
     const currentPiece = p();
     copyTextarea.value = (currentPiece && currentPiece.caption) || '';
-    if (copyContextInput && dockCopyContextVal) copyContextInput.value = dockCopyContextVal;
     updateCopyStats();
     if (copySuccessMsg) copySuccessMsg.style.display = 'none';
     copyModal.style.display = 'flex';
@@ -2603,68 +2811,11 @@ try {
     if (copyModal) copyModal.style.display = 'none';
   }
 
-  async function generateCopyWithAI() {
-    if (!btnAiGenerateCopy || !copyTextarea) return;
-    const currentPiece = p();
-    if (!currentPiece) return;
-    const getLayerText = (id) => {
-      const l = (currentPiece.layers || []).find(x => x.id === id);
-      return l && l.visible !== false ? (l.text || '') : '';
-    };
-    const origLabel = btnAiGenerateCopy.textContent;
-    btnAiGenerateCopy.disabled = true;
-    btnAiGenerateCopy.textContent = 'Redactando…';
-    try {
-      const resp = await fetch('/api/social-studio/generate-copy', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'same-origin',
-        body: JSON.stringify({
-          pieceName: currentPiece.name || NAMES[active] || '',
-          studioType: studio(),
-          category: getLayerText('category'),
-          title: getLayerText('title'),
-          accent: getLayerText('accent'),
-          support: getLayerText('support'),
-          cta: getLayerText('cta'),
-          location: getLayerText('location'),
-          customContext: copyContextInput ? copyContextInput.value.trim() : ''
-        })
-      });
-      const data = await resp.json().catch(() => ({}));
-      if (!resp.ok) throw new Error(data.error || ('Error ' + resp.status));
-      if (data.copy) {
-        copyTextarea.value = data.copy;
-        currentPiece.caption = data.copy;
-        updateCopyStats();
-        drawDock(true);
-        scheduleAutoSave();
-        status('Copy editorial generado con OpenAI.');
-      }
-    } catch (err) {
-      alert('No se pudo generar el copy con IA: ' + err.message);
-    } finally {
-      btnAiGenerateCopy.disabled = false;
-      btnAiGenerateCopy.textContent = origLabel;
-    }
-  }
-
-  if (btnAiGenerateCopy) {
-    btnAiGenerateCopy.onclick = generateCopyWithAI;
-  }
-  if (copyContextInput) {
-    copyContextInput.addEventListener('input', () => {
-      dockCopyContextVal = copyContextInput.value;
-      const dci = document.getElementById('dockCopyContext');
-      if (dci) dci.value = dockCopyContextVal;
-    });
-  }
   if (copyTextarea) {
     copyTextarea.addEventListener('input', () => {
       const currentPiece = p();
       if (currentPiece) currentPiece.caption = copyTextarea.value;
       updateCopyStats();
-      drawDock(true);
       scheduleAutoSave();
     });
   }
