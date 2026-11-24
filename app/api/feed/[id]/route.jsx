@@ -245,6 +245,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
     const index = parseInt(searchParams.get('index') || '0', 10);
     const showLogo = searchParams.get('logo') !== '0';
     const showDetails = searchParams.get('details') !== '0';
+    const fitMode = searchParams.get('fit') === 'contain' ? 'contain' : 'cover';
     const imageToUse = property.images?.[index] || property.images?.[0];
 
     // Formato Feed 4:5 oficial de Instagram (1080 x 1350)
@@ -339,7 +340,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 src={assets.imageUrl}
                 width={1080}
                 height={1350}
-                style={{ width: '1080px', height: '1350px', objectFit: 'cover' }}
+                style={{ width: '1080px', height: '1350px', objectFit: fitMode }}
               />
             </div>
 
@@ -626,7 +627,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               src={assets.imageUrl}
               width={1080}
               height={1350}
-              style={{ width: '1080px', height: '1350px', objectFit: 'cover' }}
+              style={{ width: '1080px', height: '1350px', objectFit: fitMode }}
             />
           </div>
 

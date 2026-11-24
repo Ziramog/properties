@@ -42,6 +42,7 @@ export default function FeedShareButton({ property, variant = 'light' }) {
   const [filesToShare, setFilesToShare] = useState([]);
   const [showLogo, setShowLogo] = useState(true);
   const [showDetails, setShowDetails] = useState(true);
+  const [fitMode, setFitMode] = useState('cover'); // 'cover' (ampliar 4:5) | 'contain' (original web entera)
   const [captionCopied, setCaptionCopied] = useState(false);
 
   const isDark = variant === 'dark';
@@ -50,14 +51,24 @@ export default function FeedShareButton({ property, variant = 'light' }) {
   const maxImages = Math.min(property?.images?.length || 0, 7);
   if (maxImages === 0) return null;
 
-  const handleToggleOption = (setter) => () => {
-    setter((prev) => !prev);
+  const resetPreparedState = () => {
     if (status === 'ready') {
       setStatus('idle');
       setFilesToShare([]);
       setProgress(0);
       setCaptionCopied(false);
     }
+  };
+
+  const handleToggleOption = (setter) => () => {
+    setter((prev) => !prev);
+    resetPreparedState();
+  };
+
+  const handleSelectFitMode = (nextFit) => () => {
+    if (nextFit === fitMode) return;
+    setFitMode(nextFit);
+    resetPreparedState();
   };
 
   const handlePrepare = async () => {
@@ -72,14 +83,14 @@ export default function FeedShareButton({ property, variant = 'light' }) {
         const imgEntry = property?.images?.[i] || property?.images?.[0];
         const rawImgUrl = typeof imgEntry === 'string' ? imgEntry : imgEntry?.url;
 
-        // Procesar el recorte c_fill (1080x1350) y nitidez en el navegador del usuario (0 créditos Cloudinary)
+        // Procesar el encuadre (cover o contain) en 1080x1350 en el navegador (0 créditos Cloudinary)
         const imageBase64 = rawImgUrl
-          ? await processImageInBrowser(rawImgUrl, 1080, 1350)
+          ? await processImageInBrowser(rawImgUrl, 1080, 1350, { fit: fitMode })
           : null;
 
         let file = null;
 
-        // Si logo y textos están apagados y el navegador ya recortó a JPEG 1080x1350, evitar llamada innecesaria a Satori
+        // Si logo y textos están apagados y el navegador ya generó el JPEG 1080x1350, evitar llamada innecesaria a Satori
         if (!showLogo && !showDetails && imageBase64) {
           const directRes = await fetch(imageBase64);
           const directBlob = await directRes.blob();
@@ -89,6 +100,7 @@ export default function FeedShareButton({ property, variant = 'light' }) {
             index: String(i),
             logo: showLogo ? '1' : '0',
             details: showDetails ? '1' : '0',
+            fit: fitMode,
           });
           const url = `/api/feed/${propertyId}?${params.toString()}`;
           const response = imageBase64
@@ -221,6 +233,48 @@ export default function FeedShareButton({ property, variant = 'light' }) {
           isDark={isDark}
           onChange={handleToggleOption(setShowDetails)}
         />
+      </div>
+
+      {/* Selector doble de encuadre para las 7 láminas del Feed */}
+      <div
+        role="group"
+        aria-label="Encuadre de imagen para Feed"
+        className={`grid grid-cols-2 gap-1 p-1 border ${
+          isDark
+            ? 'bg-[#181818] border-[#333]'
+            : 'bg-gray-100 border-gray-200'
+        }`}
+      >
+        <button
+          type="button"
+          disabled={status === 'preparing'}
+          aria-pressed={fitMode === 'cover'}
+          onClick={handleSelectFitMode('cover')}
+          className={`px-2.5 py-1.5 text-[12px] font-semibold transition-colors disabled:opacity-50 ${
+            fitMode === 'cover'
+              ? 'bg-[var(--color-brand)] text-white shadow-sm'
+              : isDark
+                ? 'text-zinc-300 hover:bg-[#242424]'
+                : 'text-gray-600 hover:bg-gray-200/70'
+          }`}
+        >
+          Ampliar (4:5)
+        </button>
+        <button
+          type="button"
+          disabled={status === 'preparing'}
+          aria-pressed={fitMode === 'contain'}
+          onClick={handleSelectFitMode('contain')}
+          className={`px-2.5 py-1.5 text-[12px] font-semibold transition-colors disabled:opacity-50 ${
+            fitMode === 'contain'
+              ? 'bg-[var(--color-brand)] text-white shadow-sm'
+              : isDark
+                ? 'text-zinc-300 hover:bg-[#242424]'
+                : 'text-gray-600 hover:bg-gray-200/70'
+          }`}
+        >
+          Original web
+        </button>
       </div>
 
       {status === 'ready' ? (

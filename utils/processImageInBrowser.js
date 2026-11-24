@@ -1,15 +1,74 @@
 /**
- * Recorta (c_fill) y mejora una imagen en el navegador usando HTML5 <canvas>.
- * Descarga la URL original limpia de Cloudinary (0 créditos de transformación)
- * y realiza el reescalado bicúbico/Lanczos en la GPU/CPU del dispositivo del usuario.
+ * Dibuja la imagen en el canvas según el modo de encuadre:
+ * - 'cover' (c_fill): llena todo el lienzo recortando excedentes centrados.
+ * - 'contain': encuadra la foto completa sin recorte sobre fondo #0B0D10.
+ */
+function drawFittedImage(ctx, img, targetW, targetH, fit) {
+  const imgRatio = img.width / img.height;
+  const targetRatio = targetW / targetH;
+
+  if (fit === 'contain') {
+    ctx.fillStyle = '#0B0D10';
+    ctx.fillRect(0, 0, targetW, targetH);
+
+    let destW;
+    let destH;
+    let destX;
+    let destY;
+
+    if (imgRatio > targetRatio) {
+      destW = targetW;
+      destH = Math.round(targetW / imgRatio);
+      destX = 0;
+      destY = Math.round((targetH - destH) / 2);
+    } else {
+      destH = targetH;
+      destW = Math.round(targetH * imgRatio);
+      destX = Math.round((targetW - destW) / 2);
+      destY = 0;
+    }
+
+    ctx.drawImage(img, 0, 0, img.width, img.height, destX, destY, destW, destH);
+    return;
+  }
+
+  let sourceW;
+  let sourceH;
+  let sourceX;
+  let sourceY;
+
+  if (imgRatio > targetRatio) {
+    // Foto original más horizontal que el lienzo: recortar lados
+    sourceH = img.height;
+    sourceW = img.height * targetRatio;
+    sourceX = (img.width - sourceW) / 2;
+    sourceY = 0;
+  } else {
+    // Foto original más vertical que el lienzo: recortar arriba y abajo
+    sourceW = img.width;
+    sourceH = img.width / targetRatio;
+    sourceX = 0;
+    sourceY = (img.height - sourceH) / 2;
+  }
+
+  ctx.drawImage(img, sourceX, sourceY, sourceW, sourceH, 0, 0, targetW, targetH);
+}
+
+/**
+ * Procesa una imagen en el navegador usando HTML5 <canvas> (0 créditos Cloudinary).
+ * Descarga la URL original limpia de Cloudinary y realiza el encuadre (`cover` o `contain`)
+ * y reescalado de alta calidad en el dispositivo del usuario.
  *
  * @param {string} imageUrl - URL original de la imagen en Cloudinary
  * @param {number} targetW - Ancho deseado (ej: 1080)
  * @param {number} targetH - Alto deseado (ej: 1920 para Story, 1350 para Feed)
+ * @param {{ fit?: 'cover' | 'contain' }} [options] - Modo de encuadre ('cover' por defecto)
  * @returns {Promise<string|null>} - DataURL (Base64) en formato JPEG lista para Satori, o null si falla
  */
-export async function processImageInBrowser(imageUrl, targetW, targetH) {
+export async function processImageInBrowser(imageUrl, targetW, targetH, options = {}) {
   if (!imageUrl || typeof window === 'undefined') return null;
+
+  const fit = options?.fit === 'contain' ? 'contain' : 'cover';
 
   // Asegurar que usamos la URL original limpia sin transformaciones de Cloudinary (0 créditos)
   const cleanUrl = imageUrl.replace(/\/upload\/[^/]+\/(v\d+\/)/, '/upload/$1');
@@ -37,46 +96,13 @@ export async function processImageInBrowser(imageUrl, targetW, targetH) {
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = 'high';
 
-          // 2. Micro-contraste y saturación sutil para compensar la compresión posterior de Instagram
-          if ('filter' in ctx) {
+          // 2. Micro-contraste sutil solo en recorte editorial ('cover'); en 'contain' se respeta la foto cruda
+          if (fit === 'cover' && 'filter' in ctx) {
             ctx.filter = 'contrast(1.04) saturate(1.03)';
           }
 
-          // 3. Matemática para simular "c_fill" (centrado sin deformar, equivalente a object-fit: cover)
-          const imgRatio = img.width / img.height;
-          const targetRatio = targetW / targetH;
-
-          let sourceW;
-          let sourceH;
-          let sourceX;
-          let sourceY;
-
-          if (imgRatio > targetRatio) {
-            // Foto original más horizontal que el lienzo: recortar lados
-            sourceH = img.height;
-            sourceW = img.height * targetRatio;
-            sourceX = (img.width - sourceW) / 2;
-            sourceY = 0;
-          } else {
-            // Foto original más vertical que el lienzo: recortar arriba y abajo
-            sourceW = img.width;
-            sourceH = img.width / targetRatio;
-            sourceX = 0;
-            sourceY = (img.height - sourceH) / 2;
-          }
-
-          // 4. Dibujar el recorte exacto directamente al tamaño final (1080x1920 o 1080x1350)
-          ctx.drawImage(
-            img,
-            sourceX,
-            sourceY,
-            sourceW,
-            sourceH,
-            0,
-            0,
-            targetW,
-            targetH
-          );
+          // 3. Dibujar al tamaño final (1080x1920 o 1080x1350) según el encuadre elegido
+          drawFittedImage(ctx, img, targetW, targetH, fit);
 
           // 5. Exportar como JPEG con calidad 92% (0.92) para Satori
           const base64Url = canvas.toDataURL('image/jpeg', 0.92);
