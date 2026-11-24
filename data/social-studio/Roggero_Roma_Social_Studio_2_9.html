@@ -695,6 +695,459 @@ button:hover:not(:disabled) {
   color: #f87171 !important;
   border-color: #f87171 !important;
 }
+
+/* === WIDESCREEN STUDIO 2.9+ : 5-COLUMN HORIZONTAL OPTIMIZATION (ANTI-SCROLL) === */
+.topbar {
+  height: 54px !important;
+  min-height: 54px !important;
+  padding: 0 14px !important;
+}
+@media (min-width: 980px) {
+  .shell {
+    height: calc(100vh - 54px) !important;
+    min-height: 560px !important;
+    grid-template-columns: 60px 248px minmax(340px, 1fr) 368px !important;
+  }
+}
+.studio-dock {
+  display: none;
+  min-height: 0;
+  min-width: 0;
+  background: #0f131c;
+  border-left: 1px solid var(--line);
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 11px 13px 14px;
+  gap: 10px;
+}
+@media (min-width: 1260px) {
+  .shell:not(.dock-folded) {
+    grid-template-columns: 58px 242px minmax(340px, 1fr) 340px 308px !important;
+  }
+  .shell:not(.dock-folded) .studio-dock {
+    display: flex !important;
+  }
+  .shell:not(.dock-folded) .inspect-tabs button[data-panel="ai"] {
+    display: none !important;
+  }
+}
+@media (min-width: 1440px) {
+  .shell:not(.dock-folded) {
+    grid-template-columns: 62px 260px minmax(385px, 1fr) 378px 346px !important;
+  }
+}
+@media (min-width: 1680px) {
+  .shell:not(.dock-folded) {
+    grid-template-columns: 66px 280px minmax(450px, 1fr) 422px 392px !important;
+  }
+}
+.canvas-toolbar {
+  height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 14px !important;
+}
+.work-status {
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 14px !important;
+  font-size: 10.5px !important;
+}
+.work-stage {
+  padding: 8px 14px 10px !important;
+}
+.canvas-wrap {
+  height: min(100%, 850px) !important;
+}
+.canvas-wrap.story-cover {
+  height: min(100%, 860px) !important;
+}
+/* Compact left column: Format Switcher + 2-Column Piece Grid */
+.pieces {
+  padding: 12px 11px 14px !important;
+}
+.pieces h2 {
+  font-size: 14px !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  letter-spacing: 0.2px !important;
+  margin: 0 2px 8px !important;
+  color: #cbd5e1 !important;
+}
+.format-switcher {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 11px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid #1e2433;
+}
+.format-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 9px !important;
+  border-radius: 7px !important;
+  background: #151a25 !important;
+  border: 1px solid #242c3d !important;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.format-card:hover {
+  background: #1b2230 !important;
+  border-color: #384259 !important;
+}
+.format-card.active {
+  background: rgba(242, 107, 46, 0.13) !important;
+  border: 1.5px solid #f26b2e !important;
+  box-shadow: 0 2px 12px rgba(242, 107, 46, 0.14);
+}
+.format-ico {
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  background: #0d1017;
+  border: 1px solid #262f42;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #94a3b8;
+}
+.format-card.active .format-ico {
+  color: #fb923c;
+  border-color: rgba(242, 107, 46, 0.5);
+  background: rgba(242, 107, 46, 0.12);
+}
+.format-ico svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+}
+.format-meta {
+  flex: 1;
+  min-width: 0;
+}
+.format-meta strong {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #f1f5f9;
+  line-height: 1.15;
+}
+.format-card.active .format-meta strong {
+  color: #fb923c;
+}
+.format-meta span {
+  display: block;
+  font-size: 9.5px;
+  color: #94a3b8;
+  margin-top: 1px;
+}
+.piece-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+.piece-grid-2 .piece-row:last-child:nth-child(odd) {
+  grid-column: span 2;
+}
+.piece-card-compact {
+  width: 100%;
+  position: relative;
+  height: 78px;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  border: 1px solid #262d3d !important;
+  background: #171c28 !important;
+  display: block;
+  text-align: left;
+  cursor: pointer;
+}
+.piece-grid-2 .piece-row:last-child:nth-child(odd) .piece-card-compact {
+  height: 64px;
+}
+.piece-card-compact:hover {
+  border-color: #475569 !important;
+}
+.piece-card-compact.active {
+  border: 2px solid #f26b2e !important;
+  box-shadow: 0 3px 14px rgba(242, 107, 46, 0.24) !important;
+}
+.piece-card-compact.excluded {
+  opacity: 0.45;
+}
+.piece-card-compact img.thumb-bg,
+.piece-card-compact span.thumb-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: linear-gradient(145deg, #1e3a5f, #475569 55%, #1e293b);
+}
+.piece-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8, 10, 15, 0.92) 0%, rgba(8, 10, 15, 0.42) 55%, rgba(8, 10, 15, 0.12) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 6px 7px;
+}
+.piece-card-overlay strong {
+  font-size: 11px;
+  font-weight: 700;
+  color: #f8fafc;
+  line-height: 1.15;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.piece-card-compact.active .piece-card-overlay strong {
+  color: #fb923c;
+}
+.piece-card-overlay small {
+  font-size: 9px;
+  color: #cbd5e1;
+  opacity: 0.82;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.piece-grid-2 .piece-export-chk {
+  top: 5px;
+  right: 5px;
+  width: 14px;
+  height: 14px;
+}
+
+/* Compact Inspector Controls (Anti-scroll) */
+.inspect-tabs {
+  height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 12px !important;
+}
+.inspector .inspect-body {
+  padding: 11px 13px 16px !important;
+}
+.section, details.section {
+  padding-bottom: 11px !important;
+  margin-bottom: 11px !important;
+}
+.section h3, details.section summary {
+  font-size: 12px !important;
+  margin: 0 0 7px !important;
+}
+.layer-list {
+  gap: 3.5px !important;
+}
+.layer-row {
+  min-height: 29px !important;
+  padding: 3px 6px !important;
+  font-size: 11px !important;
+}
+.field {
+  margin: 7px 0 !important;
+}
+.field label {
+  margin-bottom: 3px !important;
+  font-size: 10.5px !important;
+}
+.field input:not([type=checkbox]):not([type=range]):not([type=color]),
+.field select,
+.field textarea {
+  padding: 6px 8px !important;
+  font-size: 12px !important;
+}
+.field textarea {
+  min-height: 48px !important;
+}
+.field-row {
+  gap: 7px !important;
+}
+.field-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.field-row-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+}
+.inline-color-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #0b0e14;
+  border: 1px solid #2a3142;
+  border-radius: 6px;
+  padding: 4px 6px;
+}
+.inline-color-bar input[type=color] {
+  width: 28px !important;
+  height: 24px !important;
+  padding: 0 !important;
+  border: 1px solid #334155 !important;
+  border-radius: 4px !important;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.inline-color-bar .color-hex-badge {
+  border: 0;
+  background: transparent;
+  padding: 0 2px;
+}
+.inline-color-bar .color-actions-push {
+  margin-left: auto;
+  display: inline-flex;
+  gap: 4px;
+}
+details.cloud-control-card {
+  margin-top: 9px !important;
+  padding: 9px 10px !important;
+}
+details.cloud-control-card > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+details.cloud-control-card > summary::-webkit-details-marker {
+  display: none;
+}
+details.cloud-control-card[open] > summary {
+  margin-bottom: 7px;
+}
+
+/* Right Studio Dock Cards (IA + Copywriting + Quick Export) */
+.dock-card {
+  background: #141924;
+  border: 1px solid #232b3d;
+  border-radius: 10px;
+  padding: 11px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.dock-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.dock-card-head h4 {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+.dock-ai-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fb923c;
+  background: rgba(242, 107, 46, 0.14);
+  border: 1px solid rgba(242, 107, 46, 0.45);
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.dock-btn-ai {
+  width: 100%;
+  padding: 8px 10px !important;
+  border-radius: 7px !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  background: rgba(242, 107, 46, 0.16) !important;
+  border: 1px solid rgba(242, 107, 46, 0.55) !important;
+  color: #fdba74 !important;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.dock-btn-ai:hover:not(:disabled) {
+  background: #f26b2e !important;
+  border-color: #f26b2e !important;
+  color: #ffffff !important;
+}
+.dock-copy-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: #0b0e14;
+  border: 1px solid #262f42;
+  border-radius: 7px;
+  color: #e2e8f0;
+  padding: 8px 9px;
+  font-size: 11.5px;
+  line-height: 1.42;
+  resize: vertical;
+  min-height: 92px;
+  max-height: 200px;
+  font-family: inherit;
+  outline: none;
+}
+.dock-copy-textarea:focus {
+  border-color: #f26b2e;
+}
+.dock-copy-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: #0b0e14;
+  border: 1px solid #262f42;
+  border-radius: 6px;
+  color: #e2e8f0;
+  padding: 6px 8px;
+  font-size: 11px;
+  outline: none;
+}
+.dock-copy-input:focus {
+  border-color: #f26b2e;
+}
+.dock-export-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+.dock-export-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 9px 6px !important;
+  background: #0d1119 !important;
+  border: 1px solid #273043 !important;
+  border-radius: 8px !important;
+  color: #e2e8f0 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+}
+.dock-export-tile:hover {
+  border-color: #f26b2e !important;
+  background: rgba(242, 107, 46, 0.14) !important;
+  color: #fb923c !important;
+}
+.dock-export-tile svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+}
 </style>
 </head>
 <body>
@@ -711,6 +1164,7 @@ button:hover:not(:disabled) {
 <aside class="pieces"><h2 id="piecesHeading">Feed Studio</h2><div class="piece-list" id="pieces"></div><div id="sideHelp" class="mini-info" style="margin:18px 4px">Seleccioná una pieza. Cada formato se edita por separado.</div><div class="photo-drop-hint" id="photoDropHint" title="Arrastrá el JPG/PNG o pegalo sin abrir el selector de Windows"><b>Arrastrá una foto</b> al editor o usá <b>Ctrl+V</b> para pegarla</div></aside>
 <main class="workspace"><div class="canvas-toolbar"><div><strong>◉ &nbsp; Canvas 1080 × 1350</strong> <span class="ratio-badge">Feed 4:5</span></div><div class="canvas-tools"><span class="tool-group"><button id="chooseLayer">Capas</button><button id="movePhoto">Mover foto</button><button id="recenterPhoto" title="Recentrar fotografía">⟲</button><span class="zoom-wrap" title="Zoom de fotografía"><input id="toolbarZoom" type="range" min="1" max="3" step="0.01" value="1"><b id="zoomOut">1.00×</b></span></span><span class="sep" aria-hidden="true"></span><span class="tool-group"><button id="toggleSafe" title="Mostrar márgenes seguros y alineación">Guías</button><button id="toggleGrid" title="Mostrar cuadrícula">Cuadrícula</button><button id="toggleSquare" title="Previsualiza la adaptación real 1:1 sin cortar textos, logotipo ni ubicación">1:1</button></span></div></div><div class="work-stage"><div class="canvas-wrap"><canvas id="art" width="1080" height="1350" aria-label="Lienzo interactivo de Instagram y Facebook"></canvas></div></div><div class="work-status"><span>Arrastrá capas · Ctrl/Cmd + clic: selección múltiple · Shift: sin ajuste</span><span style="display:inline-flex;align-items:center;gap:12px;"><span id="autosaveBadge" style="font-size:11px;color:#94a3b8;white-space:nowrap;" title="Los cambios y fotografías se guardan automáticamente en este navegador"></span><span id="status" role="status">Importá una foto arrastrándola acá o con Ctrl+V (sin ventana de Windows).</span></span></div></main>
 <aside class="inspector"><div class="inspect-tabs"><button data-panel="edit" class="active">Capas</button><button data-panel="background">Fondo</button><button data-panel="brand">Marca</button><button data-panel="ai" title="Retoque visual avanzado bajo demanda">Retoque IA</button></div><div class="inspect-body" id="inspectBody"></div></aside>
+<aside class="studio-dock" id="studioDock" aria-label="IA, Copywriting y Exportación"></aside>
 </div>
 <div id="rrDropOverlay" role="status" aria-live="polite"><div class="drop-inner"><div class="drop-big">↓</div><strong>Soltá la fotografía acá</strong><p>Se cargará en la pieza activa sin abrir el selector de Windows</p><small>JPG · PNG · WebP</small></div></div>
 <input id="filePhoto" type="file" hidden>
@@ -911,10 +1365,21 @@ function ensureStoryPieces(){for(let i=0;i<5;i++)if(!pieces[STORY_START+i])piece
 let pieces=Array.from({length:6},(_,i)=>newPiece(i));ensureStoryPieces();const p=()=>pieces[active];
 const getLayer=id=>p().layers.find(l=>l.id===id);const sel=()=>getLayer(picked[0]);
 function facebook(){return active===FB;}function story(){return active>=STORY_START&&active<=STORY_END;}function studio(){return facebook()?'facebook':story()?'stories':'feed';}function studioIndices(){return facebook()?[FB]:story()?[6,7,8,9,10]:[0,1,2,3,4];}
+function isDockActive(){
+  const w=typeof window!=='undefined'?window.innerWidth:0;
+  if(w<1260)return false;
+  if(facebook()&&w<1560)return false;
+  return true;
+}
+function syncShellFold(){
+  const sh=$('.shell');
+  if(sh)sh.classList.toggle('dock-folded',!isDockActive());
+}
 function setCanvasFormat(){
  const fw=facebook()?FBW:1080,fh=facebook()?FBH:story()?1920:1350;
  if(W!==fw||H!==fh||canvas.width!==fw||canvas.height!==fh){W=fw;H=fh;canvas.width=fw;canvas.height=fh;}
  $('.canvas-wrap').classList.toggle('fb-cover',facebook());$('.canvas-wrap').classList.toggle('story-cover',story());
+ syncShellFold();
  $('.canvas-toolbar strong').textContent=`◉   Canvas ${W} × ${H}`;
  $('.ratio-badge').textContent=facebook()?'Facebook · portada':story()?'Historia 9:16':'Feed 4:5';
   $('#toggleSquare').classList.toggle('hide',facebook()||story());
@@ -943,16 +1408,30 @@ function redo(){if(!future.length)return;history.push(JSON.stringify({pieces,log
 function applyBrandColor(){document.documentElement.style.setProperty('--orange',brandOrange);document.documentElement.style.setProperty('--orangeLight',brandOrange.toLowerCase()==='#f26b2e'?'#fff5e6':'#fff6ed');}
 function changeBrandColor(hex){if(!/^#[0-9a-f]{6}$/i.test(hex))return;const old=brandOrange;mutate(()=>{brandOrange=hex.toUpperCase();for(const z of pieces)for(const l of z.layers||[]){if(typeof l.color==='string'&&[old.toLowerCase(),'#e47711','#df683b','#f6931c'].includes(l.color.toLowerCase()))l.color=brandOrange;if(l.type==='cta'&&typeof l.bgColor==='string'&&[old.toLowerCase(),'#e47711','#df683b','#f6931c'].includes(l.bgColor.toLowerCase()))l.bgColor=brandOrange;}});applyBrandColor();const el=$('#brandRead');if(el)el.textContent=brandOrange;}
 function normalizePiece(z,fromBrand='#e47711',toBrand=ORANGE){const d={middle:.27,middleY:.57,middleX:.37,middleHeight:.50,middleWidth:1.1};for(const [key,val] of Object.entries(d))if(!Number.isFinite(z[key]))z[key]=val;for(const l of z.layers||[]){if(typeof l.color==='string'&&['#df683b','#e47711','#f6931c',fromBrand.toLowerCase()].includes(l.color.toLowerCase()))l.color=toBrand;if(l.type==='cta'){if(!l.bgColor)l.bgColor=toBrand;else if(['#df683b','#e47711','#f6931c',fromBrand.toLowerCase()].includes(l.bgColor.toLowerCase()))l.bgColor=toBrand;}}return z;}
-function pieceTile(i){const name=NAMES[i],canZip=(i!==FB),inc=!canZip||pieces[i]?.included!==false;const btn=`<button class="piece-tile ${active===i?'active':''} ${inc?'':'excluded'}" data-piece="${i}">${photoDataFor(i)?`<img class="thumb" loading="lazy" decoding="async" alt="Fotografía de ${esc(name)}" src="${esc(photoDataFor(i))}">`:'<span class="thumb" aria-hidden="true"></span>'}<span class="piece-copy"><strong>${esc(name)}</strong><span>${esc(descriptions[i])}</span></span></button>`;return canZip?`<div class="piece-row">${btn}<input type="checkbox" class="piece-export-chk" data-piece-export="${i}" ${inc?'checked':''} title="Incluir en la exportación ZIP"></div>`:btn;}
+function pieceTile(i){
+  const fullName=NAMES[i],shortName=fullName.replace(/^Historia · /,''),canZip=(i!==FB),inc=!canZip||pieces[i]?.included!==false;
+  if(i===FB){
+    return `<button class="piece-tile ${active===i?'active':''}" data-piece="${i}" style="min-height:72px;padding:7px;">${photoDataFor(i)?`<img class="thumb" loading="lazy" decoding="async" alt="" src="${esc(photoDataFor(i))}" style="width:76px;height:52px;">`:'<span class="thumb" aria-hidden="true" style="width:76px;height:52px;"></span>'}<span class="piece-copy"><strong style="font-size:13px;">${esc(fullName)}</strong><span style="font-size:10.5px;margin-top:3px;">1702 × 630 (2× Meta)</span></span></button>`;
+  }
+  const btn=`<button type="button" class="piece-card-compact ${active===i?'active':''} ${inc?'':'excluded'}" data-piece="${i}" title="${esc(fullName)} — ${esc(descriptions[i])}">${photoDataFor(i)?`<img class="thumb-bg" loading="lazy" decoding="async" alt="" src="${esc(photoDataFor(i))}">`:'<span class="thumb-bg" aria-hidden="true"></span>'}<span class="piece-card-overlay"><strong>${esc(shortName)}</strong><small>${esc(descriptions[i])}</small></span></button>`;
+  return `<div class="piece-row">${btn}<input type="checkbox" class="piece-export-chk" data-piece-export="${i}" ${inc?'checked':''} title="Incluir en la exportación ZIP"></div>`;
+}
 function drawPieces(){const box=$('#pieces'),title=$('#piecesHeading'),info=$('#sideHelp');
  if(sidebarView!=='library')sidebarView='studio';
  if(sidebarView==='studio'){
-   title.textContent=facebook()?'Portada Facebook':story()?'Historias Studio':'Feed Studio';
+   title.textContent='Formatos del proyecto';
+   const curStudio=studio();
+   const formatBar=`<div class="format-switcher">
+     <button type="button" class="format-card ${curStudio==='feed'?'active':''}" data-format-switch="feed"><span class="format-ico"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/></svg></span><span class="format-meta"><strong>Feed</strong><span>1080 × 1350 (4:5)</span></span></button>
+     <button type="button" class="format-card ${curStudio==='stories'?'active':''}" data-format-switch="stories"><span class="format-ico"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><circle cx="12" cy="18.5" r="0.8"/></svg></span><span class="format-meta"><strong>Historia</strong><span>1080 × 1920 (9:16)</span></span></button>
+     <button type="button" class="format-card ${curStudio==='facebook'?'active':''}" data-format-switch="facebook"><span class="format-ico"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/></svg></span><span class="format-meta"><strong>Portada Facebook</strong><span>1702 × 630</span></span></button>
+   </div>`;
    const idxs=studioIndices();
    const selCount=idxs.filter(i=>pieces[i]?.included!==false).length;
-   const zipBar=!facebook()?`<div style="display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#94a3b8;margin:0 2px 8px;gap:6px;"><span>En ZIP: <strong style="color:#f1f5f9">${selCount}/${idxs.length}</strong></span><span style="display:inline-flex;gap:4px;"><button type="button" class="tiny" data-side="zipAll" style="padding:3px 7px;font-size:10px;">Todas</button><button type="button" class="tiny" data-side="zipWithPhoto" style="padding:3px 7px;font-size:10px;">Solo con foto</button></span></div>`:'';
-   box.innerHTML=zipBar+idxs.map(pieceTile).join('')+`<button class="side-action" data-side="restore" style="margin-top:14px">Restaurar distribución de esta pieza</button>`;
-   info.textContent=facebook()?'Portada independiente · 1702 × 630. No aparece entre las piezas de feed.':story()?'Historias 1080 × 1920. Tildá cuáles querés incluir al exportar el ZIP.':'Diseños 1080 × 1350. Tildá cuáles querés incluir al exportar el ZIP.';
+   const zipBar=!facebook()?`<div style="display:flex;align-items:center;justify-content:space-between;font-size:10.5px;color:#94a3b8;margin:0 1px 6px;gap:4px;"><span><b style="color:#e2e8f0;">Plantillas</b> · ZIP ${selCount}/${idxs.length}</span><span style="display:inline-flex;gap:3px;"><button type="button" class="tiny" data-side="zipAll" style="padding:2px 6px;font-size:9.5px;">Todas</button><button type="button" class="tiny" data-side="zipWithPhoto" style="padding:2px 6px;font-size:9.5px;">Con foto</button></span></div>`:'<div style="font-size:10.5px;font-weight:700;color:#e2e8f0;margin:0 1px 6px;">Lienzo panorámico</div>';
+   const tilesWrap=facebook()?idxs.map(pieceTile).join(''):`<div class="piece-grid-2">${idxs.map(pieceTile).join('')}</div>`;
+   box.innerHTML=formatBar+zipBar+tilesWrap+`<button class="side-action" data-side="restore" style="margin-top:9px;padding:8px;font-size:11px;">↺ Restaurar distribución</button>`;
+   info.textContent=facebook()?'Portada 1702 × 630 (exportable en 851 × 315 Meta).':story()?'Historias 9:16 sin CTA (espacio libre para link).':'Feed 4:5 (con vista previa y exportación 1:1).';
  }else if(sidebarView==='library'){
    title.textContent='Biblioteca';
    const tabsHtml=`<div class="lib-tabs"><button type="button" data-lib-tab="properties" class="${libraryTab==='properties'?'active':''}">Propiedades web</button><button type="button" data-lib-tab="project" class="${libraryTab==='project'?'active':''}">En proyecto</button></div>`;
@@ -981,59 +1460,102 @@ function drawPieces(){const box=$('#pieces'),title=$('#piecesHeading'),info=$('#
 
 
 function photoDataFor(i){return assets[pieces[i].photoKey]?.data||'';}
-function inspectTab(which){if(['style','brand'].includes(which))which='brand';else if(['overlays','filters','background'].includes(which))which='background';else if(which!=='ai'&&which!=='edit')which='edit';panel=which;$$('[data-panel]').forEach(b=>b.classList.toggle('active',b.dataset.panel===which));drawInspector();}
+let dockCopyGenerating=false,dockCopyContextVal='';
+function dockCreditsMini(){
+  if(!aiConnected())return '<span style="font-size:10px;color:#64748b;">Offline</span>';
+  if(!aiCredits)return '<span class="dock-ai-pill">✨ IA</span>';
+  const limit=Number(aiCredits.limit)||50,used=Math.max(0,Number(aiCredits.used)||0),rem=Math.max(0,limit-used);
+  return `<span class="dock-ai-pill" title="${used} usados de ${limit} créditos mensuales">✨ IA · ${rem}/${limit}</span>`;
+}
+function drawDock(force=false){
+  const dock=$('#studioDock');if(!dock)return;
+  syncShellFold();
+  if(!isDockActive()){dock.innerHTML='';return;}
+  const activeEl=document.activeElement;
+  if(!force&&activeEl&&(activeEl.id==='dockCopyTextarea'||activeEl.id==='dockCopyContext'))return;
+  const c=aiCandidates[active],z=p(),online=aiConnected(),focus=aiFocuses[active]||'titles_logo';
+  if(online&&!aiCredits&&!aiCreditsLoading)aiFetchCredits();
+  const capVal=(z&&z.caption)||'';
+  const words=capVal.trim()?capVal.trim().split(/\s+/).length:0;
+  const isFb=facebook(),isSt=story();
+  const zipCount=(isSt?[6,7,8,9,10]:[0,1,2,3,4]).filter(i=>pieces[i]?.included!==false).length;
+  dock.innerHTML=`
+  <div class="dock-card">
+    <div class="dock-card-head"><h4>Retoque IA de la foto</h4>${dockCreditsMini()}</div>
+    ${c?`<div class="ai-image-comparison" style="margin:2px 0;"><div class="ai-preview-label" style="padding:4px 8px;font-size:10px;">${aiPreviewMode==='before'?'ANTES':'DESPUÉS · Retoque propuesto'}</div><img id="aiCompareImage" alt="Comparación" src="${aiPreviewMode==='before'?c.beforePreview:c.afterPreview}" style="max-height:155px;"></div>
+    <div class="ai-button-row" style="margin:2px 0;"><button type="button" data-ai="before" class="${aiPreviewMode==='before'?'selected':''}" style="min-height:28px;padding:4px;font-size:11px;">Antes</button><button type="button" data-ai="after" class="${aiPreviewMode==='after'?'selected':''}" style="min-height:28px;padding:4px;font-size:11px;">Después</button></div>`:''}
+    <div class="field-row" style="margin:0;">
+      <div class="field" style="margin:0 !important;"><label for="aiFocus">Zona</label><select id="aiFocus" style="padding:5px 6px !important;font-size:11px !important;"><option value="titles_logo" ${focus==='titles_logo'?'selected':''}>Títulos + logo</option><option value="titles" ${focus==='titles'?'selected':''}>Solo títulos</option><option value="logo" ${focus==='logo'?'selected':''}>Solo logo</option><option value="upper" ${focus==='upper'?'selected':''}>Tercio sup.</option><option value="lower" ${focus==='lower'?'selected':''}>Tercio inf.</option><option value="general" ${focus==='general'?'selected':''}>General</option></select></div>
+      <div class="field" style="margin:0 !important;"><label for="aiIntensity">Intensidad <b id="aiIntensityRead">${Math.round((aiIntensities[active]??0.35)*100)}%</b></label><input id="aiIntensity" type="range" min="0.10" max="0.75" step="0.05" value="${aiIntensities[active]??0.35}" style="margin-top:6px;"></div>
+    </div>
+    ${c?`<div class="two-buttons"><button type="button" class="ai-action-primary" data-ai="approve" style="padding:8px;font-size:11.5px;">✓ Aprobar</button><button type="button" class="ai-secondary" data-ai="discard" style="padding:8px;font-size:11.5px;">Descartar</button></div>`:(online?`<button type="button" class="dock-btn-ai" data-ai="generate" ${aiGenerating?'disabled':''}>${aiGenerating?'⏳ Generando retoque…':'✨ Aplicar retoque IA'}</button>`:'')}
+    ${z.aiOriginal?`<button type="button" class="ai-secondary" data-ai="revert" style="padding:6px 8px;font-size:11px;">↺ Restaurar original</button>`:''}
+    ${z.aiRetouch&&!c?`<div style="font-size:10.5px;color:#4ade80;font-weight:600;">✓ Retoque IA activo en esta pieza</div>`:''}
+  </div>
+  <div class="dock-card" style="flex:1;min-height:0;">
+    <div class="dock-card-head"><h4>Copywriting con IA</h4><span class="dock-ai-pill">✨ IA</span></div>
+    <input id="dockCopyContext" class="dock-copy-input" type="text" placeholder="Contexto opcional (ej: 3 dorms, apto crédito…)" value="${esc(dockCopyContextVal)}">
+    <textarea id="dockCopyTextarea" class="dock-copy-textarea" rows="5" style="flex:1;" placeholder="Escribí el pie de publicación o generá el copy con IA a partir de los textos de esta pieza…">${esc(capVal)}</textarea>
+    <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#94a3b8;"><span id="dockCopyStats">${capVal.length} caract. · ${words} pal.</span><span id="dockCopyCopied" style="color:#4ade80;font-weight:700;display:none;">✓ ¡Copiado!</span></div>
+    <div style="display:flex;gap:6px;">
+      <button type="button" id="dockAiCopyBtn" class="dock-btn-ai" style="flex:1;" ${dockCopyGenerating?'disabled':''}>${dockCopyGenerating?'⏳ Redactando…':'✨ Generar texto con IA'}</button>
+      <button type="button" id="dockCopyClipBtn" title="Copiar texto al portapapeles" style="padding:7px 11px !important;border-radius:7px !important;font-weight:700;font-size:12px;">📋</button>
+    </div>
+  </div>
+  <div class="dock-card" style="margin-top:auto;">
+    <div class="dock-card-head"><h4>Exportar</h4><span style="font-size:10px;color:#94a3b8;">${W} × ${H}</span></div>
+    <div class="dock-export-grid">
+      <button type="button" class="dock-export-tile" data-dock-export="png" title="Descargar pieza activa en PNG"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>PNG</button>
+      <button type="button" class="dock-export-tile" data-dock-export="jpg" title="Descargar pieza activa en JPG"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>JPG</button>
+      <button type="button" class="dock-export-tile" data-dock-export="zip" title="${isFb?'Exportar PNG 851 × 315 (Meta)':`Exportar ZIP (${zipCount} piezas)`}"><svg viewBox="0 0 24 24"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>${isFb?'Meta':'ZIP ('+zipCount+')'}</button>
+    </div>
+  </div>`;
+}
+function inspectTab(which){if(['style','brand'].includes(which))which='brand';else if(['overlays','filters','background'].includes(which))which='background';else if(which==='ai'&&!isDockActive())which='ai';else which='edit';panel=which;$$('[data-panel]').forEach(b=>b.classList.toggle('active',b.dataset.panel===which));drawInspector();}
 function openFile(id){$('#'+id).click();}
 function renderLogoPreview(){const o=$('#logoPreview');if(!o)return;o.style.backgroundImage=logoMode!=='original'?'none':'';o.style.backgroundColor=logoMode!=='original'?'#263b56':'';if(!logoData){o.innerHTML='<em>SUBIR LOGO OFICIAL</em>';return;}const src=getProcessedLogo(logoMode);if(src){const url=(src instanceof HTMLCanvasElement)?src.toDataURL():logoData;o.innerHTML=`<img alt="Logo cargado" src="${esc(url)}">`;}}
-function drawInspector(){const body=$('#inspectBody');if(panel==='ai'){body.innerHTML=aiPanelMarkup();return;}if(panel==='brand'){
-body.innerHTML=`<section class="section"><h3>Naranja de marca</h3>
-<div class="field"><label>Color institucional <b id="brandRead">${brandOrange.toUpperCase()}</b></label><input id="brandColor" type="color" value="${brandOrange}"></div>
-<div class="control-preview">Naranja corporativo exacto: RGB 242, 107, 46 · #F26B2E. Modificarlo aquí actualiza los acentos vinculados al color de marca. Los colores personalizados del CTA y de los textos se respetan.</div>
-<button class="tiny" data-do="resetBrand" style="margin-top:8px">Restaurar #F26B2E</button></section>
-<section class="section"><h3>Logo</h3><div class="logo-box"><div class="logo-prev" id="logoPreview"></div><div class="logo-actions"><button class="tiny" data-do="logoUpload">Cambiar logo</button><button class="tiny" data-do="restoreLogo">Restaurar logo oficial</button></div></div>
-<div class="field" style="margin-top:10px"><label>Variante de color oficial</label>
+function drawInspector(forceDock=false){const body=$('#inspectBody');if(isDockActive()&&panel==='ai'){panel='edit';}
+$$('[data-panel]').forEach(b=>b.classList.toggle('active',b.dataset.panel===panel));
+drawDock(forceDock);
+if(panel==='ai'){body.innerHTML=aiPanelMarkup();return;}if(panel==='brand'){
+body.innerHTML=`<section class="section"><div class="section-head"><h3>Naranja de marca</h3><button class="tiny" data-do="resetBrand">Restaurar #F26B2E</button></div>
+<div class="inline-color-bar"><input id="brandColor" type="color" value="${brandOrange}"><span class="color-hex-badge" id="brandRead">${brandOrange.toUpperCase()}</span><span style="font-size:10.5px;color:#94a3b8;margin-left:auto;">RGB 242, 107, 46</span></div></section>
+<section class="section"><h3>Logo oficial</h3><div class="logo-box"><div class="logo-prev" id="logoPreview" style="width:86px;height:62px;"></div><div class="logo-actions" style="gap:6px;"><button class="tiny" data-do="logoUpload">Cambiar logo</button><button class="tiny" data-do="restoreLogo">Restaurar oficial</button></div></div>
+<div class="field"><label>Variante cromática</label>
 <div class="alignment-three" style="grid-template-columns:repeat(3,1fr);gap:4px">
   <button type="button" class="${logoMode==='white'?'active-btn':''}" data-logomode="white">Blanco total</button>
-  <button type="button" class="${logoMode==='orange-white'?'active-btn':''}" data-logomode="orange-white">ISO naranja + blanco</button>
+  <button type="button" class="${logoMode==='orange-white'?'active-btn':''}" data-logomode="orange-white">ISO naranja</button>
   <button type="button" class="${logoMode==='original'?'active-btn':''}" data-logomode="original">Original</button>
 </div></div>
-<label class="switch-row" style="margin-top:10px"><input type="checkbox" id="removeLight" ${removeLight?'checked':''}> Quitar fondo claro del logo</label>
-<p class="mini-info">Permite usar el logo oficial en blanco integral, con el ISO en naranja corporativo y textos en blanco para máximo contraste, o en sus colores originales.</p></section>
-<section class="section"><h3>Tipografías oficiales</h3><p class="mini-info">PT Serif Regular y PT Serif Bold están integradas en este HTML y se utilizan sin conexión. Podés cargar otras variantes si necesitás cambiar el estilo.</p><div class="two-buttons"><button data-do="fontReg">Cambiar Regular</button><button data-do="fontBold">Cambiar Bold</button></div><p class="mini-info">Regular: ${filesFont.reg?'Personalizada':'PT Serif oficial precargada'} · Bold: ${filesFont.bold?'Personalizada':'PT Serif oficial precargada'}</p><button class="tiny full" data-do="resetFonts" style="margin-top:9px">Restaurar ambas PT Serif oficiales</button></section>
-<div class="mini-info" style="margin-top:12px;padding-top:10px;border-top:1px solid #e9edf2;">${facebook()?'Portada Facebook 1702 × 630 (2× 851 × 315) y guías móviles.':story()?'Historia de Instagram/Facebook 1080 × 1920 · orientación 9:16. Los textos y overlays son independientes del feed.':'Feed 1080 × 1350 · 4:5, con exportación cuadrada adaptada 1080 × 1080.'}</div>`;
+<label class="switch-row" style="margin-top:6px"><input type="checkbox" id="removeLight" ${removeLight?'checked':''}> Quitar fondo claro del logo</label></section>
+<section class="section"><h3>Tipografías</h3><div class="two-buttons"><button class="tiny" data-do="fontReg">Cambiar Regular</button><button class="tiny" data-do="fontBold">Cambiar Bold</button></div><p class="mini-info">Regular: ${filesFont.reg?'Personalizada':'PT Serif oficial'} · Bold: ${filesFont.bold?'Personalizada':'PT Serif oficial'}</p><button class="tiny full" data-do="resetFonts" style="margin-top:6px">Restaurar PT Serif oficiales</button></section>`;
 renderLogoPreview();return;}
 if(panel==='background'){
 body.innerHTML=`<details class="section" open><summary>Fotografía</summary>
-<button data-do="photoUpload" class="full">Cargar / cambiar fotografía</button>
-<div class="two-buttons" style="margin-top:6px"><button type="button" data-do="clearPiecePhoto" class="tiny">Quitar foto actual</button><button type="button" data-do="clearAllImages" class="tiny" style="color:#f87171;">🧹 Limpiar todas</button></div>
-<p class="mini-info">También podés arrastrar una foto al lienzo o pegarla con Ctrl+V.</p>
-${facebook()?`<div class="fb-info" style="margin-top:10px"><strong>Portada Facebook · 1702 × 630 px (2×)</strong>Área protegida para celulares y computadoras.</div>
-<div class="field"><label>Reutilizar foto del Feed</label><select id="fbSourcePhoto">${NAMES.slice(0,5).map((n,i)=>`<option value="${i}">${esc(n)}${photoDataFor(i)?' · con imagen':''}</option>`).join('')}</select></div>
-<button class="full" data-do="copyFeedPhoto">Usar foto seleccionada en la portada</button>`:''}
+<div class="two-buttons"><button data-do="photoUpload" class="tiny" style="font-weight:700;">📁 Cargar / cambiar</button><button type="button" data-do="clearPiecePhoto" class="tiny">Quitar actual</button></div>
+<button type="button" data-do="clearAllImages" class="tiny full" style="margin-top:5px;color:#f87171;">🧹 Limpiar todas las imágenes</button>
+${facebook()?`<div class="field" style="margin-top:8px"><label>Reutilizar foto del Feed</label><div style="display:flex;gap:5px;"><select id="fbSourcePhoto" style="flex:1">${NAMES.slice(0,5).map((n,i)=>`<option value="${i}">${esc(n)}${photoDataFor(i)?' ✓':''}</option>`).join('')}</select><button class="tiny" data-do="copyFeedPhoto">Usar</button></div></div>`:''}
 </details>
 <details class="section" open><summary>Ajustes de imagen</summary>
-<p class="mini-info">Ajustes no destructivos. Solo afectan la fotografía de fondo.</p>
-${slider('Brillo','brightness',p().brightness,50,150,1,'raw')}
-${slider('Contraste','contrast',p().contrast,50,160,1,'raw')}
-${slider('Saturación','saturation',p().saturation,0,170,1,'raw')}
-<button data-do="resetFilters" class="full" style="margin-top:6px">Restablecer filtros</button>
+<div class="field-row-3">${slider('Brillo','brightness',p().brightness,50,150,1,'raw')}${slider('Contraste','contrast',p().contrast,50,160,1,'raw')}${slider('Saturación','saturation',p().saturation,0,170,1,'raw')}</div>
+<button data-do="resetFilters" class="tiny full" style="margin-top:4px">Restablecer filtros</button>
 </details>
-<details class="section" open><summary>Overlays · ${facebook()?'Portada Facebook':story()?'Historia':'Feed'}</summary>
-<p class="mini-info">Afectan solamente a la foto de esta pieza sin alterar las capas ni los textos.</p>
-<div style="font-weight:700;font-size:11.5px;color:var(--orange);margin:8px 0 4px">01 · Overlay general</div>
-${slider('Opacidad general','global',p().global??0,0,.85,.01,'%')}
-<div style="font-weight:700;font-size:11.5px;color:var(--orange);margin:8px 0 4px">02 · Overlay superior</div>
-${slider('Opacidad superior','top',p().top,0,.95,.01,'%')}${slider('Altura superior','topHeight',p().topHeight,.1,1,.01,'%')}
-<div style="font-weight:700;font-size:11.5px;color:var(--orange);margin:8px 0 4px">03 · Overlay de títulos</div>
-${slider('Opacidad de títulos','middle',p().middle,0,.95,.01,'%')}${slider('Centro vertical','middleY',p().middleY,.1,.9,.01,'%')}${slider('Centro horizontal','middleX',p().middleX,0,1,.01,'%')}${slider('Altura / alcance','middleHeight',p().middleHeight,.12,1,.01,'%')}${slider('Anchura / alcance','middleWidth',p().middleWidth,.3,1.65,.01,'×')}
-<div style="font-weight:700;font-size:11.5px;color:var(--orange);margin:8px 0 4px">04 · Overlay inferior</div>
-${slider('Opacidad inferior','bottom',p().bottom,0,.95,.01,'%')}${slider('Altura inferior','bottomHeight',p().bottomHeight,.1,1,.01,'%')}
-<button class="full" data-do="resetOverlays" style="margin-top:9px">Restablecer overlays de esta pieza</button>
+<details class="section" open><summary>Overlays · ${facebook()?'Portada FB':story()?'Historia':'Feed'}</summary>
+${slider('01 · Opacidad general','global',p().global??0,0,.85,.01,'%')}
+<div style="font-weight:700;font-size:10.5px;color:var(--orange);margin:6px 0 2px">02 · Superior</div>
+<div class="field-row">${slider('Opacidad','top',p().top,0,.95,.01,'%')}${slider('Altura','topHeight',p().topHeight,.1,1,.01,'%')}</div>
+<div style="font-weight:700;font-size:10.5px;color:var(--orange);margin:6px 0 2px">03 · Títulos (radial)</div>
+<div class="field-row">${slider('Opacidad','middle',p().middle,0,.95,.01,'%')}${slider('Centro Y','middleY',p().middleY,.1,.9,.01,'%')}</div>
+<div class="field-row-3">${slider('Centro X','middleX',p().middleX,0,1,.01,'%')}${slider('Alto','middleHeight',p().middleHeight,.12,1,.01,'%')}${slider('Ancho','middleWidth',p().middleWidth,.3,1.65,.01,'×')}</div>
+<div style="font-weight:700;font-size:10.5px;color:var(--orange);margin:6px 0 2px">04 · Inferior</div>
+<div class="field-row">${slider('Opacidad','bottom',p().bottom,0,.95,.01,'%')}${slider('Altura','bottomHeight',p().bottomHeight,.1,1,.01,'%')}</div>
+<button class="tiny full" data-do="resetOverlays" style="margin-top:6px">Restablecer overlays</button>
 </details>`;
 return;}
 panel='edit';let l=sel();body.innerHTML=`
-<section class="section"><div class="section-head"><h3>Capas <span class="hint" id="selCount">${picked.length} seleccionada(s)</span></h3><div style="display:flex;gap:10px;align-items:center;"><button class="textlink" data-do="selectCTA" style="font-weight:600;color:var(--orange);">Ir a CTA</button><button class="textlink" data-do="selectAll">Seleccionar todas</button></div></div><div id="layerList" class="layer-list"></div><div class="two-buttons" style="margin-top:9px"><button class="tiny" data-do="layerUp">↑ Subir capa</button><button class="tiny" data-do="layerDown">↓ Bajar capa</button></div></section>
-${picked.length>1?`<section class="section"><h3>Alinear capas seleccionadas</h3><div class="alignment-actions"><button data-alignlayers="left">⇤ Izquierda</button><button data-alignlayers="center">↔ Centro</button><button data-alignlayers="right">Derecha ⇥</button></div><div class="two-buttons" style="margin-top:7px"><button data-alignlayers="top">↑ Arriba</button><button data-alignlayers="bottom">↓ Abajo</button></div><p class="mini-info">Alinea los objetos al margen seguro del lienzo.</p></section>`:''}
-<section class="section"><h3>Editar elemento <span class="hint" id="selectedName">${picked.length===1?layerName(picked[0]):'selección múltiple'}</span></h3><div id="layerFields"></div></section>`;
+<section class="section"><div class="section-head"><h3>Capas <span class="hint" id="selCount">(${picked.length})</span></h3><div style="display:flex;gap:8px;align-items:center;"><button class="textlink" data-do="selectCTA" style="font-weight:600;color:var(--orange);">Ir a CTA</button><button class="textlink" data-do="selectAll">Todas</button><button class="textlink" data-do="layerUp" title="Subir capa">↑</button><button class="textlink" data-do="layerDown" title="Bajar capa">↓</button></div></div><div id="layerList" class="layer-list"></div></section>
+${picked.length>1?`<section class="section"><h3>Alinear selección</h3><div class="alignment-actions"><button data-alignlayers="left">⇤ Izq</button><button data-alignlayers="center">↔ Centro</button><button data-alignlayers="right">Der ⇥</button></div><div class="two-buttons" style="margin-top:5px"><button data-alignlayers="top">↑ Arriba</button><button data-alignlayers="bottom">↓ Abajo</button></div></section>`:''}
+<section class="section"><h3>Editar · <span class="hint" id="selectedName" style="color:#fb923c;font-weight:700;">${picked.length===1?layerName(picked[0]):'selección múltiple'}</span></h3><div id="layerFields"></div></section>`;
 drawLayers();drawLayerFields();
 }
 
@@ -1056,7 +1578,7 @@ async function aiFetchCredits(force=false){
    if(data?.credits)aiCredits=data.credits;
   }
  }catch(e){console.warn('Créditos IA:',e);}
- finally{aiCreditsLoading=false;if(panel==='ai')drawInspector();}
+ finally{aiCreditsLoading=false;if(panel==='ai')drawInspector();else if(isDockActive())drawDock();}
 }
 function aiCreditsMarkup(){
  if(!aiConnected())return '<div class="ai-state">Modo local sin conexión al servicio de retoque.</div>';
@@ -1249,27 +1771,36 @@ function aiUpdateCandidateIntensity(idx,intensity){
 const chosenIntensity=aiIntensities[idx]??0.35;
 const t=aiCompositeLocalized(img,p(),aiFocuses[idx]||'titles_logo',chosenIntensity);const normalized=t.toDataURL('image/png');const normalizedImage=await aiLoadedImage(normalized);
 const before=aiThumb(aiMakeCanvas('reference'));
-const after=aiThumb(aiMakeCanvas('proposal',normalizedImage));aiCandidates[idx]={rawAiImage:img,imageData:normalized,img:normalizedImage,beforePreview:before,afterPreview:after,width:W,height:H,sourceSignature:signature||aiSnapshot(p()),metrics};aiPreviewMode='after';inspectTab('ai');status('Retoque recibido. Compará antes/después y aprobalo únicamente si la propiedad sigue siendo fiel.');}
+const after=aiThumb(aiMakeCanvas('proposal',normalizedImage));aiCandidates[idx]={rawAiImage:img,imageData:normalized,img:normalizedImage,beforePreview:before,afterPreview:after,width:W,height:H,sourceSignature:signature||aiSnapshot(p()),metrics};aiPreviewMode='after';if(isDockActive())drawDock(true);else inspectTab('ai');status('Retoque recibido. Compará antes/después y aprobalo únicamente si la propiedad sigue siendo fiel.');}
 async function aiImport(file){if(!file)return;if(!/^image\/(png|jpeg|webp)$/i.test(file.type)&&!/\.(png|jpe?g|webp)$/i.test(file.name||'')){status('Usá una imagen PNG, JPG o WebP para el retoque.');return;}try{await aiAcceptCandidateData(await fileData(file));}catch(err){status(err.message);alert('No se pudo incorporar el retoque: '+err.message);}}
-async function aiGenerate(){if(aiGenerating||!aiConnected())return;const i=active;aiPrompts[i]=$('#aiPrompt')?.value||aiPrompts[i]||AI_DEFAULT_PROMPT;aiFocuses[i]=$('#aiFocus')?.value||'titles_logo';const currentSignature=aiSnapshot(p());aiGenerating=true;drawInspector();status('Solicitando retoque fotográfico al servidor…');try{const {meta,images}=await aiPreparedAssets(i,true);const form=new FormData();form.append('metadata',JSON.stringify(meta));for(const f of images)form.append(f.name,f.blob,f.name);const endpoint=AI_CONFIG().endpoint||'/api/social-studio/retouch';if(!endpoint.startsWith('/')||endpoint.startsWith('//'))throw Error('El endpoint debe ser una ruta interna del mismo sitio.');const resp=await fetch(endpoint,{method:'POST',body:form,credentials:'same-origin'});if(!resp.ok){const errObj=await resp.json().catch(()=>({}));throw Error(errObj.error||('El servicio devolvió '+resp.status));}const result=await resp.json();if(result.credits){aiCredits=result.credits;if(result.credits.exceeded&&result.credits.used===result.credits.limit){alert(`¡Aviso! Ya consumiste los ${result.credits.limit} créditos mensuales incluidos. Por ahora podés seguir usando el retoque.`);}}const data=result.imageDataUrl||(result.image_base64?`data:image/png;base64,${result.image_base64}`:null);if(!data||!/^data:image\/(png|jpeg|webp);base64,/i.test(data))throw Error('El servidor no devolvió una imagen en el contrato esperado.');if(active!==i||aiSnapshot(p())!==currentSignature)throw Error('La pieza cambió durante la generación: resultado no aplicado. Volvé a generar para evitar desajustes.');await aiAcceptCandidateData(data,i,currentSignature,null);}catch(e){status('Retoque IA no disponible: '+e.message);alert('No se completó el retoque: '+e.message);}finally{aiGenerating=false;if(panel==='ai')drawInspector();}}
-function aiApprove(){const c=aiCandidates[active];if(!c)return;if(aiSnapshot(p())!==c.sourceSignature){alert('La pieza fue modificada después de generar la propuesta. Volvé a importar o generar el retoque para no perder esos ajustes.');return;}if(!confirm('¿Aplicar esta fotografía retocada a la pieza actual? Los textos y el logo seguirán editables; los overlays de fondo se desactivarán para evitar doble tratamiento. Podrás restaurar el fondo previo.'))return;const idx=active,key=`ai_retouch_${Date.now()}_${idx}`;assets[key]={data:c.imageData,name:`Retoque aprobado ${NAMES[idx]}`,origin:'ai-retouch'};photoImages[key]=c.img;mutate(()=>{const z=p();if(!z.aiOriginal){z.aiOriginal={photoKey:z.photoKey,zoom:z.zoom,panX:z.panX,panY:z.panY,global:z.global,top:z.top,topHeight:z.topHeight,middle:z.middle,middleY:z.middleY,middleX:z.middleX,middleHeight:z.middleHeight,middleWidth:z.middleWidth,bottom:z.bottom,bottomHeight:z.bottomHeight,brightness:z.brightness,contrast:z.contrast,saturation:z.saturation,clouds:Object.fromEntries((z.layers||[]).map(l=>[l.id,l.cloud||0]))};}z.aiRetouch={date:new Date().toISOString(),focus:aiFocuses[idx]||'titles_logo',instruction:aiPrompts[idx]||AI_DEFAULT_PROMPT,metrics:c?.metrics};z.photoKey=key;z.zoom=1;z.panX=0;z.panY=0;z.global=0;z.top=0;z.middle=0;z.bottom=0;z.brightness=100;z.contrast=100;z.saturation=100;for(const l of (z.layers||[]))l.cloud=0;});delete aiCandidates[idx];inspectTab('ai');status('Retoque aprobado en esta pieza, con original reversible. Textos y logo siguen editables.');}
-function aiRevert(){const z=p();if(!z.aiOriginal)return;if(!confirm('¿Restaurar el fondo y los overlays previos al retoque?'))return;mutate(()=>{const orig=p().aiOriginal;if(orig.clouds){for(const l of (p().layers||[]))if(l.id in orig.clouds)l.cloud=orig.clouds[l.id];}const {clouds,...rest}=orig;Object.assign(p(),rest);delete p().aiOriginal;delete p().aiRetouch;});delete aiCandidates[active];inspectTab('ai');status('Fondo y overlays anteriores restaurados.');}
-function aiAct(action){if(action==='generate'){aiGenerate();return;}if(action==='package'){aiPackage();return;}if(action==='import'){openFile('fileAIRetouch');return;}if(action==='approve'){aiApprove();return;}if(action==='revert'){aiRevert();return;}if(action==='discard'){delete aiCandidates[active];inspectTab('ai');status('Propuesta descartada sin modificar la pieza.');return;}if(action==='before'||action==='after'){aiPreviewMode=action;drawInspector();return;}}
+async function aiGenerate(){if(aiGenerating||!aiConnected())return;const i=active;aiPrompts[i]=$('#aiPrompt')?.value||aiPrompts[i]||AI_DEFAULT_PROMPT;aiFocuses[i]=$('#aiFocus')?.value||'titles_logo';const currentSignature=aiSnapshot(p());aiGenerating=true;if(isDockActive())drawDock(true);else drawInspector();status('Solicitando retoque fotográfico al servidor…');try{const {meta,images}=await aiPreparedAssets(i,true);const form=new FormData();form.append('metadata',JSON.stringify(meta));for(const f of images)form.append(f.name,f.blob,f.name);const endpoint=AI_CONFIG().endpoint||'/api/social-studio/retouch';if(!endpoint.startsWith('/')||endpoint.startsWith('//'))throw Error('El endpoint debe ser una ruta interna del mismo sitio.');const resp=await fetch(endpoint,{method:'POST',body:form,credentials:'same-origin'});if(!resp.ok){const errObj=await resp.json().catch(()=>({}));throw Error(errObj.error||('El servicio devolvió '+resp.status));}const result=await resp.json();if(result.credits){aiCredits=result.credits;if(result.credits.exceeded&&result.credits.used===result.credits.limit){alert(`¡Aviso! Ya consumiste los ${result.credits.limit} créditos mensuales incluidos. Por ahora podés seguir usando el retoque.`);}}const data=result.imageDataUrl||(result.image_base64?`data:image/png;base64,${result.image_base64}`:null);if(!data||!/^data:image\/(png|jpeg|webp);base64,/i.test(data))throw Error('El servidor no devolvió una imagen en el contrato esperado.');if(active!==i||aiSnapshot(p())!==currentSignature)throw Error('La pieza cambió durante la generación: resultado no aplicado. Volvé a generar para evitar desajustes.');await aiAcceptCandidateData(data,i,currentSignature,null);}catch(e){status('Retoque IA no disponible: '+e.message);alert('No se completó el retoque: '+e.message);}finally{aiGenerating=false;if(panel==='ai')drawInspector();else if(isDockActive())drawDock(true);}}
+function aiApprove(){const c=aiCandidates[active];if(!c)return;if(aiSnapshot(p())!==c.sourceSignature){alert('La pieza fue modificada después de generar la propuesta. Volvé a importar o generar el retoque para no perder esos ajustes.');return;}if(!confirm('¿Aplicar esta fotografía retocada a la pieza actual? Los textos y el logo seguirán editables; los overlays de fondo se desactivarán para evitar doble tratamiento. Podrás restaurar el fondo previo.'))return;const idx=active,key=`ai_retouch_${Date.now()}_${idx}`;assets[key]={data:c.imageData,name:`Retoque aprobado ${NAMES[idx]}`,origin:'ai-retouch'};photoImages[key]=c.img;mutate(()=>{const z=p();if(!z.aiOriginal){z.aiOriginal={photoKey:z.photoKey,zoom:z.zoom,panX:z.panX,panY:z.panY,global:z.global,top:z.top,topHeight:z.topHeight,middle:z.middle,middleY:z.middleY,middleX:z.middleX,middleHeight:z.middleHeight,middleWidth:z.middleWidth,bottom:z.bottom,bottomHeight:z.bottomHeight,brightness:z.brightness,contrast:z.contrast,saturation:z.saturation,clouds:Object.fromEntries((z.layers||[]).map(l=>[l.id,l.cloud||0]))};}z.aiRetouch={date:new Date().toISOString(),focus:aiFocuses[idx]||'titles_logo',instruction:aiPrompts[idx]||AI_DEFAULT_PROMPT,metrics:c?.metrics};z.photoKey=key;z.zoom=1;z.panX=0;z.panY=0;z.global=0;z.top=0;z.middle=0;z.bottom=0;z.brightness=100;z.contrast=100;z.saturation=100;for(const l of (z.layers||[]))l.cloud=0;});delete aiCandidates[idx];if(isDockActive()){drawInspector();drawDock(true);}else inspectTab('ai');status('Retoque aprobado en esta pieza, con original reversible. Textos y logo siguen editables.');}
+function aiRevert(){const z=p();if(!z.aiOriginal)return;if(!confirm('¿Restaurar el fondo y los overlays previos al retoque?'))return;mutate(()=>{const orig=p().aiOriginal;if(orig.clouds){for(const l of (p().layers||[]))if(l.id in orig.clouds)l.cloud=orig.clouds[l.id];}const {clouds,...rest}=orig;Object.assign(p(),rest);delete p().aiOriginal;delete p().aiRetouch;});delete aiCandidates[active];if(isDockActive()){drawInspector();drawDock(true);}else inspectTab('ai');status('Fondo y overlays anteriores restaurados.');}
+function aiAct(action){if(action==='generate'){aiGenerate();return;}if(action==='package'){aiPackage();return;}if(action==='import'){openFile('fileAIRetouch');return;}if(action==='approve'){aiApprove();return;}if(action==='revert'){aiRevert();return;}if(action==='discard'){delete aiCandidates[active];if(isDockActive())drawDock(true);else inspectTab('ai');status('Propuesta descartada sin modificar la pieza.');return;}if(action==='before'||action==='after'){aiPreviewMode=action;if(isDockActive())drawDock(true);else drawInspector();return;}}
 // ----- FIN RETOQUE IA -----
 
 function slider(name,key,value,min,max,step,fmt){let shown=fmt==='%'?Math.round(value*100)+'%':fmt==='×'?Number(value).toFixed(2)+'×':Math.round(value)+'%';return `<div class="field"><label>${name}<b data-read="${key}">${shown}</b></label><input data-piecefield="${key}" type="range" min="${min}" max="${max}" step="${step}" value="${value}"></div>`;}
 const layerName=l=>{const id=typeof l==='object'?l.id:l;if(id==='cta'){const st=typeof l==='object'?(l.ctaStyle||(Number(l.height||70)<=6?'line':'solid')):'solid';return st==='line'?'Línea divisoria':st==='outline'?'Recuadro CTA (sin fill)':'Botón CTA';}return({logo:'Logo',category:'Etiqueta / categoría',title:'Título principal',accent:'Título naranja',support:'Subtítulo / apoyo',location:'Ubicación con líneas'})[id]||id;};
 function drawLayers(){const el=$('#layerList');if(!el)return;el.innerHTML=[...p().layers].reverse().map(l=>{const st=l.id==='cta'?(l.ctaStyle||(Number(l.height||70)<=6?'line':'solid')):'';const mini=l.id==='logo'?'LOGO':l.id==='cta'?(st==='line'?'LÍNEA':st==='outline'?'MARCO':'CTA'):l.id==='location'?'— UBICACIÓN —':(l.text||'').slice(0,17);return`<div class="layer-row ${picked.includes(l.id)?'selected':''} ${l.visible?'':'faded'}" data-layer="${l.id}"><button class="vis" data-visibility="${l.id}" title="${l.visible?'Ocultar':'Mostrar'}">${l.visible?'◉':'⊘'}</button><input class="sel" type="checkbox" data-multisel="${l.id}" ${picked.includes(l.id)?'checked':''}><span class="layer-mini">${esc(mini)}</span><span class="layer-name">${layerName(l)}</span><span class="updown" title="Seleccionar">⋮⋮</span></div>`;}).join('');const count=$('#selCount');if(count)count.textContent=picked.length+' seleccionada(s)';}
-function drawLayerFields(){const el=$('#layerFields');if(!el)return;if(picked.length!==1){el.innerHTML='<div class="surface-help">Elegí una sola capa para editar su texto, tamaño y posición. La alineación grupal funciona con varias capas seleccionadas.</div>';return;}const l=sel();if(!l){el.innerHTML='';return;}let html=`<label class="switch-row"><input type="checkbox" data-lcheck="visible" ${l.visible?'checked':''}> Capa visible</label>`;
-if(['text','location'].includes(l.type))html+=`<div class="field"><label>Texto</label><textarea data-lfield="text" rows="${l.id==='support'||l.id==='accent'?3:2}">${esc(l.text)}</textarea></div>`;
-if(l.type!=='cta')html+=`<div class="field-row">${lfnum('Posición X','x',l.x)}${lfnum('Posición Y','y',l.y)}${lfnum('Ancho','width',l.width)}${l.type==='logo'?lfnum('Alto','height',l.height):''}</div>`;
-if(['text','location'].includes(l.type))html+=`<div class="field"><label>Tamaño del texto <b data-size-read>${Math.round(l.size)} px</b></label><input data-lfield="size" type="range" min="12" max="160" step="1" value="${Math.round(l.size)}"></div>`;
-if(['text','location'].includes(l.type))html+=`<div class="field"><label>Interlineado (espacio vertical) <b data-lh-read>${Number(l.lineHeight||(l.id==='location'?1.1:1.15)).toFixed(2)}×</b></label><input data-lfield="lineHeight" type="range" min="0.8" max="2.5" step="0.05" value="${l.lineHeight||(l.id==='location'?1.1:1.15)}"></div>`;
-if(['text','location'].includes(l.type))html+=`<div class="field"><label>Alineación</label><div class="alignment-four" style="margin-top:4px"><button data-aligntext="left" class="${l.align==='left'?'active-btn':''}" type="button"><span>≡</span>Izq</button><button data-aligntext="center" class="${l.align==='center'?'active-btn':''}" type="button"><span>☰</span>Cen</button><button data-aligntext="right" class="${l.align==='right'?'active-btn':''}" type="button"><span>≡</span>Der</button><button data-aligntext="justify" class="${l.align==='justify'?'active-btn':''}" type="button"><span>≣</span>Just</button></div></div>`;
-if(['text','location'].includes(l.type))html+=`<div class="field-row"><div class="field"><label>Tipografía</label><select data-lfield="family"><option value="serif" ${l.family==='serif'?'selected':''}>PT Serif</option><option value="sans" ${l.family==='sans'?'selected':''}>Sans</option></select></div><div class="field"><label>Peso</label><select data-lfield="weight"><option value="regular" ${l.weight==='regular'?'selected':''}>Regular</option><option value="bold" ${l.weight==='bold'?'selected':''}>Bold</option></select></div></div><div class="field"><label>Color del texto</label><input data-lfield="color" type="color" value="${l.color}"><div class="color-tools-row"><span class="color-hex-badge">${(l.color||'#FFFFFF').toUpperCase()}</span><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.color}">📋 Copiar</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="color">📌 Pegar</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="${l.id}" data-color-field="color" data-color-val="${l.color}">⚡ Aplicar a todos (${layerName(l.id)})</button></div></div>`;
-if(l.type==='location')html+=`<div class="field" style="margin-top:10px"><label>Color de las líneas laterales</label><input data-lfield="lineColor" type="color" value="${l.lineColor||'#FFFFFF'}"><div class="color-tools-row"><span class="color-hex-badge">${(l.lineColor||'#FFFFFF').toUpperCase()}</span><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.lineColor||'#FFFFFF'}">📋 Copiar</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="lineColor">📌 Pegar</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="location" data-color-field="lineColor" data-color-val="${l.lineColor||'#FFFFFF'}">⚡ A todas las ubicaciones</button></div><div class="color-tools-row" style="margin-top:6px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Color rápido:</span><button type="button" class="btn-tiny-action" data-loc-line-color="white">Blanco (#FFF)</button><button type="button" class="btn-tiny-action highlight" data-loc-line-color="orange">Naranja marca</button><button type="button" class="btn-tiny-action" data-loc-line-color="match">Mismo del texto</button></div></div>
-<div class="field" style="margin-top:8px"><label>Grosor de las líneas laterales <b data-loc-lw-read>${Number(l.lineWidth||2.4).toFixed(1)} px</b></label><input data-lfield="lineWidth" type="range" min="1" max="8" step="0.2" value="${l.lineWidth||2.4}"></div>`;
-html+=`<div class="field"><label>Espesor refuerzo</label><input data-lfield="stroke" type="number" min="0" max="3" step="0.1" value="${l.stroke}"></div><div class="cloud-control-card"><div class="cloud-card-head"><span class="cloud-card-title">☁ Nube de contraste</span><span class="cloud-badge"><b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></span></div><div class="field" style="margin-bottom:8px"><label>Intensidad / Opacidad <b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></label><input data-lfield="cloud" type="range" min="0" max="1" step="0.01" value="${l.cloud||0}"></div><div class="field" style="margin-bottom:8px"><label>Dispersión <span style="font-size:10.5px;font-weight:400;color:var(--text-muted);">(Concentrada ↔ Difusa)</span> <b data-cloud-s-read>${Math.round((l.cloudSpread!=null?l.cloudSpread:0.5)*100)}%</b></label><input data-lfield="cloudSpread" type="range" min="0" max="1" step="0.01" value="${l.cloudSpread!=null?l.cloudSpread:0.5}"></div><div class="field-row" style="margin-bottom:8px"><div class="field"><label>Ancho (alcance X) <b data-cloud-w-read>${Number(l.cloudWidth>0?l.cloudWidth:1).toFixed(2)}×</b></label><input data-lfield="cloudWidth" type="range" min="0.2" max="3" step="0.05" value="${l.cloudWidth>0?l.cloudWidth:1}"></div><div class="field"><label>Alto (alcance Y) <b data-cloud-h-read>${Number(l.cloudHeight>0?l.cloudHeight:1).toFixed(2)}×</b></label><input data-lfield="cloudHeight" type="range" min="0.2" max="3" step="0.05" value="${l.cloudHeight>0?l.cloudHeight:1}"></div></div><div class="field-row" style="margin-bottom:8px"><div class="field"><label>Mover en ancho (X) <b data-cloud-x-read>${(l.cloudX||0)>0?'+':''}${Math.round(l.cloudX||0)} px</b></label><input data-lfield="cloudX" type="range" min="-600" max="600" step="2" value="${Math.round(l.cloudX||0)}"></div><div class="field"><label>Mover en altura (Y) <b data-cloud-y-read>${(l.cloudY||0)>0?'+':''}${Math.round(l.cloudY||0)} px</b></label><input data-lfield="cloudY" type="range" min="-400" max="400" step="2" value="${Math.round(l.cloudY||0)}"></div></div><div class="color-tools-row" style="margin-top:6px"><button type="button" class="btn-tiny-action" data-cloud-action="fit-text" title="Ajusta automáticamente centro y tamaño a la superficie de las palabras">🎯 Ajustar al texto</button><button type="button" class="btn-tiny-action" data-cloud-action="reset" title="Restablecer posición y tamaño a valores estándar">↺ Restablecer</button><button type="button" class="btn-tiny-action highlight" data-cloud-action="apply-class" title="Aplicar esta misma nube a esta capa en todas las piezas">⚡ A todos (${layerName(l.id)})</button></div></div>`;
+function drawLayerFields(){const el=$('#layerFields');if(!el)return;if(picked.length!==1){el.innerHTML='<div class="surface-help">Elegí una sola capa para editar su texto, tamaño y posición. La alineación grupal funciona con varias capas seleccionadas.</div>';return;}const l=sel();if(!l){el.innerHTML='';return;}
+let html=`<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px;"><label class="switch-row"><input type="checkbox" data-lcheck="visible" ${l.visible?'checked':''}> Capa visible</label><div style="display:inline-flex;gap:4px;"><button type="button" class="btn-tiny-action" data-do="centerLayerX" title="Centrar horizontalmente">↔ Centrar X</button><button type="button" class="btn-tiny-action" data-do="centerLayerY" title="Centrar verticalmente">↕ Centrar Y</button></div></div>`;
+if(['text','location'].includes(l.type))html+=`<div class="field"><label>Texto</label><textarea data-lfield="text" rows="2">${esc(l.text)}</textarea></div>`;
+if(l.type!=='cta')html+=`<div class="${l.type==='logo'?'field-row-4':'field-row-3'}">${lfnum('X','x',l.x)}${lfnum('Y','y',l.y)}${lfnum('Ancho','width',l.width)}${l.type==='logo'?lfnum('Alto','height',l.height):''}</div>`;
+if(['text','location'].includes(l.type)){
+  html+=`<div class="field-row">
+    <div class="field"><label>Tamaño <b data-size-read>${Math.round(l.size)} px</b></label><input data-lfield="size" type="range" min="12" max="160" step="1" value="${Math.round(l.size)}"></div>
+    <div class="field"><label>Interlineado <b data-lh-read>${Number(l.lineHeight||(l.id==='location'?1.1:1.15)).toFixed(2)}×</b></label><input data-lfield="lineHeight" type="range" min="0.8" max="2.5" step="0.05" value="${l.lineHeight||(l.id==='location'?1.1:1.15)}"></div>
+  </div>
+  <div class="field-row-3">
+    <div class="field"><label>Tipografía</label><select data-lfield="family"><option value="serif" ${l.family==='serif'?'selected':''}>PT Serif</option><option value="sans" ${l.family==='sans'?'selected':''}>Sans</option></select></div>
+    <div class="field"><label>Peso</label><select data-lfield="weight"><option value="regular" ${l.weight==='regular'?'selected':''}>Regular</option><option value="bold" ${l.weight==='bold'?'selected':''}>Bold</option></select></div>
+    <div class="field"><label>Refuerzo</label><input data-lfield="stroke" type="number" min="0" max="3" step="0.1" value="${l.stroke}"></div>
+  </div>
+  <div class="field"><label>Alineación</label><div class="alignment-four" style="margin-top:2px"><button data-aligntext="left" class="${l.align==='left'?'active-btn':''}" type="button">≡ Izq</button><button data-aligntext="center" class="${l.align==='center'?'active-btn':''}" type="button">☰ Cen</button><button data-aligntext="right" class="${l.align==='right'?'active-btn':''}" type="button">≡ Der</button><button data-aligntext="justify" class="${l.align==='justify'?'active-btn':''}" type="button">≣ Just</button></div></div>
+  <div class="field"><label>Color del texto</label><div class="inline-color-bar"><input data-lfield="color" type="color" value="${l.color}"><span class="color-hex-badge" data-color-hex>${(l.color||'#FFFFFF').toUpperCase()}</span><span class="color-actions-push"><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.color}" title="Copiar color">📋</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="color" title="Pegar color">📌</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="${l.id}" data-color-field="color" data-color-val="${l.color}" title="Aplicar a todas las piezas">⚡ A todos</button></span></div></div>`;
+}
+if(l.type==='location')html+=`<div class="field"><label>Líneas laterales · Grosor <b data-loc-lw-read>${Number(l.lineWidth||2.4).toFixed(1)} px</b></label><input data-lfield="lineWidth" type="range" min="1" max="8" step="0.2" value="${l.lineWidth||2.4}"><div class="inline-color-bar" style="margin-top:4px;"><input data-lfield="lineColor" type="color" value="${l.lineColor||'#FFFFFF'}"><span class="color-hex-badge" data-color-hex>${(l.lineColor||'#FFFFFF').toUpperCase()}</span><span class="color-actions-push"><button type="button" class="btn-tiny-action" data-loc-line-color="white">#FFF</button><button type="button" class="btn-tiny-action highlight" data-loc-line-color="orange">Marca</button><button type="button" class="btn-tiny-action" data-loc-line-color="match">=Texto</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="location" data-color-field="lineColor" data-color-val="${l.lineColor||'#FFFFFF'}" title="Aplicar a todas las ubicaciones">⚡</button></span></div></div>`;
+if(['text','location'].includes(l.type))html+=`<details class="cloud-control-card" ${(l.cloud||0)>0?'open':''}><summary><span class="cloud-card-title">☁ Nube de contraste</span><span class="cloud-badge"><b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b> ▾</span></summary><div class="field-row"><div class="field"><label>Intensidad <b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></label><input data-lfield="cloud" type="range" min="0" max="1" step="0.01" value="${l.cloud||0}"></div><div class="field"><label>Dispersión <b data-cloud-s-read>${Math.round((l.cloudSpread!=null?l.cloudSpread:0.5)*100)}%</b></label><input data-lfield="cloudSpread" type="range" min="0" max="1" step="0.01" value="${l.cloudSpread!=null?l.cloudSpread:0.5}"></div></div><div class="field-row"><div class="field"><label>Ancho X <b data-cloud-w-read>${Number(l.cloudWidth>0?l.cloudWidth:1).toFixed(2)}×</b></label><input data-lfield="cloudWidth" type="range" min="0.2" max="3" step="0.05" value="${l.cloudWidth>0?l.cloudWidth:1}"></div><div class="field"><label>Alto Y <b data-cloud-h-read>${Number(l.cloudHeight>0?l.cloudHeight:1).toFixed(2)}×</b></label><input data-lfield="cloudHeight" type="range" min="0.2" max="3" step="0.05" value="${l.cloudHeight>0?l.cloudHeight:1}"></div></div><div class="field-row"><div class="field"><label>Mover X <b data-cloud-x-read>${(l.cloudX||0)>0?'+':''}${Math.round(l.cloudX||0)} px</b></label><input data-lfield="cloudX" type="range" min="-600" max="600" step="2" value="${Math.round(l.cloudX||0)}"></div><div class="field"><label>Mover Y <b data-cloud-y-read>${(l.cloudY||0)>0?'+':''}${Math.round(l.cloudY||0)} px</b></label><input data-lfield="cloudY" type="range" min="-400" max="400" step="2" value="${Math.round(l.cloudY||0)}"></div></div><div class="color-tools-row" style="margin-top:4px"><button type="button" class="btn-tiny-action" data-cloud-action="fit-text" title="Ajusta centro y tamaño a las palabras">🎯 Ajustar</button><button type="button" class="btn-tiny-action" data-cloud-action="reset">↺ Reset</button><button type="button" class="btn-tiny-action highlight" data-cloud-action="apply-class">⚡ A todos</button></div></details>`;
 if(l.type==='cta'){
   const st=l.ctaStyle||((Number(l.height||70)<=6)?'line':'solid');
   const hVal=Math.round(l.height!=null&&l.height!==''?Number(l.height):(st==='line'?3:70));
@@ -1279,85 +1810,57 @@ if(l.type==='cta'){
   const rawText=String(l.text??'').trim();
   const hasText=(st!=='line')&&(l.showText!==false)&&rawText.length>0&&hVal>=16;
 
-  html+=`<div class="field" style="margin-top:10px">
-    <label>Estilo / Formato visual</label>
+  html+=`<div class="field">
+    <label><span>Estilo visual</span><button type="button" class="btn-tiny-action" data-cta-vis-toggle>${l.visible?'👁 Ocultar':'◉ Mostrar'}</button></label>
     <div class="alignment-three" style="grid-template-columns:repeat(3,1fr);gap:4px">
-      <button type="button" class="${st==='solid'?'active-btn':''}" data-cta-style="solid"><span>🔘</span>Sólido</button>
-      <button type="button" class="${st==='outline'?'active-btn':''}" data-cta-style="outline"><span>🔲</span>Recuadro</button>
-      <button type="button" class="${st==='line'?'active-btn':''}" data-cta-style="line"><span>━</span>Línea recta</button>
+      <button type="button" class="${st==='solid'?'active-btn':''}" data-cta-style="solid">🔘 Sólido</button>
+      <button type="button" class="${st==='outline'?'active-btn':''}" data-cta-style="outline">🔲 Recuadro</button>
+      <button type="button" class="${st==='line'?'active-btn':''}" data-cta-style="line">━ Línea</button>
     </div>
-  </div>
-  <div style="display:flex;gap:6px;margin:8px 0;">
-    <button type="button" class="btn-tiny-action" data-cta-vis-toggle style="flex:1;justify-content:center;padding:5px 8px;font-size:11px">${l.visible?'👁 Ocultar elemento en esta pieza':'◉ Mostrar elemento en esta pieza'}</button>
   </div>
   <div class="field">
-    <label>${st==='line'?'Color de la línea':st==='outline'?'Color del recuadro / borde':'Fondo del botón'}</label>
-    <input data-lfield="bgColor" type="color" value="${l.bgColor||brandOrange}">
-    <div class="color-tools-row">
-      <span class="color-hex-badge">${(l.bgColor||brandOrange).toUpperCase()}</span>
-      <button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.bgColor||brandOrange}">📋 Copiar</button>
-      <button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="bgColor">📌 Pegar</button>
-      <button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="cta" data-color-field="bgColor" data-color-val="${l.bgColor||brandOrange}">⚡ A todos los CTA</button>
-    </div>
+    <label>${st==='line'?'Color de la línea':st==='outline'?'Color del borde':'Fondo del botón'}</label>
+    <div class="inline-color-bar"><input data-lfield="bgColor" type="color" value="${l.bgColor||brandOrange}"><span class="color-hex-badge" data-color-hex>${(l.bgColor||brandOrange).toUpperCase()}</span><span class="color-actions-push"><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.bgColor||brandOrange}">📋</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="bgColor">📌</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="cta" data-color-field="bgColor" data-color-val="${l.bgColor||brandOrange}">⚡ A todos</button></span></div>
   </div>`;
 
   if(st==='outline'){
-    html+=`<div class="control-preview" style="margin:8px 0;background:#fff8ee;border-color:#f6d3a8;color:#9b4e0d;">🔲 <b>Modo Recuadro (sin fill):</b> fondo 100% transparente con solo el marco naranja.</div>
-    <div class="field"><label>Grosor del recuadro / borde <b data-cta-bw-read>${bwVal} px</b></label><input data-lfield="borderWidth" type="range" min="1" max="10" step="1" value="${bwVal}"></div>
-    <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Borde rápido:</span><button type="button" class="btn-tiny-action" data-cta-bw-preset="1">1 px (fino)</button><button type="button" class="btn-tiny-action" data-cta-bw-preset="2">2 px (estándar)</button><button type="button" class="btn-tiny-action" data-cta-bw-preset="3">3 px (medio)</button><button type="button" class="btn-tiny-action" data-cta-bw-preset="5">5 px (grueso)</button></div>
-    <div class="field"><label>Curvatura de esquinas <b data-cta-rad-read>${radVal} px</b></label><input data-lfield="borderRadius" type="range" min="0" max="30" step="1" value="${radVal}"></div>
-    <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Esquinas:</span><button type="button" class="btn-tiny-action" data-cta-rad-preset="0">Rectas (0px)</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="4">Sutil (4px)</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="8">Redondeadas (8px)</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="25">Píldora</button></div>
+    html+=`<div class="field-row"><div class="field"><label>Borde <b data-cta-bw-read>${bwVal} px</b></label><input data-lfield="borderWidth" type="range" min="1" max="10" step="1" value="${bwVal}"></div><div class="field"><label>Esquinas <b data-cta-rad-read>${radVal} px</b></label><input data-lfield="borderRadius" type="range" min="0" max="30" step="1" value="${radVal}"></div></div>
     <div class="field-row"><div class="field"><label>Ancho <b data-cta-w-read>${wVal} px</b></label><input data-lfield="width" type="range" min="10" max="${Math.max(1080,W)}" step="2" value="${wVal}"></div><div class="field"><label>Alto <b data-cta-h-read>${hVal} px</b></label><input data-lfield="height" type="range" min="20" max="180" step="1" value="${hVal}"></div></div>`;
   }else if(st==='line'){
-    html+=`<div class="control-preview" style="margin:8px 0;background:#fff8ee;border-color:#f6d3a8;color:#9b4e0d;">━ <b>Modo Línea divisoria recta:</b> barra horizontal recta sin curvatura de cápsula.</div>
-    <div class="field"><label>Grosor de la línea <b data-cta-h-read>${hVal} px</b></label><input data-lfield="height" type="range" min="1" max="30" step="1" value="${hVal}"></div>
-    <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Grosor rápido:</span><button type="button" class="btn-tiny-action" data-cta-h-preset="1">1 px (ultrafina)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="2">2 px (fina)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="3">3 px (estándar)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="5">5 px (media)</button><button type="button" class="btn-tiny-action" data-cta-h-preset="10">10 px (barra)</button></div>
-    <div class="field"><label>Ancho de la línea <b data-cta-w-read>${wVal} px</b></label><input data-lfield="width" type="range" min="10" max="${Math.max(1080,W)}" step="2" value="${wVal}"></div>
-    <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Ancho rápido:</span><button type="button" class="btn-tiny-action" data-cta-w-preset="80">80 px</button><button type="button" class="btn-tiny-action" data-cta-w-preset="150">150 px</button><button type="button" class="btn-tiny-action" data-cta-w-preset="300">300 px</button><button type="button" class="btn-tiny-action" data-cta-w-preset="500">500 px</button><button type="button" class="btn-tiny-action highlight" data-cta-w-preset="full">Ancho total</button></div>`;
+    html+=`<div class="field-row"><div class="field"><label>Grosor <b data-cta-h-read>${hVal} px</b></label><input data-lfield="height" type="range" min="1" max="30" step="1" value="${hVal}"></div><div class="field"><label>Ancho <b data-cta-w-read>${wVal} px</b></label><input data-lfield="width" type="range" min="10" max="${Math.max(1080,W)}" step="2" value="${wVal}"></div></div>
+    <div class="color-tools-row" style="margin-bottom:6px"><button type="button" class="btn-tiny-action" data-cta-w-preset="80">80px</button><button type="button" class="btn-tiny-action" data-cta-w-preset="150">150px</button><button type="button" class="btn-tiny-action" data-cta-w-preset="300">300px</button><button type="button" class="btn-tiny-action highlight" data-cta-w-preset="full">Ancho total</button></div>`;
   }else{
-    html+=`<div class="field-row"><div class="field"><label>Ancho botón <b data-cta-w-read>${wVal} px</b></label><input data-lfield="width" type="range" min="10" max="${Math.max(1080,W)}" step="2" value="${wVal}"></div><div class="field"><label>Alto botón <b data-cta-h-read>${hVal} px</b></label><input data-lfield="height" type="range" min="10" max="180" step="1" value="${hVal}"></div></div>
-    <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Alto rápido:</span><button type="button" class="btn-tiny-action" data-cta-h-preset="45">45 px</button><button type="button" class="btn-tiny-action" data-cta-h-preset="55">55 px</button><button type="button" class="btn-tiny-action" data-cta-h-preset="70">70 px</button><button type="button" class="btn-tiny-action" data-cta-h-preset="85">85 px</button></div>
-    <div class="field"><label>Curvatura de esquinas <b data-cta-rad-read>${radVal} px</b></label><input data-lfield="borderRadius" type="range" min="0" max="30" step="1" value="${radVal}"></div>
-    <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Esquinas:</span><button type="button" class="btn-tiny-action" data-cta-rad-preset="0">Rectas (0px)</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="4">Sutil (4px)</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="9">Estándar (9px)</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="30">Píldora</button></div>`;
+    html+=`<div class="field-row-3"><div class="field"><label>Ancho <b data-cta-w-read>${wVal}</b></label><input data-lfield="width" type="range" min="10" max="${Math.max(1080,W)}" step="2" value="${wVal}"></div><div class="field"><label>Alto <b data-cta-h-read>${hVal}</b></label><input data-lfield="height" type="range" min="10" max="180" step="1" value="${hVal}"></div><div class="field"><label>Radio <b data-cta-rad-read>${radVal}</b></label><input data-lfield="borderRadius" type="range" min="0" max="30" step="1" value="${radVal}"></div></div>
+    <div class="color-tools-row" style="margin-bottom:4px"><button type="button" class="btn-tiny-action" data-cta-rad-preset="0">0px</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="9">9px</button><button type="button" class="btn-tiny-action" data-cta-rad-preset="30">Píldora</button><button type="button" class="btn-tiny-action" data-cta-h-preset="55">H 55</button><button type="button" class="btn-tiny-action" data-cta-h-preset="70">H 70</button></div>`;
   }
 
   if(st!=='line'){
-    html+=`<div class="field" style="margin-top:12px"><label style="display:flex;justify-content:space-between;align-items:center;"><span>Texto del CTA</span><button type="button" class="btn-tiny-action" data-cta-text-clear style="font-size:10px;padding:1px 6px;">✕ Eliminar texto y flecha</button></label><textarea data-lfield="text" rows="2" placeholder="Dejá vacío este campo para mostrar solo la forma sin texto ni flecha...">${esc(l.text)}</textarea></div>
-    <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0;"><label class="switch-row"><input type="checkbox" data-lcheck="showText" ${l.showText!==false?'checked':''}> <span>Mostrar texto en el botón</span></label><label class="switch-row"><input type="checkbox" data-lcheck="showArrow" ${l.showArrow!==false?'checked':''}> <span>Incluir flecha (→) al final del texto</span></label></div>`;
+    html+=`<div class="field"><label><span>Texto del CTA</span><button type="button" class="btn-tiny-action" data-cta-text-clear style="font-size:9.5px;padding:1px 5px;">✕ Sin texto</button></label><textarea data-lfield="text" rows="2" placeholder="Texto del botón…">${esc(l.text)}</textarea></div>
+    <div style="display:flex;gap:12px;margin:4px 0;"><label class="switch-row"><input type="checkbox" data-lcheck="showText" ${l.showText!==false?'checked':''}> <span>Texto</span></label><label class="switch-row"><input type="checkbox" data-lcheck="showArrow" ${l.showArrow!==false?'checked':''}> <span>Flecha (→)</span></label></div>`;
     if(hasText){
-      html+=`<div class="field"><label>Color del texto</label><input data-lfield="color" type="color" value="${l.color||(st==='outline'?(l.bgColor||brandOrange):'#FFFFFF')}"><div class="color-tools-row"><span class="color-hex-badge">${(l.color||(st==='outline'?(l.bgColor||brandOrange):'#FFFFFF')).toUpperCase()}</span><button type="button" class="btn-tiny-action" data-color-action="copy" data-color-val="${l.color||(st==='outline'?(l.bgColor||brandOrange):'#FFFFFF')}">📋 Copiar</button><button type="button" class="btn-tiny-action ${copiedColor?'':'btn-disabled'}" data-color-action="paste" data-color-field="color">📌 Pegar</button><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="cta" data-color-field="color" data-color-val="${l.color||(st==='outline'?(l.bgColor||brandOrange):'#FFFFFF')}">⚡ A todos los CTA</button></div></div>
-      <div class="field"><label>Tamaño del texto <b data-size-read>${Math.round(l.size||24)} px</b></label><input data-lfield="size" type="range" min="12" max="90" step="1" value="${Math.round(l.size||24)}"></div>`;
-    }else{
-      html+=`<div class="control-preview" style="margin:6px 0 10px;background:#fff8ee;border-color:#f6d3a8;color:#9b4e0d;">🔘 <b>Sin texto:</b> se renderiza solo ${st==='outline'?'el recuadro sin relleno':'el botón sólido'} sin texto ni flecha.</div>`;
+      html+=`<div class="field-row"><div class="field"><label>Color texto</label><div class="inline-color-bar"><input data-lfield="color" type="color" value="${l.color||(st==='outline'?(l.bgColor||brandOrange):'#FFFFFF')}"><span class="color-hex-badge" data-color-hex>${(l.color||(st==='outline'?(l.bgColor||brandOrange):'#FFFFFF')).toUpperCase()}</span><span class="color-actions-push"><button type="button" class="btn-tiny-action highlight" data-color-action="apply-class" data-layer-id="cta" data-color-field="color" data-color-val="${l.color||(st==='outline'?(l.bgColor||brandOrange):'#FFFFFF')}" title="Aplicar a todos los CTA">⚡</button></span></div></div><div class="field"><label>Tamaño <b data-size-read>${Math.round(l.size||24)} px</b></label><input data-lfield="size" type="range" min="12" max="90" step="1" value="${Math.round(l.size||24)}" style="margin-top:6px;"></div></div>`;
     }
   }
 
-  html+=`<div class="field" style="margin-top:10px"><label>Posición horizontal (X) <b data-cta-x-read>${Math.round(l.x)} px</b></label><input data-lfield="x" type="range" min="0" max="${Math.max(1080,W)}" step="2" value="${Math.round(l.x)}"></div>
-  <div class="field"><label>Posición vertical (Y) <b data-cta-y-read>${Math.round(l.y)} px</b></label><input data-lfield="y" type="range" min="0" max="${H}" step="2" value="${Math.round(l.y)}"></div>
-  <div class="field-row">${lfnum('Posición X','x',l.x)}${lfnum('Posición Y','y',l.y)}${lfnum('Ancho (px)','width',wVal)}${lfnum(st==='line'?'Grosor (px)':'Alto (px)','height',hVal)}</div>
-  <div class="alignment-three" style="margin:10px 0 6px"><button type="button" data-cta-align="left"><span>⇥</span>Izquierda</button><button type="button" data-cta-align="center"><span>⇋</span>Centrar X</button><button type="button" data-cta-align="right"><span>⇤</span>Derecha</button></div>
-  <div style="margin-top:10px"><button type="button" class="btn-tiny-action highlight full" data-cta-action="apply-all" style="justify-content:center;padding:7px 10px;font-size:11px">⚡ Replicar ${st==='line'?'línea':st==='outline'?'recuadro':'botón'} a todas las piezas</button></div>
-  <p class="mini-info" style="margin-top:7px">💡 También podés arrastrar el elemento directamente con el cursor en el lienzo.</p>`;
+  html+=`<div class="field-row-4">${lfnum('X','x',l.x)}${lfnum('Y','y',l.y)}${lfnum('Ancho','width',wVal)}${lfnum(st==='line'?'Grosor':'Alto','height',hVal)}</div>
+  <div class="alignment-three" style="margin:6px 0"><button type="button" data-cta-align="left">⇥ Izq</button><button type="button" data-cta-align="center">⇋ Centro</button><button type="button" data-cta-align="right">⇤ Der</button></div>
+  <button type="button" class="btn-tiny-action highlight full" data-cta-action="apply-all" style="justify-content:center;padding:6px 8px;font-size:11px">⚡ Replicar ${st==='line'?'línea':st==='outline'?'recuadro':'botón'} a todas las piezas</button>`;
 }
 if(l.type==='logo'){
-  html+=`<div class="field" style="margin-top:10px"><label>Variante de color oficial</label>
+  html+=`<div class="field"><label>Variante cromática oficial</label>
   <div class="alignment-three" style="grid-template-columns:repeat(3,1fr);gap:4px">
     <button type="button" class="${logoMode==='white'?'active-btn':''}" data-logomode="white">Blanco total</button>
-    <button type="button" class="${logoMode==='orange-white'?'active-btn':''}" data-logomode="orange-white">ISO naranja + blanco</button>
+    <button type="button" class="${logoMode==='orange-white'?'active-btn':''}" data-logomode="orange-white">ISO naranja</button>
     <button type="button" class="${logoMode==='original'?'active-btn':''}" data-logomode="original">Original</button>
   </div></div>
-  <div class="cloud-control-card" style="margin-top:12px">
-    <div class="cloud-card-head"><span class="cloud-card-title">☁ Sombra / Overlay oscuro detrás del logo</span><span class="cloud-badge"><b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></span></div>
-    <p class="mini-info" style="margin:0 0 8px;">Aumenta el contraste y legibilidad del logo sobre cielos o fotos claras.</p>
-    <div class="field" style="margin-bottom:8px"><label>Intensidad / Opacidad <b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></label><input data-lfield="cloud" type="range" min="0" max="1" step="0.01" value="${l.cloud||0}"></div>
-    <div class="color-tools-row" style="margin-bottom:8px"><span style="font-size:10px;color:#6c7a8f;font-weight:600">Sombra rápida:</span><button type="button" class="btn-tiny-action" data-logo-cloud-preset="0">Sin sombra</button><button type="button" class="btn-tiny-action" data-logo-cloud-preset="0.30">Sutil (30%)</button><button type="button" class="btn-tiny-action" data-logo-cloud-preset="0.50">Media (50%)</button><button type="button" class="btn-tiny-action" data-logo-cloud-preset="0.75">Intensa (75%)</button></div>
-    <div class="field" style="margin-bottom:8px"><label>Dispersión <span style="font-size:10.5px;font-weight:400;color:var(--text-muted);">(Concentrada ↔ Difusa)</span> <b data-cloud-s-read>${Math.round((l.cloudSpread!=null?l.cloudSpread:0.5)*100)}%</b></label><input data-lfield="cloudSpread" type="range" min="0" max="1" step="0.01" value="${l.cloudSpread!=null?l.cloudSpread:0.5}"></div>
-    <div class="field-row" style="margin-bottom:8px"><div class="field"><label>Ancho (alcance X) <b data-cloud-w-read>${Number(l.cloudWidth>0?l.cloudWidth:1).toFixed(2)}×</b></label><input data-lfield="cloudWidth" type="range" min="0.2" max="3" step="0.05" value="${l.cloudWidth>0?l.cloudWidth:1}"></div><div class="field"><label>Alto (alcance Y) <b data-cloud-h-read>${Number(l.cloudHeight>0?l.cloudHeight:1).toFixed(2)}×</b></label><input data-lfield="cloudHeight" type="range" min="0.2" max="3" step="0.05" value="${l.cloudHeight>0?l.cloudHeight:1}"></div></div>
-    <div class="color-tools-row" style="margin-top:6px"><button type="button" class="btn-tiny-action" data-cloud-action="reset">↺ Restablecer</button><button type="button" class="btn-tiny-action highlight full" data-cloud-action="apply-class" style="justify-content:center;padding:7px;margin-top:6px;">⚡ Aplicar sombra a los logos de todas las piezas</button></div>
-  </div>
-  <p class="mini-info" style="margin-top:8px">El logo conserva sus proporciones dentro de la caja sin deformarse.</p>`;
+  <details class="cloud-control-card" ${(l.cloud||0)>0?'open':''}><summary><span class="cloud-card-title">☁ Sombra detrás del logo</span><span class="cloud-badge"><b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b> ▾</span></summary>
+    <div class="color-tools-row" style="margin-bottom:6px"><button type="button" class="btn-tiny-action" data-logo-cloud-preset="0">0%</button><button type="button" class="btn-tiny-action" data-logo-cloud-preset="0.30">30%</button><button type="button" class="btn-tiny-action" data-logo-cloud-preset="0.50">50%</button><button type="button" class="btn-tiny-action" data-logo-cloud-preset="0.75">75%</button></div>
+    <div class="field-row"><div class="field"><label>Intensidad <b data-cloud-read>${Math.round((l.cloud||0)*100)}%</b></label><input data-lfield="cloud" type="range" min="0" max="1" step="0.01" value="${l.cloud||0}"></div><div class="field"><label>Dispersión <b data-cloud-s-read>${Math.round((l.cloudSpread!=null?l.cloudSpread:0.5)*100)}%</b></label><input data-lfield="cloudSpread" type="range" min="0" max="1" step="0.01" value="${l.cloudSpread!=null?l.cloudSpread:0.5}"></div></div>
+    <div class="field-row"><div class="field"><label>Ancho X <b data-cloud-w-read>${Number(l.cloudWidth>0?l.cloudWidth:1).toFixed(2)}×</b></label><input data-lfield="cloudWidth" type="range" min="0.2" max="3" step="0.05" value="${l.cloudWidth>0?l.cloudWidth:1}"></div><div class="field"><label>Alto Y <b data-cloud-h-read>${Number(l.cloudHeight>0?l.cloudHeight:1).toFixed(2)}×</b></label><input data-lfield="cloudHeight" type="range" min="0.2" max="3" step="0.05" value="${l.cloudHeight>0?l.cloudHeight:1}"></div></div>
+    <div class="color-tools-row" style="margin-top:4px"><button type="button" class="btn-tiny-action" data-cloud-action="reset">↺ Reset</button><button type="button" class="btn-tiny-action highlight" data-cloud-action="apply-class">⚡ Aplicar a todos los logos</button></div>
+  </details>`;
 }
-html+=`<div class="two-buttons" style="margin-top:8px"><button data-do="centerLayerX">Centrar X</button><button data-do="centerLayerY">Centrar Y</button></div>`;el.innerHTML=html;}
+el.innerHTML=html;}
 function lfnum(name,key,value){return `<div class="field"><label>${name}</label><input data-lfield="${key}" type="number" step="1" value="${Math.round(value??0)}"></div>`;}
 function sliderLayer(name,key,value,min,max,step){return `<div class="field"><label>${name}<b>${Math.round(value*100)}%</b></label><input data-lfield="${key}" type="range" min="${min}" max="${max}" step="${step}" value="${value}"></div>`;}
 function drawCanvas(target=cx,exporting=false){if(!exporting&&facebook()&&squareView)squareView=false;if(squareView&&!exporting){drawSquarePreview(target);return;}target.save();target.clearRect(0,0,W,H);const piece=p();drawPhoto(target,piece,exporting);drawGradient(target,piece);rects=[];for(const l of piece.layers)drawLayerCloud(target,l);for(const l of piece.layers)drawLayerContent(target,l,exporting);if(!exporting){if(showGrid)grid(target);if(showGuides)guides(target);}target.restore();}
@@ -1539,7 +2042,7 @@ function heightFor(l){if(l.type==='logo')return l.height||176;if(l.type==='cta')
 function alignObjects(side){if(!picked.length)return;mutate(()=>{for(const id of picked){const l=getLayer(id);if(!l)continue;switch(side){case'left':l.x=SAFE;break;case'center':l.x=(W-l.width)/2;break;case'right':l.x=W-SAFE-l.width;break;case'top':l.y=SAFE;break;case'bottom':l.y=H-SAFE-heightFor(l);break;}}});drawLayerFields();status('Alineación de '+picked.length+' capa(s): '+side+'.');}
 function selectList(id,multiple){if(multiple){picked=picked.includes(id)?picked.filter(x=>x!==id):[...picked,id];if(!picked.length)picked=[id];}else picked=[id];mode='layer';updateToolBtns();drawLayers();drawLayerFields();render();}
 function updateToolBtns(){setCanvasFormat();$('#chooseLayer').classList.toggle('active-btn',mode==='layer');$('#movePhoto').classList.toggle('active-btn',mode==='photo');$('#toggleSquare').classList.toggle('active-btn',squareView);$('#toggleSquare').textContent=squareView?'Volver 4:5':'1:1';$('#toggleSafe').classList.toggle('active-btn',showGuides);$('#toggleGrid')?.classList.toggle('active-btn',showGrid);const tz=$('#toolbarZoom');if(tz)tz.value=p().zoom;const zo=$('#zoomOut');if(zo)zo.textContent=p().zoom.toFixed(2)+'×';}
-function syncAll(){setCanvasFormat();drawPieces();drawInspector();updateToolBtns();syncHistory();render();}
+function syncAll(){setCanvasFormat();drawPieces();drawInspector(true);updateToolBtns();syncHistory();render();}
 function loadImg(data,cb){const img=new Image();img.onload=()=>{cb(img);render();};img.onerror=()=>status('No se pudo abrir la imagen.');img.decoding='async';img.src=data;}
 function fileData(file){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>no(new Error('Lectura fallida'));r.readAsDataURL(file);});}
 // Importación optimizada: nunca dejar una fotografía original enorme en memoria o en el JSON.
@@ -1729,6 +2232,11 @@ if(b.dataset.ctaRadPreset&&picked.length===1&&sel()?.id==='cta'){
   mutate(()=>{l.borderRadius=val;});
   drawLayerFields();status(`Curvatura fijada en ${val} px.`);return;
 }
+if(b.dataset.ctaHPreset&&picked.length===1&&sel()?.id==='cta'){
+  const val=Number(b.dataset.ctaHPreset),l=sel();
+  mutate(()=>{l.height=val;});
+  drawLayerFields();status(`Alto fijado en ${val} px.`);return;
+}
 if(b.hasAttribute('data-cta-text-clear')&&picked.length===1&&sel()?.id==='cta'){
   const l=sel();
   mutate(()=>{l.text='';});
@@ -1857,6 +2365,7 @@ if(key==='cloudHeight'){$('[data-cloud-h-read]')&&($('[data-cloud-h-read]').text
 if(key==='cloudX'){$('[data-cloud-x-read]')&&($('[data-cloud-x-read]').textContent=(val>0?'+':'')+Math.round(val)+' px');}
 if(key==='cloudY'){$('[data-cloud-y-read]')&&($('[data-cloud-y-read]').textContent=(val>0?'+':'')+Math.round(val)+' px');}
 if(key==='cloudSpread'){$('[data-cloud-s-read]')&&($('[data-cloud-s-read]').textContent=Math.round(val*100)+'%');}
+if(key==='color'||key==='bgColor'||key==='lineColor'){const bar=el.closest('.inline-color-bar');if(bar){const hx=bar.querySelector('[data-color-hex]');if(hx)hx.textContent=String(val).toUpperCase();bar.querySelectorAll('[data-color-val]').forEach(btn=>btn.dataset.colorVal=val);}}
 render();}});
 
 // Importación directa: evita completamente el diálogo «Abrir archivo» de Windows.
@@ -1915,6 +2424,7 @@ $$('[data-nav]').forEach(b=>b.onclick=()=>{const nav=b.dataset.nav;
  else {sidebarView=nav;drawPieces();setCanvasFormat();if(nav==='library'&&libraryTab==='properties')fetchWebProperties();status('Panel: '+b.textContent.trim()+'.');}
 });
 $('#pieces').addEventListener('click',e=>{
+ const fmtBtn=e.target.closest('[data-format-switch]');if(fmtBtn){const fmt=fmtBtn.dataset.formatSwitch;sidebarView='studio';activatePiece(fmt==='facebook'?FB:fmt==='stories'?(story()?active:STORY_START):(active<5?active:0));return;}
  const libTabBtn=e.target.closest('[data-lib-tab]');if(libTabBtn){libraryTab=libTabBtn.dataset.libTab;drawPieces();if(libraryTab==='properties')fetchWebProperties();return;}
  if(e.target.closest('[data-lib-refresh]')){fetchWebProperties(true);return;}
  const opBtn=e.target.closest('[data-lib-op]');if(opBtn){webPropOp=opBtn.dataset.libOp;drawPieces();return;}
@@ -1923,11 +2433,116 @@ $('#pieces').addEventListener('click',e=>{
  if(e.target.closest('[data-lib-apply-data]')){const pr=webProperties.find(x=>x._id===selectedWebPropId);applyWebPropertyData(pr);return;}
  const photoBtn=e.target.closest('[data-lib-photo]');if(photoBtn){const pr=webProperties.find(x=>x._id===selectedWebPropId);useRemotePropertyPhoto(photoBtn.dataset.libPhoto,pr?.name||'',Number(photoBtn.dataset.libPhotoIdx||0));return;}
  const remBtn=e.target.closest('[data-lib-remove]');if(remBtn){removeLibraryAsset(remBtn.dataset.libRemove);return;}
- const action=e.target.closest('[data-side]')?.dataset.side;if(action){if(action==='upload')openFile('filePhoto');if(action==='restore')doAction('restore');if(action==='clearImages')clearAllImages();if(action==='zipAll'){studioIndices().forEach(i=>{if(pieces[i])pieces[i].included=true;});drawPieces();setCanvasFormat();scheduleAutoSave();status('Todas las piezas incluidas en el ZIP.');}if(action==='zipWithPhoto'){studioIndices().forEach(i=>{if(pieces[i])pieces[i].included=!!(pieces[i].photoKey&&photoImages[pieces[i].photoKey]?.naturalWidth);});drawPieces();setCanvasFormat();scheduleAutoSave();status('Seleccionadas solo las piezas con fotografía para el ZIP.');}return;}
+ const action=e.target.closest('[data-side]')?.dataset.side;if(action){if(action==='upload')openFile('filePhoto');if(action==='restore')doAction('restore');if(action==='clearImages')clearAllImages();if(action==='zipAll'){studioIndices().forEach(i=>{if(pieces[i])pieces[i].included=true;});drawPieces();setCanvasFormat();drawDock();scheduleAutoSave();status('Todas las piezas incluidas en el ZIP.');}if(action==='zipWithPhoto'){studioIndices().forEach(i=>{if(pieces[i])pieces[i].included=!!(pieces[i].photoKey&&photoImages[pieces[i].photoKey]?.naturalWidth);});drawPieces();setCanvasFormat();drawDock();scheduleAutoSave();status('Seleccionadas solo las piezas con fotografía para el ZIP.');}return;}
  const asset=e.target.closest('[data-asset]')?.dataset.asset;if(asset&&assets[asset]){mutate(()=>{p().photoKey=asset;p().zoom=1;p().panX=0;p().panY=0;});drawPieces();status('Fotografía de biblioteca aplicada a '+NAMES[active]+'.');}
 });
 $('#pieces').addEventListener('input',e=>{if(e.target.id!=='libSearchInput')return;webPropQuery=e.target.value;const res=$('#libPropResults'),cnt=$('#libPropCount');if(res)res.innerHTML=renderWebPropListHtml();if(cnt){const n=filteredWebProperties().length;cnt.textContent=`${n} ${n===1?'propiedad':'propiedades'}`;}});
-$('#pieces').addEventListener('change',e=>{const chk=e.target.closest('[data-piece-export]');if(!chk)return;const idx=Number(chk.dataset.pieceExport);if(!pieces[idx])return;pieces[idx].included=chk.checked;drawPieces();setCanvasFormat();scheduleAutoSave();status(`${NAMES[idx]} ${chk.checked?'incluida en':'excluida de'} la exportación ZIP.`);});
+$('#pieces').addEventListener('change',e=>{const chk=e.target.closest('[data-piece-export]');if(!chk)return;const idx=Number(chk.dataset.pieceExport);if(!pieces[idx])return;pieces[idx].included=chk.checked;drawPieces();setCanvasFormat();drawDock();scheduleAutoSave();status(`${NAMES[idx]} ${chk.checked?'incluida en':'excluida de'} la exportación ZIP.`);});
+
+async function generateDockCopy(){
+  if(dockCopyGenerating)return;
+  const currentPiece=p();if(!currentPiece)return;
+  const getLayerText=(id)=>{const l=(currentPiece.layers||[]).find(x=>x.id===id);return l&&l.visible!==false?(l.text||''):'';};
+  dockCopyGenerating=true;drawDock(true);
+  status('Redactando copy editorial con IA…');
+  try{
+    const endpoint=AI_CONFIG().copyEndpoint||'/api/social-studio/generate-copy';
+    const resp=await fetch(endpoint,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      credentials:'same-origin',
+      body:JSON.stringify({
+        pieceName:currentPiece.name||NAMES[active]||'',
+        studioType:studio(),
+        category:getLayerText('category'),
+        title:getLayerText('title'),
+        accent:getLayerText('accent'),
+        support:getLayerText('support'),
+        cta:getLayerText('cta'),
+        location:getLayerText('location'),
+        customContext:(dockCopyContextVal||'').trim()
+      })
+    });
+    const data=await resp.json().catch(()=>({}));
+    if(!resp.ok)throw new Error(data.error||('Error '+resp.status));
+    if(data.copy){
+      currentPiece.caption=data.copy;
+      const ct=$('#copyTextarea');if(ct)ct.value=data.copy;
+      scheduleAutoSave();
+      status('Copy editorial generado con OpenAI.');
+    }
+  }catch(err){
+    status('Copy IA no disponible: '+err.message);
+    alert('No se pudo generar el copy con IA: '+err.message);
+  }finally{
+    dockCopyGenerating=false;
+    drawDock(true);
+  }
+}
+
+const studioDockEl=$('#studioDock');
+if(studioDockEl){
+  studioDockEl.addEventListener('click',e=>{
+    const aiBtn=e.target.closest('[data-ai]');
+    if(aiBtn){aiAct(aiBtn.dataset.ai);return;}
+    const expBtn=e.target.closest('[data-dock-export]');
+    if(expBtn){
+      const m=expBtn.dataset.dockExport;
+      if(m==='zip'){if(facebook())exportOne('fbmeta');else exportAll(story()?'stories':'feed');}
+      else exportOne(m);
+      return;
+    }
+    if(e.target.closest('#dockAiCopyBtn')){generateDockCopy();return;}
+    if(e.target.closest('#dockCopyClipBtn')){
+      const txt=(p()&&p().caption)||'';
+      if(navigator.clipboard){
+        navigator.clipboard.writeText(txt).then(()=>{
+          const ok=$('#dockCopyCopied');
+          if(ok){ok.style.display='inline';setTimeout(()=>{if(ok)ok.style.display='none';},2200);}
+          status('Texto de publicación copiado al portapapeles.');
+        }).catch(()=>{});
+      }
+      return;
+    }
+  });
+  studioDockEl.addEventListener('change',e=>{
+    const el=e.target;
+    if(el.id==='aiFocus'){
+      aiFocuses[active]=el.value;
+      if(aiCandidates[active]?.rawAiImage)aiUpdateCandidateIntensity(active,aiIntensities[active]??0.35);
+    }
+  });
+  studioDockEl.addEventListener('input',e=>{
+    const el=e.target;
+    if(el.id==='aiIntensity'){
+      const val=+el.value;aiIntensities[active]=val;
+      const read=$('#aiIntensityRead');if(read)read.textContent=Math.round(val*100)+'%';
+      aiUpdateCandidateIntensity(active,val);
+      return;
+    }
+    if(el.id==='dockCopyContext'){
+      dockCopyContextVal=el.value;
+      const ci=$('#copyContextInput');if(ci)ci.value=el.value;
+      return;
+    }
+    if(el.id==='dockCopyTextarea'){
+      const val=el.value||'';
+      if(p())p().caption=val;
+      const words=val.trim()?val.trim().split(/\s+/).length:0;
+      const st=$('#dockCopyStats');if(st)st.textContent=`${val.length} caract. · ${words} pal.`;
+      const ct=$('#copyTextarea');if(ct)ct.value=val;
+      scheduleAutoSave();
+      return;
+    }
+  });
+}
+
+let lastDockState=isDockActive();
+window.addEventListener('resize',()=>{
+  const cur=isDockActive();
+  if(cur!==lastDockState){lastDockState=cur;syncShellFold();drawInspector(true);}
+});
+
 canvas.addEventListener('pointerdown',e=>{if(squareView&&!facebook()&&!story()){status('Vista cuadrada: previsualización. Volvé a 4:5 para mover las capas.');return;}if(e.button!==0)return;const q=point(e);if(mode==='photo'){markHistory();drag={kind:'photo',x:q.x,y:q.y,px:p().panX,py:p().panY};}else{const id=pickedAt(q.x,q.y);if(!id)return;const multi=e.ctrlKey||e.metaKey||e.shiftKey;if(multi){selectList(id,true);return;}if(!picked.includes(id))selectList(id,false);markHistory();drag={kind:'layers',x:q.x,y:q.y,origin:picked.map(id=>({id,x:getLayer(id).x,y:getLayer(id).y})),ids:[...picked]};}canvas.setPointerCapture(e.pointerId);canvas.classList.add('dragging');});
 canvas.addEventListener('pointermove',e=>{if(!drag)return;const q=point(e),dx=q.x-drag.x,dy=q.y-drag.y;if(drag.kind==='photo'){p().panX=drag.px+dx;p().panY=drag.py+dy;}else{let d=e.shiftKey?{dx,dy}:snapDelta(dx,dy,drag.ids,drag.origin);for(const orig of drag.origin){const l=getLayer(orig.id);l.x=Math.round(orig.x+d.dx);l.y=Math.round(orig.y+d.dy);}}render();});
 function finishDrag(){if(!drag)return;drag=null;snapGuide=[];canvas.classList.remove('dragging');drawLayerFields();render();scheduleAutoSave();}canvas.addEventListener('pointerup',finishDrag);canvas.addEventListener('pointercancel',finishDrag);
@@ -1977,6 +2592,7 @@ try {
     if (!copyModal || !copyTextarea) return;
     const currentPiece = p();
     copyTextarea.value = (currentPiece && currentPiece.caption) || '';
+    if (copyContextInput && dockCopyContextVal) copyContextInput.value = dockCopyContextVal;
     updateCopyStats();
     if (copySuccessMsg) copySuccessMsg.style.display = 'none';
     copyModal.style.display = 'flex';
@@ -2021,6 +2637,7 @@ try {
         copyTextarea.value = data.copy;
         currentPiece.caption = data.copy;
         updateCopyStats();
+        drawDock(true);
         scheduleAutoSave();
         status('Copy editorial generado con OpenAI.');
       }
@@ -2035,11 +2652,19 @@ try {
   if (btnAiGenerateCopy) {
     btnAiGenerateCopy.onclick = generateCopyWithAI;
   }
+  if (copyContextInput) {
+    copyContextInput.addEventListener('input', () => {
+      dockCopyContextVal = copyContextInput.value;
+      const dci = document.getElementById('dockCopyContext');
+      if (dci) dci.value = dockCopyContextVal;
+    });
+  }
   if (copyTextarea) {
     copyTextarea.addEventListener('input', () => {
       const currentPiece = p();
       if (currentPiece) currentPiece.caption = copyTextarea.value;
       updateCopyStats();
+      drawDock(true);
       scheduleAutoSave();
     });
   }
