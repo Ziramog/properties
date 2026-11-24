@@ -717,8 +717,17 @@ button:hover:not(:disabled) {
   border-left: 1px solid var(--line);
   flex-direction: column;
   overflow-y: auto;
-  padding: 11px 13px 14px;
-  gap: 10px;
+  padding: 9px 11px 10px;
+  gap: 8px;
+}
+body.dock-on .top-docked-group {
+  display: none !important;
+}
+.top-docked-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 @media (min-width: 1260px) {
   .shell:not(.dock-folded) {
@@ -1028,15 +1037,15 @@ details.cloud-control-card[open] > summary {
   margin-bottom: 7px;
 }
 
-/* Right Studio Dock Cards (Contrast: Retoque IA / Nube + Quick Export) */
+/* Right Studio Dock Cards (Legibilidad: Retoque IA / Nube + Exportar & Proyecto) */
 .dock-card {
   background: #141924;
   border: 1px solid #232b3d;
   border-radius: 10px;
-  padding: 11px 12px;
+  padding: 9px 11px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 .dock-card-head {
   display: flex;
@@ -1102,19 +1111,19 @@ details.cloud-control-card[open] > summary {
   border: 1px solid rgba(242, 107, 46, 0.24);
   border-left: 3px solid #f26b2e;
   border-radius: 6px;
-  padding: 8px 10px;
+  padding: 6px 8px;
 }
 .dock-explain-box strong {
   display: block;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
   color: #fdba74;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 .dock-explain-box p {
   margin: 0;
-  font-size: 11px;
-  line-height: 1.42;
+  font-size: 10.5px;
+  line-height: 1.36;
   color: #cbd5e1;
 }
 .dock-explain-box p b {
@@ -1257,11 +1266,54 @@ details.cloud-control-card[open] > summary {
   border-color: #f26b2e !important;
   color: #fb923c !important;
 }
+.dock-divider {
+  border-top: 1px solid #222a3a;
+  margin: 2px 0 0;
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.dock-subhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.dock-project-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+.dock-proj-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 6px !important;
+  background: #0d1119 !important;
+  border: 1px solid #262f42 !important;
+  border-radius: 6px !important;
+  color: #cbd5e1 !important;
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.dock-proj-btn:hover {
+  border-color: #475569 !important;
+  background: #171e2c !important;
+  color: #ffffff !important;
+}
 </style>
 </head>
 <body>
 <header class="topbar"><div class="brand"><div class="symbol" aria-label="Wolfim"><img src="data:image/png;base64,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" alt="Wolfim Studio" /></div><div class="studio-title-inline"><span class="brand-name">Social Studio</span><span class="studio-version">2.9</span></div></div>
-<div class="top-actions"><button id="undo" title="Deshacer (Ctrl+Z)">↶</button><button id="redo" title="Rehacer (Ctrl+Y)">↷</button><div class="dropdown"><button id="projectMain">Proyecto ▾</button><div id="projectMenu" class="dropdown-menu"><button data-project="open">Abrir proyecto JSON…</button><button data-project="save">Guardar proyecto JSON</button><hr style="border:0;border-top:1px solid var(--line);margin:4px 0;"><button data-project="clearImages" style="color:#f87171;">🧹 Limpiar todas las imágenes</button><button data-project="resetPreload">↺ Restablecer imágenes y plantilla</button></div></div><button id="resetImagesBtn" type="button" class="primary" title="Restablecer todas las imágenes, overlays y parámetros a la configuración prefijada">↺ Restablecer imágenes</button><button id="openCopyBtn" title="Redactar y copiar texto para la publicación (Copy / Caption)" class="orange-outline" style="font-weight:600;">📝 Copy Post</button><div class="dropdown"><button id="exportMain" class="primary export-btn">Exportar PNG ▾</button><div id="exportMenu" class="dropdown-menu"><button data-export="png">PNG · 1080 × 1350</button><button data-export="jpg">JPG · 1080 × 1350</button><button data-export="square">PNG cuadrado adaptado · 1080 × 1080</button><button data-export="fbmeta" class="hide">PNG · 851 × 315 (Meta)</button><button data-export="zip-feed">ZIP · 5 publicaciones de Feed</button><button data-export="zip-stories">ZIP · 5 Historias (9:16)</button></div></div></div></header>
+<div class="top-actions"><button id="undo" title="Deshacer (Ctrl+Z)">↶</button><button id="redo" title="Rehacer (Ctrl+Y)">↷</button><span class="top-docked-group" id="topDockedGroup"><div class="dropdown"><button id="projectMain">Proyecto ▾</button><div id="projectMenu" class="dropdown-menu"><button data-project="open">Abrir proyecto JSON…</button><button data-project="save">Guardar proyecto JSON</button><hr style="border:0;border-top:1px solid var(--line);margin:4px 0;"><button data-project="clearImages" style="color:#f87171;">🧹 Limpiar todas las imágenes</button><button data-project="resetPreload">↺ Restablecer imágenes y plantilla</button></div></div><button id="resetImagesBtn" type="button" class="primary" title="Restablecer todas las imágenes, overlays y parámetros a la configuración prefijada">↺ Restablecer imágenes</button><button id="openCopyBtn" title="Redactar y copiar texto para la publicación (Copy / Caption)" class="orange-outline" style="font-weight:600;">📝 Copy Post</button><div class="dropdown"><button id="exportMain" class="primary export-btn">Exportar PNG ▾</button><div id="exportMenu" class="dropdown-menu"><button data-export="png">PNG · 1080 × 1350</button><button data-export="jpg">JPG · 1080 × 1350</button><button data-export="square">PNG cuadrado adaptado · 1080 × 1080</button><button data-export="fbmeta" class="hide">PNG · 851 × 315 (Meta)</button><button data-export="zip-feed">ZIP · 5 publicaciones de Feed</button><button data-export="zip-stories">ZIP · 5 Historias (9:16)</button></div></div></span></div></header>
 <div class="shell">
 <nav class="rail" aria-label="Navegación de los estudios">
 <button class="rail-btn active" data-nav="feed" title="Feed Studio"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg>Feed Studio</button>
@@ -1474,8 +1526,10 @@ function isDockActive(){
   return true;
 }
 function syncShellFold(){
+  const activeDock=isDockActive();
   const sh=$('.shell');
-  if(sh)sh.classList.toggle('dock-folded',!isDockActive());
+  if(sh)sh.classList.toggle('dock-folded',!activeDock);
+  document.body.classList.toggle('dock-on',activeDock);
 }
 function setCanvasFormat(){
  const fw=facebook()?FBW:1080,fh=facebook()?FBH:story()?1920:1350;
@@ -1599,33 +1653,21 @@ function drawDock(){
     mainBody=`
     <div class="dock-explain-box">
       <strong>¿Para qué es el Retoque con IA?</strong>
-      <p>Retoca los <b>overlays de contraste detrás de los títulos, subtítulos y logo</b> para que los textos se vean mejor y se lean con nitidez sobre fondos claros, <b>sin oscurecer ni alterar</b> el resto de la fotografía.</p>
+      <p>Retoca los <b>overlays de contraste detrás de los títulos, subtítulos y logo</b> para que se lean con nitidez, <b>sin oscurecer ni alterar</b> el resto de la foto.</p>
     </div>
-    ${aiCreditsMarkup()}
-    <div class="field" style="margin:2px 0 !important;">
-      <label for="aiFocus">Área de títulos / logo a reforzar</label>
-      <select id="aiFocus">
-        <option value="titles_logo" ${focus==='titles_logo'?'selected':''}>Títulos, subtítulos y logo (recomendado)</option>
-        <option value="titles" ${focus==='titles'?'selected':''}>Solo títulos y subtítulos</option>
-        <option value="logo" ${focus==='logo'?'selected':''}>Solo zona del logo</option>
-        <option value="upper" ${focus==='upper'?'selected':''}>Tercio superior</option>
-        <option value="lower" ${focus==='lower'?'selected':''}>Tercio inferior</option>
-        <option value="general" ${focus==='general'?'selected':''}>Tratamiento general localizado</option>
-      </select>
-    </div>
-    <div class="field" style="margin:2px 0 !important;">
-      <label for="aiIntensity">Sutileza / Intensidad del overlay <b id="aiIntensityRead">${Math.round((aiIntensities[active]??0.35)*100)}%</b></label>
-      <input id="aiIntensity" type="range" min="0.10" max="0.75" step="0.05" value="${aiIntensities[active]??0.35}">
-      <div style="display:flex;justify-content:space-between;font-size:9.5px;color:#94a3b8;margin-top:2px;"><span>10% Muy sutil</span><span style="color:#fb923c;font-weight:700;">35% Equilibrado</span><span>75% Marcado</span></div>
+    ${aiCreditsMarkup(true)}
+    <div class="field-row" style="margin:0;">
+      <div class="field" style="margin:0 !important;"><label for="aiFocus">Área</label><select id="aiFocus" style="padding:5px 6px !important;font-size:11px !important;"><option value="titles_logo" ${focus==='titles_logo'?'selected':''}>Títulos + logo</option><option value="titles" ${focus==='titles'?'selected':''}>Solo títulos</option><option value="logo" ${focus==='logo'?'selected':''}>Solo logo</option><option value="upper" ${focus==='upper'?'selected':''}>Tercio sup.</option><option value="lower" ${focus==='lower'?'selected':''}>Tercio inf.</option><option value="general" ${focus==='general'?'selected':''}>General</option></select></div>
+      <div class="field" style="margin:0 !important;"><label for="aiIntensity">Intensidad <b id="aiIntensityRead">${Math.round((aiIntensities[active]??0.35)*100)}%</b></label><input id="aiIntensity" type="range" min="0.10" max="0.75" step="0.05" value="${aiIntensities[active]??0.35}" style="margin-top:6px;"></div>
     </div>
     ${c?`
-      <div class="ai-image-comparison" style="margin:4px 0;"><div class="ai-preview-label" style="padding:5px 8px;font-size:10.5px;">${aiPreviewMode==='before'?'ANTES · Composición actual':'DESPUÉS · Overlays retocados detrás de textos'}</div><img id="aiCompareImage" alt="Comparación del retoque" src="${aiPreviewMode==='before'?c.beforePreview:c.afterPreview}" style="max-height:175px;"></div>
-      <div class="ai-button-row" style="margin:2px 0;"><button type="button" data-ai="before" class="${aiPreviewMode==='before'?'selected':''}" style="min-height:30px;padding:4px;font-size:11px;">Antes</button><button type="button" data-ai="after" class="${aiPreviewMode==='after'?'selected':''}" style="min-height:30px;padding:4px;font-size:11px;">Después</button></div>
-      <div class="two-buttons" style="margin-top:2px;"><button type="button" class="ai-action-primary" data-ai="approve" style="padding:9px;font-size:11.5px;">✓ Aprobar retoque</button><button type="button" class="ai-secondary" data-ai="discard" style="padding:9px;font-size:11.5px;">Descartar</button></div>
-    `:(online?`<button type="button" class="dock-btn-ai" data-ai="generate" style="margin-top:2px;" ${aiGenerating?'disabled':''}>${aiGenerating?'⏳ Generando retoque de overlays…':'✨ Generar retoque con IA'}</button>`:'')}
-    ${z.aiRetouch&&!c?`<div style="background:rgba(74,222,128,.09);border:1px solid rgba(74,222,128,.32);border-radius:6px;padding:7px 9px;font-size:11px;color:#86efac;">✅ <b>Retoque IA activo en esta pieza.</b> Los títulos y el logo siguen siendo 100% editables.</div>`:''}
-    ${z.aiOriginal?`<button type="button" class="ai-secondary" data-ai="revert" style="padding:7px 9px;font-size:11px;">↺ Restaurar foto y overlays originales</button>`:''}
-    <p class="mini-info" style="margin:2px 0 0;font-size:10px;line-height:1.38;">Al aprobar, las nubes manuales de esta pieza se apagan para evitar doble sombra. Siempre es reversible.</p>`;
+      <div class="ai-image-comparison" style="margin:2px 0;"><div class="ai-preview-label" style="padding:4px 8px;font-size:10px;">${aiPreviewMode==='before'?'ANTES · Composición actual':'DESPUÉS · Overlays retocados detrás de textos'}</div><img id="aiCompareImage" alt="Comparación del retoque" src="${aiPreviewMode==='before'?c.beforePreview:c.afterPreview}" style="max-height:145px;"></div>
+      <div class="ai-button-row" style="margin:0;"><button type="button" data-ai="before" class="${aiPreviewMode==='before'?'selected':''}" style="min-height:28px;padding:3px;font-size:11px;">Antes</button><button type="button" data-ai="after" class="${aiPreviewMode==='after'?'selected':''}" style="min-height:28px;padding:3px;font-size:11px;">Después</button></div>
+      <div class="two-buttons"><button type="button" class="ai-action-primary" data-ai="approve" style="padding:7px;font-size:11px;">✓ Aprobar retoque</button><button type="button" class="ai-secondary" data-ai="discard" style="padding:7px;font-size:11px;">Descartar</button></div>
+    `:(online?`<button type="button" class="dock-btn-ai" data-ai="generate" ${aiGenerating?'disabled':''}>${aiGenerating?'⏳ Generando retoque de overlays…':'✨ Generar retoque con IA'}</button>`:'')}
+    ${z.aiRetouch&&!c?`<div style="background:rgba(74,222,128,.09);border:1px solid rgba(74,222,128,.32);border-radius:6px;padding:5px 8px;font-size:10.5px;color:#86efac;">✅ <b>Retoque IA activo.</b> Textos y logo siguen editables.</div>`:''}
+    ${z.aiOriginal?`<button type="button" class="ai-secondary" data-ai="revert" style="padding:5px 8px;font-size:10.5px;">↺ Restaurar foto y overlays originales</button>`:''}
+    <p class="mini-info" style="margin:0;font-size:9.5px;line-height:1.3;">Al aprobar se apagan las nubes manuales. Siempre es reversible.</p>`;
   }else{
     const cl=getDockCloudLayer();
     const cPct=cl?Math.round((cl.cloud||0)*100):0;
@@ -1691,13 +1733,23 @@ function drawDock(){
     ${mainBody}
   </div>
   <div class="dock-card" style="margin-top:auto;">
-    <div class="dock-card-head"><h4>Exportar</h4><span style="font-size:10px;color:#94a3b8;">${isFb?'Portada FB':isSt?'Historia 9:16':'Feed 4:5'} · ${W} × ${H}</span></div>
+    <div class="dock-card-head"><h4>Exportar y Proyecto</h4><span style="font-size:10px;color:#94a3b8;">${isFb?'Portada FB':isSt?'Historia 9:16':'Feed 4:5'} · ${W} × ${H}</span></div>
     <div class="dock-export-grid">
       <button type="button" class="dock-export-tile" data-dock-export="png" title="Descargar pieza activa en PNG (${W} × ${H})"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>PNG</button>
       <button type="button" class="dock-export-tile" data-dock-export="jpg" title="Descargar pieza activa en JPG (${W} × ${H})"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>JPG</button>
       <button type="button" class="dock-export-tile" data-dock-export="zip" title="${isFb?'Exportar PNG 851 × 315 (Meta)':`Exportar lote ZIP (${zipCount} piezas)`}"><svg viewBox="0 0 24 24"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>${isFb?'Meta':'ZIP ('+zipCount+')'}</button>
     </div>
     ${!isFb&&!isSt?`<button type="button" class="dock-sub-export" data-dock-export="square" title="Exportar versión cuadrada 1080 × 1080 sin recortar textos ni logo">◻ Exportar PNG cuadrado adaptado · 1080 × 1080</button>`:''}
+    <div class="dock-divider">
+      <div class="dock-subhead"><span>Proyecto</span><span style="font-weight:500;text-transform:none;letter-spacing:0;color:#64748b;">JSON y plantillas</span></div>
+      <div class="dock-project-grid">
+        <button type="button" class="dock-proj-btn" data-dock-project="open" title="Abrir proyecto JSON…">📂 Abrir JSON</button>
+        <button type="button" class="dock-proj-btn" data-dock-project="save" title="Guardar proyecto JSON">💾 Guardar JSON</button>
+        <button type="button" class="dock-proj-btn" data-dock-project="copyPost" title="Escribir o copiar texto de la publicación">📝 Copy Post</button>
+        <button type="button" class="dock-proj-btn" data-dock-project="clearImages" style="color:#f87171 !important;" title="Quitar todas las fotos del proyecto">🧹 Limpiar fotos</button>
+      </div>
+      <button type="button" class="dock-btn-ai" data-dock-project="resetPreload" title="Restablecer todas las imágenes, overlays y parámetros a la configuración prefijada">↺ Restablecer imágenes</button>
+    </div>
   </div>`;
 }
 function inspectTab(which){if(['style','brand'].includes(which))which='brand';else if(['overlays','filters','background'].includes(which))which='background';else if(which==='ai'&&!isDockActive())which='ai';else which='edit';panel=which;$$('[data-panel]').forEach(b=>b.classList.toggle('active',b.dataset.panel===which));drawInspector();}
@@ -1769,15 +1821,27 @@ async function aiFetchCredits(force=false){
  }catch(e){console.warn('Créditos IA:',e);}
  finally{aiCreditsLoading=false;if(panel==='ai')drawInspector();else if(isDockActive())drawDock();}
 }
-function aiCreditsMarkup(){
- if(!aiConnected())return '<div class="ai-state">Modo local sin conexión al servicio de retoque.</div>';
- if(!aiCredits)return '<div class="ai-state">Consultando créditos mensuales…</div>';
+function aiCreditsMarkup(compact=false){
+ if(!aiConnected())return `<div class="ai-state" style="${compact?'padding:6px 8px;margin:0;font-size:10.5px;':''}">Modo local sin conexión al servicio de retoque.</div>`;
+ if(!aiCredits)return `<div class="ai-state" style="${compact?'padding:6px 8px;margin:0;font-size:10.5px;':''}">Consultando créditos mensuales…</div>`;
  const limit=Number(aiCredits.limit)||50;
  const used=Math.max(0,Number(aiCredits.used)||0);
  const remaining=Math.max(0,limit-used);
  const pct=Math.min(100,Math.round((remaining/limit)*100));
  const exhausted=used>=limit;
  const barColor=exhausted?'#f59e0b':remaining<=10?'#fb923c':'#4ade80';
+ if(compact){
+   return `<div class="ai-state" style="background:#0e1420;border:1px solid ${exhausted?'rgba(245,158,11,.5)':'#233148'};border-radius:6px;padding:6px 8px;margin:0;" title="1 crédito por foto retocada · Usados este mes: ${used}">
+    <div style="display:flex;align-items:center;justify-content:space-between;font-size:10.5px;font-weight:700;margin-bottom:4px;">
+     <span style="color:#cbd5e1;">Créditos IA (1/foto)</span>
+     <span style="color:${barColor};">${remaining} / ${limit} disp.</span>
+    </div>
+    <div style="width:100%;height:4px;background:#090b10;border-radius:999px;overflow:hidden;">
+     <div style="width:${pct}%;height:100%;background:${barColor};transition:width .25s ease;"></div>
+    </div>
+    ${exhausted?`<div style="margin-top:4px;font-size:10px;color:#fbbf24;">⚠️ Cupo de ${limit} alcanzado (podés seguir generando).</div>`:''}
+   </div>`;
+ }
  return `<div class="ai-state" style="background:#131a29;border:1px solid ${exhausted?'rgba(245,158,11,.5)':'#233148'};border-radius:7px;padding:10px 12px;margin-bottom:10px;">
   <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:6px;">
    <span style="color:#e2e8f0;">Créditos mensuales</span>
@@ -2705,6 +2769,16 @@ if(studioDockEl){
       const m=expBtn.dataset.dockExport;
       if(m==='zip'){if(facebook())exportOne('fbmeta');else exportAll(story()?'stories':'feed');}
       else exportOne(m);
+      return;
+    }
+    const projBtn=e.target.closest('[data-dock-project]');
+    if(projBtn){
+      const act=projBtn.dataset.dockProject;
+      if(act==='open')openFile('fileJson');
+      else if(act==='save')saveJson();
+      else if(act==='clearImages')clearAllImages();
+      else if(act==='resetPreload')resetToPreload();
+      else if(act==='copyPost')document.getElementById('openCopyBtn')?.click();
       return;
     }
   });
