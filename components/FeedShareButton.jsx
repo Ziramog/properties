@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Layers, Share, Copy, Check } from 'lucide-react';
 import { toast } from 'react-toastify';
-import { processImageInBrowser } from '@/utils/processImageInBrowser';
+import { processImageInBrowser, getFeedCanvasSizeForImage } from '@/utils/processImageInBrowser';
 import { convertBlobToJpeg } from '@/utils/convertBlobToJpeg';
 import { buildFeedCaption } from '@/utils/feedCaption';
 
@@ -79,18 +79,28 @@ export default function FeedShareButton({ property, variant = 'light' }) {
     const propertyId = property._id || property.id;
 
     try {
+      const firstImgEntry = property?.images?.[0];
+      const firstRawImgUrl =
+        typeof firstImgEntry === 'string' ? firstImgEntry : firstImgEntry?.url;
+
+      // En "Ampliar (4:5)" conservamos exactamente 1080x1350; en "Original (apaisado)" usamos la proporción nativa de la foto 1
+      const { width: targetW, height: targetH } =
+        fitMode === 'contain' && firstRawImgUrl
+          ? await getFeedCanvasSizeForImage(firstRawImgUrl)
+          : { width: 1080, height: 1350 };
+
       for (let i = 0; i < maxImages; i++) {
         const imgEntry = property?.images?.[i] || property?.images?.[0];
         const rawImgUrl = typeof imgEntry === 'string' ? imgEntry : imgEntry?.url;
 
-        // Procesar el encuadre (cover o contain) en 1080x1350 en el navegador (0 créditos Cloudinary)
+        // Procesar el encuadre (cover o contain) en las dimensiones finales desde el navegador (0 créditos Cloudinary)
         const imageBase64 = rawImgUrl
-          ? await processImageInBrowser(rawImgUrl, 1080, 1350, { fit: fitMode })
+          ? await processImageInBrowser(rawImgUrl, targetW, targetH, { fit: fitMode })
           : null;
 
         let file = null;
 
-        // Si logo y textos están apagados y el navegador ya generó el JPEG 1080x1350, evitar llamada innecesaria a Satori
+        // Si logo y textos están apagados y el navegador ya generó el JPEG final, evitar llamada innecesaria a Satori
         if (!showLogo && !showDetails && imageBase64) {
           const directRes = await fetch(imageBase64);
           const directBlob = await directRes.blob();
@@ -101,6 +111,7 @@ export default function FeedShareButton({ property, variant = 'light' }) {
             logo: showLogo ? '1' : '0',
             details: showDetails ? '1' : '0',
             fit: fitMode,
+            h: String(targetH),
           });
           const url = `/api/feed/${propertyId}?${params.toString()}`;
           const response = imageBase64
@@ -117,12 +128,12 @@ export default function FeedShareButton({ property, variant = 'light' }) {
 
           const blob = await response.blob();
 
-          // Entregar JPEG sRGB 1080x1350 (liviano y estándar para Instagram). Reintento único ante fallos de memoria
+          // Entregar JPEG sRGB en targetW x targetH (liviano y estándar para Instagram). Reintento único ante fallos de memoria
           // en móviles para no mezclar .jpg y .png dentro del mismo lote; si vuelve a fallar, se usa el PNG original.
-          let jpegBlob = await convertBlobToJpeg(blob, 1080, 1350, 0.92);
+          let jpegBlob = await convertBlobToJpeg(blob, targetW, targetH, 0.92);
           if (!jpegBlob) {
             await new Promise((r) => setTimeout(r, 150));
-            jpegBlob = await convertBlobToJpeg(blob, 1080, 1350, 0.92);
+            jpegBlob = await convertBlobToJpeg(blob, targetW, targetH, 0.92);
           }
           file = jpegBlob
             ? new File([jpegBlob], `carrusel-${i + 1}.jpg`, { type: 'image/jpeg' })
@@ -154,10 +165,15 @@ export default function FeedShareButton({ property, variant = 'light' }) {
         }
       }
 
+      const isLandscape = fitMode === 'contain' && targetH < 1080;
       toast.success(
         copiedAuto
-          ? '¡Carrusel 4:5 listo y texto copiado! En Instagram tocá Vertical (< >) en CADA lámina.'
-          : '¡Carrusel 4:5 listo! Podés copiar el texto abajo antes de publicar.',
+          ? isLandscape
+            ? '¡Carrusel apaisado listo y texto copiado! En Instagram tocá < > (ajustar formato) para conservar el encuadre apaisado.'
+            : '¡Carrusel 4:5 listo y texto copiado! En Instagram tocá Vertical (< >) en CADA lámina.'
+          : isLandscape
+            ? '¡Carrusel apaisado listo! Podés copiar el texto abajo antes de publicar.'
+            : '¡Carrusel 4:5 listo! Podés copiar el texto abajo antes de publicar.',
         { autoClose: 8000 }
       );
     } catch (error) {
@@ -273,7 +289,7 @@ export default function FeedShareButton({ property, variant = 'light' }) {
                 : 'text-gray-600 hover:bg-gray-200/70'
           }`}
         >
-          Original web
+          Original (apaisado)
         </button>
       </div>
 

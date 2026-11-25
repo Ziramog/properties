@@ -246,13 +246,19 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
     const showLogo = searchParams.get('logo') !== '0';
     const showDetails = searchParams.get('details') !== '0';
     const fitMode = searchParams.get('fit') === 'contain' ? 'contain' : 'cover';
+    const rawH = parseInt(searchParams.get('h') || '1350', 10);
     const imageToUse = property.images?.[index] || property.images?.[0];
 
-    // Formato Feed 4:5 oficial de Instagram (1080 x 1350)
+    // Formato Feed oficial (1080x1350 en 4:5; alto dinámico 566..1350 en "Original (apaisado)")
+    const targetW = 1080;
+    const targetH = Number.isFinite(rawH) ? Math.max(566, Math.min(1350, rawH)) : 1350;
     const size = {
-      width: 1080,
-      height: 1350,
+      width: targetW,
+      height: targetH,
     };
+
+    const isCompactLandscape = targetH < 1050;
+    const compactScale = isCompactLandscape ? Math.max(0.56, targetH / 1350) : 1;
 
     const corporateOrange = '#F26B2E';
 
@@ -275,6 +281,20 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
 
     const data = extractFeedData(property);
     const titleFontSize = data.title.length > 48 ? 44 : data.title.length > 28 ? 52 : 60;
+    const effectiveTitleFontSize = isCompactLandscape
+      ? Math.round(titleFontSize * (targetH <= 650 ? 0.66 : 0.76))
+      : titleFontSize;
+    const logoWidth = isCompactLandscape ? Math.round(280 + (compactScale - 0.56) * 180) : 430;
+    const logoHeight = isCompactLandscape ? Math.round((logoWidth * 174) / 430) : 174;
+    const logoTop = isCompactLandscape ? Math.round(24 * compactScale + 8) : 56;
+    const pinW = isCompactLandscape ? 20 : 28;
+    const pinH = isCompactLandscape ? 24 : 32;
+    const locFontSize = isCompactLandscape ? 22 : 30;
+    const statFontSize = isCompactLandscape ? 26 : 38;
+    const bedBathFontSize = isCompactLandscape ? 26 : 40;
+    const statGap = isCompactLandscape ? '10px' : '14px';
+    const statDividerHeight = isCompactLandscape ? '26px' : '38px';
+    const statDividerMargin = isCompactLandscape ? '0 18px' : '0 26px';
 
     // Overlay Superior compartido (solo cuando se muestra el logo para no oscurecer cielos innecesariamente)
     const topOverlay = showLogo ? (
@@ -284,7 +304,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
           top: 0,
           left: 0,
           width: '100%',
-          height: '28%',
+          height: isCompactLandscape ? '26%' : '28%',
           backgroundImage:
             'linear-gradient(to bottom, rgba(11, 13, 16, 0.78) 0%, rgba(11, 13, 16, 0.45) 45%, rgba(11, 13, 16, 0.12) 78%, rgba(11, 13, 16, 0) 100%)',
           display: 'flex',
@@ -297,7 +317,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
       <div
         style={{
           position: 'absolute',
-          top: 56,
+          top: logoTop,
           left: 0,
           width: '100%',
           display: 'flex',
@@ -307,8 +327,8 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
       >
         <img
           src={assets.brandFullWhiteLogoUrl}
-          width={430}
-          height={174}
+          width={logoWidth}
+          height={logoHeight}
           style={{
             objectFit: 'contain',
             filter: 'drop-shadow(0px 4px 14px rgba(0,0,0,0.85))',
@@ -316,6 +336,34 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
         />
       </div>
     ) : null;
+
+    const badgeItems = data.badges.map((b, idx) => (
+      <div
+        key={idx}
+        style={{
+          backgroundColor: b.isPrimary ? corporateOrange : 'rgba(20, 26, 38, 0.85)',
+          border: b.isPrimary ? 'none' : '1px solid rgba(255, 255, 255, 0.35)',
+          padding: isCompactLandscape ? '6px 14px' : '10px 20px',
+          borderRadius: isCompactLandscape ? '5px' : '6px',
+          boxShadow: '0 6px 20px rgba(0, 0, 0, 0.55)',
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        <span
+          style={{
+            color: '#FFFFFF',
+            fontSize: isCompactLandscape ? 15 : 20,
+            fontWeight: 700,
+            letterSpacing: isCompactLandscape ? '1.2px' : '1.5px',
+            textTransform: 'uppercase',
+            fontFamily: '"Lato", sans-serif',
+          }}
+        >
+          {b.text}
+        </span>
+      </div>
+    ));
 
     // ========================================================
     // CASO 1: IMAGEN INICIAL (index === 0) — Portada Editorial Feed
@@ -334,19 +382,19 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               position: 'relative',
             }}
           >
-            {/* Fotografía principal (4:5 nativo 1080x1350) */}
-            <div style={{ position: 'absolute', top: 0, left: 0, width: '1080px', height: '1350px', display: 'flex' }}>
+            {/* Fotografía principal */}
+            <div style={{ position: 'absolute', top: 0, left: 0, width: `${targetW}px`, height: `${targetH}px`, display: 'flex' }}>
               <img
                 src={assets.imageUrl}
-                width={1080}
-                height={1350}
-                style={{ width: '1080px', height: '1350px', objectFit: fitMode }}
+                width={targetW}
+                height={targetH}
+                style={{ width: `${targetW}px`, height: `${targetH}px`, objectFit: fitMode }}
               />
             </div>
 
             {topOverlay}
 
-            {/* Overlay Inferior (46% = 621px, solo visible si se muestran textos/detalles) */}
+            {/* Overlay Inferior (46% en 4:5 o 66% en apaisado, solo visible si se muestran textos/detalles) */}
             {showDetails ? (
               <div
                 style={{
@@ -354,7 +402,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                   bottom: 0,
                   left: 0,
                   width: '100%',
-                  height: '46%',
+                  height: isCompactLandscape ? '66%' : '46%',
                   backgroundImage:
                     'linear-gradient(to top, rgba(11, 13, 16, 0.88) 0%, rgba(11, 13, 16, 0.68) 42%, rgba(11, 13, 16, 0.28) 74%, rgba(11, 13, 16, 0) 100%)',
                   display: 'flex',
@@ -364,236 +412,259 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
 
             {brandHeader}
 
-            {/* Etiquetas (controladas por el switch de textos/detalles) */}
-            {showDetails ? (
+            {/* Etiquetas flotantes en 4:5 (en apaisado compacto se integran arriba del título para no invadir el centro ni el logo) */}
+            {showDetails && !isCompactLandscape ? (
               <div
-                  style={{
-                    position: 'absolute',
-                    top: 282,
-                    left: 55,
-                    display: 'flex',
-                    gap: '10px',
-                    zIndex: 20,
-                  }}
-                >
-                  {data.badges.map((b, idx) => (
-                    <div
-                      key={idx}
-                      style={{
-                        backgroundColor: b.isPrimary ? corporateOrange : 'rgba(20, 26, 38, 0.85)',
-                        border: b.isPrimary ? 'none' : '1px solid rgba(255, 255, 255, 0.35)',
-                        padding: '10px 20px',
-                        borderRadius: '6px',
-                        boxShadow: '0 6px 20px rgba(0, 0, 0, 0.55)',
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <span
-                        style={{
-                          color: '#FFFFFF',
-                          fontSize: 20,
-                          fontWeight: 700,
-                          letterSpacing: '1.5px',
-                          textTransform: 'uppercase',
-                          fontFamily: '"Lato", sans-serif',
-                        }}
-                      >
-                        {b.text}
-                      </span>
-                    </div>
-                  ))}
+                style={{
+                  position: 'absolute',
+                  top: 282,
+                  left: 55,
+                  display: 'flex',
+                  gap: '10px',
+                  zIndex: 20,
+                }}
+              >
+                {badgeItems}
               </div>
             ) : null}
 
             {/* Bloque Editorial Inferior (directo sobre el contenedor raíz: evita Fragment en Satori) */}
             {showDetails ? (
               <div
-                  style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    padding: '0 55px 30px 55px',
-                    zIndex: 20,
-                  }}
-                >
-              {/* Título */}
-              <h1
                 style={{
-                  color: '#FFFFFF',
-                  fontSize: titleFontSize,
-                  fontFamily: '"PT Serif", serif',
-                  fontWeight: 700,
-                  lineHeight: 1.14,
-                  margin: '0 0 12px 0',
-                  textShadow: '0 3px 14px rgba(0,0,0,0.9)',
-                }}
-              >
-                {data.title}
-              </h1>
-
-              {/* Ubicación con Pin Naranja Sólido al ras izquierdo */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                <svg width="28" height="32" viewBox="4.5 1.5 15 21" fill="none" style={{ flexShrink: 0 }}>
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C10.6193 11.5 9.5 10.3807 9.5 9C9.5 7.61929 10.6193 6.5 12 6.5C13.3807 6.5 14.5 7.61929 14.5 9C14.5 10.3807 13.3807 11.5 12 11.5Z"
-                    fill={corporateOrange}
-                  />
-                </svg>
-                <span
-                  style={{
-                    color: '#F1F5F9',
-                    fontSize: 30,
-                    fontWeight: 400,
-                    lineHeight: 1.25,
-                    fontFamily: '"Lato", sans-serif',
-                    textShadow: '0 2px 8px rgba(0,0,0,0.85)',
-                  }}
-                >
-                  {data.locationFull}
-                </span>
-              </div>
-
-              {/* Separador fino */}
-              <div
-                style={{
-                  width: '100%',
-                  height: '1px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.22)',
-                  marginBottom: '18px',
-                }}
-              />
-
-              {/* Características — Íconos grandes estilo ficha web + solo cifras */}
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '18px' }}>
-                {Boolean(data.isLand && data.areaDisplay) ? (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                    <svg
-                      width="60"
-                      height="60"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke={corporateOrange}
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="m12 8 6-3-6-3v10" />
-                      <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
-                      <path d="m6.49 12.85 11.02 6.3" />
-                      <path d="M17.51 12.85 6.49 19.15" />
-                    </svg>
-                    <span style={{ color: '#FFFFFF', fontSize: 38, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
-                      {data.areaDisplay}
-                    </span>
-                  </div>
-                ) : null}
-
-                {!data.isLand ? (
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {Boolean(data.beds && data.beds > 0) ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <img src={assets.bedIconUrl} width={70} height={54} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 40, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
-                          {data.beds}
-                        </span>
-                      </div>
-                    ) : null}
-
-                    {Boolean(data.beds && data.beds > 0 && data.baths && data.baths > 0) ? (
-                      <div style={{ width: '1.5px', height: '38px', backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 26px' }} />
-                    ) : null}
-
-                    {Boolean(data.baths && data.baths > 0) ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <img src={assets.bathIconUrl} width={65} height={52} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 40, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
-                          {data.baths}
-                        </span>
-                      </div>
-                    ) : null}
-
-                    {Boolean((data.beds > 0 || data.baths > 0) && data.coveredAreaDisplay) ? (
-                      <div style={{ width: '1.5px', height: '38px', backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 26px' }} />
-                    ) : null}
-
-                    {Boolean(data.coveredAreaDisplay) ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <img src={assets.sqftIconUrl} width={56} height={56} style={{ objectFit: 'contain' }} />
-                        <span style={{ color: '#FFFFFF', fontSize: 38, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
-                          {data.coveredAreaDisplay}
-                        </span>
-                      </div>
-                    ) : null}
-
-                    {Boolean(!data.coveredAreaDisplay && data.totalAreaDisplay) ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        {(data.beds > 0 || data.baths > 0) ? (
-                          <div style={{ width: '1.5px', height: '38px', backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 26px' }} />
-                        ) : null}
-                        <svg
-                          width="60"
-                          height="60"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke={corporateOrange}
-                          strokeWidth="1.6"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="m12 8 6-3-6-3v10" />
-                          <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
-                          <path d="m6.49 12.85 11.02 6.3" />
-                          <path d="M17.51 12.85 6.49 19.15" />
-                        </svg>
-                        <span style={{ color: '#FFFFFF', fontSize: 38, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
-                          {data.totalAreaDisplay}
-                        </span>
-                      </div>
-                    ) : null}
-                  </div>
-                ) : null}
-              </div>
-
-              {/* Fila del Precio Prominente */}
-              <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '28px' }}>
-                <span
-                  style={{
-                    color: corporateOrange,
-                    fontSize: 62,
-                    fontFamily: '"PT Serif", serif',
-                    fontWeight: 700,
-                    letterSpacing: '1px',
-                    textShadow: '0 2px 10px rgba(0,0,0,0.6)',
-                  }}
-                >
-                  {data.priceDisplay}
-                </span>
-              </div>
-
-              {/* Línea editorial naranja centrada en X (en consonancia con Social Studio e Historias) */}
-              <div
-                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
                   width: '100%',
                   display: 'flex',
-                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  padding: isCompactLandscape ? '0 44px 20px 44px' : '0 55px 30px 55px',
+                  zIndex: 20,
                 }}
               >
+                {isCompactLandscape && badgeItems.length > 0 ? (
+                  <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
+                    {badgeItems}
+                  </div>
+                ) : null}
+
+                {/* Título */}
+                <h1
+                  style={{
+                    color: '#FFFFFF',
+                    fontSize: effectiveTitleFontSize,
+                    fontFamily: '"PT Serif", serif',
+                    fontWeight: 700,
+                    lineHeight: 1.14,
+                    margin: isCompactLandscape ? '0 0 6px 0' : '0 0 12px 0',
+                    textShadow: '0 3px 14px rgba(0,0,0,0.9)',
+                  }}
+                >
+                  {data.title}
+                </h1>
+
+                {/* Ubicación con Pin Naranja Sólido al ras izquierdo */}
                 <div
                   style={{
-                    width: '440px',
-                    height: '4px',
-                    backgroundColor: corporateOrange,
-                    borderRadius: '2px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: isCompactLandscape ? '8px' : '12px',
+                    marginBottom: isCompactLandscape ? '10px' : '16px',
+                  }}
+                >
+                  <svg width={pinW} height={pinH} viewBox="4.5 1.5 15 21" fill="none" style={{ flexShrink: 0 }}>
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C10.6193 11.5 9.5 10.3807 9.5 9C9.5 7.61929 10.6193 6.5 12 6.5C13.3807 6.5 14.5 7.61929 14.5 9C14.5 10.3807 13.3807 11.5 12 11.5Z"
+                      fill={corporateOrange}
+                    />
+                  </svg>
+                  <span
+                    style={{
+                      color: '#F1F5F9',
+                      fontSize: locFontSize,
+                      fontWeight: 400,
+                      lineHeight: 1.25,
+                      fontFamily: '"Lato", sans-serif',
+                      textShadow: '0 2px 8px rgba(0,0,0,0.85)',
+                    }}
+                  >
+                    {data.locationFull}
+                  </span>
+                </div>
+
+                {/* Separador fino */}
+                <div
+                  style={{
+                    width: '100%',
+                    height: '1px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+                    marginBottom: isCompactLandscape ? '10px' : '18px',
                   }}
                 />
+
+                {/* Características — Íconos grandes estilo ficha web + solo cifras */}
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: isCompactLandscape ? '10px' : '18px' }}>
+                  {Boolean(data.isLand && data.areaDisplay) ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: statGap }}>
+                      <svg
+                        width={isCompactLandscape ? 38 : 60}
+                        height={isCompactLandscape ? 38 : 60}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke={corporateOrange}
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="m12 8 6-3-6-3v10" />
+                        <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
+                        <path d="m6.49 12.85 11.02 6.3" />
+                        <path d="M17.51 12.85 6.49 19.15" />
+                      </svg>
+                      <span style={{ color: '#FFFFFF', fontSize: statFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
+                        {data.areaDisplay}
+                      </span>
+                    </div>
+                  ) : null}
+
+                  {!data.isLand ? (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      {Boolean(data.beds && data.beds > 0) ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: statGap }}>
+                          <img
+                            src={assets.bedIconUrl}
+                            width={isCompactLandscape ? 46 : 70}
+                            height={isCompactLandscape ? 36 : 54}
+                            style={{ objectFit: 'contain' }}
+                          />
+                          <span style={{ color: '#FFFFFF', fontSize: bedBathFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
+                            {data.beds}
+                          </span>
+                        </div>
+                      ) : null}
+
+                      {Boolean(data.beds && data.beds > 0 && data.baths && data.baths > 0) ? (
+                        <div
+                          style={{
+                            width: '1.5px',
+                            height: statDividerHeight,
+                            backgroundColor: 'rgba(255, 255, 255, 0.35)',
+                            margin: statDividerMargin,
+                          }}
+                        />
+                      ) : null}
+
+                      {Boolean(data.baths && data.baths > 0) ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: statGap }}>
+                          <img
+                            src={assets.bathIconUrl}
+                            width={isCompactLandscape ? 42 : 65}
+                            height={isCompactLandscape ? 34 : 52}
+                            style={{ objectFit: 'contain' }}
+                          />
+                          <span style={{ color: '#FFFFFF', fontSize: bedBathFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
+                            {data.baths}
+                          </span>
+                        </div>
+                      ) : null}
+
+                      {Boolean((data.beds > 0 || data.baths > 0) && data.coveredAreaDisplay) ? (
+                        <div
+                          style={{
+                            width: '1.5px',
+                            height: statDividerHeight,
+                            backgroundColor: 'rgba(255, 255, 255, 0.35)',
+                            margin: statDividerMargin,
+                          }}
+                        />
+                      ) : null}
+
+                      {Boolean(data.coveredAreaDisplay) ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: statGap }}>
+                          <img
+                            src={assets.sqftIconUrl}
+                            width={isCompactLandscape ? 38 : 56}
+                            height={isCompactLandscape ? 38 : 56}
+                            style={{ objectFit: 'contain' }}
+                          />
+                          <span style={{ color: '#FFFFFF', fontSize: statFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
+                            {data.coveredAreaDisplay}
+                          </span>
+                        </div>
+                      ) : null}
+
+                      {Boolean(!data.coveredAreaDisplay && data.totalAreaDisplay) ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: statGap }}>
+                          {(data.beds > 0 || data.baths > 0) ? (
+                            <div
+                              style={{
+                                width: '1.5px',
+                                height: statDividerHeight,
+                                backgroundColor: 'rgba(255, 255, 255, 0.35)',
+                                margin: statDividerMargin,
+                              }}
+                            />
+                          ) : null}
+                          <svg
+                            width={isCompactLandscape ? 38 : 60}
+                            height={isCompactLandscape ? 38 : 60}
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke={corporateOrange}
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="m12 8 6-3-6-3v10" />
+                            <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
+                            <path d="m6.49 12.85 11.02 6.3" />
+                            <path d="M17.51 12.85 6.49 19.15" />
+                          </svg>
+                          <span style={{ color: '#FFFFFF', fontSize: statFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
+                            {data.totalAreaDisplay}
+                          </span>
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : null}
+                </div>
+
+                {/* Fila del Precio Prominente */}
+                <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: isCompactLandscape ? '14px' : '28px' }}>
+                  <span
+                    style={{
+                      color: corporateOrange,
+                      fontSize: isCompactLandscape ? 42 : 62,
+                      fontFamily: '"PT Serif", serif',
+                      fontWeight: 700,
+                      letterSpacing: '1px',
+                      textShadow: '0 2px 10px rgba(0,0,0,0.6)',
+                    }}
+                  >
+                    {data.priceDisplay}
+                  </span>
+                </div>
+
+                {/* Línea editorial naranja centrada en X (en consonancia con Social Studio e Historias) */}
+                <div
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: isCompactLandscape ? '300px' : '440px',
+                      height: isCompactLandscape ? '3px' : '4px',
+                      backgroundColor: corporateOrange,
+                      borderRadius: '2px',
+                    }}
+                  />
+                </div>
               </div>
-            </div>
             ) : null}
           </div>
         ),
@@ -621,19 +692,19 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
             position: 'relative',
           }}
         >
-          {/* Fotografía protagonista limpia (4:5 nativo 1080x1350) */}
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '1080px', height: '1350px', display: 'flex' }}>
+          {/* Fotografía protagonista limpia */}
+          <div style={{ position: 'absolute', top: 0, left: 0, width: `${targetW}px`, height: `${targetH}px`, display: 'flex' }}>
             <img
               src={assets.imageUrl}
-              width={1080}
-              height={1350}
-              style={{ width: '1080px', height: '1350px', objectFit: fitMode }}
+              width={targetW}
+              height={targetH}
+              style={{ width: `${targetW}px`, height: `${targetH}px`, objectFit: fitMode }}
             />
           </div>
 
           {topOverlay}
 
-          {/* Degradado inferior progresivo (36% = 486px, solo visible si se muestran textos/detalles) */}
+          {/* Degradado inferior progresivo (36% en 4:5 o 44% en apaisado, solo visible si se muestran textos/detalles) */}
           {showDetails ? (
             <div
               style={{
@@ -641,7 +712,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 bottom: 0,
                 left: 0,
                 width: '100%',
-                height: '36%',
+                height: isCompactLandscape ? '44%' : '36%',
                 backgroundImage:
                   'linear-gradient(to top, rgba(11, 13, 16, 0.82) 0%, rgba(11, 13, 16, 0.72) 32%, rgba(11, 13, 16, 0.48) 58%, rgba(11, 13, 16, 0.16) 82%, rgba(11, 13, 16, 0) 100%)',
                 display: 'flex',
@@ -662,14 +733,14 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'flex-start',
-                padding: '0 55px 60px 55px',
+                padding: isCompactLandscape ? '0 44px 30px 44px' : '0 55px 60px 55px',
                 zIndex: 20,
               }}
             >
               <span
                 style={{
                   color: '#FFFFFF',
-                  fontSize: titleFontSize,
+                  fontSize: effectiveTitleFontSize,
                   fontFamily: '"PT Serif", serif',
                   fontWeight: 700,
                   textAlign: 'left',
@@ -680,8 +751,15 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 {data.title}
               </span>
               {data.locationFull && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
-                  <svg width="28" height="32" viewBox="4.5 1.5 15 21" fill="none" style={{ flexShrink: 0 }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: isCompactLandscape ? '8px' : '12px',
+                    marginTop: isCompactLandscape ? '8px' : '12px',
+                  }}
+                >
+                  <svg width={pinW} height={pinH} viewBox="4.5 1.5 15 21" fill="none" style={{ flexShrink: 0 }}>
                     <path
                       fillRule="evenodd"
                       clipRule="evenodd"
@@ -692,7 +770,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                   <span
                     style={{
                       color: '#F1F5F9',
-                      fontSize: 30,
+                      fontSize: locFontSize,
                       fontFamily: '"Lato", sans-serif',
                       fontWeight: 400,
                       lineHeight: 1.25,

@@ -137,3 +137,48 @@ export async function processImageInBrowser(imageUrl, targetW, targetH, options 
   await new Promise((r) => setTimeout(r, 120));
   return attemptProcess();
 }
+
+/**
+ * Calcula las dimensiones seguras de Instagram Feed (ancho fijo 1080px,
+ * alto dinámico entre 566px [1.91:1] y 1350px [4:5]) respetando la relación
+ * de aspecto natural de la imagen original (sin barras negras).
+ */
+export async function getFeedCanvasSizeForImage(imageUrl) {
+  const fallback = { width: 1080, height: 1350 };
+  if (!imageUrl || typeof window === 'undefined') return fallback;
+
+  const cleanUrl = imageUrl.replace(/\/upload\/[^/]+\/(v\d+\/)/, '/upload/$1');
+
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    let settled = false;
+
+    const finish = (result) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      img.onload = null;
+      img.onerror = null;
+      img.src = '';
+      resolve(result);
+    };
+
+    const timer = setTimeout(() => finish(fallback), 8000);
+
+    img.onload = () => {
+      const w = img.naturalWidth || img.width;
+      const h = img.naturalHeight || img.height;
+      if (!w || !h) {
+        finish(fallback);
+        return;
+      }
+      const ratio = w / h;
+      const targetH = Math.max(566, Math.min(1350, Math.round(1080 / ratio)));
+      finish({ width: 1080, height: targetH });
+    };
+
+    img.onerror = () => finish(fallback);
+    img.src = cleanUrl;
+  });
+}
