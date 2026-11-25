@@ -1318,7 +1318,6 @@ details.cloud-control-card[open] > summary {
 <nav class="rail" aria-label="Navegación de los estudios">
 <button class="rail-btn active" data-nav="feed" title="Feed Studio"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg>Feed Studio</button>
 <button class="rail-btn" data-nav="stories" title="Historias Studio · 1080 × 1920"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><circle cx="12" cy="18" r="1"/><path d="M9 6h6M9 10h6"/></svg>Historias Studio</button>
- <button class="rail-btn" data-nav="facebook" title="Portada de página de Facebook"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M5 15l5-5 4 3 3-3 3 2"/></svg>Portada Facebook</button>
  <span class="rail-separator" aria-hidden="true"></span><span class="rail-label">RECURSOS</span>
 <button class="rail-btn" data-nav="library" title="Propiedades de la web y fotos del proyecto"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><circle cx="8" cy="9" r="2"/><path d="m4 18 5-5 3 3 3-5 5 7"/></svg>Biblioteca</button>
 </nav>
@@ -1580,7 +1579,6 @@ function drawPieces(){const box=$('#pieces'),title=$('#piecesHeading'),info=$('#
    const formatBar=`<div class="format-switcher">
      <button type="button" class="format-card ${curStudio==='feed'?'active':''}" data-format-switch="feed"><span class="format-ico"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/></svg></span><span class="format-meta"><strong>Feed</strong><span>1080 × 1350 (4:5)</span></span></button>
      <button type="button" class="format-card ${curStudio==='stories'?'active':''}" data-format-switch="stories"><span class="format-ico"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><circle cx="12" cy="18.5" r="0.8"/></svg></span><span class="format-meta"><strong>Historia</strong><span>1080 × 1920 (9:16)</span></span></button>
-     <button type="button" class="format-card ${curStudio==='facebook'?'active':''}" data-format-switch="facebook"><span class="format-ico"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/></svg></span><span class="format-meta"><strong>Portada Facebook</strong><span>1702 × 630</span></span></button>
    </div>`;
    const idxs=studioIndices();
    const selCount=idxs.filter(i=>pieces[i]?.included!==false).length;
@@ -2379,7 +2377,7 @@ async function loadProject(v,{preload=false,fromAutosave=false,savedAt=null}={})
   if(!pieces[FB].layers.some(l=>l.id==='cta'))pieces[FB].layers.push(lyr('cta','cta','CONSULTÁ NUESTRAS PROPIEDADES',626,557,450,22,'#FFFFFF',{height:53,align:'center',family:'sans',visible:false,bgColor:brandOrange,cloud:0}));
   applyBrandColor();assets=v.assets||{};logoData=v.logoData||OFFICIAL_LOGO;logoMode=v.logoMode||(v.whiteLogo?'white':'original');whiteLogo=logoMode!=='original';removeLight=!!v.removeLight;logoProcessedCache=null;
   photoImages={};logoImage=null;logoWhiteCache=null;filesFont={reg:null,bold:null,...v.filesFont};fontReady={reg:true,bold:true};
-  history=[];future=[];aiCandidates={};aiPrompts={};aiFocuses={};aiIntensities={};active=(Number.isInteger(v.active)&&v.active>=0&&v.active<pieces.length)?v.active:0;picked=['title'];
+  history=[];future=[];aiCandidates={};aiPrompts={};aiFocuses={};aiIntensities={};active=(Number.isInteger(v.active)&&v.active>=0&&v.active<pieces.length&&v.active!==FB)?v.active:0;picked=['title'];
   syncAll();
   for(const [key,obj]of Object.entries(assets))if(obj?.data)loadImg(obj.data,img=>{photoImages[key]=img;render();});
   if(logoData)loadImg(logoData,img=>{logoImage=img;logoWhiteCache=null;drawInspector();});
