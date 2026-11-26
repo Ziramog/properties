@@ -54,7 +54,7 @@ const PropertiesPage = async ({ searchParams }) => {
     baths: baths || '',
     'property-type': propertyType ? propertyType.split('|') : [],
     status: status ? status.split('|') : [],
-    sort: sort || 'price-desc',
+    sort: sort || 'newest',
     favoritos: favoritos || '',
   };
 

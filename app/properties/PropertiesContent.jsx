@@ -96,9 +96,7 @@ export default async function PropertiesContent({ searchParams, subtitle }) {
     }
   }
 
-  let sortObj = {};
-  if (sort === 'newest') sortObj = { createdAt: -1 };
-  else sortObj = { createdAt: -1 };
+  const sortObj = { createdAt: -1, _id: -1 };
 
   const total = await Property.countDocuments(filter);
   const properties = await Property.find(filter).sort(sortObj);
@@ -134,10 +132,16 @@ export default async function PropertiesContent({ searchParams, subtitle }) {
     filteredProperties = filteredProperties.filter(isGranInversion);
   }
 
-  if (sort === 'price-asc') {
-    filteredProperties.sort((a, b) => (parsePrice(a.price) || 0) - (parsePrice(b.price) || 0));
-  } else if (sort === 'price-desc') {
-    filteredProperties.sort((a, b) => (parsePrice(b.price) || 0) - (parsePrice(a.price) || 0));
+  if (sort === 'price-asc' || sort === 'price-desc') {
+    const dir = sort === 'price-asc' ? 1 : -1;
+    filteredProperties.sort((a, b) => {
+      const priceA = parsePrice(a.price);
+      const priceB = parsePrice(b.price);
+      if (priceA === null && priceB === null) return 0;
+      if (priceA === null) return 1;
+      if (priceB === null) return -1;
+      return (priceA - priceB) * dir;
+    });
   }
 
   const isFiltered = !!(type && type !== 'Todos') || !!(term && term !== 'Ciudad') || !!(operation && operation !== 'Todos');

@@ -78,8 +78,12 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     baths: currentFilters.baths || '',
     'property-type': currentFilters['property-type'] || [],
     status: currentFilters.status || [],
-    sort: currentFilters.sort || 'price-desc',
+    sort: currentFilters.sort || 'newest',
   });
+
+  useEffect(() => {
+    setFilters((prev) => ({ ...prev, sort: currentFilters.sort || 'newest' }));
+  }, [currentFilters.sort]);
 
   const [focused, setFocused] = useState({
     term: false, address: false, tipo: false, operation: false, area: false, price: false, bedrooms: false, baths: false,
@@ -218,7 +222,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
     if (filters.baths) params.set('baths', filters.baths);
     if (filters['property-type']?.length) params.set('propertyType', filters['property-type'].join('|'));
     if (filters.status?.length) params.set('status', filters.status.join('|'));
-    if (filters.sort) params.set('sort', filters.sort);
+    if (filters.sort && filters.sort !== 'newest') params.set('sort', filters.sort);
     
     const query = params.toString();
     if (onFilter) {
@@ -236,7 +240,7 @@ export default function PropertiesSearch({ currentFilters = {}, onFilter, title 
   const handleReset = () => {
     setFilters({
       term: '', address: '', tipo: '', operation: '', area: '',
-      price: '', minPrice: '', maxPrice: '', bedrooms: '', baths: '', 'property-type': [], status: [], sort: 'price-desc',
+      price: '', minPrice: '', maxPrice: '', bedrooms: '', baths: '', 'property-type': [], status: [], sort: 'newest',
     });
     setCitySearch('');
     if (onFilter) {
