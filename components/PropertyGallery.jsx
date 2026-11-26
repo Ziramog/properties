@@ -1,7 +1,8 @@
 'use client';
 import Image from 'next/image';
-import { Gallery, Item } from 'react-photoswipe-gallery';
+import { Item } from 'react-photoswipe-gallery';
 import { LayoutGrid, LandPlot } from 'lucide-react';
+import PropertyLightbox, { registerImageDimensions } from './shared/PropertyLightbox';
 import { getAreaDisplay } from '@/utils/propertyDisplay';
 import { trackWhatsappClick, trackMapClick } from '@/utils/analytics';
 import { parsePrice, formatPriceDisplay } from '@/utils/priceUtils';
@@ -41,27 +42,19 @@ const PropertyGallery = ({ images = [], property }) => {
   };
 
   return (
-    <Gallery
-      options={{
-        bgOpacity: 0.95,
-        padding: { top: 80, bottom: 80, left: 20, right: 20 },
-        showHideAnimationType: 'fade',
-      }}
-    >
+    <PropertyLightbox>
       <section className="bg-[#000] pt-[90px] md:pt-[150px] pb-[30px]">
         {/* Mosaic: full width with navbar padding, no max-w */}
         <div className="px-4 md:px-[50px]">
           <div className="flex flex-col md:grid md:grid-cols-[2fr_3fr] md:gap-[5px] rounded-[30px] overflow-hidden">
 
             {/* Big image — 40% width on desktop */}
-            <div className="relative group cursor-pointer overflow-hidden bg-[#111] md:aspect-[16/9]"
-                 style={{ minHeight: '250px' }}>
+            <div className="relative group cursor-pointer overflow-hidden bg-[#111] aspect-[4/3] md:aspect-[16/9] min-h-[250px]">
               {images[0] && (
                 <Item original={images[0]?.url} width="1920" height="1280">
                   {({ ref, open }) => (
                     <div ref={ref} onClick={open}
-                         className="relative w-full md:h-full"
-                         style={{ minHeight: '250px' }}>
+                         className="relative w-full h-full min-h-[250px]">
                       <Image
                         src={images[0]?.url}
                         alt={property?.name || ''}
@@ -69,6 +62,7 @@ const PropertyGallery = ({ images = [], property }) => {
                         className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
                         sizes="(max-width: 768px) 100vw, 40vw"
                         priority={true}
+                        onLoad={(e) => registerImageDimensions(images[0]?.url, e.currentTarget)}
                       />
                     </div>
                   )}
@@ -99,7 +93,8 @@ const PropertyGallery = ({ images = [], property }) => {
                              className="relative group flex-shrink-0 w-[130px] h-[86px] cursor-pointer overflow-hidden">
                           <Image src={image?.url} alt="" fill
                                  className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
-                                 sizes="130px" loading="lazy" />
+                                 sizes="130px" loading="lazy"
+                                 onLoad={(e) => registerImageDimensions(image?.url, e.currentTarget)} />
                           <div className="absolute inset-0 bg-white/0 group-hover:bg-white/60 transition-all duration-300 ease-in-out pointer-events-none" />
                         </div>
                       )}
@@ -115,7 +110,8 @@ const PropertyGallery = ({ images = [], property }) => {
                              className="relative group cursor-pointer overflow-hidden bg-[#111] aspect-[16/9]">
                           <Image src={image?.url} alt="" fill
                                  className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
-                                 sizes="20vw" loading="lazy" />
+                                 sizes="20vw" loading="lazy"
+                                 onLoad={(e) => registerImageDimensions(image?.url, e.currentTarget)} />
                           <div className="absolute inset-0 bg-white/0 group-hover:bg-white/60 transition-all duration-300 ease-in-out pointer-events-none" />
                         </div>
                       )}
@@ -236,7 +232,7 @@ const PropertyGallery = ({ images = [], property }) => {
           </div>
         </div>
       </section>
-    </Gallery>
+    </PropertyLightbox>
   );
 };
 

@@ -1,18 +1,13 @@
 'use client';
 import Image from 'next/image';
-import { Gallery, Item } from 'react-photoswipe-gallery';
+import { Item } from 'react-photoswipe-gallery';
+import PropertyLightbox, { registerImageDimensions } from './shared/PropertyLightbox';
 
 const FullGallery = ({ images = [], propertyName }) => {
   if (images.length === 0) return null;
 
   return (
-    <Gallery
-      options={{
-        bgOpacity: 0.95,
-        padding: { top: 80, bottom: 80, left: 20, right: 20 },
-        showHideAnimationType: 'fade',
-      }}
-    >
+    <PropertyLightbox>
       <section className="rounded-none md:rounded-[30px] overflow-hidden mx-[-16px] md:mx-0">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-[5px]">
             {images.map((image, index) => (
@@ -30,6 +25,7 @@ const FullGallery = ({ images = [], propertyName }) => {
                       className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
                       sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       loading="lazy"
+                      onLoad={(e) => registerImageDimensions(image?.url, e.currentTarget)}
                     />
                     <div className="absolute inset-0 bg-white/0 group-hover:bg-white/60 transition-all duration-300 ease-in-out pointer-events-none" />
                   </div>
@@ -38,7 +34,7 @@ const FullGallery = ({ images = [], propertyName }) => {
             ))}
         </div>
       </section>
-    </Gallery>
+    </PropertyLightbox>
   );
 };
 
