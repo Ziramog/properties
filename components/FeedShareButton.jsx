@@ -83,25 +83,33 @@ export default function FeedShareButton({ property, variant = 'light' }) {
       const firstRawImgUrl =
         typeof firstImgEntry === 'string' ? firstImgEntry : firstImgEntry?.url;
 
-      // En "Ampliar (4:5)" conservamos exactamente 1080x1350; en "Original (apaisado)" usamos la proporción nativa de la foto 1
-      const { width: targetW, height: targetH } =
-        fitMode === 'contain' && firstRawImgUrl
-          ? await getFeedCanvasSizeForImage(firstRawImgUrl)
-          : { width: 1080, height: 1350 };
+      // En "Ampliar (4:5)" conservamos exactamente 1080x1350 a sangre.
+      // En "Original (apaisado)" también se entrega 1080x1350 (4:5 nativo, Instagram no recorta), pero la foto va
+      // entera dentro de una caja 1080 x photoH (proporción de la foto 1, acotada a 566..760) con franjas de marca.
+      const isFrameMode = fitMode === 'contain';
+      const photoH = isFrameMode && firstRawImgUrl
+        ? Math.max(566, Math.min(760, (await getFeedCanvasSizeForImage(firstRawImgUrl)).height))
+        : 1350;
+      const targetW = 1080;
+      const targetH = 1350;
+      const serverFit = isFrameMode ? 'frame' : 'cover';
 
       for (let i = 0; i < maxImages; i++) {
         const imgEntry = property?.images?.[i] || property?.images?.[0];
         const rawImgUrl = typeof imgEntry === 'string' ? imgEntry : imgEntry?.url;
 
-        // Procesar el encuadre (cover o contain) en las dimensiones finales desde el navegador (0 créditos Cloudinary)
+        // Procesar el encuadre en el navegador (0 créditos Cloudinary): cover a 1080x1350, o contain en la caja de foto
         const imageBase64 = rawImgUrl
-          ? await processImageInBrowser(rawImgUrl, targetW, targetH, { fit: fitMode })
+          ? await processImageInBrowser(rawImgUrl, targetW, isFrameMode ? photoH : targetH, {
+              fit: isFrameMode ? 'contain' : 'cover',
+            })
           : null;
 
         let file = null;
 
         // Si logo y textos están apagados y el navegador ya generó el JPEG final, evitar llamada innecesaria a Satori
-        if (!showLogo && !showDetails && imageBase64) {
+        // (solo en 4:5 a sangre; en modo marco siempre se compone el lienzo 4:5 en el servidor)
+        if (!isFrameMode && !showLogo && !showDetails && imageBase64) {
           const directRes = await fetch(imageBase64);
           const directBlob = await directRes.blob();
           file = new File([directBlob], `carrusel-${i + 1}.jpg`, { type: 'image/jpeg' });
@@ -110,8 +118,9 @@ export default function FeedShareButton({ property, variant = 'light' }) {
             index: String(i),
             logo: showLogo ? '1' : '0',
             details: showDetails ? '1' : '0',
-            fit: fitMode,
+            fit: serverFit,
             h: String(targetH),
+            ph: String(photoH),
           });
           const url = `/api/feed/${propertyId}?${params.toString()}`;
           const response = imageBase64
@@ -165,11 +174,11 @@ export default function FeedShareButton({ property, variant = 'light' }) {
         }
       }
 
-      const isLandscape = fitMode === 'contain' && targetH < 1080;
+      const isLandscape = isFrameMode;
       toast.success(
         copiedAuto
           ? isLandscape
-            ? '¡Carrusel apaisado listo y texto copiado! En Instagram tocá < > (ajustar formato) para conservar el encuadre apaisado.'
+            ? '¡Carrusel apaisado (marco 4:5) listo y texto copiado! En Instagram tocá Vertical (< >) en CADA lámina.'
             : '¡Carrusel 4:5 listo y texto copiado! En Instagram tocá Vertical (< >) en CADA lámina.'
           : isLandscape
             ? '¡Carrusel apaisado listo! Podés copiar el texto abajo antes de publicar.'

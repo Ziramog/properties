@@ -245,13 +245,32 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
     const index = parseInt(searchParams.get('index') || '0', 10);
     const showLogo = searchParams.get('logo') !== '0';
     const showDetails = searchParams.get('details') !== '0';
-    const fitMode = searchParams.get('fit') === 'contain' ? 'contain' : 'cover';
+    const fitParam = searchParams.get('fit');
+    // 'frame' = "Original (apaisado)" dentro de lienzo 4:5: foto apaisada entera (sin recorte) con franjas de marca
+    const fitMode = fitParam === 'contain' || fitParam === 'frame' ? fitParam : 'cover';
+    const isFrame = fitMode === 'frame';
     const rawH = parseInt(searchParams.get('h') || '1350', 10);
     const imageToUse = property.images?.[index] || property.images?.[0];
 
-    // Formato Feed oficial (1080x1350 en 4:5; alto dinámico 566..1350 en "Original (apaisado)")
+    // Formato Feed oficial (1080x1350 en 4:5 y en 'frame'; alto dinámico 566..1350 en 'contain' legado)
     const targetW = 1080;
-    const targetH = Number.isFinite(rawH) ? Math.max(566, Math.min(1350, rawH)) : 1350;
+    const targetH = isFrame
+      ? 1350
+      : Number.isFinite(rawH)
+        ? Math.max(566, Math.min(1350, rawH))
+        : 1350;
+
+    // Geometría del modo 'frame': caja de foto 1080 x framePhotoH y franjas superior (logo) e inferior (textos)
+    const rawPh = parseInt(searchParams.get('ph') || '720', 10);
+    const framePhotoH = Number.isFinite(rawPh) ? Math.max(566, Math.min(760, rawPh)) : 720;
+    const frameFreeH = 1350 - framePhotoH;
+    const frameTopH =
+      showLogo && showDetails
+        ? Math.round(frameFreeH * 0.38)
+        : showDetails
+          ? Math.round(frameFreeH * 0.24)
+          : Math.round(frameFreeH / 2);
+    const frameBottomH = frameFreeH - frameTopH;
     const size = {
       width: targetW,
       height: targetH,
@@ -502,6 +521,178 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
         </span>
       </div>
     ));
+
+    // ========================================================
+    // CASO 0: MODO 'frame' — "Original (apaisado)" en lienzo 4:5 (1080x1350)
+    // La foto va entera (sin recorte ni zoom) en una caja central; logo y textos
+    // viven en franjas sólidas #0B0D10 para no tapar la fotografía. Instagram
+    // recibe 4:5 nativo y no aplica recortes propios.
+    // ========================================================
+    if (isFrame) {
+      const frameTitleSize = data.title.length > 48 ? 38 : data.title.length > 28 ? 44 : 50;
+      const frameLogoW = 360;
+      const frameLogoH = Math.round((frameLogoW * 174) / 430);
+      const pinPath =
+        'M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C10.6193 11.5 9.5 10.3807 9.5 9C9.5 7.61929 10.6193 6.5 12 6.5C13.3807 6.5 14.5 7.61929 14.5 9C14.5 10.3807 13.3807 11.5 12 11.5Z';
+
+      const locationRow = data.locationFull ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: index === 0 ? '14px' : 0 }}>
+          <svg width={24} height={28} viewBox="4.5 1.5 15 21" fill="none" style={{ flexShrink: 0 }}>
+            <path fillRule="evenodd" clipRule="evenodd" d={pinPath} fill={corporateOrange} />
+          </svg>
+          <span
+            style={{
+              color: '#F1F5F9',
+              fontSize: 26,
+              fontWeight: 400,
+              lineHeight: 1.25,
+              fontFamily: '"Lato", sans-serif',
+            }}
+          >
+            {data.locationFull}
+          </span>
+        </div>
+      ) : null;
+
+      return await renderImage(
+        (
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: '#0B0D10',
+              fontFamily: '"Lato", sans-serif',
+              position: 'relative',
+            }}
+          >
+            {/* Franja superior: logo */}
+            {showLogo ? (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: `${frameTopH}px`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <img
+                  src={assets.brandFullWhiteLogoUrl}
+                  width={frameLogoW}
+                  height={frameLogoH}
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+            ) : null}
+
+            {/* Fotografía entera, sin recorte */}
+            <div
+              style={{
+                position: 'absolute',
+                top: frameTopH,
+                left: 0,
+                width: `${targetW}px`,
+                height: `${framePhotoH}px`,
+                display: 'flex',
+              }}
+            >
+              <img
+                src={assets.imageUrl}
+                width={targetW}
+                height={framePhotoH}
+                style={{ width: `${targetW}px`, height: `${framePhotoH}px`, objectFit: 'contain' }}
+              />
+            </div>
+
+            {/* Franja inferior: textos */}
+            {showDetails ? (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: frameTopH + framePhotoH,
+                  left: 0,
+                  width: '100%',
+                  height: `${frameBottomH}px`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  padding: '0 55px',
+                }}
+              >
+                <div
+                  style={{
+                    color: '#FFFFFF',
+                    fontSize: index === 0 ? frameTitleSize : Math.min(44, frameTitleSize),
+                    fontFamily: '"PT Serif", serif',
+                    fontWeight: 700,
+                    lineHeight: 1.14,
+                    marginBottom: '10px',
+                    display: 'flex',
+                  }}
+                >
+                  {data.title}
+                </div>
+
+                {locationRow}
+
+                {index === 0 && hasPropertyStats
+                  ? renderStatsRow({
+                      centered: false,
+                      marginBottom: '14px',
+                      gap: '12px',
+                      landSize: 44,
+                      bedW: 52,
+                      bedH: 40,
+                      bathW: 48,
+                      bathH: 38,
+                      sqftSize: 42,
+                      statFontSize: 30,
+                      bedBathFontSize: 32,
+                      dividerHeight: '30px',
+                      dividerMargin: '0 20px',
+                    })
+                  : null}
+
+                {index === 0 ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '16px',
+                    }}
+                  >
+                    <span
+                      style={{
+                        color: corporateOrange,
+                        fontSize: 52,
+                        fontFamily: '"PT Serif", serif',
+                        fontWeight: 700,
+                        letterSpacing: '1px',
+                      }}
+                    >
+                      {data.priceDisplay}
+                    </span>
+                    {badgeItems.length > 0 ? (
+                      <div style={{ display: 'flex', gap: '10px' }}>{badgeItems}</div>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        ),
+        {
+          ...size,
+          fonts: fontOptions,
+        }
+      );
+    }
 
     // ========================================================
     // CASO 1: IMAGEN INICIAL (index === 0) — Portada Editorial Feed
