@@ -139,6 +139,123 @@ export async function processImageInBrowser(imageUrl, targetW, targetH, options 
 }
 
 /**
+ * Lámina "apaisado completo" sin logo ni textos (modo marco 4:5, 0 créditos Cloudinary):
+ * fondo = la misma foto ampliada y difuminada (desenfoque por reducción extrema + reescalado,
+ * compatible con iOS Safari donde ctx.filter no está disponible) y, centrada verticalmente,
+ * la foto entera sin recorte dentro de una caja de targetW x photoH.
+ *
+ * @returns {Promise<string|null>} DataURL JPEG targetW x targetH, o null si falla
+ */
+export async function processFramedBlurImageInBrowser(imageUrl, targetW, targetH, photoH) {
+  if (!imageUrl || typeof window === 'undefined') return null;
+
+  const cleanUrl = imageUrl.replace(/\/upload\/[^/]+\/(v\d+\/)/, '/upload/$1');
+  const boxH = Math.min(targetH, Math.max(1, Math.round(photoH)));
+
+  const attemptProcess = () =>
+    new Promise((resolve) => {
+      const img = new window.Image();
+      img.crossOrigin = 'anonymous';
+
+      img.onload = () => {
+        const canvases = [];
+        const makeCanvas = (w, h) => {
+          const c = document.createElement('canvas');
+          c.width = w;
+          c.height = h;
+          canvases.push(c);
+          return c;
+        };
+        const release = () => {
+          for (const c of canvases) {
+            c.width = 0;
+            c.height = 0;
+          }
+          img.src = '';
+        };
+
+        try {
+          const canvas = makeCanvas(targetW, targetH);
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            release();
+            resolve(null);
+            return;
+          }
+
+          // 1. Fondo difuminado: cover en miniatura (≈1/30) y reescalado en dos pasos con suavizado
+          const tinyW = Math.max(8, Math.round(targetW / 30));
+          const tinyH = Math.max(8, Math.round(targetH / 30));
+          const tiny = makeCanvas(tinyW, tinyH);
+          const tinyCtx = tiny.getContext('2d');
+          const mid = makeCanvas(Math.round(targetW / 6), Math.round(targetH / 6));
+          const midCtx = mid.getContext('2d');
+
+          if (tinyCtx && midCtx) {
+            tinyCtx.imageSmoothingEnabled = true;
+            tinyCtx.imageSmoothingQuality = 'high';
+            drawFittedImage(tinyCtx, img, tinyW, tinyH, 'cover');
+
+            midCtx.imageSmoothingEnabled = true;
+            midCtx.imageSmoothingQuality = 'high';
+            midCtx.drawImage(tiny, 0, 0, mid.width, mid.height);
+
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(mid, 0, 0, targetW, targetH);
+          } else {
+            ctx.fillStyle = '#0B0D10';
+            ctx.fillRect(0, 0, targetW, targetH);
+          }
+
+          // Velo oscuro sutil para que la foto nítida se despegue del fondo
+          ctx.fillStyle = 'rgba(11, 13, 16, 0.38)';
+          ctx.fillRect(0, 0, targetW, targetH);
+
+          // 2. Foto entera (contain) centrada en la caja targetW x boxH, sin recorte
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          const imgRatio = img.width / img.height;
+          const boxRatio = targetW / boxH;
+          let destW;
+          let destH;
+          if (imgRatio > boxRatio) {
+            destW = targetW;
+            destH = Math.round(targetW / imgRatio);
+          } else {
+            destH = boxH;
+            destW = Math.round(boxH * imgRatio);
+          }
+          const destX = Math.round((targetW - destW) / 2);
+          const destY = Math.round((targetH - destH) / 2);
+          ctx.drawImage(img, 0, 0, img.width, img.height, destX, destY, destW, destH);
+
+          const base64Url = canvas.toDataURL('image/jpeg', 0.92);
+          release();
+          resolve(base64Url);
+        } catch (err) {
+          console.warn('Fallback: no se pudo componer la lámina difuminada:', err);
+          release();
+          resolve(null);
+        }
+      };
+
+      img.onerror = (err) => {
+        console.warn('Fallback: error cargando imagen para lámina difuminada:', err);
+        img.src = '';
+        resolve(null);
+      };
+
+      img.src = cleanUrl;
+    });
+
+  const firstTry = await attemptProcess();
+  if (firstTry) return firstTry;
+  await new Promise((r) => setTimeout(r, 120));
+  return attemptProcess();
+}
+
+/**
  * Calcula las dimensiones seguras de Instagram Feed (ancho fijo 1080px,
  * alto dinámico entre 566px [1.91:1] y 1350px [4:5]) respetando la relación
  * de aspecto natural de la imagen original (sin barras negras).

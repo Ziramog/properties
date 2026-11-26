@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Layers, Share, Copy, Check } from 'lucide-react';
 import { toast } from 'react-toastify';
-import { processImageInBrowser, getFeedCanvasSizeForImage } from '@/utils/processImageInBrowser';
+import { processImageInBrowser, processFramedBlurImageInBrowser, getFeedCanvasSizeForImage } from '@/utils/processImageInBrowser';
 import { convertBlobToJpeg } from '@/utils/convertBlobToJpeg';
 import { buildFeedCaption } from '@/utils/feedCaption';
 
@@ -98,18 +98,24 @@ export default function FeedShareButton({ property, variant = 'light' }) {
         const imgEntry = property?.images?.[i] || property?.images?.[0];
         const rawImgUrl = typeof imgEntry === 'string' ? imgEntry : imgEntry?.url;
 
-        // Procesar el encuadre en el navegador (0 créditos Cloudinary): cover a 1080x1350, o contain en la caja de foto
-        const imageBase64 = rawImgUrl
-          ? await processImageInBrowser(rawImgUrl, targetW, isFrameMode ? photoH : targetH, {
-              fit: isFrameMode ? 'contain' : 'cover',
-            })
-          : null;
+        // Procesar el encuadre en el navegador (0 créditos Cloudinary): cover a 1080x1350, o contain en la caja de foto.
+        // "Original (apaisado)" sin logo ni textos: portada ampliada 4:5 a sangre y resto apaisado completo
+        // sobre fondo difuminado de la misma foto (sin franjas sólidas vacías).
+        const isCleanFrame = isFrameMode && !showLogo && !showDetails;
+        const imageBase64 = !rawImgUrl
+          ? null
+          : isCleanFrame
+            ? i === 0
+              ? await processImageInBrowser(rawImgUrl, targetW, targetH, { fit: 'cover' })
+              : await processFramedBlurImageInBrowser(rawImgUrl, targetW, targetH, photoH)
+            : await processImageInBrowser(rawImgUrl, targetW, isFrameMode ? photoH : targetH, {
+                fit: isFrameMode ? 'contain' : 'cover',
+              });
 
         let file = null;
 
-        // Si logo y textos están apagados y el navegador ya generó el JPEG final, evitar llamada innecesaria a Satori
-        // (solo en 4:5 a sangre; en modo marco siempre se compone el lienzo 4:5 en el servidor)
-        if (!isFrameMode && !showLogo && !showDetails && imageBase64) {
+        // Si logo y textos están apagados y el navegador ya generó el JPEG final 1080x1350, evitar llamada a Satori
+        if (!showLogo && !showDetails && imageBase64) {
           const directRes = await fetch(imageBase64);
           const directBlob = await directRes.blob();
           file = new File([directBlob], `carrusel-${i + 1}.jpg`, { type: 'image/jpeg' });
