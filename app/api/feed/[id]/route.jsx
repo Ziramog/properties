@@ -284,17 +284,155 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
     const effectiveTitleFontSize = isCompactLandscape
       ? Math.round(titleFontSize * (targetH <= 650 ? 0.66 : 0.76))
       : titleFontSize;
+
+    // Zona segura central para miniatura 3:4 del Perfil Instagram en modo "Original (apaisado)"
+    const safeGridWidth = isCompactLandscape ? Math.round(targetH * 0.75) : 1080;
+    const safeContentWidth = isCompactLandscape ? Math.max(360, safeGridWidth - 52) : 970;
+    const compactCoverTitleSize =
+      targetH <= 650
+        ? data.title.length > 42
+          ? 27
+          : data.title.length > 26
+            ? 31
+            : 35
+        : data.title.length > 42
+          ? 31
+          : data.title.length > 26
+            ? 36
+            : 40;
+    const compactCoverPriceSize = targetH <= 650 ? 42 : 48;
+
     const logoWidth = isCompactLandscape ? Math.round(280 + (compactScale - 0.56) * 180) : 430;
     const logoHeight = isCompactLandscape ? Math.round((logoWidth * 174) / 430) : 174;
     const logoTop = isCompactLandscape ? Math.round(24 * compactScale + 8) : 56;
     const pinW = isCompactLandscape ? 20 : 28;
     const pinH = isCompactLandscape ? 24 : 32;
     const locFontSize = isCompactLandscape ? 22 : 30;
-    const statFontSize = isCompactLandscape ? 26 : 38;
-    const bedBathFontSize = isCompactLandscape ? 26 : 40;
-    const statGap = isCompactLandscape ? '10px' : '14px';
-    const statDividerHeight = isCompactLandscape ? '26px' : '38px';
-    const statDividerMargin = isCompactLandscape ? '0 18px' : '0 26px';
+
+    const hasPropertyStats =
+      Boolean(data.isLand && data.areaDisplay) ||
+      Boolean(!data.isLand && (data.beds > 0 || data.baths > 0 || data.coveredAreaDisplay || data.totalAreaDisplay));
+
+    const renderStatsRow = (cfg) => (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: cfg.centered ? 'center' : 'flex-start',
+          flexWrap: cfg.centered ? 'wrap' : 'nowrap',
+          marginBottom: cfg.marginBottom,
+        }}
+      >
+        {Boolean(data.isLand && data.areaDisplay) ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: cfg.gap }}>
+            <svg
+              width={cfg.landSize}
+              height={cfg.landSize}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke={corporateOrange}
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="m12 8 6-3-6-3v10" />
+              <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
+              <path d="m6.49 12.85 11.02 6.3" />
+              <path d="M17.51 12.85 6.49 19.15" />
+            </svg>
+            <span style={{ color: '#FFFFFF', fontSize: cfg.statFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
+              {data.areaDisplay}
+            </span>
+          </div>
+        ) : null}
+
+        {!data.isLand ? (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: cfg.centered ? 'center' : 'flex-start' }}>
+            {Boolean(data.beds && data.beds > 0) ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: cfg.gap }}>
+                <img src={assets.bedIconUrl} width={cfg.bedW} height={cfg.bedH} style={{ objectFit: 'contain' }} />
+                <span style={{ color: '#FFFFFF', fontSize: cfg.bedBathFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
+                  {data.beds}
+                </span>
+              </div>
+            ) : null}
+
+            {Boolean(data.beds && data.beds > 0 && data.baths && data.baths > 0) ? (
+              <div
+                style={{
+                  width: '1.5px',
+                  height: cfg.dividerHeight,
+                  backgroundColor: 'rgba(255, 255, 255, 0.35)',
+                  margin: cfg.dividerMargin,
+                }}
+              />
+            ) : null}
+
+            {Boolean(data.baths && data.baths > 0) ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: cfg.gap }}>
+                <img src={assets.bathIconUrl} width={cfg.bathW} height={cfg.bathH} style={{ objectFit: 'contain' }} />
+                <span style={{ color: '#FFFFFF', fontSize: cfg.bedBathFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
+                  {data.baths}
+                </span>
+              </div>
+            ) : null}
+
+            {Boolean((data.beds > 0 || data.baths > 0) && data.coveredAreaDisplay) ? (
+              <div
+                style={{
+                  width: '1.5px',
+                  height: cfg.dividerHeight,
+                  backgroundColor: 'rgba(255, 255, 255, 0.35)',
+                  margin: cfg.dividerMargin,
+                }}
+              />
+            ) : null}
+
+            {Boolean(data.coveredAreaDisplay) ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: cfg.gap }}>
+                <img src={assets.sqftIconUrl} width={cfg.sqftSize} height={cfg.sqftSize} style={{ objectFit: 'contain' }} />
+                <span style={{ color: '#FFFFFF', fontSize: cfg.statFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
+                  {data.coveredAreaDisplay}
+                </span>
+              </div>
+            ) : null}
+
+            {Boolean(!data.coveredAreaDisplay && data.totalAreaDisplay) ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: cfg.gap }}>
+                {(data.beds > 0 || data.baths > 0) ? (
+                  <div
+                    style={{
+                      width: '1.5px',
+                      height: cfg.dividerHeight,
+                      backgroundColor: 'rgba(255, 255, 255, 0.35)',
+                      margin: cfg.dividerMargin,
+                    }}
+                  />
+                ) : null}
+                <svg
+                  width={cfg.landSize}
+                  height={cfg.landSize}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke={corporateOrange}
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="m12 8 6-3-6-3v10" />
+                  <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
+                  <path d="m6.49 12.85 11.02 6.3" />
+                  <path d="M17.51 12.85 6.49 19.15" />
+                </svg>
+                <span style={{ color: '#FFFFFF', fontSize: cfg.statFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
+                  {data.totalAreaDisplay}
+                </span>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+    );
 
     // Overlay Superior compartido (solo cuando se muestra el logo para no oscurecer cielos innecesariamente)
     const topOverlay = showLogo ? (
@@ -394,7 +532,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
 
             {topOverlay}
 
-            {/* Overlay Inferior (46% en 4:5 o 66% en apaisado, solo visible si se muestran textos/detalles) */}
+            {/* Overlay Inferior (46% en 4:5 o 62% en apaisado, solo visible si se muestran textos/detalles) */}
             {showDetails ? (
               <div
                 style={{
@@ -402,7 +540,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                   bottom: 0,
                   left: 0,
                   width: '100%',
-                  height: isCompactLandscape ? '66%' : '46%',
+                  height: isCompactLandscape ? '62%' : '46%',
                   backgroundImage:
                     'linear-gradient(to top, rgba(11, 13, 16, 0.88) 0%, rgba(11, 13, 16, 0.68) 42%, rgba(11, 13, 16, 0.28) 74%, rgba(11, 13, 16, 0) 100%)',
                   display: 'flex',
@@ -412,7 +550,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
 
             {brandHeader}
 
-            {/* Etiquetas flotantes en 4:5 (en apaisado compacto se integran arriba del título para no invadir el centro ni el logo) */}
+            {/* Etiquetas flotantes en 4:5 (en apaisado compacto van centradas dentro de la zona segura 3:4) */}
             {showDetails && !isCompactLandscape ? (
               <div
                 style={{
@@ -428,8 +566,8 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
               </div>
             ) : null}
 
-            {/* Bloque Editorial Inferior (directo sobre el contenedor raíz: evita Fragment en Satori) */}
-            {showDetails ? (
+            {/* Bloque Editorial Inferior */}
+            {showDetails && isCompactLandscape ? (
               <div
                 style={{
                   position: 'absolute',
@@ -438,25 +576,98 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                   width: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  padding: isCompactLandscape ? '0 44px 20px 44px' : '0 55px 30px 55px',
+                  alignItems: 'center',
+                  paddingBottom: '18px',
                   zIndex: 20,
                 }}
               >
-                {isCompactLandscape && badgeItems.length > 0 ? (
-                  <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
-                    {badgeItems}
-                  </div>
-                ) : null}
+                <div
+                  style={{
+                    width: `${safeContentWidth}px`,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  }}
+                >
+                  {badgeItems.length > 0 ? (
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      {badgeItems}
+                    </div>
+                  ) : null}
 
+                  <div
+                    style={{
+                      color: '#FFFFFF',
+                      fontSize: compactCoverTitleSize,
+                      fontFamily: '"PT Serif", serif',
+                      fontWeight: 700,
+                      lineHeight: 1.14,
+                      textAlign: 'center',
+                      justifyContent: 'center',
+                      marginBottom: '10px',
+                      textShadow: '0 3px 14px rgba(0,0,0,0.9)',
+                      display: 'flex',
+                    }}
+                  >
+                    {data.title}
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', marginBottom: '12px' }}>
+                    <span
+                      style={{
+                        color: corporateOrange,
+                        fontSize: compactCoverPriceSize,
+                        fontFamily: '"PT Serif", serif',
+                        fontWeight: 700,
+                        letterSpacing: '0.8px',
+                        textShadow: '0 2px 10px rgba(0,0,0,0.6)',
+                      }}
+                    >
+                      {data.priceDisplay}
+                    </span>
+                  </div>
+
+                  <div
+                    style={{
+                      width: `${Math.min(300, safeContentWidth - 40)}px`,
+                      height: '3px',
+                      backgroundColor: corporateOrange,
+                      borderRadius: '2px',
+                      display: 'flex',
+                    }}
+                  />
+                </div>
+              </div>
+            ) : showDetails ? (
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: '0 55px 30px 55px',
+                  zIndex: 20,
+                }}
+              >
                 {/* Título */}
                 <h1
                   style={{
                     color: '#FFFFFF',
-                    fontSize: effectiveTitleFontSize,
+                    fontSize: titleFontSize,
                     fontFamily: '"PT Serif", serif',
                     fontWeight: 700,
                     lineHeight: 1.14,
-                    margin: isCompactLandscape ? '0 0 6px 0' : '0 0 12px 0',
+                    margin: '0 0 12px 0',
                     textShadow: '0 3px 14px rgba(0,0,0,0.9)',
                   }}
                 >
@@ -468,11 +679,11 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: isCompactLandscape ? '8px' : '12px',
-                    marginBottom: isCompactLandscape ? '10px' : '16px',
+                    gap: '12px',
+                    marginBottom: '16px',
                   }}
                 >
-                  <svg width={pinW} height={pinH} viewBox="4.5 1.5 15 21" fill="none" style={{ flexShrink: 0 }}>
+                  <svg width={28} height={32} viewBox="4.5 1.5 15 21" fill="none" style={{ flexShrink: 0 }}>
                     <path
                       fillRule="evenodd"
                       clipRule="evenodd"
@@ -483,7 +694,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                   <span
                     style={{
                       color: '#F1F5F9',
-                      fontSize: locFontSize,
+                      fontSize: 30,
                       fontWeight: 400,
                       lineHeight: 1.25,
                       fontFamily: '"Lato", sans-serif',
@@ -500,143 +711,33 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                     width: '100%',
                     height: '1px',
                     backgroundColor: 'rgba(255, 255, 255, 0.22)',
-                    marginBottom: isCompactLandscape ? '10px' : '18px',
+                    marginBottom: '18px',
                   }}
                 />
 
                 {/* Características — Íconos grandes estilo ficha web + solo cifras */}
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: isCompactLandscape ? '10px' : '18px' }}>
-                  {Boolean(data.isLand && data.areaDisplay) ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: statGap }}>
-                      <svg
-                        width={isCompactLandscape ? 38 : 60}
-                        height={isCompactLandscape ? 38 : 60}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke={corporateOrange}
-                        strokeWidth="1.6"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="m12 8 6-3-6-3v10" />
-                        <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
-                        <path d="m6.49 12.85 11.02 6.3" />
-                        <path d="M17.51 12.85 6.49 19.15" />
-                      </svg>
-                      <span style={{ color: '#FFFFFF', fontSize: statFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
-                        {data.areaDisplay}
-                      </span>
-                    </div>
-                  ) : null}
-
-                  {!data.isLand ? (
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      {Boolean(data.beds && data.beds > 0) ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: statGap }}>
-                          <img
-                            src={assets.bedIconUrl}
-                            width={isCompactLandscape ? 46 : 70}
-                            height={isCompactLandscape ? 36 : 54}
-                            style={{ objectFit: 'contain' }}
-                          />
-                          <span style={{ color: '#FFFFFF', fontSize: bedBathFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
-                            {data.beds}
-                          </span>
-                        </div>
-                      ) : null}
-
-                      {Boolean(data.beds && data.beds > 0 && data.baths && data.baths > 0) ? (
-                        <div
-                          style={{
-                            width: '1.5px',
-                            height: statDividerHeight,
-                            backgroundColor: 'rgba(255, 255, 255, 0.35)',
-                            margin: statDividerMargin,
-                          }}
-                        />
-                      ) : null}
-
-                      {Boolean(data.baths && data.baths > 0) ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: statGap }}>
-                          <img
-                            src={assets.bathIconUrl}
-                            width={isCompactLandscape ? 42 : 65}
-                            height={isCompactLandscape ? 34 : 52}
-                            style={{ objectFit: 'contain' }}
-                          />
-                          <span style={{ color: '#FFFFFF', fontSize: bedBathFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
-                            {data.baths}
-                          </span>
-                        </div>
-                      ) : null}
-
-                      {Boolean((data.beds > 0 || data.baths > 0) && data.coveredAreaDisplay) ? (
-                        <div
-                          style={{
-                            width: '1.5px',
-                            height: statDividerHeight,
-                            backgroundColor: 'rgba(255, 255, 255, 0.35)',
-                            margin: statDividerMargin,
-                          }}
-                        />
-                      ) : null}
-
-                      {Boolean(data.coveredAreaDisplay) ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: statGap }}>
-                          <img
-                            src={assets.sqftIconUrl}
-                            width={isCompactLandscape ? 38 : 56}
-                            height={isCompactLandscape ? 38 : 56}
-                            style={{ objectFit: 'contain' }}
-                          />
-                          <span style={{ color: '#FFFFFF', fontSize: statFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
-                            {data.coveredAreaDisplay}
-                          </span>
-                        </div>
-                      ) : null}
-
-                      {Boolean(!data.coveredAreaDisplay && data.totalAreaDisplay) ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: statGap }}>
-                          {(data.beds > 0 || data.baths > 0) ? (
-                            <div
-                              style={{
-                                width: '1.5px',
-                                height: statDividerHeight,
-                                backgroundColor: 'rgba(255, 255, 255, 0.35)',
-                                margin: statDividerMargin,
-                              }}
-                            />
-                          ) : null}
-                          <svg
-                            width={isCompactLandscape ? 38 : 60}
-                            height={isCompactLandscape ? 38 : 60}
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke={corporateOrange}
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="m12 8 6-3-6-3v10" />
-                            <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
-                            <path d="m6.49 12.85 11.02 6.3" />
-                            <path d="M17.51 12.85 6.49 19.15" />
-                          </svg>
-                          <span style={{ color: '#FFFFFF', fontSize: statFontSize, fontWeight: 700, fontFamily: '"Lato", sans-serif' }}>
-                            {data.totalAreaDisplay}
-                          </span>
-                        </div>
-                      ) : null}
-                    </div>
-                  ) : null}
-                </div>
+                {renderStatsRow({
+                  centered: false,
+                  marginBottom: '18px',
+                  gap: '14px',
+                  landSize: 60,
+                  bedW: 70,
+                  bedH: 54,
+                  bathW: 65,
+                  bathH: 52,
+                  sqftSize: 56,
+                  statFontSize: 38,
+                  bedBathFontSize: 40,
+                  dividerHeight: '38px',
+                  dividerMargin: '0 26px',
+                })}
 
                 {/* Fila del Precio Prominente */}
-                <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: isCompactLandscape ? '14px' : '28px' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '28px' }}>
                   <span
                     style={{
                       color: corporateOrange,
-                      fontSize: isCompactLandscape ? 42 : 62,
+                      fontSize: 62,
                       fontFamily: '"PT Serif", serif',
                       fontWeight: 700,
                       letterSpacing: '1px',
@@ -657,8 +758,8 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 >
                   <div
                     style={{
-                      width: isCompactLandscape ? '300px' : '440px',
-                      height: isCompactLandscape ? '3px' : '4px',
+                      width: '440px',
+                      height: '4px',
                       backgroundColor: corporateOrange,
                       borderRadius: '2px',
                     }}
@@ -704,7 +805,7 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
 
           {topOverlay}
 
-          {/* Degradado inferior progresivo (36% en 4:5 o 44% en apaisado, solo visible si se muestran textos/detalles) */}
+          {/* Degradado inferior progresivo */}
           {showDetails ? (
             <div
               style={{
@@ -712,9 +813,9 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
                 bottom: 0,
                 left: 0,
                 width: '100%',
-                height: isCompactLandscape ? '44%' : '36%',
+                height: isCompactLandscape ? (index === 1 ? '56%' : '44%') : '36%',
                 backgroundImage:
-                  'linear-gradient(to top, rgba(11, 13, 16, 0.82) 0%, rgba(11, 13, 16, 0.72) 32%, rgba(11, 13, 16, 0.48) 58%, rgba(11, 13, 16, 0.16) 82%, rgba(11, 13, 16, 0) 100%)',
+                  'linear-gradient(to top, rgba(11, 13, 16, 0.86) 0%, rgba(11, 13, 16, 0.72) 36%, rgba(11, 13, 16, 0.44) 62%, rgba(11, 13, 16, 0.14) 84%, rgba(11, 13, 16, 0) 100%)',
                 display: 'flex',
               }}
             />
@@ -722,8 +823,111 @@ async function handleFeedRequest(request, { params }, clientImageBase64 = null) 
 
           {brandHeader}
 
-          {/* Bottom Left: Título y Dirección de la Propiedad */}
-          {showDetails ? (
+          {/* Segunda foto en modo "Original (apaisado)": íconos de características en tamaño legible + título y ubicación dentro de zona segura */}
+          {showDetails && isCompactLandscape && index === 1 ? (
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                paddingBottom: '20px',
+                zIndex: 20,
+              }}
+            >
+              <div
+                style={{
+                  width: `${safeContentWidth}px`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+              >
+                {hasPropertyStats
+                  ? renderStatsRow({
+                      centered: true,
+                      marginBottom: '10px',
+                      gap: '9px',
+                      landSize: 38,
+                      bedW: 44,
+                      bedH: 34,
+                      bathW: 40,
+                      bathH: 32,
+                      sqftSize: 36,
+                      statFontSize: 26,
+                      bedBathFontSize: 27,
+                      dividerHeight: '24px',
+                      dividerMargin: '0 14px',
+                    })
+                  : null}
+
+                {hasPropertyStats ? (
+                  <div
+                    style={{
+                      width: `${Math.min(320, safeContentWidth - 40)}px`,
+                      height: '1px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.24)',
+                      marginBottom: '9px',
+                      display: 'flex',
+                    }}
+                  />
+                ) : null}
+
+                <div
+                  style={{
+                    color: '#FFFFFF',
+                    fontSize: Math.min(30, effectiveTitleFontSize),
+                    fontFamily: '"PT Serif", serif',
+                    fontWeight: 700,
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    textShadow: '0 3px 14px rgba(0,0,0,0.9)',
+                    lineHeight: 1.15,
+                    display: 'flex',
+                  }}
+                >
+                  {data.title}
+                </div>
+
+                {data.locationFull && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '7px',
+                      marginTop: '7px',
+                    }}
+                  >
+                    <svg width={18} height={21} viewBox="4.5 1.5 15 21" fill="none" style={{ flexShrink: 0 }}>
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C10.6193 11.5 9.5 10.3807 9.5 9C9.5 7.61929 10.6193 6.5 12 6.5C13.3807 6.5 14.5 7.61929 14.5 9C14.5 10.3807 13.3807 11.5 12 11.5Z"
+                        fill={corporateOrange}
+                      />
+                    </svg>
+                    <span
+                      style={{
+                        color: '#F1F5F9',
+                        fontSize: 19,
+                        fontFamily: '"Lato", sans-serif',
+                        fontWeight: 400,
+                        lineHeight: 1.25,
+                        textShadow: '0 2px 8px rgba(0,0,0,0.85)',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {data.locationFull}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : showDetails ? (
             <div
               style={{
                 position: 'absolute',
