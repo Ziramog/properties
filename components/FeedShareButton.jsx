@@ -42,10 +42,13 @@ export default function FeedShareButton({ property, variant = 'light' }) {
   const [filesToShare, setFilesToShare] = useState([]);
   const [showLogo, setShowLogo] = useState(true);
   const [showDetails, setShowDetails] = useState(true);
-  const [fitMode, setFitMode] = useState('cover'); // 'cover' (ampliar 4:5) | 'contain' (original web entera)
+  const [fitMode, setFitMode] = useState('cover'); // 'cover' (ampliar 4:5) | 'frame' (apaisado con marco 4:5) | 'landscape' (solo apaisado plano)
   const [captionCopied, setCaptionCopied] = useState(false);
 
   const isDark = variant === 'dark';
+  const isLandscapeOnly = fitMode === 'landscape';
+  const effectiveShowLogo = isLandscapeOnly ? false : showLogo;
+  const effectiveShowDetails = isLandscapeOnly ? false : showDetails;
 
   // Limitar a máximo 7 fotos (coincidiendo con las fotos mostradas en la grilla negra principal)
   const maxImages = Math.min(property?.images?.length || 0, 7);
@@ -83,47 +86,54 @@ export default function FeedShareButton({ property, variant = 'light' }) {
       const firstRawImgUrl =
         typeof firstImgEntry === 'string' ? firstImgEntry : firstImgEntry?.url;
 
-      // En "Ampliar (4:5)" conservamos exactamente 1080x1350 a sangre.
-      // En "Original (apaisado)" también se entrega 1080x1350 (4:5 nativo, Instagram no recorta), pero la foto va
-      // entera dentro de una caja 1080 x photoH (proporción de la foto 1, acotada a 566..760) con franjas de marca.
-      const isFrameMode = fitMode === 'contain';
-      const photoH = isFrameMode && firstRawImgUrl
-        ? Math.max(566, Math.min(760, (await getFeedCanvasSizeForImage(firstRawImgUrl)).height))
-        : 1350;
+      // 1. "Ampliar (4:5)" ('cover'): 1080x1350 a sangre.
+      // 2. "Apaisado (marco)" ('frame'): 1080x1350 (4:5 nativo) con foto apaisada entera en caja 1080xphotoH.
+      // 3. "Solo apaisado" ('landscape'): 1080xlandscapeH (proporción natural de la foto 1, 566..1350), plano sin logo ni textos.
+      const isFrameMode = fitMode === 'frame';
+      const firstSize =
+        (isFrameMode || isLandscapeOnly) && firstRawImgUrl
+          ? await getFeedCanvasSizeForImage(firstRawImgUrl)
+          : { width: 1080, height: 1350 };
+
       const targetW = 1080;
-      const targetH = 1350;
+      const targetH = isLandscapeOnly ? firstSize.height : 1350;
+      const photoH = isFrameMode ? Math.max(566, Math.min(760, firstSize.height)) : targetH;
       const serverFit = isFrameMode ? 'frame' : 'cover';
 
       for (let i = 0; i < maxImages; i++) {
         const imgEntry = property?.images?.[i] || property?.images?.[0];
         const rawImgUrl = typeof imgEntry === 'string' ? imgEntry : imgEntry?.url;
 
-        // Procesar el encuadre en el navegador (0 créditos Cloudinary): cover a 1080x1350, o contain en la caja de foto.
-        // "Original (apaisado)" sin logo ni textos: portada ampliada 4:5 a sangre y resto apaisado completo
-        // sobre fondo difuminado de la misma foto (sin franjas sólidas vacías).
-        const isCleanFrame = isFrameMode && !showLogo && !showDetails;
+        // Procesar el encuadre en el navegador (0 créditos Cloudinary):
+        // - 'landscape': contain en 1080 x landscapeH (sin franjas, sin logo, sin texto)
+        // - 'frame' sin logo ni textos: portada 4:5 a sangre + láminas 2..7 apaisadas sobre fondo difuminado
+        // - 'frame' con logo/textos: contain en caja 1080 x photoH para componer en Satori
+        // - 'cover': cover 1080 x 1350
+        const isCleanFrame = isFrameMode && !effectiveShowLogo && !effectiveShowDetails;
         const imageBase64 = !rawImgUrl
           ? null
-          : isCleanFrame
-            ? i === 0
-              ? await processImageInBrowser(rawImgUrl, targetW, targetH, { fit: 'cover' })
-              : await processFramedBlurImageInBrowser(rawImgUrl, targetW, targetH, photoH)
-            : await processImageInBrowser(rawImgUrl, targetW, isFrameMode ? photoH : targetH, {
-                fit: isFrameMode ? 'contain' : 'cover',
-              });
+          : isLandscapeOnly
+            ? await processImageInBrowser(rawImgUrl, targetW, targetH, { fit: 'contain' })
+            : isCleanFrame
+              ? i === 0
+                ? await processImageInBrowser(rawImgUrl, targetW, targetH, { fit: 'cover' })
+                : await processFramedBlurImageInBrowser(rawImgUrl, targetW, targetH, photoH)
+              : await processImageInBrowser(rawImgUrl, targetW, isFrameMode ? photoH : targetH, {
+                  fit: isFrameMode ? 'contain' : 'cover',
+                });
 
         let file = null;
 
-        // Si logo y textos están apagados y el navegador ya generó el JPEG final 1080x1350, evitar llamada a Satori
-        if (!showLogo && !showDetails && imageBase64) {
+        // Si logo y textos están apagados (o es Solo apaisado) y el navegador ya generó el JPEG final, evitar llamada a Satori
+        if (!effectiveShowLogo && !effectiveShowDetails && imageBase64) {
           const directRes = await fetch(imageBase64);
           const directBlob = await directRes.blob();
           file = new File([directBlob], `carrusel-${i + 1}.jpg`, { type: 'image/jpeg' });
         } else {
           const params = new URLSearchParams({
             index: String(i),
-            logo: showLogo ? '1' : '0',
-            details: showDetails ? '1' : '0',
+            logo: effectiveShowLogo ? '1' : '0',
+            details: effectiveShowDetails ? '1' : '0',
             fit: serverFit,
             h: String(targetH),
             ph: String(photoH),
@@ -180,17 +190,19 @@ export default function FeedShareButton({ property, variant = 'light' }) {
         }
       }
 
-      const isLandscape = isFrameMode;
-      toast.success(
-        copiedAuto
-          ? isLandscape
+      const readyMessage = isLandscapeOnly
+        ? copiedAuto
+          ? '¡Carrusel solo apaisado listo y texto copiado! En Instagram tocá < > en la primera foto para mantener el formato apaisado.'
+          : '¡Carrusel solo apaisado listo! Podés copiar el texto abajo antes de publicar.'
+        : isFrameMode
+          ? copiedAuto
             ? '¡Carrusel apaisado (marco 4:5) listo y texto copiado! En Instagram tocá Vertical (< >) en CADA lámina.'
-            : '¡Carrusel 4:5 listo y texto copiado! En Instagram tocá Vertical (< >) en CADA lámina.'
-          : isLandscape
-            ? '¡Carrusel apaisado listo! Podés copiar el texto abajo antes de publicar.'
-            : '¡Carrusel 4:5 listo! Podés copiar el texto abajo antes de publicar.',
-        { autoClose: 8000 }
-      );
+            : '¡Carrusel apaisado (marco 4:5) listo! Podés copiar el texto abajo antes de publicar.'
+          : copiedAuto
+            ? '¡Carrusel 4:5 listo y texto copiado! En Instagram tocá Vertical (< >) en CADA lámina.'
+            : '¡Carrusel 4:5 listo! Podés copiar el texto abajo antes de publicar.';
+
+      toast.success(readyMessage, { autoClose: 8000 });
     } catch (error) {
       console.error(error);
       toast.error('Hubo un error al preparar el carrusel.');
@@ -252,25 +264,25 @@ export default function FeedShareButton({ property, variant = 'light' }) {
       <div className="grid grid-cols-2 gap-2">
         <FeedToggleSwitch
           label="Logo en foto"
-          checked={showLogo}
-          disabled={status === 'preparing'}
+          checked={effectiveShowLogo}
+          disabled={status === 'preparing' || isLandscapeOnly}
           isDark={isDark}
           onChange={handleToggleOption(setShowLogo)}
         />
         <FeedToggleSwitch
           label="Textos en foto"
-          checked={showDetails}
-          disabled={status === 'preparing'}
+          checked={effectiveShowDetails}
+          disabled={status === 'preparing' || isLandscapeOnly}
           isDark={isDark}
           onChange={handleToggleOption(setShowDetails)}
         />
       </div>
 
-      {/* Selector doble de encuadre para las 7 láminas del Feed */}
+      {/* Selector triple de encuadre para las 7 láminas del Feed */}
       <div
         role="group"
         aria-label="Encuadre de imagen para Feed"
-        className={`grid grid-cols-2 gap-1 p-1 border ${
+        className={`grid grid-cols-3 gap-1 p-1 border ${
           isDark
             ? 'bg-[#181818] border-[#333]'
             : 'bg-gray-100 border-gray-200'
@@ -281,7 +293,7 @@ export default function FeedShareButton({ property, variant = 'light' }) {
           disabled={status === 'preparing'}
           aria-pressed={fitMode === 'cover'}
           onClick={handleSelectFitMode('cover')}
-          className={`px-2.5 py-1.5 text-[12px] font-semibold transition-colors disabled:opacity-50 ${
+          className={`px-1.5 py-1.5 text-[11px] sm:text-[12px] leading-tight font-semibold transition-colors disabled:opacity-50 ${
             fitMode === 'cover'
               ? 'bg-[var(--color-brand)] text-white shadow-sm'
               : isDark
@@ -294,17 +306,32 @@ export default function FeedShareButton({ property, variant = 'light' }) {
         <button
           type="button"
           disabled={status === 'preparing'}
-          aria-pressed={fitMode === 'contain'}
-          onClick={handleSelectFitMode('contain')}
-          className={`px-2.5 py-1.5 text-[12px] font-semibold transition-colors disabled:opacity-50 ${
-            fitMode === 'contain'
+          aria-pressed={fitMode === 'frame'}
+          onClick={handleSelectFitMode('frame')}
+          className={`px-1.5 py-1.5 text-[11px] sm:text-[12px] leading-tight font-semibold transition-colors disabled:opacity-50 ${
+            fitMode === 'frame'
               ? 'bg-[var(--color-brand)] text-white shadow-sm'
               : isDark
                 ? 'text-zinc-300 hover:bg-[#242424]'
                 : 'text-gray-600 hover:bg-gray-200/70'
           }`}
         >
-          Original (apaisado)
+          Apaisado (marco)
+        </button>
+        <button
+          type="button"
+          disabled={status === 'preparing'}
+          aria-pressed={fitMode === 'landscape'}
+          onClick={handleSelectFitMode('landscape')}
+          className={`px-1.5 py-1.5 text-[11px] sm:text-[12px] leading-tight font-semibold transition-colors disabled:opacity-50 ${
+            fitMode === 'landscape'
+              ? 'bg-[var(--color-brand)] text-white shadow-sm'
+              : isDark
+                ? 'text-zinc-300 hover:bg-[#242424]'
+                : 'text-gray-600 hover:bg-gray-200/70'
+          }`}
+        >
+          Solo apaisado
         </button>
       </div>
 
